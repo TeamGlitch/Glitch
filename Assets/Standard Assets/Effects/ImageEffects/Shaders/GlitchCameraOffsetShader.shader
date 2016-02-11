@@ -1,4 +1,4 @@
-Shader "Hidden/GlitchShader" {
+Shader "Hidden/GlitchCameraOffsetShader" {
 Properties {
 	_MainTex ("Base (RGB)", 2D) = "white" {}
 	_DispTex ("Base (RGB)", 2D) = "bump" {}
