@@ -4,21 +4,19 @@ using UnityStandardAssets.ImageEffects;
 
 [ExecuteInEditMode]
 [AddComponentMenu("Image Effects/Shaders/GlitchOffsetEffect")]
-public class GlitchOffsetCameraEffect : ImageEffectBase {
+public class GlitchOffsetCamera : ImageEffectBase {
 	
 
-	float cycleTime;
+	float cycleEnd = 0;
 	Texture2D texture, correction;
 	
 	public float intensity = 1;			//Glitch movement
 	public int divisions = 10;			//Number of divisions on a glitch cycle
-	public int cycleDuration = 2;		//Duration of a glitch cycle
+	public float cycleDuration = 0.05f;	//Duration of a glitch cycle
 	public float frequency = 0.15f;		//Probability of a glitch cycle having a glitch effect
 	public float inestability = 0.3f;	//Probability of a given division to have movement
 
 	void Start(){
-		cycleTime = cycleDuration;
-
 		//Creates a 1x1 texel texture with relative value 1 for correction
 		correction = new Texture2D(1,1);
 		correction.SetPixel (0, 0, new Color32 (1, 0, 0, 0));
@@ -30,7 +28,7 @@ public class GlitchOffsetCameraEffect : ImageEffectBase {
 	void OnRenderImage (RenderTexture source, RenderTexture destination) {
 
 		//If the glitch cycle has ended
-		if (cycleTime >= cycleDuration) {
+		if (Time.time >= cycleEnd) {
 			//Checks if the new glitch cycle has glitch effect
 			if (Random.value < frequency) {
 
@@ -62,10 +60,7 @@ public class GlitchOffsetCameraEffect : ImageEffectBase {
 				texture = correction;
 
 			}
-			cycleTime = 0;
-
-		} else {
-			cycleTime++;
+			cycleEnd = Time.time + cycleDuration;
 		}
 
 		//Sends properties to the shader and paints
