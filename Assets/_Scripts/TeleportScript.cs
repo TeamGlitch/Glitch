@@ -1,28 +1,38 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TeleportScript : PlayerController {
+public class TeleportScript : MonoBehaviour {
 
-    public void Teleport(int direction)
+	CharacterController controller;
+	bool alreadyUsed = false;
+
+	void Start (){
+		controller = GetComponent<CharacterController>();
+	}
+
+    void Update()
     {
-        float directionVertical = Input.GetAxis("Vertical");
-        print (directionVertical);
-        if (directionVertical > 0.0f)
-        {
-            directionVertical = 1.0f;
-        }
-        else
-        {
-            if (directionVertical < 0.0f)
-            {
-                directionVertical = -1.0f;
-            }
-        }
-        Vector3 newPosition = new Vector3(transform.localPosition.x + (transform.localScale.x * 2) * direction, transform.localPosition.y + (2 * transform.localScale.y) * directionVertical + 0.1f, transform.localPosition.z);
+		if (alreadyUsed == true && controller.isGrounded) {
+			alreadyUsed = false;
+		}
 
-		if (!Physics.CheckCapsule(newPosition, newPosition, transform.localScale.x / 2))
-        {
-            transform.Translate((transform.localScale.x * 2) * direction, directionVertical * transform.localScale.y, 0.0f);
-        }
+		if (Input.GetKeyDown (KeyCode.L) && alreadyUsed == false) {
+
+			if (!controller.isGrounded){
+				alreadyUsed = true;
+			}
+		
+			float horizontalTranslation = Input.GetAxisRaw("Horizontal") * (transform.localScale.x * 2);
+			float verticalTranslation = Input.GetAxisRaw("Vertical") * (2 * transform.localScale.y);
+
+			Vector3 newPosition = new Vector3(transform.localPosition.x + horizontalTranslation, transform.localPosition.y + verticalTranslation + 0.1f, transform.localPosition.z);
+
+			if (!Physics.CheckCapsule(newPosition, newPosition, transform.localScale.x / 2))
+			{
+				transform.Translate(horizontalTranslation, verticalTranslation, transform.localPosition.z);
+			}
+
+		}
     }
+
 }
