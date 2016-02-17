@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class TeleportScript : MonoBehaviour {
-
+	
 	CharacterController controller;
 	bool alreadyUsed = false;
 
@@ -16,7 +16,7 @@ public class TeleportScript : MonoBehaviour {
 			alreadyUsed = false;
 		}
 
-		if (Input.GetKeyDown (KeyCode.L) && alreadyUsed == false) {
+		if (Input.GetKeyDown (KeyCode.L) && !alreadyUsed) {
 
 			if (!controller.isGrounded){
 				alreadyUsed = true;

@@ -7,38 +7,75 @@ public class PlayerController : MonoBehaviour
 	public float speed = 30.0f;
 	public float jumpSpeed = 100.0f;
 	public float gravity = 9.8f;
+	public int maxJumpPress = 20;
 
 	private float vSpeed = 0.0f;
-	private Vector3 moveDirection = Vector3.zero;
+	private int jumpPressTime = 0;
+	private Vector3 moveDirection;
+
 	private int numBoxes = 0;
 
 	public GameObject errorBoxPrefab;
 	CharacterController controller;
+	SpriteRenderer spriteRenderer;
 
 	// Use this for initialization
 	void Start ()
 	{
-		controller = GetComponent<CharacterController> ();
+		controller = GetComponent<CharacterController>();
+		spriteRenderer = GetComponent<SpriteRenderer>();
 	}
 
 	// Update is called once per frame
 	void Update ()
 	{
+		//Gets the movement direction
 		moveDirection = new Vector3 (Input.GetAxis ("Horizontal"), 0, 0);
+
+		//Flips the sprite renderer if is changing direction
+		if (moveDirection.x > 0 && spriteRenderer.flipX == true) {
+			spriteRenderer.flipX = false;
+		} else if (moveDirection.x < 0 && spriteRenderer.flipX == false) {
+			spriteRenderer.flipX = true;
+		}
+
 		moveDirection = transform.TransformDirection (moveDirection);
 		moveDirection *= speed;
 
+		//If it's grounded
 		if (controller.isGrounded) {
-			if (Input.GetButton ("Jump"))
+
+			//If the button is pushed, start jump
+			if (Input.GetButton ("Jump")) {
 				vSpeed = jumpSpeed;
-			else
+				jumpPressTime = 0;
+			} else {
 				vSpeed = 0;
+			}
+
+		} else {
+
+			//If it's in the air
+			//If the player keeps pushing the jump button give a little
+			//vSpeed momentum - that gets gradually smaller - to get a
+			//higher jump. Do until the press time gets to his max.
+			//If the player releases the button, stop giving extra momentum to the jump.
+			if (Input.GetButton ("Jump") && jumpPressTime < maxJumpPress) {
+				vSpeed = jumpSpeed * (1 - (jumpPressTime/maxJumpPress));
+				jumpPressTime++;
+			} else {
+				jumpPressTime = maxJumpPress;
+			}
 		}
 
+		//Add gravity speed
 		vSpeed -= gravity * Time.deltaTime;
 		moveDirection.y = vSpeed;
+
+		//Move the controller
 		controller.Move (moveDirection * Time.deltaTime);
 
+		//Errorbox creation
 		if (Input.GetMouseButtonDown (0)) {
 			if (numBoxes < 3) {
 				Vector3 mouse = Input.mousePosition;
@@ -54,6 +91,7 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
+	//Announce that a error box was deleted
 	public void errorBoxDeleted (int num)
 	{
 		numBoxes -= num;
