@@ -75,18 +75,18 @@ public class PlayerController : MonoBehaviour
                 break;
         }
 
-		if (controller.isGrounded) 
+		if (controller.isGrounded){
             coolDown = false;
             state = player_state.IN_GROUND;
             
             // This is for know if the player input is "W" or "S"
-			if (Input.GetButtonDown("Jump"))
+			if (Input.GetButtonDown("Jump")){
 				vSpeed = jumpSpeed;
                 state = player_state.JUMPING;
 			}
 		}
 
-		if (Input.GetMouseButtonDown (0)) 
+		if (Input.GetMouseButtonDown (0)){ 
 			if (numBoxes < 3) {
 				Vector3 mouse = Input.mousePosition;
 				mouse.z = 15;
@@ -99,12 +99,6 @@ public class PlayerController : MonoBehaviour
 				numBoxes++;
 			}
 		}
-	}
-
-	public void errorBoxDeleted (int num)
-	{
-		numBoxes -= num;
-	}
 
         if ((Input.GetKeyDown(KeyCode.L)) && (coolDown == false))
         {
@@ -133,4 +127,9 @@ public class PlayerController : MonoBehaviour
         moveDirection.x = 0.0f;
         state = GetComponent<TeleportScript>().Teleport();
     }
+
+	public void errorBoxDeleted (int num)
+	{
+		numBoxes -= num;
+	}
 }
