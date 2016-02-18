@@ -19,20 +19,15 @@ public class PlayerController : MonoBehaviour
 	public float speed = 30.0f;
 	public float jumpSpeed = 100.0f;
 	public float gravity = 9.8f;
-	public float scaleDesiredX = 1.0f;
-	public float scaleDesiredY = 1.0f;
-	public float scaleBoxColliderX = 1.0f;
-	public float scaleBoxColliderY = 1.0f;
-	public float scaleBoxColliderZ = 1.0f;
     public player_state state;
     static public bool coolDown = false;
 
 	private float vSpeed = 0.0f;
 	private Vector3 moveDirection = Vector3.zero;
+	private int numBoxes = 0;
 
-	GameObject errorBox1;
-	GameObject errorBox2;
-	GameObject errorBox3;
+	public GameObject errorBoxPrefab;
+	CharacterController controller;
 
     void OnControllerColliderHit(ControllerColliderHit coll)
     {
@@ -49,17 +44,13 @@ public class PlayerController : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		errorBox1 = GameObject.Find ("ErrorBox1");
-		errorBox2 = GameObject.Find ("ErrorBox2");
-		errorBox3 = GameObject.Find ("ErrorBox3");
+		controller = GetComponent<CharacterController> ();
         state = player_state.IN_GROUND;
 	}
-	
+
 	// Update is called once per frame
 	void Update () 
 	{
-        CharacterController controller = GetComponent<CharacterController>();
-
         // State machine for player control depending on state
         switch (state)
         {
@@ -85,35 +76,35 @@ public class PlayerController : MonoBehaviour
         }
 
 		if (controller.isGrounded) 
-		{
             coolDown = false;
             state = player_state.IN_GROUND;
             
             // This is for know if the player input is "W" or "S"
 			if (Input.GetButtonDown("Jump"))
-			{
 				vSpeed = jumpSpeed;
                 state = player_state.JUMPING;
 			}
 		}
 
 		if (Input.GetMouseButtonDown (0)) 
-		{
-			Vector3 mouse = Input.mousePosition;
-			mouse.z = 15;
-			mouse = Camera.main.ScreenToWorldPoint(mouse);
+			if (numBoxes < 3) {
+				Vector3 mouse = Input.mousePosition;
+				mouse.z = 15;
+				mouse = Camera.main.ScreenToWorldPoint (mouse);
 
-			if (!errorBox1.GetComponent<ErrorBoxScript> ().boxActive && errorBox1.GetComponent<ErrorBoxScript> ().canBeActivated) {
-				errorBox1.GetComponent<ErrorBoxScript> ().ActivateBox (new Vector3(mouse.x, mouse.y, 0));
+				GameObject errorBox = (GameObject)Instantiate (errorBoxPrefab);
+				errorBox.transform.position = new Vector3 (mouse.x, mouse.y, 0);
+				errorBox.GetComponent<ErrorBoxScript> ().duration = 500;
+				errorBox.GetComponent<ErrorBoxScript> ().player = this;
+				numBoxes++;
 			}
-			else if (!errorBox2.GetComponent<ErrorBoxScript> ().boxActive && errorBox2.GetComponent<ErrorBoxScript> ().canBeActivated) {
-				errorBox2.GetComponent<ErrorBoxScript> ().ActivateBox (new Vector3(mouse.x, mouse.y, 0));
-			}
-			else if (!errorBox3.GetComponent<ErrorBoxScript> ().boxActive && errorBox3.GetComponent<ErrorBoxScript> ().canBeActivated) {
-				errorBox3.GetComponent<ErrorBoxScript> ().ActivateBox (new Vector3(mouse.x, mouse.y, 0));
-			}
-
 		}
+	}
+
+	public void errorBoxDeleted (int num)
+	{
+		numBoxes -= num;
+	}
 
         if ((Input.GetKeyDown(KeyCode.L)) && (coolDown == false))
         {
