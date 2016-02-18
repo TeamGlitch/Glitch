@@ -1,1 +1,1 @@
-*.cs diff
+*.cs text diff=csharp
