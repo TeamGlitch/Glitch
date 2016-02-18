@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour
     };
 
     public Material brokenTexture;
-	public Sprite errorBox;
 	public float speed = 30.0f;
 	public float jumpSpeed = 100.0f;
 	public float gravity = 9.8f;
