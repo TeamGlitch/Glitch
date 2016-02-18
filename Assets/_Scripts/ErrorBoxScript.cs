@@ -3,7 +3,7 @@ using System.Collections;
 
 public class ErrorBoxScript : MonoBehaviour {
 
-	public PlayerController player;
+	public ErrorBoxCreator errorBoxCreator;
 	private float elapsedTime = 0;
 	public float duration = -1;
 		
@@ -11,7 +11,7 @@ public class ErrorBoxScript : MonoBehaviour {
 	void Update () {
 		elapsedTime++;
 		if (elapsedTime >= duration) {
-			player.GetComponent<PlayerController> ().errorBoxDeleted (1);
+			errorBoxCreator.errorBoxDeleted(1);
 			Destroy (gameObject);
 		}
 	}

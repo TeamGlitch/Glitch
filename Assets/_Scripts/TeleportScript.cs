@@ -16,11 +16,7 @@ public class TeleportScript : MonoBehaviour {
 			alreadyUsed = false;
 		}
 
-		if (Input.GetKeyDown (KeyCode.L) && !alreadyUsed) {
-
-			if (!controller.isGrounded){
-				alreadyUsed = true;
-			}
+		if (Input.GetButtonDown("Teleport") && !alreadyUsed) {
 		
 			float horizontalTranslation = Input.GetAxisRaw("Horizontal") * (transform.localScale.x * 2);
 			float verticalTranslation = Input.GetAxisRaw("Vertical") * (2 * transform.localScale.y);
@@ -30,6 +26,7 @@ public class TeleportScript : MonoBehaviour {
 			if (!Physics.CheckCapsule(newPosition, newPosition, transform.localScale.x / 2))
 			{
 				transform.Translate(horizontalTranslation, verticalTranslation, transform.localPosition.z);
+				alreadyUsed = true;
 			}
 
 		}
