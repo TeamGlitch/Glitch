@@ -4,16 +4,16 @@ using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
-	public float speed = 30.0f;					//Horizontal speed
-	public float jumpSpeed = 100.0f;			//Vertical speed
-	public float gravity = 9.8f;				//Gravity
-	public int maxJumpPress = 20;				//Max Updates a jump can be extended
-	public int jumpRest = 4;					//Time of jump preparing and fall recovery
+	public float speed = 12.0f;					//Horizontal speed
+	public float jumpSpeed = 13.5f;				//Vertical speed
+	public float gravity = 50.0f;				//Gravity
+	public float maxJumpTime = 0.33f;			//Max time a jump can be extended
+	public float jumpRest = 0.025f;				//Time of jump preparing and fall recovery
 
 	private float vSpeed = 0.0f;				//Vertical Speed
-	private int jumpPressTime = 0;				//Jump extended time
-	private int preparingJump = 0;				//Jump preparing time left
-	private int fallRecovery = 0;				//Fall recovery time left
+	private float startJumpPress = -1;			//When the extended jump started
+	private float preparingJump = 0;				//Jump preparing time left
+	private float fallRecovery = 0;				//Fall recovery time left
 
 	private Vector3 moveDirection;				//Direction of movement
 
@@ -45,18 +45,20 @@ public class PlayerController : MonoBehaviour
 
 		//If it's recovering from a fall, don't allow to jump
 		if (fallRecovery > 0 && controller.isGrounded) {
-			fallRecovery--;
+			fallRecovery -= Time.deltaTime;
 		} 
+			
 		//If it's preparing a jump, wait
 		else if (preparingJump > 0) {
-			preparingJump--;
+			preparingJump -= Time.deltaTime;
 
 			//If it's ready to jump, start jump and give fall recovery time
-			if (preparingJump == 0) {
+			if (preparingJump <= 0) {
 				vSpeed = jumpSpeed;
-				jumpPressTime = 0;
+				startJumpPress = Time.time;
 				fallRecovery = jumpRest;
 			}
+				
 		//If it's not waiting for any reason
 		} else {
 
@@ -77,11 +79,12 @@ public class PlayerController : MonoBehaviour
 				//vSpeed momentum - that gets gradually smaller - to get a
 				//higher jump. Do until the press time gets to his max.
 				//If the player releases the button, stop giving extra momentum to the jump.
-				if (Input.GetButton ("Jump") && jumpPressTime < maxJumpPress) {
-					vSpeed = jumpSpeed * (1 - (jumpPressTime/maxJumpPress));
-					jumpPressTime++;
-				} else {
-					jumpPressTime = maxJumpPress;
+				if (Input.GetButton ("Jump") && startJumpPress != -1){
+					if ((Time.time - startJumpPress) <= maxJumpTime) {
+						vSpeed = jumpSpeed;
+					} else {
+						startJumpPress = -1;
+					}
 				}
 			}
 
