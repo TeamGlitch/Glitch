@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TeleportScript : MonoBehaviour {
 
-    public bool Teleport(CharacterController controller, PlayerController playerScript)
+    public bool Teleport(CharacterController controller)
     {
         // We catch the direction to teleport
         float directionVertical = Input.GetAxisRaw("Vertical");

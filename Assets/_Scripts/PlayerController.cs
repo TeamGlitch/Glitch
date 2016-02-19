@@ -121,7 +121,7 @@ public class PlayerController : MonoBehaviour
         vSpeed = 0.0f;
         moveDirection.x = 0.0f;
 
-        coolDown = teleport.Teleport(controller, this);
+        coolDown = teleport.Teleport(controller);
         state = player_state.FALLING;
     }
 }
