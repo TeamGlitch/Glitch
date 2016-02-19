@@ -4,36 +4,29 @@ using System.Collections;
 public class TexturePainterBulletScript : MonoBehaviour {
 
 	//public terrainType type;
+	public Vector3 speed;
+	public Material paintMaterial;
 
 	// Use this for initialization
 	void Start () {
-	
 	}
 
-	/*
-	public void Paint(){
-		Material newMat;
-
-		if (type == terrainType.Icy) {
-			newMat = Resources.Load ("Icy", typeof(Material)) as Material;
-		} else if (type == terrainType.Slimy) {
-			newMat = Resources.Load ("Slimy", typeof(Material)) as Material;
-		} else {
-			newMat = Resources.Load("Normal", typeof(Material)) as Material;
-		}
-
-		GetComponent<Renderer>().sharedMaterial = newMat;
+	// Update is called once per frame
+	void Update () {
+		this.transform.position += speed * Time.deltaTime;
 	}
 
-	void OnTriggerEnter(Collider col) {
+	void OnCollisionEnter(Collision col) {
 
-		Transform parentColisionado = col.GetComponent<Collider> ().transform.parent;
+		//Read the renderer.
+		Renderer renderer = col.collider.GetComponentInParent<Renderer>();
 
-		if (parentColisionado != null && parentColisionado.name == "World") {
-			col.GetComponent<Collider> ().GetComponent<TerrainScript> ().setType (type);
+		//If it exists, take the material and give it to the texture swapper
+		if (renderer != null) {
+			renderer.sharedMaterial = paintMaterial;
 		}
 
 		Destroy (gameObject);
 	}
-	*/
+
 }
