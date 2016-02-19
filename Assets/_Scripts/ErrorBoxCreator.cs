@@ -9,7 +9,7 @@ public class ErrorBoxCreator : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//Errorbox creation
-		if (Input.GetMouseButtonDown (0)) {
+		if (Input.GetButtonDown("PowerAction_0") && (!Input.GetButton("ToggleTextureChange") && Input.GetAxisRaw("ToggleTextureChange") == 0) ) {
 			if (numBoxes < 3) {
 				Vector3 mouse = Input.mousePosition;
 				mouse.z = 15;
@@ -23,7 +23,6 @@ public class ErrorBoxCreator : MonoBehaviour {
 			}
 		}
 	}
-
 
 	//Announce that a error box was deleted
 	public void errorBoxDeleted (int num)

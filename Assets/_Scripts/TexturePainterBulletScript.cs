@@ -14,6 +14,11 @@ public class TexturePainterBulletScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		this.transform.position += speed * Time.deltaTime;
+
+		//If it's out of the screen, delete
+		if (Camera.main.WorldToViewportPoint (this.transform.position).x > 1) {
+			Destroy(gameObject);
+		}
 	}
 
 	void OnCollisionEnter(Collision col) {
