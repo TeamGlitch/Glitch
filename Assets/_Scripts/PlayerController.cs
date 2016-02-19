@@ -14,18 +14,17 @@ public class PlayerController : MonoBehaviour
         TELEPORTING
     };
 
+    public player_state state;
     public Material brokenTexture;
 	public float speed = 30.0f;
 	public float jumpSpeed = 100.0f;
 	public float gravity = 9.8f;
-    public player_state state;
-    static public bool coolDown = false;
-
+    public bool coolDown = false;
+    public GameObject errorBoxPrefab;
 	private float vSpeed = 0.0f;
 	private Vector3 moveDirection = Vector3.zero;
 	private int numBoxes = 0;
-
-	public GameObject errorBoxPrefab;
+    TeleportScript teleport;
 	CharacterController controller;
 
     void OnControllerColliderHit(ControllerColliderHit coll)
@@ -44,29 +43,25 @@ public class PlayerController : MonoBehaviour
 	void Start ()
 	{
 		controller = GetComponent<CharacterController> ();
+        teleport = GetComponent<TeleportScript>();
         state = player_state.IN_GROUND;
 	}
 
 	// Update is called once per frame
 	void Update () 
 	{
+        print(state);
         // State machine for player control depending on state
         switch (state)
         {
             case player_state.IN_GROUND: 
             case player_state.JUMPING:
+            case player_state.FALLING:
                 // Control of movemente in X axis
                 moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, 0);
                 moveDirection = transform.TransformDirection(moveDirection);
                 moveDirection *= speed;
 
-                // Control of movemente in Y axis
-                vSpeed -= gravity * Time.deltaTime;
-                moveDirection.y = vSpeed;
-                controller.Move(moveDirection * Time.deltaTime);
-                break;
-
-            case player_state.FALLING:
                 // Control of movemente in Y axis
                 vSpeed -= gravity * Time.deltaTime;
                 moveDirection.y = vSpeed;
@@ -78,7 +73,6 @@ public class PlayerController : MonoBehaviour
             coolDown = false;
             state = player_state.IN_GROUND;
             
-            // This is for know if the player input is "W" or "S"
 			if (Input.GetButtonDown("Jump")){
 				vSpeed = jumpSpeed;
                 state = player_state.JUMPING;
@@ -116,18 +110,18 @@ public class PlayerController : MonoBehaviour
     // Function that active teleport. Necessary to Coroutine work
     IEnumerator ActivateTeleport()
     {
-        // If player is Jumping, we activate the cooldown
-        if (state == player_state.JUMPING)
-        {
-            coolDown = true;
-        }
-
+        coolDown = true;
         // Wait for 0.2 seconds
-        yield return new WaitForSeconds(0.2f); 
+        if (!controller.isGrounded)
+        {
+            yield return new WaitForSeconds(0.2f);
+        }
 
         // With this after teleport not continues go up in a jumping
         vSpeed = 0.0f;
         moveDirection.x = 0.0f;
-        state = GetComponent<TeleportScript>().Teleport();
+
+        coolDown = teleport.Teleport(controller, this);
+        state = player_state.FALLING;
     }
 }
