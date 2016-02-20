@@ -3,18 +3,19 @@ using System.Collections;
 
 public class TextureSwapper : MonoBehaviour {
 
-	public GameObject sight;
-	public GameObject stealerBullet;
-	public GameObject paintBullet;
-	public float shootSpeed = 0.45f;
-	public float radius = 2.0f; 
-	public float shootCooldown = 0.1f;
+	public GameObject sight;							//Sight reference
+	public GameObject stealerBullet;					//Stealer bullet prefab
+	public GameObject paintBullet;						//Painter bullet prefab
+	public float shootSpeed = 0.45f;					//Speed of the bullet
+	public float radius = 2.0f; 						//Radius of the sight transformation
+	public float shootCooldown = 0.1f;					//Cooldown between shoots
 
 	public Material actualTexture = null;
 
-	private RectTransform sightRectTransform;
-	private bool shootingMode = false;
-	private float lastShootStart = 0.0f;
+	private RectTransform sightRectTransform;			//Transformation of the sight
+	private bool shootingMode = false;					//If it is in shooting mode
+	private bool usingController = true;				//The player is using a controller?
+	private float lastShootStart = 0.0f;				//When the last shoot started
 
 	// Use this for initialization
 	void Start () {
@@ -40,7 +41,15 @@ public class TextureSwapper : MonoBehaviour {
 
 			//Calcule the distance to where the sight is aiming at
 			Vector2 distance;
-			if (Input.GetAxisRaw ("ToggleTextureChange") > 0) {
+
+			//Determine if using the controller or not
+			if (!usingController && (Input.GetAxis("Aim_Horizontal") != 0 || Input.GetAxis("Aim_Vertical") != 0)) {
+				usingController = true;
+			} else if (usingController && (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)) {
+				usingController = false;
+			}
+
+			if (usingController) {
 				
 				//If a controller is being used
 				distance = new Vector2 (Input.GetAxis("Aim_Horizontal") * 100, Input.GetAxis("Aim_Vertical") * 100);
