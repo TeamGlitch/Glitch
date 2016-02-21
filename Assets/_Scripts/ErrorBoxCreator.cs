@@ -5,6 +5,7 @@ public class ErrorBoxCreator : MonoBehaviour {
 
 	public GameObject errorBoxPrefab;					//Prefab of the error box
 
+	private ObjectPool boxes;							//Boxes pool
 	private GameObject placeholder;						//Placeholder that shows where the box will appear
 
 	private int numBoxes = 0;							//How many active boxes are present
@@ -14,15 +15,19 @@ public class ErrorBoxCreator : MonoBehaviour {
 	private float restartOriginalPosition = -1;			//If its later than this, restart the placeholder position
 
 	void Start(){
+		
+		boxes = new ObjectPool(errorBoxPrefab);
+
 		//Initialize the placeholder
 		placeholder = (GameObject)Instantiate(errorBoxPrefab);
-		placeholder.GetComponent<SpriteRenderer> ().color = new Color(1.0F, 1.0F, 1.0F, 0.4F);
+		placeholder.GetComponent<SpriteRenderer>().color = new Color(1.0F, 1.0F, 1.0F, 0.4F);
 		placeholder.GetComponent<BoxCollider>().enabled = false;
+
 	}
 
 	// Update is called once per frame
 	void Update () {
-
+		
 		//Moving placeholder to know where it will be put down
 		if (Input.GetButton ("PowerAction_1") && (!Input.GetButton ("ToggleTextureChange") && Input.GetAxisRaw ("ToggleTextureChange") == 0)) {
 			if (numBoxes < 3) {
@@ -61,7 +66,7 @@ public class ErrorBoxCreator : MonoBehaviour {
 			if (numBoxes < 3) {
 
 				//Create an error box and place it
-				GameObject errorBox = (GameObject)Instantiate (errorBoxPrefab);
+				GameObject errorBox = boxes.getObject();
 				errorBox.transform.position = calculateErrorBoxPosition();
 
 				//Send properties
@@ -69,6 +74,7 @@ public class ErrorBoxCreator : MonoBehaviour {
 				EBScript.errorBoxCreator = this;
 				EBScript.startTime = Time.time;
 				EBScript.duration = 5;
+				EBScript.cooldown = 8;
 
 				//Increase number of boxes active and set the restart position time
 				numBoxes++;
@@ -76,7 +82,7 @@ public class ErrorBoxCreator : MonoBehaviour {
 			}
 
 		}
-		//Deleting the placeholder
+		//Hiding the placeholder
 		else if (previsualization) {
 			previsualization = false;
 			placeholder.SetActive (false);

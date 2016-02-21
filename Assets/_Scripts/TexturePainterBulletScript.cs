@@ -1,25 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TexturePainterBulletScript : MonoBehaviour {
+public class TexturePainterBulletScript : TextureBullet {
 
-	//public terrainType type;
-	public Vector3 speed;
 	public Material paintMaterial;
-
-	// Use this for initialization
-	void Start () {
-	}
-
-	// Update is called once per frame
-	void Update () {
-		this.transform.position += speed * Time.deltaTime;
-
-		//If it's out of the screen, delete
-		if (Camera.main.WorldToViewportPoint (this.transform.position).x > 1) {
-			Destroy(gameObject);
-		}
-	}
 
 	void OnCollisionEnter(Collision col) {
 
@@ -31,7 +15,7 @@ public class TexturePainterBulletScript : MonoBehaviour {
 			renderer.sharedMaterial = paintMaterial;
 		}
 
-		Destroy (gameObject);
+		gameObject.SetActive(false);
 	}
 
 }

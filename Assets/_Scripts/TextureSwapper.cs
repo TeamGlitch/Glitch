@@ -5,12 +5,15 @@ public class TextureSwapper : MonoBehaviour {
 
 	public GameObject sight;							//Sight reference
 	public GameObject stealerBullet;					//Stealer bullet prefab
-	public GameObject paintBullet;						//Painter bullet prefab
+	public GameObject painterBullet;					//Painter bullet prefab
 	public float shootSpeed = 0.45f;					//Speed of the bullet
 	public float radius = 2.0f; 						//Radius of the sight transformation
 	public float shootCooldown = 0.1f;					//Cooldown between shoots
 
-	public Material actualTexture = null;
+	public Material actualTexture = null;				//Actual texture used for painting
+
+	private ObjectPool stealerBulletPool;				//Object pools
+	private ObjectPool painterBulletPool;
 
 	private RectTransform sightRectTransform;			//Transformation of the sight
 	private bool shootingMode = false;					//If it is in shooting mode
@@ -20,10 +23,15 @@ public class TextureSwapper : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		sight.SetActive(false);
+		stealerBulletPool = new ObjectPool(stealerBullet);
+		painterBulletPool = new ObjectPool(painterBullet);
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+		//print ("Stealer - Size: " + stealerBulletPool.getActualSize () + " Max: " + stealerBulletPool.getMaxSize () + " Activated: " + stealerBulletPool.getActiveMembers () + " Inactivated: " + stealerBulletPool.getInactiveMembers ());
+		//print ("Painter - Size: " + painterBulletPool.getActualSize () + " Max: " + painterBulletPool.getMaxSize () + " Activated: " + painterBulletPool.getActiveMembers () + " Inactivated: " + painterBulletPool.getInactiveMembers ()); 
 
 		//Shooting mode activation - desactivation
 		if (Input.GetButtonDown("ToggleTextureChange") || (Input.GetAxisRaw("ToggleTextureChange") > 0 && !shootingMode)) {
@@ -95,14 +103,14 @@ public class TextureSwapper : MonoBehaviour {
 
 				//Stealer
 				if (shoot == 1) { 						
-					bullet  = (GameObject)Instantiate(stealerBullet);
+					bullet  = stealerBulletPool.getObject();
 					TextureStealerBulletScript TEScript = bullet.GetComponent<TextureStealerBulletScript>();
 					TEScript.speed = new Vector3 (shootSpeed * cosShoot, shootSpeed * sinShoot, 0);
 					TEScript.textureSwapper = this;
 				} 
 				//Painter
 				else if (shoot == 0) {					
-					bullet = (GameObject)Instantiate (paintBullet);
+					bullet  = painterBulletPool.getObject();
 					TexturePainterBulletScript TPScript = bullet.GetComponent<TexturePainterBulletScript>();
 					TPScript.speed = new Vector3 (shootSpeed * cosShoot, shootSpeed * sinShoot, 0);
 					TPScript.paintMaterial = actualTexture;
