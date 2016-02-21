@@ -21,11 +21,14 @@ public class PlayerController : MonoBehaviour
 	public float gravity = 9.8f;
     public bool coolDown = false;
     public GameObject errorBoxPrefab;
+    public World world;
+
 	private float vSpeed = 0.0f;
 	private Vector3 moveDirection = Vector3.zero;
 	private int numBoxes = 0;
-    TeleportScript teleport;
-	CharacterController controller;
+    private SlowFPS slowFPS;
+    private TeleportScript teleport;
+	private CharacterController controller;
 
     void OnControllerColliderHit(ControllerColliderHit coll)
     {
@@ -44,13 +47,14 @@ public class PlayerController : MonoBehaviour
 	{
 		controller = GetComponent<CharacterController> ();
         teleport = GetComponent<TeleportScript>();
+        slowFPS = GetComponent<SlowFPS>();
         state = player_state.IN_GROUND;
 	}
 
 	// Update is called once per frame
 	void Update () 
 	{
-        print(state);
+
         // State machine for player control depending on state
         switch (state)
         {
@@ -99,6 +103,19 @@ public class PlayerController : MonoBehaviour
             StartCoroutine("ActivateTeleport");
             ActivateTeleport();
             state = player_state.TELEPORTING;
+        }
+
+        if (Input.GetButtonDown("Fire1"))
+        {
+            if (world.slow == false)
+            {
+                world.slow = true;
+            }
+            else
+            {
+                
+                world.slow = false;
+            }
         }
 	}
 
