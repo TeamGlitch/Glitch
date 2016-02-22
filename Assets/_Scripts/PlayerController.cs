@@ -16,14 +16,18 @@ public class PlayerController : MonoBehaviour
 
     public player_state state;
     public Material brokenTexture;
+    public int lifes;
+    public int items = 0;
 	public float speed = 30.0f;
 	public float jumpSpeed = 100.0f;
 	public float gravity = 9.8f;
     public bool coolDown = false;
     public GameObject errorBoxPrefab;
+    public GUILifes guiLife;
+    public GUICollects guiItem;
 	private float vSpeed = 0.0f;
 	private Vector3 moveDirection = Vector3.zero;
-	private int numBoxes = 0;
+	private int numBoxes = 0; 
     TeleportScript teleport;
 	CharacterController controller;
 
@@ -42,6 +46,7 @@ public class PlayerController : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
+        lifes = 3;
 		controller = GetComponent<CharacterController> ();
         teleport = GetComponent<TeleportScript>();
         state = player_state.IN_GROUND;
@@ -50,7 +55,6 @@ public class PlayerController : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-        print(state);
         // State machine for player control depending on state
         switch (state)
         {

@@ -3,25 +3,17 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class GUICollects : MonoBehaviour {
-    private int items;
+    public PlayerController player;
     private Text itemNumber;
 
     void Start()
     {
-        items = 0;
         itemNumber = GetComponent<Text>();
-        itemNumber.text = items.ToString();
+        itemNumber.text = player.items.ToString();
     }
 
-	public void Increment()
+	public void GUIItemRepresent()
     {
-        ++items;
-        itemNumber.text = items.ToString();
-    }
-
-    public void Decrement(int itemsDecremented)
-    {
-        items -= itemsDecremented;
-        itemNumber.text = items.ToString();
+        itemNumber.text = player.items.ToString();
     }
 }
