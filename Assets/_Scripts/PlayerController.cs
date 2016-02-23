@@ -112,8 +112,7 @@ public class PlayerController : MonoBehaviour
                 world.slow = true;
             }
             else
-            {
-                
+            {        
                 world.slow = false;
             }
         }
