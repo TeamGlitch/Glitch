@@ -12,6 +12,7 @@ public class GUICollects : MonoBehaviour {
         itemNumber.text = player.items.ToString();
     }
 
+	// Function that represent the number of items collected
 	public void GUIItemRepresent()
     {
         itemNumber.text = player.items.ToString();

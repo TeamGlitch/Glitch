@@ -7,6 +7,9 @@ public class GUILifes : MonoBehaviour {
     public Image[] lifes;
     private int life = 3;
 
+	// Function to increment lifes in the GUI.
+	// Do a comparison from lifes before and now and change the 
+	// correspondent sprites. Is possible increment more than 1 life.
     public void IncrementLifes()
     {
         int aux = player.lifes - life;
@@ -17,6 +20,9 @@ public class GUILifes : MonoBehaviour {
         life += aux;
     }
 
+	// Function to decrement lifes in the GUI.
+	// Do a check for know which life has been lost
+	// and change the sprite of this life to lost life sprite.
     public void DecrementLifes()
     {
         int aux = 3 - player.lifes - 1;
