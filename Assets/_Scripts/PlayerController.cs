@@ -79,12 +79,10 @@ public class PlayerController : MonoBehaviour
 				//vSpeed momentum - that gets gradually smaller - to get a
 				//higher jump. Do until the press time gets to his max.
 				//If the player releases the button, stop giving extra momentum to the jump.
-				if (Input.GetButton ("Jump") && startJumpPress != -1){
-					if ((Time.time - startJumpPress) <= maxJumpTime) {
-						vSpeed = jumpSpeed;
-					} else {
-						startJumpPress = -1;
-					}
+				if (startJumpPress != -1 && Input.GetButton ("Jump") && (Time.time - startJumpPress) <= maxJumpTime) {
+					vSpeed = jumpSpeed;
+				} else {
+					startJumpPress = -1;
 				}
 			}
 

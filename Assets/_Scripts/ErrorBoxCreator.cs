@@ -21,8 +21,9 @@ public class ErrorBoxCreator : MonoBehaviour {
 		//Initialize the placeholder
 		placeholder = (GameObject)Instantiate(errorBoxPrefab);
 		placeholder.GetComponent<SpriteRenderer>().color = new Color(1.0F, 1.0F, 1.0F, 0.4F);
-		placeholder.GetComponent<BoxCollider>().enabled = false;
-
+		Destroy (placeholder.GetComponent<ErrorBoxScript>());
+		Destroy (placeholder.GetComponent<BoxCollider>());
+		placeholder.SetActive (false);
 	}
 
 	// Update is called once per frame

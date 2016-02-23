@@ -9,8 +9,8 @@ public class ErrorBoxScript : MonoBehaviour {
 	public float cooldown = -1;
 
 	private bool active = true;
-	private SpriteRenderer spriteRenderer;
-	private BoxCollider boxCollider;
+	private SpriteRenderer spriteRenderer = null;
+	private BoxCollider boxCollider = null;
 
 	void Start(){
 		spriteRenderer = GetComponent<SpriteRenderer>();
@@ -36,8 +36,8 @@ public class ErrorBoxScript : MonoBehaviour {
 	//to be ready if the object pool calls it again
 	void OnDisable(){
 		active = true;
-		spriteRenderer.enabled = true;
-		boxCollider.enabled = true;
+		if(spriteRenderer != null) spriteRenderer.enabled = true;
+		if(boxCollider != null) boxCollider.enabled = true;
 	}
 
 }
