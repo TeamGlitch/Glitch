@@ -70,18 +70,36 @@ public class PlayerController : MonoBehaviour
                 vSpeed -= gravity * Time.deltaTime;
                 moveDirection.y = vSpeed;
                 controller.Move(moveDirection * Time.deltaTime);
+
+                if (controller.isGrounded)
+                {
+                    coolDown = false;
+                    state = player_state.IN_GROUND;
+
+                    if (Input.GetButtonDown("Jump"))
+                    {
+                        vSpeed = jumpSpeed;
+                        state = player_state.JUMPING;
+                    }
+                }
+
+                if ((Input.GetKeyDown(KeyCode.L)) && (coolDown == false))
+                {
+                    // We create a coroutine to do a delay in the teleport and the state of player is changed to teleporting
+                    StartCoroutine("ActivateTeleport");
+                    ActivateTeleport();
+                    state = player_state.TELEPORTING;
+                }
+
+                break;
+
+                // In teleporting the player can't move and physics didn't have any action to player
+            case player_state.TELEPORTING:
+                vSpeed = 0.0f;
+                moveDirection = new Vector3(0, 0, 0);
                 break;
         }
 
-		if (controller.isGrounded){ 
-            coolDown = false;
-            state = player_state.IN_GROUND;
-            
-			if (Input.GetButtonDown("Jump")){
-				vSpeed = jumpSpeed;
-                state = player_state.JUMPING;
-			}
-		}
 
 		if (Input.GetMouseButtonDown (0)) {
 			if (numBoxes < 3) {
@@ -96,14 +114,6 @@ public class PlayerController : MonoBehaviour
 				numBoxes++;
 			}
 		}
-		
-		if ((Input.GetKeyDown(KeyCode.L)) && (coolDown == false))
-        {
-            // We create a coroutine to do a delay in the teleport and the state of player is changed to teleporting
-            StartCoroutine("ActivateTeleport");
-            ActivateTeleport();
-            state = player_state.TELEPORTING;
-        }
 
         if (Input.GetButtonDown("Fire1"))
         {
@@ -128,14 +138,14 @@ public class PlayerController : MonoBehaviour
     {
         coolDown = true;
         // Wait for 0.2 seconds
-        if (!controller.isGrounded)
+        if (controller.isGrounded)
         {
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.3f);
         }
-
-        // With this after teleport not continues go up in a jumping
-        vSpeed = 0.0f;
-        moveDirection.x = 0.0f;
+        else
+        {
+            yield return new WaitForSeconds(0.5f);
+        }
 
         coolDown = teleport.Teleport(controller);
         state = player_state.FALLING;
