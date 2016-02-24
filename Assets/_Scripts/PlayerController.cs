@@ -16,26 +16,27 @@ public class PlayerController : MonoBehaviour
 
     public player_state state;
     public Material brokenTexture;
-	public float speed = 12.0f;					//Horizontal speed
-	public float jumpSpeed = 13.5f;				//Vertical speed
-	public float gravity = 50.0f;				//Gravity
-	public float maxJumpTime = 0.33f;			//Max time a jump can be extended
-	public float jumpRest = 0.025f;				//Time of jump preparing and fall recovery
+	public int lifes;
+    public int items = 0;						// Items collected
+	public float speed = 12.0f;					// Horizontal speed
+	public float jumpSpeed = 13.5f;			
+	public float gravity = 50.0f;				
+	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
+	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
     public bool coolDown = false;
-    public GameObject errorBoxPrefab;
+	public GUILifes guiLife;
+    public GUICollects guiItem;
+    public TeleportScript teleport;
     public World world;
 
 	private float startJumpPress = -1;			//When the extended jump started
 	private float preparingJump = 0;				//Jump preparing time left
 	private float fallRecovery = 0;				//Fall recovery time left
-
-	private Vector3 moveDirection;				//Direction of movement
-
+	private Vector3 moveDirection = Vector3.zero;				//Direction of movement
 	private SpriteRenderer spriteRenderer;				//Reference to the sprite renderer
 	private float vSpeed = 0.0f;
 	private int numBoxes = 0;
     private SlowFPS slowFPS;
-    private TeleportScript teleport;
 	private CharacterController controller;
 
     void OnControllerColliderHit(ControllerColliderHit coll)
@@ -51,8 +52,8 @@ public class PlayerController : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
+        lifes = 3;
 		controller = GetComponent<CharacterController> ();
-        teleport = GetComponent<TeleportScript>();
         slowFPS = GetComponent<SlowFPS>();
 	    spriteRenderer = GetComponent<SpriteRenderer>();
         state = player_state.IN_GROUND;
@@ -61,7 +62,6 @@ public class PlayerController : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-
         // State machine for player control depending on state
         switch (state)
         {
@@ -115,8 +115,12 @@ public class PlayerController : MonoBehaviour
 
                             if (Input.GetButtonDown("Jump"))
                             {
-                                vSpeed = jumpSpeed;
+                                preparingJump = jumpRest;
                                 state = player_state.JUMPING;
+                            }
+                            else
+                            {
+                                vSpeed = 0;
                             }
                         }
                         else
@@ -157,21 +161,6 @@ public class PlayerController : MonoBehaviour
                 moveDirection = new Vector3(0, 0, 0);
                 break;
         }
-
-
-		if (Input.GetMouseButtonDown (0)) {
-			if (numBoxes < 3) {
-				Vector3 mouse = Input.mousePosition;
-				mouse.z = 15;
-				mouse = Camera.main.ScreenToWorldPoint (mouse);
-
-				GameObject errorBox = (GameObject)Instantiate (errorBoxPrefab);
-				errorBox.transform.position = new Vector3 (mouse.x, mouse.y, 0);
-				errorBox.GetComponent<ErrorBoxScript> ().duration = 500;
-				errorBox.GetComponent<ErrorBoxScript> ().player = this;
-				numBoxes++;
-			}
-		}
 
         if (Input.GetButtonDown("Fire1"))
         {
