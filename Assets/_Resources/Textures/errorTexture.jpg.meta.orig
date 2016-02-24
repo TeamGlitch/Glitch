@@ -1,10 +1,10 @@
 fileFormatVersion: 2
 <<<<<<< HEAD
-guid: af73492aa8ca1d24d94f0913270aa260
-timeCreated: 1454766911
+guid: 0f057a7bf96c104418d09633262fd3ce
+timeCreated: 1455816380
 =======
-guid: 1f9cb11ba7274fa48b9421bb4967ce32
-timeCreated: 1455739551
+guid: d9c58ac9b15453a4091123400c16007f
+timeCreated: 1455739556
 >>>>>>> Movement&TextureChange
 licenseType: Free
 TextureImporter:
@@ -32,17 +32,21 @@ TextureImporter:
   grayScaleToAlpha: 0
   generateCubemap: 0
   cubemapConvolution: 0
+<<<<<<< HEAD
+  cubemapConvolutionSteps: 8
+=======
   cubemapConvolutionSteps: 7
+>>>>>>> Movement&TextureChange
   cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: -1
   maxTextureSize: 2048
   textureSettings:
     filterMode: -1
-    aniso: 16
+    aniso: -1
     mipBias: -1
-    wrapMode: 1
-  nPOTScale: 0
+    wrapMode: -1
+  nPOTScale: 1
   lightmap: 0
   rGBM: 0
   compressionQuality: 50
@@ -50,7 +54,7 @@ TextureImporter:
 =======
   allowsAlphaSplitting: 0
 >>>>>>> Movement&TextureChange
-  spriteMode: 1
+  spriteMode: 0
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -61,8 +65,8 @@ TextureImporter:
 >>>>>>> Movement&TextureChange
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 100
-  alphaIsTransparency: 1
-  textureType: 8
+  alphaIsTransparency: 0
+  textureType: -1
   buildTargetSettings: []
   spriteSheet:
     sprites: []

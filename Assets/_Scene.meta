@@ -1,7 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 0317b8a84e56ae14c9897824070abc55
 folderAsset: yes
 timeCreated: 1455039112
+=======
+guid: 1004697ea2a76394eb4e430e1df464da
+folderAsset: yes
+timeCreated: 1455739543
+>>>>>>> Movement&TextureChange
 licenseType: Free
 DefaultImporter:
   userData: 

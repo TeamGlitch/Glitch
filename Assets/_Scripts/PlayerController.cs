@@ -16,15 +16,23 @@ public class PlayerController : MonoBehaviour
 
     public player_state state;
     public Material brokenTexture;
-	public float speed = 30.0f;
-	public float jumpSpeed = 100.0f;
-	public float gravity = 9.8f;
+	public float speed = 12.0f;					//Horizontal speed
+	public float jumpSpeed = 13.5f;				//Vertical speed
+	public float gravity = 50.0f;				//Gravity
+	public float maxJumpTime = 0.33f;			//Max time a jump can be extended
+	public float jumpRest = 0.025f;				//Time of jump preparing and fall recovery
     public bool coolDown = false;
     public GameObject errorBoxPrefab;
     public World world;
 
+	private float startJumpPress = -1;			//When the extended jump started
+	private float preparingJump = 0;				//Jump preparing time left
+	private float fallRecovery = 0;				//Fall recovery time left
+
+	private Vector3 moveDirection;				//Direction of movement
+
+	private SpriteRenderer spriteRenderer;				//Reference to the sprite renderer
 	private float vSpeed = 0.0f;
-	private Vector3 moveDirection = Vector3.zero;
 	private int numBoxes = 0;
     private SlowFPS slowFPS;
     private TeleportScript teleport;
@@ -35,9 +43,7 @@ public class PlayerController : MonoBehaviour
         if (coll.gameObject.CompareTag("Floor"))
         {
             TextureEffects.TextureFlicker(coll.gameObject, brokenTexture);
-        }
-        else
-        {
+        }else{
             TextureEffects.TextureFlickerRepeat(coll.gameObject, brokenTexture);
         }
     }
@@ -48,6 +54,7 @@ public class PlayerController : MonoBehaviour
 		controller = GetComponent<CharacterController> ();
         teleport = GetComponent<TeleportScript>();
         slowFPS = GetComponent<SlowFPS>();
+	    spriteRenderer = GetComponent<SpriteRenderer>();
         state = player_state.IN_GROUND;
 	}
 
@@ -66,20 +73,68 @@ public class PlayerController : MonoBehaviour
                 moveDirection = transform.TransformDirection(moveDirection);
                 moveDirection *= speed;
 
-                // Control of movemente in Y axis
-                vSpeed -= gravity * Time.deltaTime;
-                moveDirection.y = vSpeed;
-                controller.Move(moveDirection * Time.deltaTime);
-
-                if (controller.isGrounded)
+		        // Flips the sprite renderer if is changing direction
+		        if (moveDirection.x > 0 && spriteRenderer.flipX == true) 
                 {
-                    coolDown = false;
-                    state = player_state.IN_GROUND;
-
-                    if (Input.GetButtonDown("Jump"))
+			        spriteRenderer.flipX = false;
+		        }else{
+                    if (moveDirection.x < 0 && spriteRenderer.flipX == false) 
                     {
-                        vSpeed = jumpSpeed;
-                        state = player_state.JUMPING;
+			            spriteRenderer.flipX = true;
+                    }
+		        }
+
+		        //If it's recovering from a fall, don't allow to jump
+                if (fallRecovery > 0 && controller.isGrounded)
+                {
+                    fallRecovery -= Time.deltaTime;
+                }
+                else
+                {
+                    //If it's preparing a jump, wait
+                    if (preparingJump > 0)
+                    {
+                        preparingJump -= Time.deltaTime;
+
+                        //If it's ready to jump, start jump and give fall recovery time
+                        if (preparingJump <= 0)
+                        {
+                            vSpeed = jumpSpeed;
+                            startJumpPress = Time.time;
+                            fallRecovery = jumpRest;
+                        }
+
+                    }
+                    else
+                    {
+                        //If it's not waiting for any reason
+                        if (controller.isGrounded)
+                        {
+                            coolDown = false;
+                            state = player_state.IN_GROUND;
+
+                            if (Input.GetButtonDown("Jump"))
+                            {
+                                vSpeed = jumpSpeed;
+                                state = player_state.JUMPING;
+                            }
+                        }
+                        else
+                        {
+                            //If it's in the air
+                            //If the player keeps pushing the jump button give a little
+                            //vSpeed momentum - that gets gradually smaller - to get a
+                            //higher jump. Do until the press time gets to his max.
+                            //If the player releases the button, stop giving extra momentum to the jump.
+                            if (startJumpPress != -1 && Input.GetButton("Jump") && (Time.time - startJumpPress) <= maxJumpTime)
+                            {
+                                vSpeed = jumpSpeed;
+                            }
+                            else
+                            {
+                                startJumpPress = -1;
+                            }
+                        }
                     }
                 }
 
@@ -90,7 +145,10 @@ public class PlayerController : MonoBehaviour
                     ActivateTeleport();
                     state = player_state.TELEPORTING;
                 }
-
+                // Control of movemente in Y axis
+                vSpeed -= gravity * Time.deltaTime;
+                moveDirection.y = vSpeed;
+                controller.Move(moveDirection * Time.deltaTime);
                 break;
 
                 // In teleporting the player can't move and physics didn't have any action to player

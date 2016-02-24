@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: b10b8645c110e1043b8e053733a54118
 timeCreated: 1454766435
+=======
+guid: e870230727bf4a14b846f0f63a12755d
+timeCreated: 1455739559
+>>>>>>> Movement&TextureChange
 licenseType: Free
 NativeFormatImporter:
   userData: 

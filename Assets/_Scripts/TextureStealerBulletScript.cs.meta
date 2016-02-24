@@ -1,11 +1,6 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
-guid: 5e32f667c288a9043a503ed3c757ba97
-timeCreated: 1454940462
-=======
-guid: b3baef47c1f2d0247afecb7814ae2ce0
-timeCreated: 1455739547
->>>>>>> Movement&TextureChange
+guid: e61c3dd9f1896a642936b6d134b63515
+timeCreated: 1455809507
 licenseType: Free
 MonoImporter:
   serializedVersion: 2

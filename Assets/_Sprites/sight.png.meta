@@ -1,11 +1,6 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
-guid: af73492aa8ca1d24d94f0913270aa260
-timeCreated: 1454766911
-=======
-guid: 1f9cb11ba7274fa48b9421bb4967ce32
-timeCreated: 1455739551
->>>>>>> Movement&TextureChange
+guid: aeaf088a0e404474880179dc3691b509
+timeCreated: 1455836461
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName: {}
@@ -22,11 +17,7 @@ TextureImporter:
   bumpmap:
     convertToNormalMap: 0
     externalNormalMap: 0
-<<<<<<< HEAD
-    heightScale: .25
-=======
     heightScale: 0.25
->>>>>>> Movement&TextureChange
     normalMapFilter: 0
   isReadable: 0
   grayScaleToAlpha: 0
@@ -46,19 +37,12 @@ TextureImporter:
   lightmap: 0
   rGBM: 0
   compressionQuality: 50
-<<<<<<< HEAD
-=======
   allowsAlphaSplitting: 0
->>>>>>> Movement&TextureChange
   spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
-<<<<<<< HEAD
-  spritePivot: {x: .5, y: .5}
-=======
   spritePivot: {x: 0.5, y: 0.5}
->>>>>>> Movement&TextureChange
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 100
   alphaIsTransparency: 1
@@ -66,10 +50,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites: []
-<<<<<<< HEAD
-=======
     outline: []
->>>>>>> Movement&TextureChange
   spritePackingTag: 
   userData: 
   assetBundleName: 
