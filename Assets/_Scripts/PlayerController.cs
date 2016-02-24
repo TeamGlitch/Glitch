@@ -25,10 +25,10 @@ public class PlayerController : MonoBehaviour
     public GameObject errorBoxPrefab;
     public GUILifes guiLife;
     public GUICollects guiItem;
+    public TeleportScript teleport;
 	private float vSpeed = 0.0f;
 	private Vector3 moveDirection = Vector3.zero;
 	private int numBoxes = 0; 
-    TeleportScript teleport;
 	CharacterController controller;
 
     void OnControllerColliderHit(ControllerColliderHit coll)
@@ -48,7 +48,6 @@ public class PlayerController : MonoBehaviour
 	{
         lifes = 3;
 		controller = GetComponent<CharacterController> ();
-        teleport = GetComponent<TeleportScript>();
         state = player_state.IN_GROUND;
 	}
 
