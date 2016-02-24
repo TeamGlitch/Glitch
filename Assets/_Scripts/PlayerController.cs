@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
     public GUICollects guiItem;
     public TeleportScript teleport;
     public World world;
+    public SlowFPS slowFPS;
 
 	private float startJumpPress = -1;			//When the extended jump started
 	private float preparingJump = 0;				//Jump preparing time left
@@ -36,7 +37,6 @@ public class PlayerController : MonoBehaviour
 	private SpriteRenderer spriteRenderer;				//Reference to the sprite renderer
 	private float vSpeed = 0.0f;
 	private int numBoxes = 0;
-    private SlowFPS slowFPS;
 	private CharacterController controller;
 
     void OnControllerColliderHit(ControllerColliderHit coll)
@@ -162,8 +162,9 @@ public class PlayerController : MonoBehaviour
                 break;
         }
 
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("SlowFPS"))
         {
+            print(world.slow);
             if (world.slow == false)
             {
                 world.slow = true;
@@ -184,13 +185,15 @@ public class PlayerController : MonoBehaviour
     IEnumerator ActivateTeleport()
     {
         coolDown = true;
-        // Wait for 0.2 seconds
+        
         if (controller.isGrounded)
         {
+            // Wait for 0.3 seconds
             yield return new WaitForSeconds(0.3f);
         }
         else
         {
+            // Wait for 0.5 seconds
             yield return new WaitForSeconds(0.5f);
         }
 
