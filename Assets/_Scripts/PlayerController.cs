@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
 	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
     public bool teleportCooldown = false;
-	public GUIlives guiLife;
+	public GUILives guiLife;
     public GUICollects guiItem;
     public TeleportScript teleport;
     public World world;
@@ -63,7 +63,11 @@ public class PlayerController : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		
+        if (Input.anyKeyDown)
+        {
+            --lives;
+            guiLife.DecrementLives();
+        }
 		Vector3 moveDirection = new Vector3 (0, 0, 0);
 
         // State-changing calculations
