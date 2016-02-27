@@ -10,10 +10,12 @@ public class BoxCreatorUIMask : MonoBehaviour {
 	private float startTime;
 	private RectTransform maskTransform;
 	private RectTransform childTransform;
+	private GlowBoxCreatorUI glow;
 
-	void Start(){
+	void Awake(){
 		maskTransform = GetComponent<RectTransform>();
 		childTransform = transform.GetChild(0).GetComponent<RectTransform>();
+		glow = transform.parent.Find("Glow").GetComponent<GlowBoxCreatorUI>();
 	}
 
 	public void StartMovement(float iEndTime){
@@ -34,6 +36,8 @@ public class BoxCreatorUIMask : MonoBehaviour {
 		childTransform.anchoredPosition = new Vector2 (0, -newY);
 
 		if (percent == 1.0f) {
+			glow.gameObject.SetActive(true);
+			glow.StartMovement();
 			gameObject.SetActive(false);
 		}
 	}
