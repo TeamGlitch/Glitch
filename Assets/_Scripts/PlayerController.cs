@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
 	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
     public bool teleportCooldown = false;
-	public GUIlives guiLife;
+	public GUILives guiLife;
     public GUICollects guiItem;
     public TeleportScript teleport;
     public World world;

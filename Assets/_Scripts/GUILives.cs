@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class GUIlives : MonoBehaviour {
+public class GUILives : MonoBehaviour {
     public PlayerController player;
     public Image[] lives;
     private int life = 3;

@@ -4,9 +4,13 @@ using System.Collections;
 public class ErrorBoxCreator : MonoBehaviour {
 
 	public GameObject errorBoxPrefab;					//Prefab of the error box
+	public BoxCreatorUI boxCreatorUI;					//UI
 
 	private ObjectPool boxes;							//Boxes pool
 	private GameObject placeholder;						//Placeholder that shows where the box will appear
+
+	public float duration = 5;							//How many time a platform is active
+	public float cooldown = 8;							//How many time until a new platform can be created
 
 	private int numBoxes = 0;							//How many active boxes are present
 	private bool usingController = true;				//The player is using a controller?
@@ -74,8 +78,11 @@ public class ErrorBoxCreator : MonoBehaviour {
 				ErrorBoxScript EBScript = errorBox.GetComponent<ErrorBoxScript>(); 
 				EBScript.errorBoxCreator = this;
 				EBScript.startTime = Time.time;
-				EBScript.duration = 5;
-				EBScript.cooldown = 8;
+				EBScript.duration = duration;
+				EBScript.cooldown = cooldown;
+
+				//Notify the GUI
+				boxCreatorUI.boxUsed(numBoxes, Time.time + cooldown);
 
 				//Increase number of boxes active and set the restart position time
 				numBoxes++;
