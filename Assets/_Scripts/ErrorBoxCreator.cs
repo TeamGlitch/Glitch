@@ -82,7 +82,7 @@ public class ErrorBoxCreator : MonoBehaviour {
 				EBScript.cooldown = cooldown;
 
 				//Notify the GUI
-				boxCreatorUI.boxUsed(numBoxes, Time.time + cooldown);
+				boxCreatorUI.boxUsed(boxes.indexOf(errorBox), Time.time + cooldown);
 
 				//Increase number of boxes active and set the restart position time
 				numBoxes++;

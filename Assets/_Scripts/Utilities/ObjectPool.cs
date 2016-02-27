@@ -86,4 +86,15 @@ public class ObjectPool : MonoBehaviour {
 		return maxSize;
 	}
 
+	//Index of element
+	public int indexOf(GameObject go){
+
+		for (int i = 0; i < buffer.Count; i++) {
+			if (buffer[i] == go)
+				return i;
+		}
+
+		return -1;
+	}
+
 }
