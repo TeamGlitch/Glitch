@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class GUILives : MonoBehaviour {
+public class HUDLives : MonoBehaviour {
     public PlayerController player;
     public Image[] livesArray;
 

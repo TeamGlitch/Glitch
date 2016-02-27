@@ -25,8 +25,8 @@ public class PlayerController : MonoBehaviour
 	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
     public bool teleportCooldown = false;
-	public GUILives guiLife;
-    public GUICollects guiItem;
+	public HUDLives guiLife;
+    public HUDCollects guiItem;
     public TeleportScript teleport;
     public World world;
     public SlowFPS slowFPS;
@@ -63,11 +63,6 @@ public class PlayerController : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-        if (Input.anyKeyDown)
-        {
-            --lives;
-            guiLife.DecrementLives();
-        }
 		Vector3 moveDirection = new Vector3 (0, 0, 0);
 
         // State-changing calculations
@@ -121,7 +116,7 @@ public class PlayerController : MonoBehaviour
 						state = player_state.IN_GROUND;
 					}
 					
-					if (state == player_state.IN_GROUND && Input.GetButtonDown ("Jump")) {
+					if ((state == player_state.IN_GROUND) && (Input.GetButtonDown ("Jump"))) {
 						preparingJump = jumpRest;
 						state = player_state.PREPARING_JUMP;
 					} else {
@@ -134,7 +129,7 @@ public class PlayerController : MonoBehaviour
 					//vSpeed momentum - that gets gradually smaller - to get a
 					//higher jump. Do until the press time gets to his max.
 					//If the player releases the button, stop giving extra momentum to the jump.
-					if (startJumpPress != -1 && Input.GetButton ("Jump") && (Time.time - startJumpPress) <= maxJumpTime) {
+					if ((startJumpPress != -1) && (Input.GetButton ("Jump")) && ((Time.time - startJumpPress) <= maxJumpTime)) {
 						vSpeed = jumpSpeed;
 					} else {
 						startJumpPress = -1;
@@ -171,7 +166,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetButtonDown("SlowFPS"))
         {
-            print(world.slow);
+
             if (world.slow == false)
             {
                 world.slow = true;

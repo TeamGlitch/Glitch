@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class GUICollects : MonoBehaviour {
+public class HUDCollects : MonoBehaviour {
     public PlayerController player;
     private Text itemNumber;
 
