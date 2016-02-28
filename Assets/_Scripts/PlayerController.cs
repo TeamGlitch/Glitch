@@ -25,12 +25,15 @@ public class PlayerController : MonoBehaviour
 	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
     public bool teleportCooldown = false;
+    public Camera mainCamera;
+    public Camera godCamera;
 	public GUIlives guiLife;
     public GUICollects guiItem;
     public TeleportScript teleport;
     public World world;
     public SlowFPS slowFPS;
 
+    private bool godMode = false;
 	private float startJumpPress = -1;				//When the extended jump started
 	private float preparingJump = 0;				//Jump preparing time left
 	private float fallRecovery = 0;					//Fall recovery time left
@@ -42,25 +45,27 @@ public class PlayerController : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit coll)
     {
-        if (coll.gameObject.CompareTag("Floor"))
+        if (!coll.gameObject.CompareTag("ErrorBox"))
         {
-            TextureEffects.TextureFlicker(coll.gameObject, brokenTexture);
-        } else {
-            TextureEffects.TextureFlickerRepeat(coll.gameObject, brokenTexture);
+            if (coll.gameObject.CompareTag("Floor"))
+            {
+                TextureEffects.TextureFlicker(coll.gameObject, brokenTexture);
+            }
+            else
+            {
+                TextureEffects.TextureFlickerRepeat(coll.gameObject, brokenTexture);
+            }
         }
     }
 
-	// Use this for initialization
 	void Start ()
 	{
         lives = 3;
 		controller = GetComponent<CharacterController>();
-        slowFPS = GetComponent<SlowFPS>();
 	    spriteRenderer = GetComponent<SpriteRenderer>();
 		state = player_state.JUMPING;
 	}
 
-	// Update is called once per frame
 	void Update () 
 	{
 		
@@ -175,6 +180,23 @@ public class PlayerController : MonoBehaviour
             else
             {        
                 world.slow = false;
+            }
+        }
+
+        // To active God mode camera
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            if (godMode == true)
+            {
+                mainCamera.gameObject.SetActive(true);
+                godCamera.gameObject.SetActive(false);
+                godMode = false;
+            }
+            else
+            {
+                godCamera.gameObject.SetActive(true);
+                mainCamera.gameObject.SetActive(false);
+                godMode = true;
             }
         }
 
