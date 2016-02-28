@@ -14,7 +14,7 @@ public class ErrorBoxScript : MonoBehaviour {
 
 	private float nextFlicker = -1;
 
-	void Start(){
+	void Awake(){
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		boxCollider = GetComponent<BoxCollider>();
 	}
