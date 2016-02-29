@@ -13,6 +13,7 @@ public class TextureStealerBulletScript : TextureBullet {
 		//If it exists, take the material and give it to the texture swapper
 		if (renderer != null) {
 			textureSwapper.actualTexture = renderer.sharedMaterial;
+            textureSwapper.HUDtex.AssignTexture(textureSwapper.actualTexture);
 		}
 
 		gameObject.SetActive(false);

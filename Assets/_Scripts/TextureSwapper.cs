@@ -9,7 +9,7 @@ public class TextureSwapper : MonoBehaviour {
 	public float shootSpeed = 0.45f;					//Speed of the bullet
 	public float radius = 2.0f; 						//Radius of the sight transformation
 	public float shootCooldown = 0.1f;					//Cooldown between shoots
-
+    public HUDTexture HUDtex;
 	public Material actualTexture = null;				//Actual texture used for painting
 
 	private ObjectPool stealerBulletPool;				//Object pools
