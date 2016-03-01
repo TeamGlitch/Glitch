@@ -5,7 +5,10 @@ public class WhipManager : MonoBehaviour {
 
 	public GameObject chainPrefab;
 	public float distanceToWhip;
+	public GameObject sphereRotatorPrefab;
 
+	private GameObject sphereRotator;
+	private Rigidbody sphereRotatorRigidbody;
 	private GameObject chain;
 
 	private GameObject player;
@@ -22,7 +25,12 @@ public class WhipManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+
+		sphereRotator = Instantiate (sphereRotatorPrefab);
+		sphereRotator.SetActive (false);
+
+		sphereRotatorRigidbody = sphereRotator.GetComponent<Rigidbody> ();
+
 		chain = Instantiate (chainPrefab);
 		chainPieces = new GameObject[13];
 
@@ -69,6 +77,7 @@ public class WhipManager : MonoBehaviour {
 				player.transform.position = lastPosition;
 				playerController.EndWhip ();
 				activated = false;
+				sphereRotator.SetActive (false);
 			} 
 		}
 		else {
@@ -88,12 +97,20 @@ public class WhipManager : MonoBehaviour {
 				if (Vector3.Distance (playerPosition, posToWhip) <= distanceToWhip) 
 				{
 
+					sphereRotator.SetActive (true);
+					sphereRotator.transform.position = posToWhip;
+
+					float angle = Mathf.Atan2 (posToWhip.y - player.transform.position.y, posToWhip.x - player.transform.position.x) * Mathf.Rad2Deg + 180.0f;
+					float angleInclinacion = angle + 90.0f;
+					player.transform.rotation = Quaternion.Euler(0.0f, 0.0f, angleInclinacion);
+
 					chain.SetActive (true);
 					chain.transform.position = posToWhip;
+					chain.transform.rotation =  Quaternion.Euler(0.0f, 0.0f, angleInclinacion);
 
 					characterJoint = player.AddComponent <CharacterJoint> ();
-					characterJoint.connectedBody = whipObjects [closerWhipObject].GetComponent<Rigidbody> ();
-
+//					characterJoint.connectedBody = whipObjects [closerWhipObject].GetComponent<Rigidbody> ();
+					characterJoint.connectedBody = sphereRotatorRigidbody;
 					playerController.StartWhip();
 					activated = true;
 

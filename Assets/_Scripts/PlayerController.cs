@@ -31,7 +31,8 @@ public class PlayerController : MonoBehaviour
     public TeleportScript teleport;
     public World world;
     public SlowFPS slowFPS;
-	public float WhipForce = 5.0f;
+	public float whipForce = 5.0f;
+	public float maxAngleWhipForce = 60.0f;
 
 	private float startJumpPress = -1;				//When the extended jump started
 	private float preparingJump = 0;				//Jump preparing time left
@@ -104,12 +105,17 @@ public class PlayerController : MonoBehaviour
 					state = player_state.TELEPORTING;
 					vSpeed = 0;
 				} else {
-
+				
 					teleportCooldown = false;
-					if (Input.GetButtonDown ("Jump")) {
+					if (Input.GetButtonDown ("Jump")) 
+					{
 						preparingJump = jumpRest;
 						state = player_state.PREPARING_JUMP;
 					} 
+					else if (!controller.isGrounded) 
+					{
+						state = player_state.JUMPING;
+					}
 					else {
 						vSpeed = 0;
 					}
@@ -171,13 +177,20 @@ public class PlayerController : MonoBehaviour
 			break;
 
 			case player_state.WHIPING:
-				if (Input.GetKey (KeyCode.D))
+
+				if(gameObject.transform.rotation.eulerAngles.z > 360.0f-maxAngleWhipForce || 
+				   gameObject.transform.rotation.eulerAngles.z < maxAngleWhipForce)
 				{
-					rigidBody.AddForce (new Vector3 (WhipForce, 0.0f, 0.0f));
-				} 
-				else if (Input.GetKey (KeyCode.A))
-				{
-					rigidBody.AddForce (new Vector3 (-WhipForce, 0.0f, 0.0f));
+					float whipDirection = Input.GetAxisRaw ("Horizontal");
+					
+					if (whipDirection == 1.0f)
+					{
+						rigidBody.AddForce (new Vector3 (whipForce, 0.0f, 0.0f));
+					} 
+					else if (whipDirection == -1.0f)
+					{
+						rigidBody.AddForce (new Vector3 (-whipForce, 0.0f, 0.0f));
+					}
 				}
 			break;
         }
@@ -194,11 +207,11 @@ public class PlayerController : MonoBehaviour
 			moveDirection *= speed;
 
 			// Flips the sprite renderer if is changing direction
-			if (moveDirection.x > 0 && spriteRenderer.flipX == true) {
+			/*if (moveDirection.x > 0 && spriteRenderer.flipX == true) {
 				spriteRenderer.flipX = false;
 			} else if (moveDirection.x < 0 && spriteRenderer.flipX == false) {
 				spriteRenderer.flipX = true;
-			}
+			}*/
 			moveDirection.y = vSpeed;
 			controller.Move(moveDirection * Time.deltaTime);
 
@@ -253,6 +266,7 @@ public class PlayerController : MonoBehaviour
 	}
 	public void EndWhip()
 	{
+		startJumpPress = Time.time;
 		state = player_state.JUMPING;
 		vSpeed = jumpSpeed;
 		rigidBody.isKinematic = true;

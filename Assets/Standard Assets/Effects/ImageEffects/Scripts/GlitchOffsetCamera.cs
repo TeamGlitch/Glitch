@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEditor;
 using UnityStandardAssets.ImageEffects;
 
 [ExecuteInEditMode]
