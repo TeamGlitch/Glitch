@@ -10,7 +10,7 @@ public class ErrorBoxCreator : MonoBehaviour {
 	private GameObject placeholder;						//Placeholder that shows where the box will appear
 
 	public float duration = 5;							//How many time a platform is active
-	public float cooldown = 8;							//How many time until a new platform can be created
+	public float cooldown = 16;							//How many time until a new platform can be created
 
 	private int numBoxes = 0;							//How many active boxes are present
 	private bool usingController = true;				//The player is using a controller?
@@ -24,9 +24,9 @@ public class ErrorBoxCreator : MonoBehaviour {
 
 		//Initialize the placeholder
 		placeholder = (GameObject)Instantiate(errorBoxPrefab);
-		placeholder.GetComponent<SpriteRenderer>().color = new Color(1.0F, 1.0F, 1.0F, 0.4F);
 		Destroy (placeholder.GetComponent<ErrorBoxScript>());
 		Destroy (placeholder.GetComponent<BoxCollider>());
+		placeholder.GetComponent<SpriteRenderer>().color = new Color(1.0F, 1.0F, 1.0F, 0.4F);
 		placeholder.SetActive (false);
 	}
 

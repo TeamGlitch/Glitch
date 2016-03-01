@@ -29,7 +29,7 @@ public class ErrorBoxScript : MonoBehaviour {
 
 				//Set first ficker if not stablished
 				if (nextFlicker == -1) {
-					nextFlicker = Time.time + (duration - 2.1f);
+					nextFlicker = Time.time + (duration - 1.0f);
 				}
 
 				//If it's flicker time
@@ -42,14 +42,7 @@ public class ErrorBoxScript : MonoBehaviour {
 						spriteRenderer.color = new Color (1, 1, 1, 1);
 					}
 
-					//Set next flicker depending on time left
-					if ((Time.time - startTime) > (duration - 0.7f)) {
-						nextFlicker = Time.time + 0.05f;
-					} else if ((Time.time - startTime) > (duration - 1.4f)) {
-						nextFlicker = Time.time + 0.1f;
-					} else {
-						nextFlicker = Time.time + 0.2f;
-					}
+					nextFlicker = Time.time + 0.15f;
 				}
 
 				//If it's time over, remove renderer and collider
@@ -83,5 +76,4 @@ public class ErrorBoxScript : MonoBehaviour {
 		spriteRenderer.color = new Color (1, 1, 1, 1);
 
 	}
-
 }
