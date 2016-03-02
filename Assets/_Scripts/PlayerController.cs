@@ -42,7 +42,6 @@ public class PlayerController : MonoBehaviour
 	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
 
-	private Vector3 moveDirection = Vector3.zero;	//Direction of movement
 	private float vSpeed = 0.0f;
 
 	private float startJumpPress = -1;				//When the extended jump started

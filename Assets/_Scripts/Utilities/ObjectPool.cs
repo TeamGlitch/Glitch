@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class ObjectPool : MonoBehaviour {
+public class ObjectPool {
 
 	private int maxSize;				//Max size of the array. If it's -1, its an auto-extensible array
 	private List<GameObject> buffer;	//Elements list
@@ -31,7 +31,7 @@ public class ObjectPool : MonoBehaviour {
 		}
 
 		if (returnedObject == null && (maxSize == -1 || buffer.Count + 1 < maxSize)) {
-			returnedObject = (GameObject) Instantiate (prefab);
+			returnedObject = (GameObject) GameObject.Instantiate (prefab);
 			buffer.Add (returnedObject);
 		}
 
@@ -43,7 +43,7 @@ public class ObjectPool : MonoBehaviour {
 		for (int i = buffer.Count - 1; i > 0; i--) {
 			GameObject obj = buffer[i];
 			buffer.RemoveAt(i);
-			Destroy(obj);
+			GameObject.Destroy(obj);
 		}
 	}
 
