@@ -5,9 +5,10 @@ public class BoxCreatorUIMask : MonoBehaviour {
 
 	public float startYPos;
 	public float endYPos;
-	public float endTime;
 
 	private float startTime;
+	private float endTime;
+
 	private RectTransform maskTransform;
 	private RectTransform childTransform;
 	private GlowBoxCreatorUI glow;
