@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using InControl;
 
 public class WhipManager : MonoBehaviour {
 
@@ -69,7 +70,7 @@ public class WhipManager : MonoBehaviour {
 			float angleInclinacion = angle + 90.0f;
 			chain.transform.rotation =  Quaternion.Euler(0.0f, 0.0f, angleInclinacion);
 
-			if (Input.GetButton ("Jump")) 
+			if (InputManager.ActiveDevice.Action1) 
 			{
 				chainPieces [previousDeActivated].SetActive (true);
 				chain.SetActive (false);
@@ -81,7 +82,7 @@ public class WhipManager : MonoBehaviour {
 			} 
 		}
 		else {
-			if (Input.GetKeyDown (KeyCode.Z)) {
+			if (InputManager.ActiveDevice.Action4.WasPressed) {
 				int closerWhipObject = 0;
 				Vector3 playerPosition = gameObject.transform.position;
 				for (int i = 1; i < whipObjects.Length; ++i) 

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using GlitchEffectsDLL;
+using InControl;
 
 public class PlayerController : MonoBehaviour 
 {
@@ -98,8 +99,8 @@ public class PlayerController : MonoBehaviour
 
 			case player_state.IN_GROUND: 
 			
-				// If it's teleporting
-				if ((Input.GetKeyDown (KeyCode.L)) && (!teleportCooldown)) {
+			// If it's teleporting
+			if (InputManager.ActiveDevice.Action3.WasPressed && (!teleportCooldown)) {
 					// We create a coroutine to do a delay in the teleport and the state of player is changed to teleporting
 					StartCoroutine ("ActivateTeleport");
 					ActivateTeleport ();
@@ -110,7 +111,7 @@ public class PlayerController : MonoBehaviour
 				{
 				
 					teleportCooldown = false;
-					if (Input.GetButtonDown ("Jump")) 
+				if (InputManager.ActiveDevice.Action1.WasPressed) 
 					{
 						preparingJump = jumpRest;
 						state = player_state.PREPARING_JUMP;
@@ -129,7 +130,7 @@ public class PlayerController : MonoBehaviour
 			case player_state.JUMPING:
 
 			//If it's teleporting
-			if ((Input.GetKeyDown (KeyCode.L)) && (!teleportCooldown)) {
+			if (InputManager.ActiveDevice.Action3.WasPressed && (!teleportCooldown)) {
 				// We create a coroutine to do a delay in the teleport and the state of player is changed to teleporting
 				StartCoroutine ("ActivateTeleport");
 				ActivateTeleport ();
@@ -169,7 +170,8 @@ public class PlayerController : MonoBehaviour
 					//vSpeed momentum - that gets gradually smaller - to get a
 					//higher jump. Do until the press time gets to his max.
 					//If the player releases the button, stop giving extra momentum to the jump.
-					if ((startJumpPress != -1) && (Input.GetButton ("Jump")) && ((Time.time - startJumpPress) <= maxJumpTime)) {
+					if ((startJumpPress != -1) && (InputManager.ActiveDevice.Action1.IsPressed)
+						&& ((Time.time - startJumpPress) <= maxJumpTime)) {
 						vSpeed = jumpSpeed;
 					} else {
 						startJumpPress = -1;
@@ -184,7 +186,7 @@ public class PlayerController : MonoBehaviour
 				if(gameObject.transform.rotation.eulerAngles.z > 360.0f-maxAngleWhipForce || 
 				   gameObject.transform.rotation.eulerAngles.z < maxAngleWhipForce)
 				{
-					float whipDirection = Input.GetAxisRaw ("Horizontal");
+				float whipDirection = InputManager.ActiveDevice.LeftStickX.Value;
 					
 					if (whipDirection == 1.0f)
 					{
@@ -205,7 +207,7 @@ public class PlayerController : MonoBehaviour
 			vSpeed -= gravity * Time.deltaTime;
 
 			// Control of movemente in X axis
-			moveDirection.x = Input.GetAxis ("Horizontal");
+			moveDirection.x = InputManager.ActiveDevice.LeftStickX.Value;
 			moveDirection = transform.TransformDirection (moveDirection);
 			moveDirection *= speed;
 
@@ -221,7 +223,7 @@ public class PlayerController : MonoBehaviour
 		moveDirection.y = vSpeed;
 		controller.Move(moveDirection * Time.deltaTime);
 
-        if (Input.GetButtonDown("SlowFPS"))
+		if (InputManager.ActiveDevice.LeftBumper.WasPressed)
         {
             if (world.slow == false)
             {

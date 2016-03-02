@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using InControl;
 
 public class TeleportScript : MonoBehaviour {
 
     public bool Teleport(CharacterController controller)
     {
         // We catch the direction to teleport
-        float directionVertical = Input.GetAxisRaw("Vertical");
-        float directionHorizontal = Input.GetAxisRaw("Horizontal");
+		float directionVertical = InputManager.ActiveDevice.LeftStickY.Value;
+		float directionHorizontal = InputManager.ActiveDevice.LeftStickX.Value;
 
         if (controller.isGrounded)
         {

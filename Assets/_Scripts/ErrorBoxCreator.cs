@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using InControl;
 
 public class ErrorBoxCreator : MonoBehaviour {
 
@@ -9,7 +10,6 @@ public class ErrorBoxCreator : MonoBehaviour {
 	private GameObject placeholder;						//Placeholder that shows where the box will appear
 
 	private int numBoxes = 0;							//How many active boxes are present
-	private bool usingController = true;				//The player is using a controller?
 	private bool previsualization = false;				//Currently using the placeholder
 
 	private float restartOriginalPosition = -1;			//If its later than this, restart the placeholder position
@@ -28,9 +28,9 @@ public class ErrorBoxCreator : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		
+
 		//Moving placeholder to know where it will be put down
-		if (Input.GetButton ("PowerAction_1") && (!Input.GetButton ("ToggleTextureChange") && Input.GetAxisRaw ("ToggleTextureChange") == 0)) {
+		if (InputManager.ActiveDevice.RightTrigger.IsPressed && !InputManager.ActiveDevice.LeftTrigger.IsPressed) {
 			if (numBoxes < 3) {
 
 				//If the previsualization hasn't started, activate it
@@ -50,20 +50,13 @@ public class ErrorBoxCreator : MonoBehaviour {
 
 				}
 
-				//Determine if using the controller or not
-				if (!usingController && (Input.GetAxis("Aim_Horizontal") != 0 || Input.GetAxis("Aim_Vertical") != 0)) {
-					usingController = true;
-				} else if (usingController && (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)) {
-					usingController = false;
-				}
-
 				//Calculate position and move placeholder
 				placeholder.transform.position = calculateErrorBoxPosition();
 
 			}
 		} 
 		//Creating the box
-		else if (Input.GetButtonUp ("PowerAction_1") && (!Input.GetButton ("ToggleTextureChange") && Input.GetAxisRaw ("ToggleTextureChange") == 0)) {
+		else if (InputManager.ActiveDevice.RightTrigger.WasReleased && !InputManager.ActiveDevice.LeftTrigger.IsPressed) {
 			if (numBoxes < 3) {
 
 				//Create an error box and place it
@@ -100,11 +93,11 @@ public class ErrorBoxCreator : MonoBehaviour {
 	private Vector3 calculateErrorBoxPosition(){
 
 		Vector3 mouse;
-		if (usingController) {
-			
+		if (InputManager.ActiveDevice.Name != "Keyboard/Mouse") {
+
 			//If using a controller, move the placeholder with the right joystick
-			float posx = placeholder.transform.position.x + ((50.0f * Time.deltaTime) * Input.GetAxis ("Aim_Horizontal"));
-			float posy = placeholder.transform.position.y + ((50.0f * Time.deltaTime) * Input.GetAxis ("Aim_Vertical"));
+			float posx = placeholder.transform.position.x + ((50.0f * Time.deltaTime) * InputManager.ActiveDevice.RightStickX);
+			float posy = placeholder.transform.position.y + ((50.0f * Time.deltaTime) * InputManager.ActiveDevice.RightStickY);
 
 			//Get to screen coordinates and make sure it isn't out of the screen
 			mouse = new Vector3 (posx, posy, transform.position.z);

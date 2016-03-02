@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using InControl;
 
 public class TextureSwapper : MonoBehaviour {
 
@@ -17,7 +18,6 @@ public class TextureSwapper : MonoBehaviour {
 
 	private RectTransform sightRectTransform;			//Transformation of the sight
 	private bool shootingMode = false;					//If it is in shooting mode
-	private bool usingController = true;				//The player is using a controller?
 	private float lastShootStart = 0.0f;				//When the last shoot started
 
 	// Use this for initialization
@@ -25,6 +25,7 @@ public class TextureSwapper : MonoBehaviour {
 		sight.SetActive(false);
 		stealerBulletPool = new ObjectPool(stealerBullet);
 		painterBulletPool = new ObjectPool(painterBullet);
+		sightRectTransform = sight.GetComponent<RectTransform>();
 	}
 	
 	// Update is called once per frame
@@ -34,12 +35,11 @@ public class TextureSwapper : MonoBehaviour {
 		//print ("Painter - Size: " + painterBulletPool.getActualSize () + " Max: " + painterBulletPool.getMaxSize () + " Activated: " + painterBulletPool.getActiveMembers () + " Inactivated: " + painterBulletPool.getInactiveMembers ()); 
 
 		//Shooting mode activation - desactivation
-		if (Input.GetButtonDown("ToggleTextureChange") || (Input.GetAxisRaw("ToggleTextureChange") > 0 && !shootingMode)) {
+		if (InputManager.ActiveDevice.LeftTrigger.WasPressed) {
 			shootingMode = true;
-			sightRectTransform = sight.GetComponent<RectTransform>();
 			sight.SetActive(true);
 		}
-		if (Input.GetButtonUp("ToggleTextureChange") || (Input.GetAxisRaw("ToggleTextureChange") == 0 && shootingMode)) {
+		if (InputManager.ActiveDevice.LeftTrigger.WasReleased) {
 			shootingMode = false;
 			sight.SetActive(false);
 		}
@@ -50,17 +50,10 @@ public class TextureSwapper : MonoBehaviour {
 			//Calcule the distance to where the sight is aiming at
 			Vector2 distance;
 
-			//Determine if using the controller or not
-			if (!usingController && (Input.GetAxis("Aim_Horizontal") != 0 || Input.GetAxis("Aim_Vertical") != 0)) {
-				usingController = true;
-			} else if (usingController && (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)) {
-				usingController = false;
-			}
-
-			if (usingController) {
+			if (InputManager.ActiveDevice.Name != "Keyboard/Mouse") {
 				
 				//If a controller is being used
-				distance = new Vector2 (Input.GetAxis("Aim_Horizontal") * 100, Input.GetAxis("Aim_Vertical") * 100);
+				distance = new Vector2 (InputManager.ActiveDevice.RightStickX * 100, InputManager.ActiveDevice.RightStickY * 100);
 
 			} else {
 				
@@ -86,9 +79,9 @@ public class TextureSwapper : MonoBehaviour {
 			//If the stealer bullet button is pressed and the shoot cooldown x 4 is over
 			//shoot = -1 do not shoot, 0 shoot painter, 1 shoot stealer
 			int shoot = -1;
-			if ((Input.GetButton("PowerAction_0") || Input.GetAxisRaw ("PowerAction_0") > 0) && (actualTexture != null) && (Time.time - lastShootStart > shootCooldown)) {
+			if (InputManager.ActiveDevice.RightTrigger.IsPressed && (actualTexture != null) && (Time.time - lastShootStart > shootCooldown)) {
 				shoot = 0;
-			} else if ( Input.GetButton("PowerAction_1") && (Time.time - lastShootStart > shootCooldown * 4)){
+			} else if ( InputManager.ActiveDevice.RightBumper.IsPressed && (Time.time - lastShootStart > shootCooldown * 4)){
 				shoot = 1;
 			}
 
