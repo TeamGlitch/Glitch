@@ -28,3 +28,4 @@ sysinfo.txt
 
 #Exceptions
 !/[Pp]rojectSettings/InputManager.asset
+!/[Pp]rojectSettings/TagManager.asset
