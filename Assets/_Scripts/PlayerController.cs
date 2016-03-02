@@ -17,34 +17,67 @@ public class PlayerController : MonoBehaviour
 		WHIPING
     };
 
+	///////////// Variables /////////////
+
+	//State
     public player_state state;
-    public Material brokenTexture;
+
+	//External References
+	public HUDLives guiLife;
+	public HUDCollects guiItem;
+
+	//Internal References
+	private SpriteRenderer spriteRenderer;			//Reference to the sprite renderer
+	private CharacterController controller;
+	private Rigidbody rigidBody;
+
+	//Properties
 	public int lives;
-    public int items = 0;						// Items collected
+	public int items = 0;						// Items collected
+
+	//Movement Variables
 	public float speed = 12.0f;					// Horizontal speed
 	public float jumpSpeed = 13.5f;			
 	public float gravity = 50.0f;				
 	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
-    public bool teleportCooldown = false;
-	public HUDLives guiLife;
-    public HUDCollects guiItem;
-    public TeleportScript teleport;
-    public World world;
-    public SlowFPS slowFPS;
-	public float whipForce = 5.0f;
-	public float maxAngleWhipForce = 60.0f;
 
+	private Vector3 moveDirection = Vector3.zero;	//Direction of movement
+	private float vSpeed = 0.0f;
 
 	private float startJumpPress = -1;				//When the extended jump started
 	private float preparingJump = 0;				//Jump preparing time left
 	private float fallRecovery = 0;					//Fall recovery time left
-	private Vector3 moveDirection = Vector3.zero;	//Direction of movement
-	private SpriteRenderer spriteRenderer;			//Reference to the sprite renderer
-	private float vSpeed = 0.0f;
-	private int numBoxes = 0;
-	private CharacterController controller;
-	private Rigidbody rigidBody;
+
+	///// Powers
+	//Teleport
+    public bool teleportCooldown = false;
+	public TeleportScript teleport;
+
+	//Slow FPS
+	public SlowFPS slowFPS;
+
+	//Whip
+	public float whipForce = 5.0f;
+	public float maxAngleWhipForce = 60.0f;
+
+	///// Other
+	//Broken effect
+	public Material brokenTexture;
+
+
+	///////////// Functions /////////////
+
+	// Use this for initialization
+	void Start ()
+	{
+		lives = 3;
+		controller = GetComponent<CharacterController>();
+		slowFPS = GetComponent<SlowFPS>();
+		spriteRenderer = GetComponent<SpriteRenderer>();
+		state = player_state.JUMPING;
+		rigidBody = GetComponent<Rigidbody>();
+	}
 
     void OnControllerColliderHit(ControllerColliderHit coll)
     {
@@ -56,17 +89,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-	// Use this for initialization
-	void Start ()
-	{
-        lives = 3;
-		controller = GetComponent<CharacterController>();
-        slowFPS = GetComponent<SlowFPS>();
-	    spriteRenderer = GetComponent<SpriteRenderer>();
-		state = player_state.JUMPING;
-		rigidBody = GetComponent<Rigidbody> ();
-	}
-
 	// Update is called once per frame
 	void Update () 
 	{
@@ -76,128 +98,35 @@ public class PlayerController : MonoBehaviour
         switch (state)
         {
 			case player_state.PREPARING_JUMP:
-
-				preparingJump -= Time.deltaTime;
-
-				//If it's ready to jump, start jump and give fall recovery time
-				if (preparingJump <= 0)
-				{
-					vSpeed = jumpSpeed;
-					startJumpPress = Time.time;
-					fallRecovery = jumpRest;
-					state = player_state.JUMPING;
-				}
+			
+				PrepareJump();
 				break;
 
 			case player_state.FALL_RECOVERING:
-
-				fallRecovery -= Time.deltaTime;
-				if (fallRecovery <= 0){
-					state = player_state.IN_GROUND;
-				}
+			
+				RecoverFall();
 				break;
 
 			case player_state.IN_GROUND: 
-			
-			// If it's teleporting
-			if (InputManager.ActiveDevice.Action3.WasPressed && (!teleportCooldown)) {
-					// We create a coroutine to do a delay in the teleport and the state of player is changed to teleporting
-					StartCoroutine ("ActivateTeleport");
-					ActivateTeleport ();
-					state = player_state.TELEPORTING;
-					vSpeed = 0;
-				} 
-				else 
-				{
 				
-					teleportCooldown = false;
-				if (InputManager.ActiveDevice.Action1.WasPressed) 
-					{
-						preparingJump = jumpRest;
-						state = player_state.PREPARING_JUMP;
-					} 
-					else if (!controller.isGrounded) 
-					{
-						state = player_state.JUMPING;
-					}
-					else 
-					{
-						vSpeed = 0;
-					}
+				// If it's not teleporting
+				if (!ActivatingTeleport()) {
+					Grounded();
 				}
 				break;
 
 			case player_state.JUMPING:
 
-			//If it's teleporting
-			if (InputManager.ActiveDevice.Action3.WasPressed && (!teleportCooldown)) {
-				// We create a coroutine to do a delay in the teleport and the state of player is changed to teleporting
-				StartCoroutine ("ActivateTeleport");
-				ActivateTeleport ();
-				state = player_state.TELEPORTING;
-				vSpeed = 0;
-			} 
-			else 
-			{
-
-				//If it's grounded
-				if (controller.isGrounded) {
-					state = player_state.FALL_RECOVERING;
-				} 
-				else 
-				{
-					//If it's in the air
-					Vector3 eulerAngles = gameObject.transform.rotation.eulerAngles;
-					float rotationZ = 0.0f;
-
-					if (eulerAngles.z < 0.0f) {
-						eulerAngles.z += 360.0f;
-					}
-
-					if (eulerAngles.z != 0.0f) {
-						if (eulerAngles.z <= 3.0f || eulerAngles.z >= 357.0f) {
-							rotationZ = 0.0f;
-						}
-						else if (eulerAngles.z <= 180.0f) {
-							rotationZ = eulerAngles.z - 3.0f;
-						} else if (eulerAngles.z > 180.0f) {
-							rotationZ = eulerAngles.z + 3.0f;
-						}
-						gameObject.transform.rotation = Quaternion.Euler(eulerAngles.x, eulerAngles.y, rotationZ);
-					}
-
-					//If the player keeps pushing the jump button give a little
-					//vSpeed momentum - that gets gradually smaller - to get a
-					//higher jump. Do until the press time gets to his max.
-					//If the player releases the button, stop giving extra momentum to the jump.
-					if ((startJumpPress != -1) && (InputManager.ActiveDevice.Action1.IsPressed)
-						&& ((Time.time - startJumpPress) <= maxJumpTime)) {
-						vSpeed = jumpSpeed;
-					} else {
-						startJumpPress = -1;
-					}
-
+				// If it's not teleporting
+				if (!ActivatingTeleport()) {
+					OnAir ();
 				}
-			}
-			break;
+				break;
 
 			case player_state.WHIPING:
+				Whipping ();
+				break;
 
-				if(gameObject.transform.rotation.eulerAngles.z > 360.0f-maxAngleWhipForce || 
-				   gameObject.transform.rotation.eulerAngles.z < maxAngleWhipForce)
-				{
-				float whipDirection = InputManager.ActiveDevice.LeftStickX.Value;
-					
-					if (whipDirection == 1.0f)
-					{
-						rigidBody.AddForce (new Vector3 (whipForce, 0.0f, 0.0f));
-					} 
-					else if (whipDirection == -1.0f)
-					{
-						rigidBody.AddForce (new Vector3 (-whipForce, 0.0f, 0.0f));
-					}
-				}
-			break;
         }
 
 		//Non state-changing operations
@@ -223,23 +152,130 @@ public class PlayerController : MonoBehaviour
 		moveDirection.y = vSpeed;
 		controller.Move(moveDirection * Time.deltaTime);
 
-		if (InputManager.ActiveDevice.LeftBumper.WasPressed)
-        {
-            if (world.slow == false)
-            {
-                world.slow = true;
-            }
-            else
-            {        
-                world.slow = false;
-            }
-        }
+	}
+
+	private void PrepareJump(){
+		
+		preparingJump -= Time.deltaTime;
+
+		//If it's ready to jump, start jump and give fall recovery time
+		if (preparingJump <= 0)
+		{
+			vSpeed = jumpSpeed;
+			startJumpPress = Time.time;
+			fallRecovery = jumpRest;
+			state = player_state.JUMPING;
+		}
 
 	}
 
-	public void errorBoxDeleted (int num)
-	{
-		numBoxes -= num;
+	private void RecoverFall(){
+		
+		fallRecovery -= Time.deltaTime;
+
+		if (fallRecovery <= 0){
+			state = player_state.IN_GROUND;
+		}
+
+	}
+
+	private void Grounded(){
+			
+		teleportCooldown = false;
+
+		if (InputManager.ActiveDevice.Action1.WasPressed) 
+		{
+			preparingJump = jumpRest;
+			state = player_state.PREPARING_JUMP;
+		} 
+		else if (!controller.isGrounded) 
+		{
+			state = player_state.JUMPING;
+		}
+		else 
+		{
+			vSpeed = 0;
+		}
+
+	}
+
+	private void OnAir(){
+
+		//If it's grounded
+		if (controller.isGrounded) {
+			state = player_state.FALL_RECOVERING;
+		} 
+		else 
+		{
+			//If it's in the air
+			Vector3 eulerAngles = gameObject.transform.rotation.eulerAngles;
+			float rotationZ = 0.0f;
+
+			if (eulerAngles.z < 0.0f) {
+				eulerAngles.z += 360.0f;
+			}
+
+			if (eulerAngles.z != 0.0f) {
+				if (eulerAngles.z <= 3.0f || eulerAngles.z >= 357.0f) {
+					rotationZ = 0.0f;
+				}
+				else if (eulerAngles.z <= 180.0f) {
+					rotationZ = eulerAngles.z - 3.0f;
+				} else if (eulerAngles.z > 180.0f) {
+					rotationZ = eulerAngles.z + 3.0f;
+				}
+				gameObject.transform.rotation = Quaternion.Euler(eulerAngles.x, eulerAngles.y, rotationZ);
+			}
+
+			//If the player keeps pushing the jump button give a little
+			//vSpeed momentum - that gets gradually smaller - to get a
+			//higher jump. Do until the press time gets to his max.
+			//If the player releases the button, stop giving extra momentum to the jump.
+			if ((startJumpPress != -1) && (InputManager.ActiveDevice.Action1.IsPressed)
+				&& ((Time.time - startJumpPress) <= maxJumpTime)) {
+				vSpeed = jumpSpeed;
+			} else {
+				startJumpPress = -1;
+			}
+
+		}
+
+	}
+
+	private void Whipping(){
+		
+		if(gameObject.transform.rotation.eulerAngles.z > 360.0f-maxAngleWhipForce || 
+			gameObject.transform.rotation.eulerAngles.z < maxAngleWhipForce)
+		{
+			float whipDirection = InputManager.ActiveDevice.LeftStickX.Value;
+
+			if (whipDirection == 1.0f)
+			{
+				rigidBody.AddForce (new Vector3 (whipForce, 0.0f, 0.0f));
+			} 
+			else if (whipDirection == -1.0f)
+			{
+				rigidBody.AddForce (new Vector3 (-whipForce, 0.0f, 0.0f));
+			}
+		}
+
+	}
+
+	private bool ActivatingTeleport(){
+
+		if (InputManager.ActiveDevice.Action3.WasPressed && (!teleportCooldown)) {
+			
+			// We create a coroutine to do a delay in the teleport and the state of player is changed to teleporting
+			StartCoroutine ("ActivateTeleport");
+			ActivateTeleport();
+			state = player_state.TELEPORTING;
+			vSpeed = 0;
+
+			return true;
+		}
+
+		return false;
+
 	}
 
     // Function that active teleport. Necessary to Coroutine work
@@ -268,6 +304,7 @@ public class PlayerController : MonoBehaviour
 		vSpeed = 0;
 		rigidBody.isKinematic = false;
 	}
+
 	public void EndWhip()
 	{
 		startJumpPress = Time.time;

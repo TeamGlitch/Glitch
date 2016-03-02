@@ -1,52 +1,72 @@
 ﻿using UnityEngine;
 using System.Collections;
+using InControl;
 
 public class SlowFPS : MonoBehaviour {
 
-    public float timeRemaining;
-    private float MAXTime;
-    private float recoveryTime;
-    private float timePerFrame = 0.0f;
+	//Reference
+	public World world;
+
+	public float MAXTime = 10.0f;				//Max time the power can be active
+	public float timeRemaining;					//Remaining time the power can be activated
+
+	public float recoveryRate = 3.0f;			//Time it takes to make a recovery bump
+    private float recoveryTime;					//Time to the next recovery bump
+
     private float timeCount;
-    public PlayerController player;
+	private float timePerFrame = 0.0f;
 
     void Start()
     {
         // Begin with 10 seconds and the cooldown time for each second are 3 seconds
-        MAXTime = 10.0f;
-        timeRemaining = MAXTime;
-        recoveryTime = 3.0f;
+		timeRemaining = MAXTime;
+		recoveryTime = recoveryRate;
     }
 
 	// In the update we control the available time of the power and it's recovery
     void Update()
     {
+		if (InputManager.ActiveDevice.LeftBumper.WasPressed)
+		{
+			if (world.slow == false)
+			{
+				world.slow = true;
+			}
+			else
+			{        
+				world.slow = false;
+			}
+		}
+
 		// If power is enabled we check the time left and if is minus than 0, we disable the power
-        if (player.world.slow == true)
+        if (world.slow == true)
         {
-            if (timeRemaining > 0.0f)
+			timeRemaining -= Time.deltaTime;
+
+            if (timeRemaining <= 0.0f)
             {
-                timeRemaining -= Time.deltaTime;
-            }
-            else
-            {
-                player.world.slow = false;
+				timeRemaining = 0;
+                world.slow = false;
             }
         }
         else
         {
 			// This is to check the recovery time. 3 seconds gives us one second of power
-            if (timeRemaining < 10.0f)
+			if (timeRemaining < MAXTime)
             {
                 recoveryTime -= Time.deltaTime;
+
                 if (recoveryTime <= 0.0f)
                 {
                     timeRemaining += 1.0f;
-                    recoveryTime = 3.0f;
-                    if (timeRemaining > 10.0f)
-                    {
-                        timeRemaining = 10.0f;
-                    }
+
+					if (timeRemaining > MAXTime)
+					{
+						timeRemaining = MAXTime;
+					}
+
+					recoveryTime = recoveryRate;
+
                 }
             }
         }
