@@ -20,20 +20,13 @@ public class PlayerController : MonoBehaviour
 	///////////// Variables /////////////
 
 	//State
-    public player_state state;
-
-	//External References
-	public HUDLives guiLife;
-	public HUDCollects guiItem;
+	public player_state state;
 
 	//Internal References
+	private Player player;
 	private SpriteRenderer spriteRenderer;			//Reference to the sprite renderer
 	private CharacterController controller;
 	private Rigidbody rigidBody;
-
-	//Properties
-	public int lives;
-	public int items = 0;						// Items collected
 
 	//Movement Variables
 	public float speed = 12.0f;					// Horizontal speed
@@ -50,7 +43,7 @@ public class PlayerController : MonoBehaviour
 
 	///// Powers
 	//Teleport
-    public bool teleportCooldown = false;
+    private bool teleportCooldown = false;
 	public TeleportScript teleport;
 
 	//Slow FPS
@@ -70,7 +63,7 @@ public class PlayerController : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		lives = 3;
+		player = GetComponent<Player>();
 		controller = GetComponent<CharacterController>();
 		slowFPS = GetComponent<SlowFPS>();
 		spriteRenderer = GetComponent<SpriteRenderer>();

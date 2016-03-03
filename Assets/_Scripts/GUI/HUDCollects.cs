@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class HUDCollects : MonoBehaviour {
-    public PlayerController player;
+    public Player player;
     private Text itemNumber;
 
     void Start()
