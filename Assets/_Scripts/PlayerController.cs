@@ -14,7 +14,8 @@ public class PlayerController : MonoBehaviour
         JUMPING,
 		FALL_RECOVERING,
         TELEPORTING,
-		WHIPING
+		WHIPING,
+		DEATH
     };
 
 	///////////// Variables /////////////
@@ -35,7 +36,7 @@ public class PlayerController : MonoBehaviour
 	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
 
-	private float vSpeed = 0.0f;
+	public float vSpeed = 0.0f;
 
 	private float startJumpPress = -1;				//When the extended jump started
 	private float preparingJump = 0;				//Jump preparing time left
@@ -205,7 +206,9 @@ public class PlayerController : MonoBehaviour
         }
 
 		//Non state-changing operations
-		if (state != player_state.TELEPORTING && state != player_state.WHIPING) {
+		if (state != player_state.DEATH &&
+			state != player_state.TELEPORTING &&
+			state != player_state.WHIPING) {
 			
 			// Gravity
 			vSpeed -= gravity * Time.deltaTime;

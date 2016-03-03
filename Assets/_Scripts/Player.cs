@@ -22,6 +22,16 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+	}
+
+	void OnTriggerEnter(Collider coll){
+		
+		if(coll.CompareTag("Death")){
+			lives -= 1;
+			guiLife.UpdateLifeUI();
+			playerController.state = PlayerController.player_state.DEATH;
+			playerController.vSpeed = 0;
+		}
+
 	}
 }
