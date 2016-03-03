@@ -98,32 +98,115 @@ public class PlayerController : MonoBehaviour
         {
 			case player_state.PREPARING_JUMP:
 			
-				PrepareJump();
+				preparingJump -= Time.deltaTime;
+
+				//If it's ready to jump, start jump and give fall recovery time
+				if (preparingJump <= 0)
+				{
+					vSpeed = jumpSpeed;
+					startJumpPress = Time.time;
+					fallRecovery = jumpRest;
+					state = player_state.JUMPING;
+				}
 				break;
 
 			case player_state.FALL_RECOVERING:
 			
-				RecoverFall();
+				fallRecovery -= Time.deltaTime;
+
+				if (fallRecovery <= 0){
+					state = player_state.IN_GROUND;
+				}
+
 				break;
 
 			case player_state.IN_GROUND: 
 				
 				// If it's not teleporting
-				if (!ActivatingTeleport()) {
-					Grounded();
+				if (!ActivatingTeleport())
+				{
+					teleportCooldown = false;
+
+					if (InputManager.ActiveDevice.Action1.WasPressed) 
+					{
+						preparingJump = jumpRest;
+						state = player_state.PREPARING_JUMP;
+					} 
+					else if (!controller.isGrounded) 
+					{
+						state = player_state.JUMPING;
+					}
+					else 
+					{
+						vSpeed = 0;
+					}
 				}
 				break;
 
 			case player_state.JUMPING:
 
 				// If it's not teleporting
-				if (!ActivatingTeleport()) {
-					OnAir ();
+				if (!ActivatingTeleport())
+				{
+					//If it's grounded
+					if (controller.isGrounded) {
+						state = player_state.FALL_RECOVERING;
+					} 
+					else 
+					{
+						//If it's in the air
+						Vector3 eulerAngles = gameObject.transform.rotation.eulerAngles;
+						float rotationZ = 0.0f;
+
+						if (eulerAngles.z < 0.0f) {
+							eulerAngles.z += 360.0f;
+						}
+
+						if (eulerAngles.z != 0.0f) {
+							if (eulerAngles.z <= 3.0f || eulerAngles.z >= 357.0f) {
+								rotationZ = 0.0f;
+							}
+							else if (eulerAngles.z <= 180.0f) {
+								rotationZ = eulerAngles.z - 3.0f;
+							} else if (eulerAngles.z > 180.0f) {
+								rotationZ = eulerAngles.z + 3.0f;
+							}
+							gameObject.transform.rotation = Quaternion.Euler(eulerAngles.x, eulerAngles.y, rotationZ);
+						}
+
+						//If the player keeps pushing the jump button give a little
+						//vSpeed momentum - that gets gradually smaller - to get a
+						//higher jump. Do until the press time gets to his max.
+						//If the player releases the button, stop giving extra momentum to the jump.
+						if ((startJumpPress != -1) && (InputManager.ActiveDevice.Action1.IsPressed)
+							&& ((Time.time - startJumpPress) <= maxJumpTime)) {
+							vSpeed = jumpSpeed;
+						} else {
+							startJumpPress = -1;
+						}
+
+					}
 				}
+
 				break;
 
 			case player_state.WHIPING:
-				Whipping ();
+			
+				if(gameObject.transform.rotation.eulerAngles.z > 360.0f-maxAngleWhipForce || 
+					gameObject.transform.rotation.eulerAngles.z < maxAngleWhipForce)
+				{
+					float whipDirection = InputManager.ActiveDevice.LeftStickX.Value;
+
+					if (whipDirection == 1.0f)
+					{
+						rigidBody.AddForce (new Vector3 (whipForce, 0.0f, 0.0f));
+					} 
+					else if (whipDirection == -1.0f)
+					{
+						rigidBody.AddForce (new Vector3 (-whipForce, 0.0f, 0.0f));
+					}
+				}
+
 				break;
 
         }
@@ -150,113 +233,6 @@ public class PlayerController : MonoBehaviour
 
 		moveDirection.y = vSpeed;
 		controller.Move(moveDirection * Time.deltaTime);
-
-	}
-
-	private void PrepareJump(){
-		
-		preparingJump -= Time.deltaTime;
-
-		//If it's ready to jump, start jump and give fall recovery time
-		if (preparingJump <= 0)
-		{
-			vSpeed = jumpSpeed;
-			startJumpPress = Time.time;
-			fallRecovery = jumpRest;
-			state = player_state.JUMPING;
-		}
-
-	}
-
-	private void RecoverFall(){
-		
-		fallRecovery -= Time.deltaTime;
-
-		if (fallRecovery <= 0){
-			state = player_state.IN_GROUND;
-		}
-
-	}
-
-	private void Grounded(){
-			
-		teleportCooldown = false;
-
-		if (InputManager.ActiveDevice.Action1.WasPressed) 
-		{
-			preparingJump = jumpRest;
-			state = player_state.PREPARING_JUMP;
-		} 
-		else if (!controller.isGrounded) 
-		{
-			state = player_state.JUMPING;
-		}
-		else 
-		{
-			vSpeed = 0;
-		}
-
-	}
-
-	private void OnAir(){
-
-		//If it's grounded
-		if (controller.isGrounded) {
-			state = player_state.FALL_RECOVERING;
-		} 
-		else 
-		{
-			//If it's in the air
-			Vector3 eulerAngles = gameObject.transform.rotation.eulerAngles;
-			float rotationZ = 0.0f;
-
-			if (eulerAngles.z < 0.0f) {
-				eulerAngles.z += 360.0f;
-			}
-
-			if (eulerAngles.z != 0.0f) {
-				if (eulerAngles.z <= 3.0f || eulerAngles.z >= 357.0f) {
-					rotationZ = 0.0f;
-				}
-				else if (eulerAngles.z <= 180.0f) {
-					rotationZ = eulerAngles.z - 3.0f;
-				} else if (eulerAngles.z > 180.0f) {
-					rotationZ = eulerAngles.z + 3.0f;
-				}
-				gameObject.transform.rotation = Quaternion.Euler(eulerAngles.x, eulerAngles.y, rotationZ);
-			}
-
-			//If the player keeps pushing the jump button give a little
-			//vSpeed momentum - that gets gradually smaller - to get a
-			//higher jump. Do until the press time gets to his max.
-			//If the player releases the button, stop giving extra momentum to the jump.
-			if ((startJumpPress != -1) && (InputManager.ActiveDevice.Action1.IsPressed)
-				&& ((Time.time - startJumpPress) <= maxJumpTime)) {
-				vSpeed = jumpSpeed;
-			} else {
-				startJumpPress = -1;
-			}
-
-		}
-
-	}
-
-	private void Whipping(){
-		
-		if(gameObject.transform.rotation.eulerAngles.z > 360.0f-maxAngleWhipForce || 
-			gameObject.transform.rotation.eulerAngles.z < maxAngleWhipForce)
-		{
-			float whipDirection = InputManager.ActiveDevice.LeftStickX.Value;
-
-			if (whipDirection == 1.0f)
-			{
-				rigidBody.AddForce (new Vector3 (whipForce, 0.0f, 0.0f));
-			} 
-			else if (whipDirection == -1.0f)
-			{
-				rigidBody.AddForce (new Vector3 (-whipForce, 0.0f, 0.0f));
-			}
-		}
 
 	}
 
