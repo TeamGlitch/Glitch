@@ -12,7 +12,7 @@ public class MainCamera : MonoBehaviour {
     void Update()
     {
         float posy = Mathf.SmoothDamp(transform.position.y, player.transform.position.y + 3, ref ySpeed, ySmooth);
-        float posx = Mathf.SmoothDamp(transform.position.x, player.transform.position.x, ref xSpeed, xSmooth * Time.deltaTime);
+        float posx = Mathf.SmoothDamp(transform.position.x, player.transform.position.x + 7, ref xSpeed, xSmooth * Time.deltaTime);
         transform.position = new Vector3 (posx, posy, transform.position.z);
     } 
 }
