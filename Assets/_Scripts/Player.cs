@@ -6,6 +6,7 @@ public class Player : MonoBehaviour {
 	//External references
 	public HUDLives guiLife;
 	public HUDCollects guiItem;
+	public CheckPoint lastCheckPoint;
 
 	//Internal references
 	private PlayerController playerController;
@@ -18,10 +19,6 @@ public class Player : MonoBehaviour {
 	void Start () {
 		playerController = GetComponent<PlayerController>();
 		lives = 3;
-	}
-	
-	// Update is called once per frame
-	void Update () {
 	}
 
 	void OnTriggerEnter(Collider coll){
