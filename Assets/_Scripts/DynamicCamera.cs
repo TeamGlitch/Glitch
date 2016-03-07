@@ -4,23 +4,20 @@ using System.Collections;
 public class DynamicCamera : MonoBehaviour {
     public Transform player;
     public Camera mainCamera;
-    public GameObject powers;
+    public World world;
+    public GameObject titles;
 
     private int speed = 10;
     private float delay = 5.0f;
-    private PlayerController movePlayer;
-
-    void Start()
-    {
-        movePlayer = player.GetComponent<PlayerController>();
-    }
 
     void Update () {
         if (transform.position.x <= (player.position.x + 7))
         {
             delay -= Time.deltaTime;
+            titles.SetActive(true);
             if (delay <= 0.0f)
             {
+                titles.SetActive(false);
                 transform.Translate(0.0f, 0.0f, speed*Time.deltaTime);
                 if (transform.position.z >= -15)
                 {
@@ -37,9 +34,7 @@ public class DynamicCamera : MonoBehaviour {
     void beginGame()
     {
         mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y, -15);
-        mainCamera.gameObject.SetActive(true);
-        movePlayer.enabled = true;
-        powers.SetActive(true);
+        world.enabled = true;
         gameObject.SetActive(false);
     } 
 }
