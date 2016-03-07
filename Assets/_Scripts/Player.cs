@@ -28,6 +28,12 @@ public class Player : MonoBehaviour {
 		glitchPartPool = new ObjectPool(glitchPart);
 		playerController = GetComponent<PlayerController>();
 		lives = 3;
+
+		GameObject[] parts = new GameObject[100];
+		for (int i = 0; i < 100; i++)
+			parts[i] = glitchPartPool.getObject();
+		for (int i = 0; i < 100; i++)
+			parts[i].SetActive(false);
 	}
 
 	void OnTriggerEnter(Collider coll){

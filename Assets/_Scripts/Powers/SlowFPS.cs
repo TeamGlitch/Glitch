@@ -34,6 +34,7 @@ public class SlowFPS : MonoBehaviour {
 			{
 				powerActive = true;
 				world.doUpdate = false;
+				world.toggleSlowFPS();
 			}
 			else
 			{        
@@ -88,5 +89,6 @@ public class SlowFPS : MonoBehaviour {
 	private void deactivatePower(){
 		powerActive = false;
 		world.doUpdate = true;
+		world.toggleSlowFPS();
 	}
 }

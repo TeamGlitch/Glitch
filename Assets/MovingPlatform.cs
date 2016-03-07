@@ -13,7 +13,7 @@ public class MovingPlatform : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (world.doUpdate) {
-			transform.position = new Vector3(10.0f + (2.0f * Mathf.Sin(Time.time)) ,0,0);
+			transform.position = new Vector3(10.0f + world.slowDown * (2.0f * Mathf.Sin(Time.time)) ,0,0);
 		}
 	}
 }

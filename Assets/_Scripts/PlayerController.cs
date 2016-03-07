@@ -80,6 +80,9 @@ public class PlayerController : MonoBehaviour
         } else {
             TextureEffects.TextureFlickerRepeat(coll.gameObject, brokenTexture);
         }
+
+		if ((controller.collisionFlags & CollisionFlags.Above) != 0)
+			vSpeed = 0;
     }
 
 	// Update is called once per frame
