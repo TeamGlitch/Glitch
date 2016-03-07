@@ -24,12 +24,15 @@ public class glitchFragment : MonoBehaviour {
 	private Vector3 regrupMovementVector;
 	private Vector3 target;
 
+	private bool noMoreLives;
+
 	void Awake(){
 		rigidBody = GetComponent<Rigidbody>();
 	}
 
-	public void restart(Vector3 targt, Player plyr = null){
+	public void restart(Vector3 targt, Player plyr = null, bool noMoreLives = false){
 
+		this.noMoreLives = noMoreLives;
 		target = targt;
 		player = plyr;
 		actualPhase = fragmentPhases.EXPLODE;
@@ -70,7 +73,8 @@ public class glitchFragment : MonoBehaviour {
 
 		case fragmentPhases.FREEZE:
 			if (Time.time > phaseEnd) {
-				actualPhase = fragmentPhases.REAGROUP;
+				if(!noMoreLives)
+					actualPhase = fragmentPhases.REAGROUP;
 				phaseEnd = Time.time;
 				regrupMovementVector = ((target - transform.position) / 0.5f);
 			}

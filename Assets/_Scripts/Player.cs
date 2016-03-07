@@ -8,6 +8,7 @@ public class Player : MonoBehaviour {
 	public HUDCollects guiItem;
 
 	public CheckPoint lastCheckPoint;
+	public DeadMenuScript deadScript;
 
 	//Internal references
 	private PlayerController playerController;
@@ -41,17 +42,32 @@ public class Player : MonoBehaviour {
 
 				for (int i = 0; i < 100; i++) {
 					
-					GameObject part = glitchPartPool.getObject();
+					GameObject part = glitchPartPool.getObject ();
 
 					part.transform.position = transform.position;
 
 					if (i == 0) {
-						part.GetComponent<glitchFragment>().restart(lastCheckPoint.gameObject.transform.position, this);
+						part.GetComponent<glitchFragment> ().restart (lastCheckPoint.gameObject.transform.position, this);
 					} else {
-						part.GetComponent<glitchFragment>().restart(lastCheckPoint.gameObject.transform.position);
+						part.GetComponent<glitchFragment> ().restart (lastCheckPoint.gameObject.transform.position);
 					}
 
 				}
+			} else {
+				for (int i = 0; i < 100; i++) {
+
+					GameObject part = glitchPartPool.getObject ();
+
+					part.transform.position = transform.position;
+
+					if (i == 0) {
+						part.GetComponent<glitchFragment> ().restart (lastCheckPoint.gameObject.transform.position, this, true);
+					} else {
+						part.GetComponent<glitchFragment> ().restart (lastCheckPoint.gameObject.transform.position, null, true);
+					}
+
+				}
+				deadScript.PlayerDead ();
 			}
 
 			GetComponent<SpriteRenderer>().enabled = false;
