@@ -38,36 +38,24 @@ public class Player : MonoBehaviour {
 			playerController.state = PlayerController.player_state.DEATH;
 			playerController.vSpeed = 0;
 
-			if (lives > 0) {
+			bool lastLife = (lives > 0) ? false : true;
 
-				for (int i = 0; i < 100; i++) {
-					
-					GameObject part = glitchPartPool.getObject ();
+			for (int i = 0; i < 100; i++) {
+				
+				GameObject part = glitchPartPool.getObject();
+				part.transform.position = transform.position;
 
-					part.transform.position = transform.position;
-
-					if (i == 0) {
-						part.GetComponent<glitchFragment> ().restart (lastCheckPoint.gameObject.transform.position, this);
-					} else {
-						part.GetComponent<glitchFragment> ().restart (lastCheckPoint.gameObject.transform.position);
-					}
-
+				if (i == 0) {
+					part.GetComponent<glitchFragment> ().restart (lastCheckPoint.gameObject.transform.position, lastLife, this);
+				} else {
+					part.GetComponent<glitchFragment> ().restart (lastCheckPoint.gameObject.transform.position, lastLife);
 				}
-			} else {
-				for (int i = 0; i < 100; i++) {
 
-					GameObject part = glitchPartPool.getObject ();
+			}
 
-					part.transform.position = transform.position;
-
-					if (i == 0) {
-						part.GetComponent<glitchFragment> ().restart (lastCheckPoint.gameObject.transform.position, this, true);
-					} else {
-						part.GetComponent<glitchFragment> ().restart (lastCheckPoint.gameObject.transform.position, null, true);
-					}
-
-				}
-				deadScript.PlayerDead ();
+			if(lastLife){
+				deadScript.gameObject.SetActive(true);
+				deadScript.PlayerDead();
 			}
 
 			GetComponent<SpriteRenderer>().enabled = false;

@@ -5,32 +5,26 @@ using System.Collections;
 
 public class DeadMenuScript : MonoBehaviour {
 
-	public Canvas deadMenu;
-	public Button restartButton;
-	public Button menuButton;
+	private Canvas deadMenu;
+	private Button restartButton;
+	private Button menuButton;
 
 	public GlitchOffsetCamera glitchedCameraScript;
 
 	private float timeDead;
-	private bool dead;
 
 	// Use this for initialization
-	void Start () {
-		deadMenu = deadMenu.GetComponent<Canvas> ();
+	void Awake () {
 
-		restartButton = restartButton.GetComponent<Button> ();
-		menuButton = menuButton.GetComponent<Button> ();
-
-		deadMenu.enabled = false;
-
-		dead = false;
-
-		timeDead = 0.0f;
+		deadMenu = GetComponent<Canvas>();
+		restartButton = transform.FindChild("RestartGame").GetComponent<Button> ();
+		menuButton = transform.FindChild("MainMenu").GetComponent<Button>();
+		gameObject.SetActive(false);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (dead) {
+		if (deadMenu.enabled == false) {
 			timeDead += Time.deltaTime;
 			if (timeDead >= 2.0f && timeDead < 4.0f) {
 				if(glitchedCameraScript.divisions < 50)
@@ -38,12 +32,10 @@ public class DeadMenuScript : MonoBehaviour {
 				glitchedCameraScript.intensity += 0.05f;
 				glitchedCameraScript.frequency += 0.005f;
 				glitchedCameraScript.inestability += 0.005f;
-			} else if (timeDead >= 4.0f && timeDead < 6.0f) {
 			} else if (timeDead >= 6.0f) {
 				deadMenu.enabled = true;
 				glitchedCameraScript.enabled = false;
 			}
-				
 		}
 	}
 
@@ -60,8 +52,8 @@ public class DeadMenuScript : MonoBehaviour {
 	public void PlayerDead()
 	{
 		glitchedCameraScript.enabled = true;
+		deadMenu.enabled = false;
 		timeDead = 0.0f;
-		dead = true;
 	}
 
 }

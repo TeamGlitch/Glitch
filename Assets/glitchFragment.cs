@@ -30,7 +30,7 @@ public class glitchFragment : MonoBehaviour {
 		rigidBody = GetComponent<Rigidbody>();
 	}
 
-	public void restart(Vector3 targt, Player plyr = null, bool noMoreLives = false){
+	public void restart(Vector3 targt, bool noMoreLives = false, Player plyr = null){
 
 		this.noMoreLives = noMoreLives;
 		target = targt;
