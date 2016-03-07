@@ -13,7 +13,9 @@ public class CheckPoint : MonoBehaviour {
 	}
 
 	protected void setThisAsCheckPoint(GameObject player){
-		player.GetComponent<Player>().lastCheckPoint = this;
+		Player script = player.GetComponent<Player> ();
+		script.lastCheckPoint = this;
+		script.healCompletely();
 
 		Renderer renderer = GetComponent<Renderer>();
 		renderer.material.color = new Color (1, 0, 0, renderer.material.color.a);

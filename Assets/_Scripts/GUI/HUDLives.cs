@@ -11,7 +11,7 @@ public class HUDLives : MonoBehaviour {
     private Sprite noLife;
     private int activeNodes;
 
-    void Start()
+    void Awake()
     {
         life = Resources.Load<Sprite>("Sprites/life");
         noLife = Resources.Load<Sprite>("Sprites/lostLife");
@@ -28,7 +28,7 @@ public class HUDLives : MonoBehaviour {
 			for (int i = activeNodes; i < player.lives; i++) {
 				livesArray[i].sprite = life;
 			}
-		} else {
+		} else if (diference < 0) {
 			for (int i = activeNodes + diference; i < activeNodes; i++) {
 				livesArray [i].sprite = noLife;
 			}

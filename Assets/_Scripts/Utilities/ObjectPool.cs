@@ -52,7 +52,6 @@ public class ObjectPool {
 	//Actual size of the buffer
 	public int getActualSize(){
 		return buffer.Count;
-	
 	}
 
 	//Buffer active members
