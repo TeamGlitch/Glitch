@@ -35,13 +35,13 @@ namespace CustomProfileExample
 				{
 					Handle = "Jump",
 					Target = InputControlType.Action1,
-					Source = KeyCodeButton( KeyCode.Space )
+					Source = KeyCodeButton( KeyCode.W )
 				},
 				new InputControlMapping
 				{
 					Handle = "Teleport",
 					Target = InputControlType.Action3,
-					Source = KeyCodeButton( KeyCode.L )
+					Source = KeyCodeButton( KeyCode.Space )
 				},
 				new InputControlMapping
 				{
