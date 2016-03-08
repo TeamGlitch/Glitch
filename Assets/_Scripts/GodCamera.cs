@@ -6,6 +6,8 @@ public class GodCamera : MonoBehaviour {
     private int speed = 10;
 
 	void Update () {
+		// Inputs to move camera:
+		// h: Left, k: Right, u: Up, j: Down
         if (Input.GetKey(KeyCode.H))
         {
             moveDirection.x = -Time.deltaTime * speed;
