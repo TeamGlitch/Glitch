@@ -35,8 +35,13 @@ public class PlayerController : MonoBehaviour
 	public float gravity = 50.0f;				
 	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
-	public float vSpeed = 0.0f;
+    public float preJumpPosY = 0;
+    public Camera mainCamera;
+    public Camera godCamera;
+    public World world;
+    public float vSpeed = 0.0f;
 
+    private bool godMode = false;
 	private float startJumpPress = -1;				//When the extended jump started
 	private float preparingJump = 0;				//Jump preparing time left
 	private float fallRecovery = 0;					//Fall recovery time left
@@ -67,24 +72,28 @@ public class PlayerController : MonoBehaviour
 		controller = GetComponent<CharacterController>();
 		slowFPS = GetComponent<SlowFPS>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
-		state = player_state.JUMPING;
+		state = player_state.IN_GROUND;
 		rigidBody = GetComponent<Rigidbody>();
 	}
 
     void OnControllerColliderHit(ControllerColliderHit coll)
     {
-        if (coll.gameObject.CompareTag("Floor"))
+        if (!coll.gameObject.CompareTag("ErrorBox"))
         {
-            TextureEffects.TextureFlicker(coll.gameObject, brokenTexture);
-        } else {
-            TextureEffects.TextureFlickerRepeat(coll.gameObject, brokenTexture);
+            if (coll.gameObject.CompareTag("Floor"))
+            {
+                TextureEffects.TextureFlicker(coll.gameObject, brokenTexture);
+            }
+            else
+            {
+                TextureEffects.TextureFlickerRepeat(coll.gameObject, brokenTexture);
+            }
         }
 
 		if ((controller.collisionFlags & CollisionFlags.Above) != 0)
 			vSpeed = 0;
     }
 
-	// Update is called once per frame
 	void Update () 
 	{
 		Vector3 moveDirection = new Vector3 (0, 0, 0);
@@ -127,6 +136,7 @@ public class PlayerController : MonoBehaviour
 					{
 						preparingJump = jumpRest;
 						state = player_state.PREPARING_JUMP;
+						preJumpPosY = transform.position.y + (transform.localScale.y * 4);
 					} 
 					else if (!controller.isGrounded) 
 					{
@@ -232,6 +242,22 @@ public class PlayerController : MonoBehaviour
 		moveDirection.y = vSpeed;
 		controller.Move(moveDirection * Time.deltaTime);
 
+        // To active God mode camera
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            if (godMode == true)
+            {
+                mainCamera.gameObject.SetActive(true);
+                godCamera.gameObject.SetActive(false);
+                godMode = false;
+            }
+            else
+            {
+                godCamera.gameObject.SetActive(true);
+                mainCamera.gameObject.SetActive(false);
+                godMode = true;
+            }
+        }
 	}
 
 	private bool ActivatingTeleport(){
