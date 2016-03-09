@@ -19,11 +19,9 @@ public class MenuScript : MonoBehaviour {
 	public Image keyboardImage;
 	public Image gamepadImage;
 
-	public float origW = 1980.0f;
-	public float origH = 1020.0f;
-
 	// Use this for initialization
 	void Start () {
+
 		quitMenu = quitMenu.GetComponent<Canvas> ();
 		levelSelectionMenu = levelSelectionMenu.GetComponent<Canvas> ();
 		helpMenu = helpMenu.GetComponent<Canvas> ();
@@ -47,6 +45,7 @@ public class MenuScript : MonoBehaviour {
 		creditsMenu.enabled = false;
 	
 	}
+
 
 	public void ContinuePress()
 	{

@@ -24,6 +24,9 @@ public class TextureSwapper : MonoBehaviour {
 	private bool shootingMode = false;					//If it is in shooting mode
 	private float lastShootStart = 0.0f;				//When the last shoot started
 
+	private float originalCamW = 1920.0f;
+	private float originalCamH = 1080.0f;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -80,8 +83,13 @@ public class TextureSwapper : MonoBehaviour {
 
 			//Sight position
 			Vector3 sightPosition = new Vector3(transform.position.x + (radius * Mathf.Cos (angle)), transform.position.y + (radius * Mathf.Sin (angle)), 0);
-			sightRectTransform.anchoredPosition = Camera.main.WorldToScreenPoint(sightPosition);
+			Vector3 camPosition = Camera.current.WorldToScreenPoint(sightPosition);
 
+			camPosition.x *= originalCamW / Camera.current.pixelWidth; 
+			camPosition.y *= originalCamH / Camera.current.pixelHeight; 
+
+			sightRectTransform.anchoredPosition = camPosition;
+		
 			//Checks if it can shoot
 			//If the paint bullet button is pressed, there is a paint texture and the shoot cooldown is over
 			//If the stealer bullet button is pressed and the shoot cooldown x 4 is over
