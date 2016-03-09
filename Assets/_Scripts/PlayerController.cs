@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
 	public float gravity = 50.0f;				
 	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
+    public float preJumpPosY = 0;
     public bool teleportCooldown = false;
     public Camera mainCamera;
     public Camera godCamera;
@@ -32,6 +33,7 @@ public class PlayerController : MonoBehaviour
     public TeleportScript teleport;
     public World world;
     public SlowFPS slowFPS;
+    public float vSpeed = 0.0f;
 
     private bool godMode = false;
 	private float startJumpPress = -1;				//When the extended jump started
@@ -39,7 +41,6 @@ public class PlayerController : MonoBehaviour
 	private float fallRecovery = 0;					//Fall recovery time left
 	private Vector3 moveDirection = Vector3.zero;	//Direction of movement
 	private SpriteRenderer spriteRenderer;			//Reference to the sprite renderer
-	private float vSpeed = 0.0f;
 	private int numBoxes = 0;
 	private CharacterController controller;
 
@@ -125,6 +126,7 @@ public class PlayerController : MonoBehaviour
 					if (state == player_state.IN_GROUND && Input.GetButtonDown ("Jump")) {
 						preparingJump = jumpRest;
 						state = player_state.PREPARING_JUMP;
+                        preJumpPosY = transform.position.y + (transform.localScale.y * 4);
 					} else {
 						vSpeed = 0;
 					}
