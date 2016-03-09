@@ -24,8 +24,8 @@ public class TextureSwapper : MonoBehaviour {
 	private bool shootingMode = false;					//If it is in shooting mode
 	private float lastShootStart = 0.0f;				//When the last shoot started
 
-	private float originalCamW = 1920.0f;
-	private float originalCamH = 1080.0f;
+	public Canvas gui;
+	private RectTransform guiRectTrans;
 
 	// Use this for initialization
 	void Start () {
@@ -34,9 +34,8 @@ public class TextureSwapper : MonoBehaviour {
 
 		stealerBulletPool = new ObjectPool(stealerBullet);
 		painterBulletPool = new ObjectPool(painterBullet);
-
 		sightRectTransform = sight.GetComponent<RectTransform>();
-
+		sightRectTransform = sight.GetComponent<RectTransform>();
 	}
 	
 	// Update is called once per frame
@@ -83,10 +82,10 @@ public class TextureSwapper : MonoBehaviour {
 
 			//Sight position
 			Vector3 sightPosition = new Vector3(transform.position.x + (radius * Mathf.Cos (angle)), transform.position.y + (radius * Mathf.Sin (angle)), 0);
-			Vector3 camPosition = Camera.current.WorldToScreenPoint(sightPosition);
+			Vector3 camPosition = Camera.main.WorldToScreenPoint(sightPosition);
 
-			camPosition.x *= originalCamW / Camera.current.pixelWidth; 
-			camPosition.y *= originalCamH / Camera.current.pixelHeight; 
+			camPosition.x *= guiRectTrans.rect.width / Camera.main.pixelWidth; 
+			camPosition.y *= guiRectTrans.rect.height / Camera.main.pixelHeight; 
 
 			sightRectTransform.anchoredPosition = camPosition;
 		

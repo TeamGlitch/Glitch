@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Resources/Sprites/gampad.png.meta
 guid: fda8af712f0d2724397d02ebb68514dd
 timeCreated: 1457447664
+=======
+guid: d1680fc7ca016134e9165585f13edf45
+timeCreated: 1457447996
+>>>>>>> StartMenu:Assets/Resources/Sprites/gampad.png.meta
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName: {}
