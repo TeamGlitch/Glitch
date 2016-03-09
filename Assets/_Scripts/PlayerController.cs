@@ -41,9 +41,7 @@ public class PlayerController : MonoBehaviour
 	public float gravity = 50.0f;				
 	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
-
 	private float vSpeed = 0.0f;
-
 	private float startJumpPress = -1;				//When the extended jump started
 	private float preparingJump = 0;				//Jump preparing time left
 	private float fallRecovery = 0;					//Fall recovery time left
@@ -59,7 +57,10 @@ public class PlayerController : MonoBehaviour
 	//Whip
 	public float whipForce = 5.0f;
 	public float maxAngleWhipForce = 60.0f;
-
+	
+	// Error Box
+	private int numBoxes = 0;
+	
 	///// Other
 	//Broken effect
 	public Material brokenTexture;

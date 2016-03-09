@@ -5,9 +5,13 @@ using InControl;
 public class ErrorBoxCreator : MonoBehaviour {
 
 	public GameObject errorBoxPrefab;					//Prefab of the error box
+	public BoxCreatorUI boxCreatorUI;					//UI
 
 	private ObjectPool boxes;							//Boxes pool
 	private GameObject placeholder;						//Placeholder that shows where the box will appear
+
+	public float duration = 5;							//How many time a platform is active
+	public float cooldown = 16;							//How many time until a new platform can be created
 
 	private int numBoxes = 0;							//How many active boxes are present
 	private bool previsualization = false;				//Currently using the placeholder
@@ -20,9 +24,9 @@ public class ErrorBoxCreator : MonoBehaviour {
 
 		//Initialize the placeholder
 		placeholder = (GameObject)Instantiate(errorBoxPrefab);
-		placeholder.GetComponent<SpriteRenderer>().color = new Color(1.0F, 1.0F, 1.0F, 0.4F);
 		Destroy (placeholder.GetComponent<ErrorBoxScript>());
 		Destroy (placeholder.GetComponent<BoxCollider>());
+		placeholder.GetComponent<SpriteRenderer>().color = new Color(1.0F, 1.0F, 1.0F, 0.4F);
 		placeholder.SetActive (false);
 	}
 
@@ -67,8 +71,11 @@ public class ErrorBoxCreator : MonoBehaviour {
 				ErrorBoxScript EBScript = errorBox.GetComponent<ErrorBoxScript>(); 
 				EBScript.errorBoxCreator = this;
 				EBScript.startTime = Time.time;
-				EBScript.duration = 5;
-				EBScript.cooldown = 8;
+				EBScript.duration = duration;
+				EBScript.cooldown = cooldown;
+
+				//Notify the GUI
+				boxCreatorUI.boxUsed(boxes.indexOf(errorBox), Time.time + cooldown);
 
 				//Increase number of boxes active and set the restart position time
 				numBoxes++;
