@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
         lives = 3;
 		controller = GetComponent<CharacterController>();
 	    spriteRenderer = GetComponent<SpriteRenderer>();
-		state = player_state.JUMPING;
+		state = player_state.IN_GROUND;
 	}
 
 	void Update () 
