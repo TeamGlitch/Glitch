@@ -14,26 +14,20 @@ public class PlayerController : MonoBehaviour
         JUMPING,
 		FALL_RECOVERING,
         TELEPORTING,
-		WHIPING
+		WHIPING,
+		DEATH
     };
 
 	///////////// Variables /////////////
 
 	//State
-    public player_state state;
-
-	//External References
-	public HUDLives guiLife;
-	public HUDCollects guiItem;
+	public player_state state;
 
 	//Internal References
+	private Player player;
 	private SpriteRenderer spriteRenderer;			//Reference to the sprite renderer
 	private CharacterController controller;
 	private Rigidbody rigidBody;
-
-	//Properties
-	public int lives;
-	public int items = 0;						// Items collected
 
 	//Movement Variables
 	public float speed = 12.0f;					// Horizontal speed
@@ -41,14 +35,15 @@ public class PlayerController : MonoBehaviour
 	public float gravity = 50.0f;				
 	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
-	private float vSpeed = 0.0f;
+	public float vSpeed = 0.0f;
+
 	private float startJumpPress = -1;				//When the extended jump started
 	private float preparingJump = 0;				//Jump preparing time left
 	private float fallRecovery = 0;					//Fall recovery time left
 
 	///// Powers
 	//Teleport
-    public bool teleportCooldown = false;
+    private bool teleportCooldown = false;
 	public TeleportScript teleport;
 
 	//Slow FPS
@@ -71,7 +66,7 @@ public class PlayerController : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		lives = 3;
+		player = GetComponent<Player>();
 		controller = GetComponent<CharacterController>();
 		slowFPS = GetComponent<SlowFPS>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
@@ -87,6 +82,9 @@ public class PlayerController : MonoBehaviour
         } else {
             TextureEffects.TextureFlickerRepeat(coll.gameObject, brokenTexture);
         }
+
+		if ((controller.collisionFlags & CollisionFlags.Above) != 0)
+			vSpeed = 0;
     }
 
 	// Update is called once per frame
@@ -213,7 +211,9 @@ public class PlayerController : MonoBehaviour
         }
 
 		//Non state-changing operations
-		if (state != player_state.TELEPORTING && state != player_state.WHIPING) {
+		if (state != player_state.DEATH &&
+			state != player_state.TELEPORTING &&
+			state != player_state.WHIPING) {
 			
 			// Gravity
 			vSpeed -= gravity * Time.deltaTime;

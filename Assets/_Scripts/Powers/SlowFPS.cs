@@ -7,14 +7,16 @@ public class SlowFPS : MonoBehaviour {
 	//Reference
 	public World world;
 
+	private bool powerActive = false;
+
+	public float timeBetweenUpdates = 1;		//Seconds between slow updates
+	private float timeLastUpdate = 0;			//When the last slow update was done
+
 	public float MAXTime = 10.0f;				//Max time the power can be active
-	public float timeRemaining;					//Remaining time the power can be activated
+	public float timeRemaining;					//Remaining time the power can be active
 
 	public float recoveryRate = 3.0f;			//Time it takes to make a recovery bump
     private float recoveryTime;					//Time to the next recovery bump
-
-    private float timeCount;
-	private float timePerFrame = 0.0f;
 
     void Start()
     {
@@ -28,26 +30,38 @@ public class SlowFPS : MonoBehaviour {
     {
 		if (InputManager.ActiveDevice.LeftBumper.WasPressed)
 		{
-			if (world.slow == false)
+			if (powerActive == false)
 			{
-				world.slow = true;
+				powerActive = true;
+				world.doUpdate = false;
+				world.toggleSlowFPS();
 			}
 			else
 			{        
-				world.slow = false;
+				deactivatePower();
 			}
 		}
 
 		// If power is enabled we check the time left and if is minus than 0, we disable the power
-        if (world.slow == true)
+		if (powerActive)
         {
 			timeRemaining -= Time.deltaTime;
 
-            if (timeRemaining <= 0.0f)
-            {
+			if (timeRemaining <= 0.0f)
+			{
 				timeRemaining = 0;
-                world.slow = false;
-            }
+				deactivatePower ();
+
+			} else {
+
+				if (world.doUpdate == true) {
+					world.doUpdate = false;
+					timeLastUpdate = Time.time;
+				} else if (Time.time >= timeLastUpdate + timeBetweenUpdates) {
+					world.doUpdate = true;
+				}
+
+			}
         }
         else
         {
@@ -72,27 +86,9 @@ public class SlowFPS : MonoBehaviour {
         }
     }
 
-	// This function is a timer that notify to a object update 
-	// with a true or false in it's return. In the update of the 
-	// slowed object we have to chech if this return is true or false, 
-	// and if is false not update the object.
-    public bool Slow(float time)
-    {
-        if (timePerFrame != time)
-        {
-            timePerFrame = time;
-            timeCount = timePerFrame;
-        }
-        else
-        {
-            timeCount -= Time.deltaTime;
-            if (timeCount < 0.0f)
-            {
-                timeCount = timePerFrame;
-                return true;
-            }
-        }
-        return false;
-    }
-
+	private void deactivatePower(){
+		powerActive = false;
+		world.doUpdate = true;
+		world.toggleSlowFPS();
+	}
 }
