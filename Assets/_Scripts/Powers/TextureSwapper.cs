@@ -34,7 +34,7 @@ public class TextureSwapper : MonoBehaviour {
 
 		stealerBulletPool = new ObjectPool(stealerBullet);
 		painterBulletPool = new ObjectPool(painterBullet);
-		sightRectTransform = sight.GetComponent<RectTransform>();
+        guiRectTrans = gui.GetComponent<RectTransform>();
 		sightRectTransform = sight.GetComponent<RectTransform>();
 	}
 	

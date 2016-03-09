@@ -3,37 +3,31 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class HUDLives : MonoBehaviour {
-	
+
     public Player player;
-    public Image[] livesArray;
+    public Image[] lives;
+    private int life = 3;
 
-    private Sprite life;
-    private Sprite noLife;
-    private int activeNodes;
-
-    void Awake()
+    // Function to increment lives in the GUI.
+    // Do a comparison from lives before and now and change the 
+    // correspondent sprites. Is possible increment more than 1 life.
+    public void IncrementLives()
     {
-        life = Resources.Load<Sprite>("Sprites/life");
-        noLife = Resources.Load<Sprite>("Sprites/lostLife");
-		activeNodes = player.lives;
+        int increment = player.lives - life;
+        for (int i = lives.Length - 1; i > lives.Length - 1 - increment; --i)
+        {
+            lives[i - life].sprite = Resources.Load<Sprite>("Sprites/life");
+        }
+        life += increment;
     }
 
-	// Function to update the UI life representation according to
-	// the current player lives
-    public void UpdateLifeUI()
+    // Function to decrement lives in the GUI.
+    // Do a check for know which life has been lost
+    // and change the sprite of this life to lost life sprite.
+    public void Decrementlives()
     {
-		int diference = player.lives - activeNodes;
-
-		if (diference > 0) {
-			for (int i = activeNodes; i < player.lives; i++) {
-				livesArray[i].sprite = life;
-			}
-		} else if (diference < 0) {
-			for (int i = activeNodes + diference; i < activeNodes; i++) {
-				livesArray [i].sprite = noLife;
-			}
-		}
-
-		activeNodes = player.lives;
+        int aux = 3 - player.lives - 1;
+        lives[aux].sprite = Resources.Load<Sprite>("Sprites/lostLife");
+        --life;
     }
 }

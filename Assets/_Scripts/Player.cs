@@ -40,7 +40,7 @@ public class Player : MonoBehaviour {
 		
 		if(coll.CompareTag("Death")){
 			lives -= 1;
-			guiLife.UpdateLifeUI();
+			guiLife.Decrementlives();
 			playerController.state = PlayerController.player_state.DEATH;
 			playerController.vSpeed = 0;
 
@@ -77,6 +77,6 @@ public class Player : MonoBehaviour {
 
 	public void healCompletely(){
 		lives = 3;
-		guiLife.UpdateLifeUI();
+		guiLife.IncrementLives();
 	}
 }
