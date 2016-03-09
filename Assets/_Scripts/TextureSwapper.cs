@@ -20,14 +20,16 @@ public class TextureSwapper : MonoBehaviour {
 	private bool usingController = true;				//The player is using a controller?
 	private float lastShootStart = 0.0f;				//When the last shoot started
 
-	private float originalCamW = 1920.0f;
-	private float originalCamH = 1080.0f;
+	public Canvas gui;
+	private RectTransform guiRectTrans;
 
 	// Use this for initialization
 	void Start () {
 		sight.SetActive(false);
 		stealerBulletPool = new ObjectPool(stealerBullet);
 		painterBulletPool = new ObjectPool(painterBullet);
+		guiRectTrans = gui.GetComponent<RectTransform> ();
+		sightRectTransform = sight.GetComponent<RectTransform>();
 	}
 	
 	// Update is called once per frame
@@ -39,7 +41,6 @@ public class TextureSwapper : MonoBehaviour {
 		//Shooting mode activation - desactivation
 		if (Input.GetButtonDown("ToggleTextureChange") || (Input.GetAxisRaw("ToggleTextureChange") > 0 && !shootingMode)) {
 			shootingMode = true;
-			sightRectTransform = sight.GetComponent<RectTransform>();
 			sight.SetActive(true);
 		}
 		if (Input.GetButtonUp("ToggleTextureChange") || (Input.GetAxisRaw("ToggleTextureChange") == 0 && shootingMode)) {
@@ -82,10 +83,10 @@ public class TextureSwapper : MonoBehaviour {
 
 			//Sight position
 			Vector3 sightPosition = new Vector3(transform.position.x + (radius * Mathf.Cos (angle)), transform.position.y + (radius * Mathf.Sin (angle)), 0);
-			Vector3 camPosition = Camera.current.WorldToScreenPoint(sightPosition);
+			Vector3 camPosition = Camera.main.WorldToScreenPoint(sightPosition);
 
-			camPosition.x *= originalCamW / Camera.current.pixelWidth; 
-			camPosition.y *= originalCamH / Camera.current.pixelHeight; 
+			camPosition.x *= guiRectTrans.rect.width / Camera.main.pixelWidth; 
+			camPosition.y *= guiRectTrans.rect.height / Camera.main.pixelHeight; 
 
 			sightRectTransform.anchoredPosition = camPosition;
 		
