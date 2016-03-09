@@ -53,9 +53,6 @@ public class PlayerController : MonoBehaviour
 	public float whipForce = 5.0f;
 	public float maxAngleWhipForce = 60.0f;
 	
-	// Error Box
-	private int numBoxes = 0;
-	
 	///// Other
 	//Broken effect
 	public Material brokenTexture;

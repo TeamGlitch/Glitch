@@ -17,8 +17,8 @@ public class DeadMenuScript : MonoBehaviour {
 	void Awake () {
 
 		deadMenu = GetComponent<Canvas>();
-		restartButton = transform.FindChild("RestartGame").GetComponent<Button> ();
-		menuButton = transform.FindChild("MainMenu").GetComponent<Button>();
+		restartButton = transform.FindChild("Restart Game").GetComponent<Button> ();
+		menuButton = transform.FindChild("Main Menu").GetComponent<Button>();
 		gameObject.SetActive(false);
 	}
 	
