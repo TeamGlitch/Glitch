@@ -4,8 +4,8 @@ using System.Collections;
 
 public class GlowBoxCreatorUI : MonoBehaviour {
 
-	public RectTransform maskTransform;
-	public Image image;
+	private RectTransform maskTransform;
+	private Image image;
 
 	private float startTime;
 	private float endTime;
@@ -17,6 +17,7 @@ public class GlowBoxCreatorUI : MonoBehaviour {
 	}
 
 	public void StartMovement(){
+		Debug.Log ("startMovement inside funtion");
 		startTime = Time.time;
 		endTime = Time.time + 0.5f;
 	}

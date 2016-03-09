@@ -13,10 +13,11 @@ public class BoxCreatorUIMask : MonoBehaviour {
 	private RectTransform childTransform;
 	private GlowBoxCreatorUI glow;
 
-	void Awake(){
+	void Start(){
 		maskTransform = GetComponent<RectTransform>();
 		childTransform = transform.GetChild(0).GetComponent<RectTransform>();
 		glow = transform.parent.Find("Glow").GetComponent<GlowBoxCreatorUI>();
+		gameObject.SetActive(false);
 	}
 
 	public void StartMovement(float iEndTime){
