@@ -311,4 +311,5 @@ public class PlayerController : MonoBehaviour
 		vSpeed = jumpSpeed;
 		rigidBody.isKinematic = true;
 	}
+
 }

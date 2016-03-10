@@ -37,4 +37,5 @@ public class MainCamera : MonoBehaviour {
         posx = Mathf.SmoothDamp(transform.position.x, player.transform.position.x + offsetX, ref xSpeed, xSmooth * Time.deltaTime);
         transform.position = new Vector3 (posx, posy, transform.position.z);
     } 
+
 }
