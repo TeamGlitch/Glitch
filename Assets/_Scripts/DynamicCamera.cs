@@ -11,7 +11,7 @@ public class DynamicCamera : MonoBehaviour {
     private int speed = 10;
     private float delay = 5.0f;
 	private int offsetX = 7;
-	private int zPosition = -15;
+	private int zPosition = -40;
 
     void Update () {
 
