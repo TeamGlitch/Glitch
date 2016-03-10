@@ -35,6 +35,7 @@ public class DeadMenuScript : MonoBehaviour {
 			} else if (timeDead >= 6.0f) {
 				deadMenu.enabled = true;
 				glitchedCameraScript.enabled = false;
+				restartButton.Select ();
 			}
 		}
 	}

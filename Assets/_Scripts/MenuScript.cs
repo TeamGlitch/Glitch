@@ -19,6 +19,7 @@ public class MenuScript : MonoBehaviour {
 	public Button gamepadButton;
 	public Image keyboardImage;
 	public Image gamepadImage;
+	public Button backButtonInHelp;
 	public Button firstLevelSelectButton;
 	public Button firstHelpButton;
 	public Button firstExitButton;
@@ -41,6 +42,7 @@ public class MenuScript : MonoBehaviour {
 
 		keyboardButton = keyboardButton.GetComponent<Button> (); 
 		gamepadButton = gamepadButton.GetComponent<Button> (); 
+		backButtonInHelp = backButtonInHelp.GetComponent<Button> ();
 
 		keyboardImage = keyboardImage.GetComponent<Image> (); 
 		gamepadImage = gamepadImage.GetComponent<Image> (); 
@@ -93,6 +95,11 @@ public class MenuScript : MonoBehaviour {
 		keyboardImage.enabled = true;
 		gamepadImage.enabled = false;
 
+		Navigation customNav = new Navigation();
+		customNav.mode = Navigation.Mode.Explicit;
+		customNav.selectOnUp = gamepadButton;
+		backButtonInHelp.navigation = customNav;
+
 		firstHelpButton.Select ();
 	}
 
@@ -117,6 +124,11 @@ public class MenuScript : MonoBehaviour {
 		keyboardImage.enabled = true;
 		gamepadImage.enabled = false;
 
+		Navigation customNav = new Navigation();
+		customNav.mode = Navigation.Mode.Explicit;
+		customNav.selectOnUp = gamepadButton;
+		backButtonInHelp.navigation = customNav;
+
 		gamepadButton.Select ();
 	}
 
@@ -126,6 +138,11 @@ public class MenuScript : MonoBehaviour {
 		gamepadButton.enabled = false;
 		keyboardImage.enabled = false;
 		gamepadImage.enabled = true;
+
+		Navigation customNav = new Navigation();
+		customNav.mode = Navigation.Mode.Explicit;
+		customNav.selectOnUp = keyboardButton;
+		backButtonInHelp.navigation = customNav;
 
 		keyboardButton.Select ();
 	}

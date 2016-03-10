@@ -61,6 +61,12 @@ namespace CustomProfileExample
 					Target = InputControlType.LeftBumper,
 					Source = KeyCodeButton( KeyCode.LeftControl )
 				},
+				new InputControlMapping
+				{
+					Handle = "StartCommand",
+					Target = InputControlType.Menu,
+					Source = KeyCodeButton( KeyCode.Escape )
+				},
 			};
 
 			AnalogMappings = new[]

@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using InControl;
 
 public class PauseScript : MonoBehaviour {
 
@@ -23,10 +24,11 @@ public class PauseScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.Escape) && !pauseMenu.enabled) {
+		if (InputManager.ActiveDevice.MenuWasPressed && !pauseMenu.enabled) {
 			Time.timeScale = 0.0f;
 			pauseMenu.enabled = true;
-		} else if (Input.GetKeyDown (KeyCode.Escape)) {
+			resumeButton.Select ();
+		} else if (InputManager.ActiveDevice.MenuWasPressed) {
 			Time.timeScale = 1.0f;
 			pauseMenu.enabled = false;
 		}
