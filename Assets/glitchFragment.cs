@@ -13,16 +13,16 @@ public class glitchFragment : MonoBehaviour {
 		WAIT_FOR_KILL
 	};
 
-	private Rigidbody rigidBody;
-	private Player player;
+	private Rigidbody rigidBody;					//The rigidbody of the fragment
+	private Player player;							//A reference to the player that only the first fragment has
 
-	private fragmentPhases actualPhase;
+	private fragmentPhases actualPhase;				//Actual phase
 
-	private float phaseEnd = 0;
-	private float reagroupEnd = 0;
+	private float phaseEnd = 0;						//When the next phase will end
+	private float reagroupEnd = 0;					//When the reagroup phase will end
 
-	private Vector3 regrupMovementVector;
-	private Vector3 target;
+	private Vector3 regrupMovementVector;			//Vector to the checkpoint
+	private Vector3 target;							//The position of the checkpoint
 
 	private bool noMoreLives;
 
@@ -52,6 +52,7 @@ public class glitchFragment : MonoBehaviour {
 		switch (actualPhase) {
 
 		case fragmentPhases.EXPLODE:
+			
 			if (Time.time > phaseEnd) {
 				actualPhase = fragmentPhases.SLOW_DOWN;
 				phaseEnd = Time.time + 1.0f;
@@ -60,27 +61,51 @@ public class glitchFragment : MonoBehaviour {
 			break;
 
 		case fragmentPhases.SLOW_DOWN:
+
 			if (Time.time < phaseEnd) {
 				rigidBody.velocity *= 0.95f;
 			} else {
+
 				actualPhase = fragmentPhases.FREEZE;
-				phaseEnd = Time.time + Random.Range(0.0f, 0.8f);
+
+				//The first fragment (with a reference to the player)
+				//will always start moving after half the possible
+				//start-moving time has passed
+				if (player != null)
+					phaseEnd = Time.time + 0.4f;
+				else
+					phaseEnd = Time.time + Random.Range(0.0f, 0.8f);
+				
 				reagroupEnd = Time.time + 1.3f;
 				rigidBody.velocity *= 0.0f;
+			
 			}
 
 			break;
 
 		case fragmentPhases.FREEZE:
+			
 			if (Time.time > phaseEnd) {
-				if(!noMoreLives)
+				if(!noMoreLives) {
+					
+					//Calculate the movement speed to the checkpoint
 					actualPhase = fragmentPhases.REAGROUP;
-				phaseEnd = Time.time;
-				regrupMovementVector = ((target - transform.position) / 0.5f);
+					regrupMovementVector = ((target - transform.position) / 0.5f);
+
+					//In this final phases phaseEnd is when the freezing phase ended
+					phaseEnd = Time.time;
+
+					//The first fragment tells the player to move to the checkpoint too
+					if (player != null)
+						player.moveToCheckPoint();
+					
+				}
 			}
 			break;
 
 		case fragmentPhases.REAGROUP:
+
+			//Move until enough time has passed in reagroup mode
 			if (Time.time < phaseEnd + 0.5f) {
 				transform.position += regrupMovementVector * Time.deltaTime;
 			} else {
@@ -89,9 +114,14 @@ public class glitchFragment : MonoBehaviour {
 			break;
 
 		case fragmentPhases.WAIT_FOR_KILL:
+			
+			//Wait until everyone has reagrouped and deactivate
 			if (Time.time >= reagroupEnd) {
+
+				//The first fragment tells the player to resurrect too
 				if (player != null)
 					player.Resurrected ();
+				
 				gameObject.SetActive(false);
 			}
 			break;

@@ -22,12 +22,16 @@ public class PlayerController : MonoBehaviour
 
 	//State
 	public player_state state;
+	private bool godMode = false;
 
 	//Internal References
-	private Player player;
 	private SpriteRenderer spriteRenderer;			//Reference to the sprite renderer
 	private CharacterController controller;
 	private Rigidbody rigidBody;
+
+	//External references
+	public Camera mainCamera;
+	public Camera godCamera;
 
 	//Movement Variables
 	public float speed = 12.0f;					// Horizontal speed
@@ -36,12 +40,8 @@ public class PlayerController : MonoBehaviour
 	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
     public float preJumpPosY = 0;
-    public Camera mainCamera;
-    public Camera godCamera;
-    public World world;
     public float vSpeed = 0.0f;
 
-    private bool godMode = false;
 	private float startJumpPress = -1;				//When the extended jump started
 	private float preparingJump = 0;				//Jump preparing time left
 	private float fallRecovery = 0;					//Fall recovery time left
@@ -68,7 +68,6 @@ public class PlayerController : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		player = GetComponent<Player>();
 		controller = GetComponent<CharacterController>();
 		slowFPS = GetComponent<SlowFPS>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
