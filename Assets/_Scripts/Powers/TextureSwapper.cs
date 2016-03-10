@@ -4,8 +4,9 @@ using InControl;
 
 public class TextureSwapper : MonoBehaviour {
 
-	public HUDTexture HUDtex;							//UI reference
+	public HUDTexture HUD_tex;							//UI reference
 	public GameObject sight;							//Sight reference
+	public Canvas gui;
 
 	public GameObject stealerBullet;					//Stealer bullet prefab
 	public GameObject painterBullet;					//Painter bullet prefab
@@ -24,7 +25,7 @@ public class TextureSwapper : MonoBehaviour {
 	private bool shootingMode = false;					//If it is in shooting mode
 	private float lastShootStart = 0.0f;				//When the last shoot started
 
-	public Canvas gui;
+
 	private RectTransform guiRectTrans;
 
 	// Use this for initialization
