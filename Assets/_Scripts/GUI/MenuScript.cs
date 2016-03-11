@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using InControl;
 
 public class MenuScript : MonoBehaviour {
 
@@ -18,6 +19,12 @@ public class MenuScript : MonoBehaviour {
 	public Button gamepadButton;
 	public Image keyboardImage;
 	public Image gamepadImage;
+	public Button backButtonInHelp;
+	public Button firstLevelSelectButton;
+	public Button firstHelpButton;
+	public Button firstExitButton;
+	public Button firstCreditsButton;
+
 
 	// Use this for initialization
 	void Start () {
@@ -35,17 +42,24 @@ public class MenuScript : MonoBehaviour {
 
 		keyboardButton = keyboardButton.GetComponent<Button> (); 
 		gamepadButton = gamepadButton.GetComponent<Button> (); 
+		backButtonInHelp = backButtonInHelp.GetComponent<Button> ();
 
 		keyboardImage = keyboardImage.GetComponent<Image> (); 
 		gamepadImage = gamepadImage.GetComponent<Image> (); 
+
+		firstLevelSelectButton = firstLevelSelectButton.GetComponent<Button> ();
+		firstHelpButton = firstHelpButton.GetComponent<Button> ();
+		firstExitButton = firstExitButton.GetComponent<Button> ();
+		firstCreditsButton = firstCreditsButton.GetComponent<Button> ();
 
 		quitMenu.enabled = false;
 		levelSelectionMenu.enabled = false;
 		helpMenu.enabled = false;
 		creditsMenu.enabled = false;
+
+		startText.Select ();
 	
 	}
-
 
 	public void ContinuePress()
 	{
@@ -61,6 +75,8 @@ public class MenuScript : MonoBehaviour {
 		HelpText.enabled = false;
 		exitText.enabled = false;
 		creditsText.enabled = false;
+
+		firstLevelSelectButton.Select ();
 	}
 
 	public void HelpPress()
@@ -78,6 +94,13 @@ public class MenuScript : MonoBehaviour {
 
 		keyboardImage.enabled = true;
 		gamepadImage.enabled = false;
+
+		Navigation customNav = new Navigation();
+		customNav.mode = Navigation.Mode.Explicit;
+		customNav.selectOnUp = gamepadButton;
+		backButtonInHelp.navigation = customNav;
+
+		firstHelpButton.Select ();
 	}
 
 
@@ -90,6 +113,8 @@ public class MenuScript : MonoBehaviour {
 		HelpText.enabled = false;
 		exitText.enabled = false;
 		creditsText.enabled = false;
+
+		firstExitButton.Select ();
 	}
 
 	public void KeyboardPress()
@@ -98,6 +123,13 @@ public class MenuScript : MonoBehaviour {
 		gamepadButton.enabled = true;
 		keyboardImage.enabled = true;
 		gamepadImage.enabled = false;
+
+		Navigation customNav = new Navigation();
+		customNav.mode = Navigation.Mode.Explicit;
+		customNav.selectOnUp = gamepadButton;
+		backButtonInHelp.navigation = customNav;
+
+		gamepadButton.Select ();
 	}
 
 	public void GamepadPress()
@@ -106,6 +138,13 @@ public class MenuScript : MonoBehaviour {
 		gamepadButton.enabled = false;
 		keyboardImage.enabled = false;
 		gamepadImage.enabled = true;
+
+		Navigation customNav = new Navigation();
+		customNav.mode = Navigation.Mode.Explicit;
+		customNav.selectOnUp = keyboardButton;
+		backButtonInHelp.navigation = customNav;
+
+		keyboardButton.Select ();
 	}
 
 	public void NoPress()
@@ -120,6 +159,8 @@ public class MenuScript : MonoBehaviour {
 		HelpText.enabled = true;
 		exitText.enabled = true;
 		creditsText.enabled = true;
+
+		startText.Select ();
 	}
 
 	public void CreditsMenu()
@@ -131,6 +172,8 @@ public class MenuScript : MonoBehaviour {
 		HelpText.enabled = false;
 		exitText.enabled = false;
 		creditsText.enabled = false;
+
+		firstCreditsButton.Select ();
 	}
 
 	public void ExitGame()
