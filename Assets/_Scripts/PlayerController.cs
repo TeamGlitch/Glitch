@@ -7,6 +7,8 @@ using InControl;
 public class PlayerController : MonoBehaviour 
 {
 
+	private float zPosition = 0.0f;
+
     public enum player_state
     {
         IN_GROUND,
@@ -238,8 +240,22 @@ public class PlayerController : MonoBehaviour
 
 		}
 
+
 		moveDirection.y = vSpeed;
+
+/*		if(transform.position.z != zPosition)
+		{
+			moveDirection.z = (zPosition - transform.position.z) * 0.05f;
+		}*/
+
 		controller.Move(moveDirection * Time.deltaTime);
+
+		if (transform.position.z != 0.0f)
+		{
+			Vector3 pos = transform.position;
+			pos.z = zPosition;
+			transform.position = pos;
+		}
 
         // To active God mode camera
         if (Input.GetKeyDown(KeyCode.G))
