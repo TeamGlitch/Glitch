@@ -7,7 +7,7 @@ using InControl;
 public class PlayerController : MonoBehaviour 
 {
 
-	private float zPosition = 0.0f;
+	public float zPosition = 0.0f;
 
     public enum player_state
     {
@@ -243,14 +243,14 @@ public class PlayerController : MonoBehaviour
 
 		moveDirection.y = vSpeed;
 
-/*		if(transform.position.z != zPosition)
+		/*if(transform.position.z != zPosition)
 		{
 			moveDirection.z = (zPosition - transform.position.z) * 0.05f;
 		}*/
 
 		controller.Move(moveDirection * Time.deltaTime);
 
-		if (transform.position.z != 0.0f)
+		if (transform.position.z != zPosition)
 		{
 			Vector3 pos = transform.position;
 			pos.z = zPosition;
