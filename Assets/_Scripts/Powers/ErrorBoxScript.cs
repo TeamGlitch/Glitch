@@ -53,7 +53,7 @@ public class ErrorBoxScript : MonoBehaviour {
 				}
 					
 			//If cooldown is over, disable the box
-			} else if (!active && (Time.time - startTime >= cooldown)) {
+			} else if (!active && (Time.time >= cooldown)) {
 				
 				errorBoxCreator.errorBoxDeleted(1);
 				gameObject.SetActive(false);

@@ -7,7 +7,7 @@ public class BoxCreatorUIMask : MonoBehaviour {
 	public float endYPos;
 
 	private float startTime;
-	private float endTime;
+	public float endTime;
 
 	private RectTransform maskTransform;
 	private RectTransform childTransform;

@@ -11,7 +11,6 @@ public class ErrorBoxCreator : MonoBehaviour {
 	private GameObject placeholder;						//Placeholder that shows where the box will appear
 
 	public float duration = 5;							//How many time a platform is active
-	public float cooldown = 16;							//How many time until a new platform can be created
 
 	private int numBoxes = 0;							//How many active boxes are present
 	private bool previsualization = false;				//Currently using the placeholder
@@ -72,10 +71,17 @@ public class ErrorBoxCreator : MonoBehaviour {
 				EBScript.errorBoxCreator = this;
 				EBScript.startTime = Time.time;
 				EBScript.duration = duration;
-				EBScript.cooldown = cooldown;
+
+				int indexThis = boxes.indexOf(errorBox);
+				EBScript.cooldown = Time.time + duration + 1.0f;
+
+				for (int i = 0; i < boxes.buffer.Count; i++) {
+					if (i != indexThis && boxes.buffer [i].activeSelf)
+						boxes.buffer [i].GetComponent<ErrorBoxScript>().cooldown = EBScript.cooldown;
+				}
 
 				//Notify the GUI
-				boxCreatorUI.boxUsed(boxes.indexOf(errorBox), Time.time + cooldown);
+				boxCreatorUI.boxUsed(boxes.indexOf(errorBox), EBScript.cooldown);
 
 				//Increase number of boxes active and set the restart position time
 				numBoxes++;

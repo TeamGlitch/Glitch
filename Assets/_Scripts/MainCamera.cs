@@ -4,37 +4,47 @@ using System.Collections;
 public class MainCamera : MonoBehaviour {
 
     public PlayerController player;
-    public float ySmooth = 0.1f;
     public float xSmooth = 20.0f;
-	
-    private float ySpeed;
+	public float maxUp = 0.5f;
+	public float maxDown = 0.33f;
+
     private float xSpeed;
 	private int offsetX = 7;
-	private int offsetY = 6;
-    private bool moveY = false;
-	
+
+	private Camera thisCamera;
+
+	void Awake(){
+		thisCamera = gameObject.GetComponent<Camera>();
+	}
+
     void Update()
     {
-        float posy = transform.position.y;
-        float posx;
+		
+		if (Camera.current == thisCamera) {
 
-        // Camera only moves if surpasses a limit of height in a jump. This limit is 4 times the Y scale of the player.
-        if ((player.transform.position.y > player.preJumpPosY) || (player.state == PlayerController.player_state.IN_GROUND) || ((player.state == PlayerController.player_state.JUMPING) && (player.vSpeed < 0) && (moveY == true)))
-        {
-            moveY = true;
-        }
-        else
-        {
-            moveY = false;
-        }
+			float posy = transform.position.y;
+			float posx;
 
-		// We use SmoothDamp with a begin and end point, velocity and smoothness
-		// With a low smoothness reachs target faster
-        if (moveY == true)
-        {
-            posy = Mathf.SmoothDamp(transform.position.y, player.transform.position.y + offsetY, ref ySpeed, ySmooth);
-        }
-        posx = Mathf.SmoothDamp(transform.position.x, player.transform.position.x + offsetX, ref xSpeed, xSmooth * Time.deltaTime);
-        transform.position = new Vector3 (posx, posy, transform.position.z);
+			Vector3 positionOnViewport = Camera.current.WorldToViewportPoint(player.transform.position);
+
+			// Camera only moves if it's over the 50% of the screen or over the 33% of the screen
+			if (positionOnViewport.y > maxUp) {
+
+				Vector3 expectedPosition = Camera.current.ViewportToWorldPoint ( new Vector3(0, maxUp, positionOnViewport.z) );
+				expectedPosition = expectedPosition - player.transform.position;
+				posy -= expectedPosition.y;
+
+			} else if (positionOnViewport.y < maxDown) {
+
+				Vector3 expectedPosition = Camera.current.ViewportToWorldPoint ( new Vector3(0, maxDown, positionOnViewport.z) );
+				expectedPosition = expectedPosition - player.transform.position;
+				posy -= expectedPosition.y;
+
+			}
+				
+			posx = Mathf.SmoothDamp(transform.position.x, player.transform.position.x + offsetX, ref xSpeed, xSmooth * Time.deltaTime);
+			transform.position = new Vector3 (posx, posy, transform.position.z);
+		
+		}
     } 
 }

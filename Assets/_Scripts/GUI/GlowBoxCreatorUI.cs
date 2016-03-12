@@ -17,7 +17,6 @@ public class GlowBoxCreatorUI : MonoBehaviour {
 	}
 
 	public void StartMovement(){
-		Debug.Log ("startMovement inside funtion");
 		startTime = Time.time;
 		endTime = Time.time + 0.5f;
 	}

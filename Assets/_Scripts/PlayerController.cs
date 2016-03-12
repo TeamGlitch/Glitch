@@ -7,8 +7,6 @@ using InControl;
 public class PlayerController : MonoBehaviour 
 {
 
-	private float zPosition = 0.0f;
-
     public enum player_state
     {
         IN_GROUND,
@@ -36,12 +34,15 @@ public class PlayerController : MonoBehaviour
 	public Camera godCamera;
 
 	//Movement Variables
+
+	private bool playerActivedJump = false;		// The jump state is cause of a player jump? (If not, it could be a fall)
+
+	private float zPosition;					// Position on the z axis. Unvariable
 	public float speed = 12.0f;					// Horizontal speed
-	public float jumpSpeed = 13.5f;			
-	public float gravity = 50.0f;				
+	public float jumpSpeed = 13.5f;				// Base jump speed
+	public float gravity = 50.0f;				// Gravity
 	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
-    public float preJumpPosY = 0;
     public float vSpeed = 0.0f;
 
 	private float startJumpPress = -1;				//When the extended jump started
@@ -70,6 +71,7 @@ public class PlayerController : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
+		zPosition = transform.position.z;
 		controller = GetComponent<CharacterController>();
 		slowFPS = GetComponent<SlowFPS>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
@@ -97,6 +99,7 @@ public class PlayerController : MonoBehaviour
 
 	void Update () 
 	{
+		
 		Vector3 moveDirection = new Vector3 (0, 0, 0);
 
         // State-changing calculations
@@ -133,11 +136,15 @@ public class PlayerController : MonoBehaviour
 				{
 					teleportCooldown = false;
 
-					if (InputManager.ActiveDevice.Action1.WasPressed) 
+					//If the jump key is being pressed but it has been released since the
+					//last jump
+					if (InputManager.ActiveDevice.Action1.IsPressed && !playerActivedJump) 
 					{
+						//Start jump and set the player-activated jump to true so it
+						//can't jump without releasing the button
 						preparingJump = jumpRest;
+						playerActivedJump = true;
 						state = player_state.PREPARING_JUMP;
-						preJumpPosY = transform.position.y + (transform.localScale.y * 4);
 					} 
 					else if (!controller.isGrounded) 
 					{
@@ -240,22 +247,21 @@ public class PlayerController : MonoBehaviour
 
 		}
 
-
 		moveDirection.y = vSpeed;
-
-/*		if(transform.position.z != zPosition)
-		{
-			moveDirection.z = (zPosition - transform.position.z) * 0.05f;
-		}*/
-
 		controller.Move(moveDirection * Time.deltaTime);
 
-		if (transform.position.z != 0.0f)
+		//Make sure z is non-variant
+		if (transform.position.z != zPosition)
 		{
 			Vector3 pos = transform.position;
 			pos.z = zPosition;
 			transform.position = pos;
 		}
+
+		//If a player-induced jump is checked but the jump key is not longer
+		//being held, set it to false so it can jump again
+		if (playerActivedJump && !InputManager.ActiveDevice.Action1.IsPressed)
+			playerActivedJump = false;
 
         // To active God mode camera
         if (Input.GetKeyDown(KeyCode.G))
