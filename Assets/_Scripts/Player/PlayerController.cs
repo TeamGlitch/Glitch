@@ -24,10 +24,10 @@ public class PlayerController : MonoBehaviour
 	public player_state state;
 	private bool godMode = false;
 
-	//Internal References
-	private SpriteRenderer spriteRenderer;			//Reference to the sprite renderer
-	private CharacterController controller;
-	private Rigidbody rigidBody;
+	//Player Components
+	public SpriteRenderer spriteRenderer;			//Reference to the sprite renderer
+	public CharacterController controller;
+	public Rigidbody rigidBody;
 
 	//External references
 	public Camera mainCamera;
@@ -39,12 +39,13 @@ public class PlayerController : MonoBehaviour
 	public float gravity = 50.0f;				
 	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
-    public float preJumpPosY = 0;
+    public float cameraYBound = 0;
     public float vSpeed = 0.0f;
 
 	private float startJumpPress = -1;				//When the extended jump started
 	private float preparingJump = 0;				//Jump preparing time left
 	private float fallRecovery = 0;					//Fall recovery time left
+    public float zPosition = 0.0f;
 
 	///// Powers
 	//Teleport
@@ -65,14 +66,9 @@ public class PlayerController : MonoBehaviour
 
 	///////////// Functions /////////////
 
-	// Use this for initialization
 	void Start ()
 	{
-		controller = GetComponent<CharacterController>();
-		slowFPS = GetComponent<SlowFPS>();
-		spriteRenderer = GetComponent<SpriteRenderer>();
 		state = player_state.IN_GROUND;
-		rigidBody = GetComponent<Rigidbody>();
 	}
 
     void OnControllerColliderHit(ControllerColliderHit coll)
@@ -135,7 +131,7 @@ public class PlayerController : MonoBehaviour
 					{
 						preparingJump = jumpRest;
 						state = player_state.PREPARING_JUMP;
-						preJumpPosY = transform.position.y + (transform.localScale.y * 4);
+						cameraYBound = transform.position.y + (transform.localScale.y * 4);
 					} 
 					else if (!controller.isGrounded) 
 					{
@@ -154,7 +150,8 @@ public class PlayerController : MonoBehaviour
 				if (!ActivatingTeleport())
 				{
 					//If it's grounded
-					if (controller.isGrounded) {
+					if (controller.isGrounded) 
+                    {
 						state = player_state.FALL_RECOVERING;
 					} 
 					else 
@@ -168,7 +165,8 @@ public class PlayerController : MonoBehaviour
 						}
 
 						if (eulerAngles.z != 0.0f) {
-							if (eulerAngles.z <= 3.0f || eulerAngles.z >= 357.0f) {
+							if (eulerAngles.z <= 3.0f || eulerAngles.z >= 357.0f) 
+                            {
 								rotationZ = 0.0f;
 							}
 							else if (eulerAngles.z <= 180.0f) {
@@ -184,15 +182,16 @@ public class PlayerController : MonoBehaviour
 						//higher jump. Do until the press time gets to his max.
 						//If the player releases the button, stop giving extra momentum to the jump.
 						if ((startJumpPress != -1) && (InputManager.ActiveDevice.Action1.IsPressed)
-							&& ((Time.time - startJumpPress) <= maxJumpTime)) {
+							&& ((Time.time - startJumpPress) <= maxJumpTime)) 
+                        {
 							vSpeed = jumpSpeed;
-						} else {
+						} 
+                        else 
+                        {
 							startJumpPress = -1;
 						}
-
 					}
 				}
-
 				break;
 
 			case player_state.WHIPING:
@@ -211,16 +210,14 @@ public class PlayerController : MonoBehaviour
 						rigidBody.AddForce (new Vector3 (-whipForce, 0.0f, 0.0f));
 					}
 				}
-
 				break;
-
         }
 
 		//Non state-changing operations
 		if (state != player_state.DEATH &&
 			state != player_state.TELEPORTING &&
-			state != player_state.WHIPING) {
-			
+			state != player_state.WHIPING) 
+        {	
 			// Gravity
 			vSpeed -= gravity * Time.deltaTime;
 
@@ -230,16 +227,23 @@ public class PlayerController : MonoBehaviour
 			moveDirection *= speed;
 
 			// Flips the sprite renderer if is changing direction
-			if (moveDirection.x > 0 && spriteRenderer.flipX == true) {
+			if ((moveDirection.x > 0) && (spriteRenderer.flipX == true)) 
+            {
 				spriteRenderer.flipX = false;
-			} else if (moveDirection.x < 0 && spriteRenderer.flipX == false) {
+			} else if ((moveDirection.x < 0) && (spriteRenderer.flipX == false)) {
 				spriteRenderer.flipX = true;
 			}
-
 		}
 
 		moveDirection.y = vSpeed;
 		controller.Move(moveDirection * Time.deltaTime);
+
+        if (transform.position.z != zPosition)
+        {
+            Vector3 pos = transform.position;
+            pos.z = zPosition;
+            transform.position = pos;
+        }
 
         // To active God mode camera
         if (Input.GetKeyDown(KeyCode.G))
@@ -261,8 +265,8 @@ public class PlayerController : MonoBehaviour
 
 	private bool ActivatingTeleport(){
 
-		if (InputManager.ActiveDevice.Action3.WasPressed && (!teleportCooldown)) {
-			
+		if (InputManager.ActiveDevice.Action3.WasPressed && (!teleportCooldown)) 
+        {	
 			// We create a coroutine to do a delay in the teleport and the state of player is changed to teleporting
 			StartCoroutine ("ActivateTeleport");
 			ActivateTeleport();
@@ -271,9 +275,7 @@ public class PlayerController : MonoBehaviour
 
 			return true;
 		}
-
 		return false;
-
 	}
 
     // Function that active teleport. Necessary to Coroutine work

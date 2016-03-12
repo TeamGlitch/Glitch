@@ -1,22 +1,17 @@
 ﻿using UnityEngine;
-using System.Collections;
 using InControl;
 
 public class SlowFPS : MonoBehaviour {
 
-	//Reference
 	public World world;
+    public float recoveryRate = 3.0f;			// Time it takes to make a recovery bump
+	public float timeBetweenUpdates = 1;		// Seconds between slow updates
+	public float MAXTime = 10.0f;				// Max time the power can be active
+	public float timeRemaining;					// Remaining time the power can be active
 
-	private bool powerActive = false;
-
-	public float timeBetweenUpdates = 1;		//Seconds between slow updates
-	private float timeLastUpdate = 0;			//When the last slow update was done
-
-	public float MAXTime = 10.0f;				//Max time the power can be active
-	public float timeRemaining;					//Remaining time the power can be active
-
-	public float recoveryRate = 3.0f;			//Time it takes to make a recovery bump
-    private float recoveryTime;					//Time to the next recovery bump
+    private float recoveryTime;					// Time to the next recovery bump
+    private bool powerActive = false;
+    private float timeLastUpdate = 0;			// When the last slow update was done
 
     void Start()
     {
@@ -52,15 +47,12 @@ public class SlowFPS : MonoBehaviour {
 				timeRemaining = 0;
 				deactivatePower ();
 
-			} else {
-
-				if (world.doUpdate == true) {
+			} else if (world.doUpdate == true) {
 					world.doUpdate = false;
 					timeLastUpdate = Time.time;
-				} else if (Time.time >= timeLastUpdate + timeBetweenUpdates) {
-					world.doUpdate = true;
-				}
 
+			} else if (Time.time >= timeLastUpdate + timeBetweenUpdates) {
+					world.doUpdate = true;
 			}
         }
         else
@@ -80,7 +72,6 @@ public class SlowFPS : MonoBehaviour {
 					}
 
 					recoveryTime = recoveryRate;
-
                 }
             }
         }

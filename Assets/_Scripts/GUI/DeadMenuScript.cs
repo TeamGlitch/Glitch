@@ -1,34 +1,32 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System.Collections;
 
 public class DeadMenuScript : MonoBehaviour {
 
-	private Canvas deadMenu;
-	private Button restartButton;
-	private Button menuButton;
-
+	public Canvas deadMenu;
+	public Button restartButton;
+	public Button menuButton;
 	public GlitchOffsetCamera glitchedCameraScript;
 
 	private float timeDead;
 
-	// Use this for initialization
-	void Awake () {
-
-		deadMenu = GetComponent<Canvas>();
-		restartButton = transform.FindChild("Restart Game").GetComponent<Button> ();
-		menuButton = transform.FindChild("Main Menu").GetComponent<Button>();
+	void Awake () 
+    {
 		gameObject.SetActive(false);
 	}
 	
-	// Update is called once per frame
-	void Update () {
+    // The screen is glitched and appears a blue screen
+	void Update () 
+    {
 		if (deadMenu.enabled == false) {
 			timeDead += Time.deltaTime;
-			if (timeDead >= 2.0f && timeDead < 4.0f) {
-				if(glitchedCameraScript.divisions < 50)
-					glitchedCameraScript.divisions += 1;
+			if (timeDead >= 2.0f && timeDead < 4.0f) 
+            {
+                if (glitchedCameraScript.divisions < 50)
+                {
+                    glitchedCameraScript.divisions += 1;
+                }
 				glitchedCameraScript.intensity += 0.05f;
 				glitchedCameraScript.frequency += 0.005f;
 				glitchedCameraScript.inestability += 0.005f;

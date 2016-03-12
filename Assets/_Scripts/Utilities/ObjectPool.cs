@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class ObjectPool {
 
-	private int maxSize;				//Max size of the array. If it's -1, its an auto-extensible array
-	private List<GameObject> buffer;	//Elements list
+	private int maxSize;				// Max size of the array. If it's -1, its an auto-extensible array
+	private List<GameObject> buffer;	// Elements list
 	private GameObject prefab;
 
 	public ObjectPool(GameObject objectPrefab, int poolSize = -1 )
@@ -15,10 +15,10 @@ public class ObjectPool {
 		prefab = objectPrefab;
 	}
 
-	//Returns the first inactive object or creates a new one
-	//if there are none.
-	//Returns null if there aren't inactive objects and
-	//can't add more because the buffer is at max size
+	// Returns the first inactive object or creates a new one
+	// if there are none.
+	// Returns null if there aren't inactive objects and
+	// can't add more because the buffer is at max size
 	public GameObject getObject (){
 
 		GameObject returnedObject = null;
@@ -38,7 +38,7 @@ public class ObjectPool {
 		return returnedObject;
 	}
 
-	//Clears the pool
+	// Clears the pool
 	public void ClearPool(){
 		for (int i = buffer.Count - 1; i > 0; i--) {
 			GameObject obj = buffer[i];
@@ -49,12 +49,12 @@ public class ObjectPool {
 
 	//////////////////Getters//////////////////
 
-	//Actual size of the buffer
+	// Actual size of the buffer
 	public int getActualSize(){
 		return buffer.Count;
 	}
 
-	//Buffer active members
+	// Buffer active members
 	public int getActiveMembers(){
 		
 		int number = 0;
@@ -67,7 +67,7 @@ public class ObjectPool {
 
 	}
 
-	//Buffer inactive members
+	// Buffer inactive members
 	public int getInactiveMembers(){
 
 		int number = 0;
@@ -80,12 +80,12 @@ public class ObjectPool {
 
 	}
 
-	//Buffer limitation
+	// Buffer limitation
 	public int getMaxSize(){
 		return maxSize;
 	}
 
-	//Index of element
+	// Index of element
 	public int indexOf(GameObject go){
 
 		for (int i = 0; i < buffer.Count; i++) {

@@ -26,39 +26,13 @@ public class MenuScript : MonoBehaviour {
 	public Button firstCreditsButton;
 
 
-	// Use this for initialization
-	void Start () {
-
-		quitMenu = quitMenu.GetComponent<Canvas> ();
-		levelSelectionMenu = levelSelectionMenu.GetComponent<Canvas> ();
-		helpMenu = helpMenu.GetComponent<Canvas> ();
-		creditsMenu = creditsMenu.GetComponent<Canvas> ();
-
-		startText = startText.GetComponent<Button> ();
-		exitText = exitText.GetComponent<Button> ();
-		levelSelectText = levelSelectText.GetComponent<Button> ();
-		HelpText = HelpText.GetComponent<Button> ();
-		creditsText = creditsText.GetComponent<Button> ();
-
-		keyboardButton = keyboardButton.GetComponent<Button> (); 
-		gamepadButton = gamepadButton.GetComponent<Button> (); 
-		backButtonInHelp = backButtonInHelp.GetComponent<Button> ();
-
-		keyboardImage = keyboardImage.GetComponent<Image> (); 
-		gamepadImage = gamepadImage.GetComponent<Image> (); 
-
-		firstLevelSelectButton = firstLevelSelectButton.GetComponent<Button> ();
-		firstHelpButton = firstHelpButton.GetComponent<Button> ();
-		firstExitButton = firstExitButton.GetComponent<Button> ();
-		firstCreditsButton = firstCreditsButton.GetComponent<Button> ();
-
+	void Start () 
+    {
 		quitMenu.enabled = false;
 		levelSelectionMenu.enabled = false;
 		helpMenu.enabled = false;
 		creditsMenu.enabled = false;
-
 		startText.Select ();
-	
 	}
 
 	public void ContinuePress()

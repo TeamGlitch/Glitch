@@ -7,19 +7,18 @@ public class DynamicCamera : MonoBehaviour {
     public Camera mainCamera;
     public World world;
     public GameObject titles;
+    public int speed;
+    public int zoomSpeed;
 
-    private int speed = 10;
     private float delay = 5.0f;
 	private int offsetX = 7;
-	private int zPosition = -15;
+	private int zPosition = -20;
 
     void Update () {
 
+        // If any button is pressed the intro is skipped
 		if (InputManager.ActiveDevice.AnyButton.IsPressed) {
-			
-			if (titles.activeSelf == true)
-				titles.SetActive (false);
-
+            titles.SetActive(false);
 			transform.position = new Vector3(player.position.x + offsetX, transform.position.y, zPosition);
 			beginGame ();
 
@@ -27,29 +26,27 @@ public class DynamicCamera : MonoBehaviour {
 			
 			// Camera freeze for a "delay" time to show title of level
 			delay -= Time.deltaTime;
-
-			if(titles.activeSelf != true)
-				titles.SetActive(true);
+            if (titles.activeSelf != true)
+            {
+                titles.SetActive(true);
+            }
 
 			if (delay <= 0.0f)
 			{
 				// Camera do a zoom to player and the game begins
 				titles.SetActive(false);
-				transform.Translate(0.0f, 0.0f, speed*Time.deltaTime);
+				transform.Translate(0.0f, 0.0f, zoomSpeed*Time.deltaTime);
 				if (transform.position.z >= zPosition)
 				{
 					beginGame();
 				}
 			}
-
 		}
 		else
 		{
 			// Camera moves to left until reach player
 			transform.Translate((Time.deltaTime) * -speed, 0.0f, 0.0f);
 		}
-
-       
     }
 
 	// Function that positions the main camera, active "World" (that active player
