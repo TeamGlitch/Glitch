@@ -32,6 +32,10 @@ public class PlayerController : MonoBehaviour
 	//External references
 	public Camera mainCamera;
 	public Camera godCamera;
+    public Camera staticCamera1;
+    public Camera staticCamera2;
+    public Camera staticCamera3;
+    public Camera staticCamera4;
 
 	//Movement Variables
 	public float speed = 12.0f;					// Horizontal speed
@@ -264,6 +268,43 @@ public class PlayerController : MonoBehaviour
                 godMode = true;
             }
         }
+
+        // To active a static camera
+        if (mainCamera.isActiveAndEnabled)
+        {
+            if (Input.GetKeyDown(KeyCode.Keypad1))
+            {
+                staticCamera1.gameObject.SetActive(true);
+                mainCamera.gameObject.SetActive(false);
+            }
+            else if (Input.GetKeyDown(KeyCode.Keypad2))
+            {
+                staticCamera2.gameObject.SetActive(true);
+                mainCamera.gameObject.SetActive(false);
+            }
+            else if (Input.GetKeyDown(KeyCode.Keypad3))
+            {
+                staticCamera3.gameObject.SetActive(true);
+                mainCamera.gameObject.SetActive(false);
+            }
+            else if (Input.GetKeyDown(KeyCode.Keypad4))
+            {
+                staticCamera4.gameObject.SetActive(true);
+                mainCamera.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Keypad0))
+            {
+                mainCamera.gameObject.SetActive(true);
+                staticCamera1.gameObject.SetActive(false);
+                staticCamera2.gameObject.SetActive(false);
+                staticCamera3.gameObject.SetActive(false);
+                staticCamera4.gameObject.SetActive(false);
+            }
+        }
+
 	}
 
 	private bool ActivatingTeleport(){
