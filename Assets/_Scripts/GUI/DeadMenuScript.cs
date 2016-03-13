@@ -1,46 +1,49 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class DeadMenuScript : MonoBehaviour {
 
-	public Canvas deadMenu;
-	public Button restartButton;
-	public Button menuButton;
+	private Canvas deadMenu;
+	private Button restartButton;
+	private Button menuButton;
+
+	public GameObject playerPowers;
 	public GlitchOffsetCamera glitchedCameraScript;
 
 	private float timeDead;
 
-	void Awake () 
-    {
+	// Use this for initialization
+	void Awake () {
+
+		deadMenu = GetComponent<Canvas>();
+		restartButton = transform.FindChild("Restart Game").GetComponent<Button> ();
+		menuButton = transform.FindChild("Main Menu").GetComponent<Button>();
 		gameObject.SetActive(false);
+		playerPowers.SetActive (false);
 	}
-	
-    // The screen is glitched and appears a blue screen
-	void Update () 
-    {
+
+	// Update is called once per frame
+	void Update () {
 		if (deadMenu.enabled == false) {
 			timeDead += Time.deltaTime;
-			if (timeDead >= 2.0f && timeDead < 4.0f) 
-            {
-                if (glitchedCameraScript.divisions < 50)
-                {
-                    glitchedCameraScript.divisions += 1;
-                }
+			if (timeDead >= 2.0f && timeDead < 4.0f) {
+				if(glitchedCameraScript.divisions < 50)
+					glitchedCameraScript.divisions += 1;
 				glitchedCameraScript.intensity += 0.05f;
 				glitchedCameraScript.frequency += 0.005f;
 				glitchedCameraScript.inestability += 0.005f;
 			} else if (timeDead >= 6.0f) {
 				deadMenu.enabled = true;
 				glitchedCameraScript.enabled = false;
-				restartButton.Select ();
 			}
 		}
 	}
 
 	public void RestartPress()
 	{
-		SceneManager.LoadScene ("scene");
+		SceneManager.LoadScene ("forest");
 	}
 
 	public void MenuPress()

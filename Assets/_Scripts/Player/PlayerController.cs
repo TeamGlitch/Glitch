@@ -233,24 +233,20 @@ public class PlayerController : MonoBehaviour
 			} else if ((moveDirection.x < 0) && (spriteRenderer.flipX == false)) {
 				spriteRenderer.flipX = true;
 			}
+			moveDirection.y = vSpeed;
+
+			controller.Move(moveDirection * Time.deltaTime);
+
+			if (transform.position.z != zPosition)
+			{
+				Vector3 pos = transform.position;
+				pos.z = zPosition;
+				transform.position = pos;
+			}
 		}
 
 
-		moveDirection.y = vSpeed;
 
-		/*if(transform.position.z != zPosition)
-		{
-			moveDirection.z = (zPosition - transform.position.z) * 0.05f;
-		}*/
-
-		controller.Move(moveDirection * Time.deltaTime);
-
-		if (transform.position.z != zPosition)
-		{
-			Vector3 pos = transform.position;
-			pos.z = zPosition;
-			transform.position = pos;
-		}
 
         // To active God mode camera
         if (Input.GetKeyDown(KeyCode.G))

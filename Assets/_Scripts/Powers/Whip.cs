@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using InControl;
 
 public class Whip : MonoBehaviour {
@@ -6,18 +7,21 @@ public class Whip : MonoBehaviour {
 	public GameObject chainPrefab;
 	public float distanceToWhip;
 	public GameObject sphereRotatorPrefab;
-    public PlayerController playerController;
-    public GameObject player;
 
 	private GameObject sphereRotator;
-    private Rigidbody sphereRotatorRigidbody;
+	private Rigidbody sphereRotatorRigidbody;
 	private GameObject chain;
+
+	private GameObject player;
 	private GameObject[] whipObjects;
+	private PlayerController playerController;
 	private CharacterJoint characterJoint;
 	private GameObject[] chainPieces;
+
 	private bool activated;
+
 	private Vector3 lastPosition;
-	private Vector3 posToWhip;
+	private Vector2 posToWhip;
 	private int previousDeActivated;
 
 	// Use this for initialization
@@ -25,7 +29,8 @@ public class Whip : MonoBehaviour {
 
 		sphereRotator = Instantiate (sphereRotatorPrefab);
 		sphereRotator.SetActive (false);
-        sphereRotatorRigidbody = sphereRotator.GetComponent<Rigidbody>();
+
+		sphereRotatorRigidbody = sphereRotator.GetComponent<Rigidbody> ();
 
 		chain = Instantiate (chainPrefab);
 		chainPieces = new GameObject[13];
@@ -44,14 +49,20 @@ public class Whip : MonoBehaviour {
 		chainPieces [11] = GameObject.Find ("ChainOnlySprites(Clone)/Chain1/Chain2/Chain3/Chain4/Chain5/Chain6/Chain7/Chain8/Chain9/Chain10/Chain11/Chain12");
 		chainPieces [12] = GameObject.Find ("ChainOnlySprites(Clone)/Chain1/Chain2/Chain3/Chain4/Chain5/Chain6/Chain7/Chain8/Chain9/Chain10/Chain11/Chain12/Chain13");
 
+		player = GameObject.Find ("Player");
 		whipObjects = GameObject.FindGameObjectsWithTag ("WhipObject");
 
 		chain.SetActive (false);
+
+		playerController = player.GetComponent<PlayerController> ();
+
 		posToWhip = Vector3.zero;
 		activated = false;
+
 		previousDeActivated = 0;
 	}
-	
+
+	// Update is called once per frame
 	void Update () {
 		if (activated) {
 			lastPosition = player.transform.position;
@@ -73,18 +84,19 @@ public class Whip : MonoBehaviour {
 		else {
 			if (InputManager.ActiveDevice.Action4.WasPressed) {
 				int closerWhipObject = 0;
-				Vector3 playerPosition = gameObject.transform.position;
+				Vector2 playerPosition = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y);
 				for (int i = 1; i < whipObjects.Length; ++i) 
 				{
-					if (Vector3.Distance (playerPosition, whipObjects[closerWhipObject].transform.position) > Vector3.Distance (playerPosition, whipObjects[i].transform.position))
+					if (Vector2.Distance (playerPosition, new Vector2(whipObjects[closerWhipObject].transform.position.x, whipObjects[closerWhipObject].transform.position.y)) > Vector2.Distance (playerPosition, new Vector2(whipObjects[i].transform.position.x, whipObjects[i].transform.position.y)))
 					{
 						closerWhipObject = i;
 					}
 				}
 
-				posToWhip = whipObjects [closerWhipObject].transform.position;
+				posToWhip.x = whipObjects [closerWhipObject].transform.position.x;
+				posToWhip.y = whipObjects [closerWhipObject].transform.position.y;
 
-				if (Vector3.Distance (playerPosition, posToWhip) <= distanceToWhip) 
+				if (Vector2.Distance (playerPosition, posToWhip) <= distanceToWhip) 
 				{
 
 					sphereRotator.SetActive (true);
@@ -95,15 +107,17 @@ public class Whip : MonoBehaviour {
 					player.transform.rotation = Quaternion.Euler(0.0f, 0.0f, angleInclinacion);
 
 					chain.SetActive (true);
-					chain.transform.position = posToWhip;
+					Vector3 newChainPos = new Vector3 (posToWhip.x, posToWhip.y, player.transform.position.z);
+					chain.transform.position = newChainPos;
 					chain.transform.rotation =  Quaternion.Euler(0.0f, 0.0f, angleInclinacion);
 
 					characterJoint = player.AddComponent <CharacterJoint> ();
+					//					characterJoint.connectedBody = whipObjects [closerWhipObject].GetComponent<Rigidbody> ();
 					characterJoint.connectedBody = sphereRotatorRigidbody;
 					playerController.StartWhip();
 					activated = true;
 
-					float totalDistance = Vector3.Distance(playerPosition, posToWhip);
+					float totalDistance = Vector2.Distance(playerPosition, posToWhip);
 
 					int chainsNeeded = Mathf.CeilToInt(totalDistance / 0.5f);
 
