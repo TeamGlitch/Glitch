@@ -13,6 +13,7 @@ public class EndPointScript : MonoBehaviour {
 
     // Script is disabled until OnTriggerEnter detects the player
 	void OnTriggerEnter(Collider coll){
+		Debug.Log ("HI");
 		if(coll.gameObject.name == "Player"){
             titlesGameObject.SetActive(true);
 			title.text = "Level Complete!";
@@ -25,7 +26,7 @@ public class EndPointScript : MonoBehaviour {
 	}
 
 	void Update(){
-		if (Time.time >= endGame) {
+		if (endGame != -1 && Time.time >= endGame) {
 			SceneManager.LoadScene("menu");
 		}
 	}
