@@ -3,16 +3,29 @@ using System.Collections;
 using InControl;
 
 public class DynamicCamera : MonoBehaviour {
+
+	public enum dynamic_camera_state
+	{
+		PANNING,
+		WAITING,
+		ZOOMING
+	};
+		
     public Transform player;
     public Camera mainCamera;
     public World world;
     public GameObject titles;
     public int speed;
     public int zoomSpeed;
+	public int speed = 10;
 
+
+	private dynamic_camera_state state = dynamic_camera_state.PANNING;
     private float delay = 5.0f;
 	private int offsetX = 7;
 	private int zPosition = -20;
+
+	private Vector3 zoomSpeedVector;
 
     void Update () {
 
@@ -20,32 +33,43 @@ public class DynamicCamera : MonoBehaviour {
 		if (InputManager.ActiveDevice.AnyButton.IsPressed) {
             titles.SetActive(false);
 			transform.position = new Vector3(player.position.x + offsetX, transform.position.y, zPosition);
-			beginGame ();
+			beginGame();
 
-		} else if (transform.position.x <= (player.position.x + offsetX)) {
-			
-			// Camera freeze for a "delay" time to show title of level
-			delay -= Time.deltaTime;
-            if (titles.activeSelf != true)
-            {
-                titles.SetActive(true);
-            }
+		} else {
 
-			if (delay <= 0.0f)
-			{
-				// Camera do a zoom to player and the game begins
-				titles.SetActive(false);
-				transform.Translate(0.0f, 0.0f, zoomSpeed*Time.deltaTime);
-				if (transform.position.z >= zPosition)
-				{
-					beginGame();
-				}
+			switch (state) {
+
+				case dynamic_camera_state.PANNING:
+					
+					if (transform.position.x <= (player.position.x + offsetX)) {
+						state = dynamic_camera_state.WAITING;
+						titles.SetActive(true);
+					} else {
+						// Camera moves to left until reach player
+						transform.Translate((Time.deltaTime) * -speed, 0.0f, 0.0f);
+					}
+					break;
+							
+				case dynamic_camera_state.WAITING:
+					
+					delay -= Time.deltaTime; 
+					if (delay <= 0.0f) {
+						state = dynamic_camera_state.ZOOMING;
+						titles.SetActive(false);
+						Vector3 destination = new Vector3 (player.transform.position.x, player.transform.position.y, zPosition);
+						zoomSpeedVector = (destination - transform.position) / 2.0f;
+					};
+					break;
+							
+				case dynamic_camera_state.ZOOMING:
+				
+					transform.Translate(zoomSpeedVector * Time.deltaTime);
+					if (transform.position.z >= zPosition)
+					{
+						beginGame();
+					}
+					break;
 			}
-		}
-		else
-		{
-			// Camera moves to left until reach player
-			transform.Translate((Time.deltaTime) * -speed, 0.0f, 0.0f);
 		}
     }
 

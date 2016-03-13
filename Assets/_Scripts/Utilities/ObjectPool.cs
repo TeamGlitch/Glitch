@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class ObjectPool {
 
-	private int maxSize;				// Max size of the array. If it's -1, its an auto-extensible array
-	private List<GameObject> buffer;	// Elements list
+	private int maxSize;				//Max size of the array. If it's -1, its an auto-extensible array
+	public List<GameObject> buffer;		//Elements list
 	private GameObject prefab;
 
 	public ObjectPool(GameObject objectPrefab, int poolSize = -1 )

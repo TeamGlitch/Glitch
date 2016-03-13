@@ -76,8 +76,14 @@ public class ErrorBoxScript : MonoBehaviour
 
         active = true;
 
-        if (spriteRenderer != null) spriteRenderer.enabled = true;
-        if (boxCollider != null) boxCollider.enabled = true;
+        if (spriteRenderer != null)
+		{ 
+			spriteRenderer.enabled = true;
+		}
+        if (boxCollider != null)
+		{
+			boxCollider.enabled = true;
+		}
 
         nextFlicker = -1;
         spriteRenderer.color = new Color(1, 1, 1, 1);
