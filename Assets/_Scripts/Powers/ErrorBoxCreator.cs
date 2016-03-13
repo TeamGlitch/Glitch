@@ -34,6 +34,7 @@ public class ErrorBoxCreator : MonoBehaviour {
 
 		//Moving placeholder to know where it will be put down
 		if (InputManager.ActiveDevice.RightTrigger.IsPressed && !InputManager.ActiveDevice.LeftTrigger.IsPressed) {
+			
 			if (numBoxes < 3) {
 
 				//If the previsualization hasn't started, activate it
@@ -58,8 +59,10 @@ public class ErrorBoxCreator : MonoBehaviour {
 
 			}
 		} 
+
 		//Creating the box
 		else if (InputManager.ActiveDevice.RightTrigger.WasReleased && !InputManager.ActiveDevice.LeftTrigger.IsPressed) {
+			
 			if (numBoxes < 3) {
 
 				//Create an error box and place it
@@ -89,6 +92,7 @@ public class ErrorBoxCreator : MonoBehaviour {
 			}
 
 		}
+
 		//Hiding the placeholder
 		else if (previsualization) {
 			previsualization = false;
