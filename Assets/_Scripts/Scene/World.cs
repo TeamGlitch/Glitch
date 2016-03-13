@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class World : MonoBehaviour {
 
     public bool doUpdate = true;
-	public float slowDown = 1;
+    public int numBoxes = 0;			// How many active boxes are present in world
 	public PlayerController player;
     public Camera mainCamera;
     public GameObject powers;
     public GameObject gui;
+
+    private float slowDown = 1;
 
 	void Start()
     {
@@ -19,6 +20,7 @@ public class World : MonoBehaviour {
         player.enabled = true;
     }
 	
+    // Modifies fps of world (included enemies)
 	public void toggleSlowFPS (){
 		if (slowDown == 1) {
 			slowDown = 0.5f;

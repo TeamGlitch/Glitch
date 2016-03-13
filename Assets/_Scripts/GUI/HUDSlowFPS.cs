@@ -10,6 +10,7 @@ public class HUDSlowFPS : MonoBehaviour {
     private float maxTime = 10.0f;
     private Color maxColor;
     private Color minColor;
+    private float colorOffset = 1.2f;
 
     void Start()
     {
@@ -18,10 +19,11 @@ public class HUDSlowFPS : MonoBehaviour {
     }
 
 	// Update is called once per frame
-	void Update () {
+	void Update () 
+    {
         bar.value = slowFPS.timeRemaining;
 
-        // 1.2 is a constant to delay the change of color
-        barFill.color = Color.Lerp(minColor, maxColor, (bar.value / maxTime) * 1.2f);
+        // colorOffset is a constant to delay the change of color
+        barFill.color = Color.Lerp(minColor, maxColor, (bar.value / maxTime) * colorOffset);
 	}
 }

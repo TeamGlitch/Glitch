@@ -6,28 +6,26 @@ public class HUDLives : MonoBehaviour {
 
     public Player player;
     public Image[] lives;
-    private int life = 3;
+    public Sprite life;
+    public Sprite noLife;
 
-    // Function to increment lives in the GUI.
-    // Do a comparison from lives before and now and change the 
-    // correspondent sprites. Is possible increment more than 1 life.
-    public void IncrementLives()
+    private int maxLives = 3;
+
+
+    // Function to update lives in HUD-
+    // If player lives is minus than i then is a lost life
+    public void UpdateLives()
     {
-        int increment = player.lives - life;
-        for (int i = lives.Length - 1; i > lives.Length - 1 - increment; --i)
+        for (int i = maxLives - 1; i >= 0; --i)
         {
-            lives[i - life].sprite = Resources.Load<Sprite>("Sprites/life");
+            if (i <= (player.lives - 1))
+            {
+                lives[i].sprite = life;
+            }
+            else
+            {
+                lives[i].sprite = noLife;
+            }
         }
-        life += increment;
-    }
-
-    // Function to decrement lives in the GUI.
-    // Do a check for know which life has been lost
-    // and change the sprite of this life to lost life sprite.
-    public void Decrementlives()
-    {
-        int aux = 3 - player.lives - 1;
-        lives[aux].sprite = Resources.Load<Sprite>("Sprites/lostLife");
-        --life;
     }
 }

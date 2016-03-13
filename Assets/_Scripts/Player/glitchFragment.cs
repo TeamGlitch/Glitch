@@ -30,11 +30,11 @@ public class glitchFragment : MonoBehaviour {
 		rigidBody = GetComponent<Rigidbody>();
 	}
 
-	public void restart(Vector3 targt, bool noMoreLives = false, Player plyr = null){
+	public void restart(Vector3 objective, bool noMoreLives = false, Player playerReference = null){
 
 		this.noMoreLives = noMoreLives;
-		target = targt;
-		player = plyr;
+		target = objective;
+		player = playerReference;
 		actualPhase = fragmentPhases.EXPLODE;
 		phaseEnd = Time.time + 1.5f;
 		rigidBody.useGravity = true;

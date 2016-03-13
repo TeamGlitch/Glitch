@@ -4,11 +4,10 @@ using UnityEngine.UI;
 
 public class HUDCollects : MonoBehaviour {
     public Player player;
-    private Text itemNumber;
+    public Text itemNumber;
 
     void Start()
     {
-        itemNumber = GetComponent<Text>();
         itemNumber.text = player.items.ToString();
     }
 

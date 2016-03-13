@@ -1,25 +1,21 @@
 ﻿using UnityEngine;
-using System.Collections;
 using InControl;
 
-public class WhipManager : MonoBehaviour {
+public class Whip : MonoBehaviour {
 
 	public GameObject chainPrefab;
 	public float distanceToWhip;
 	public GameObject sphereRotatorPrefab;
+    public PlayerController playerController;
+    public GameObject player;
 
 	private GameObject sphereRotator;
-	private Rigidbody sphereRotatorRigidbody;
+    private Rigidbody sphereRotatorRigidbody;
 	private GameObject chain;
-
-	private GameObject player;
 	private GameObject[] whipObjects;
-	private PlayerController playerController;
 	private CharacterJoint characterJoint;
 	private GameObject[] chainPieces;
-
 	private bool activated;
-
 	private Vector3 lastPosition;
 	private Vector3 posToWhip;
 	private int previousDeActivated;
@@ -29,8 +25,7 @@ public class WhipManager : MonoBehaviour {
 
 		sphereRotator = Instantiate (sphereRotatorPrefab);
 		sphereRotator.SetActive (false);
-
-		sphereRotatorRigidbody = sphereRotator.GetComponent<Rigidbody> ();
+        sphereRotatorRigidbody = sphereRotator.GetComponent<Rigidbody>();
 
 		chain = Instantiate (chainPrefab);
 		chainPieces = new GameObject[13];
@@ -49,20 +44,14 @@ public class WhipManager : MonoBehaviour {
 		chainPieces [11] = GameObject.Find ("ChainOnlySprites(Clone)/Chain1/Chain2/Chain3/Chain4/Chain5/Chain6/Chain7/Chain8/Chain9/Chain10/Chain11/Chain12");
 		chainPieces [12] = GameObject.Find ("ChainOnlySprites(Clone)/Chain1/Chain2/Chain3/Chain4/Chain5/Chain6/Chain7/Chain8/Chain9/Chain10/Chain11/Chain12/Chain13");
 
-		player = GameObject.Find ("Player");
 		whipObjects = GameObject.FindGameObjectsWithTag ("WhipObject");
 
 		chain.SetActive (false);
-
-		playerController = player.GetComponent<PlayerController> ();
-
 		posToWhip = Vector3.zero;
 		activated = false;
-
 		previousDeActivated = 0;
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		if (activated) {
 			lastPosition = player.transform.position;
@@ -110,7 +99,6 @@ public class WhipManager : MonoBehaviour {
 					chain.transform.rotation =  Quaternion.Euler(0.0f, 0.0f, angleInclinacion);
 
 					characterJoint = player.AddComponent <CharacterJoint> ();
-//					characterJoint.connectedBody = whipObjects [closerWhipObject].GetComponent<Rigidbody> ();
 					characterJoint.connectedBody = sphereRotatorRigidbody;
 					playerController.StartWhip();
 					activated = true;
