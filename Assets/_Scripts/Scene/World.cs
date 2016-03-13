@@ -3,7 +3,6 @@
 public class World : MonoBehaviour {
 
     public bool doUpdate = true;
-    public int numBoxes = 0;			// How many active boxes are present in world
 	public PlayerController player;
     public Camera mainCamera;
     public GameObject powers;

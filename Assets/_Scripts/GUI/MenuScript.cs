@@ -37,7 +37,7 @@ public class MenuScript : MonoBehaviour {
 
 	public void ContinuePress()
 	{
-		SceneManager.LoadScene ("scene");
+		SceneManager.LoadScene ("forest");
 	}
 
 	public void LevelSelectPress()

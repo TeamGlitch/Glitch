@@ -7,8 +7,6 @@ using InControl;
 public class PlayerController : MonoBehaviour 
 {
 
-	public float zPosition = 0.0f;
-
     public enum player_state
     {
         IN_GROUND,

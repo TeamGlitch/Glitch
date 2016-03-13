@@ -2,7 +2,6 @@
 using InControl;
 
 public class TeleportScript : MonoBehaviour {
-    public float teleportDistance = 4.0f;
 
 	public float teleportDistance = 4.0f;
 
