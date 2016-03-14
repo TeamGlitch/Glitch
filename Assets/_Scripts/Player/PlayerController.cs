@@ -52,7 +52,6 @@ public class PlayerController : MonoBehaviour
 	private float startJumpPress = -1;				//When the extended jump started
 	private float preparingJump = 0;				//Jump preparing time left
 	private float fallRecovery = 0;					//Fall recovery time left
-    public float zPosition = 0.0f;
 
 	///// Powers
 	//Teleport

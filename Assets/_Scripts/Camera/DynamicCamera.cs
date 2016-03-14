@@ -15,9 +15,8 @@ public class DynamicCamera : MonoBehaviour {
     public Camera mainCamera;
     public World world;
     public GameObject titles;
-    public int speed;
+    public int speed = 10;
     public int zoomSpeed;
-	public int speed = 10;
 
 
 	private dynamic_camera_state state = dynamic_camera_state.PANNING;
