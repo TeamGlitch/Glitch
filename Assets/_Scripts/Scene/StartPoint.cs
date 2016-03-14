@@ -6,6 +6,6 @@ public class StartPoint : CheckPoint {
 
 	void Start () {
 		playerTransform.position = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
-		setThisAsCheckPoint(player);
+		setThisAsCheckPoint();
 	}
 }

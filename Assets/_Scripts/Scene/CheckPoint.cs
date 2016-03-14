@@ -9,15 +9,14 @@ public class CheckPoint : MonoBehaviour {
 	void OnTriggerEnter(Collider coll){
 		if((coll.gameObject.name == "Player") && !active)
         {
-			setThisAsCheckPoint(player);
+			setThisAsCheckPoint();
 		}
 	}
 
-	protected void setThisAsCheckPoint(Player player)
+	protected void setThisAsCheckPoint()
     {
-		Player script = player.GetComponent<Player> ();
-		script.lastCheckPoint = this;
-		script.healCompletely();
+		player.lastCheckPoint = this;
+		player.healCompletely();
 
         // Changes color of checkpoint
 		renderer.material.color = new Color (1, 0, 0, renderer.material.color.a);
