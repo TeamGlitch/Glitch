@@ -8,6 +8,7 @@ public class SlowFPS : MonoBehaviour {
 	public float timeBetweenUpdates = 1;		// Seconds between slow updates
 	public float MAXTime = 10.0f;				// Max time the power can be active
 	public float timeRemaining;					// Remaining time the power can be active
+	public float slowDown = 0.5f;				//How much the world slows down on slowFPS
 
     private float recoveryTime;					// Time to the next recovery bump
     private bool powerActive = false;
@@ -29,6 +30,7 @@ public class SlowFPS : MonoBehaviour {
 			{
 				powerActive = true;
 				world.doUpdate = false;
+				timeLastUpdate = Time.time;
 				world.toggleSlowFPS();
 			}
 			else
@@ -45,14 +47,13 @@ public class SlowFPS : MonoBehaviour {
 			if (timeRemaining <= 0.0f)
 			{
 				timeRemaining = 0;
-				deactivatePower ();
+				deactivatePower();
 
 			} else if (world.doUpdate == true) {
-					world.doUpdate = false;
 					timeLastUpdate = Time.time;
 
 			} else if (Time.time >= timeLastUpdate + timeBetweenUpdates) {
-					world.doUpdate = true;
+					world.requestUpdate((Time.time - timeLastUpdate) * slowDown);
 			}
         }
         else
@@ -79,7 +80,6 @@ public class SlowFPS : MonoBehaviour {
 
 	private void deactivatePower(){
 		powerActive = false;
-		world.doUpdate = true;
 		world.toggleSlowFPS();
 	}
 }

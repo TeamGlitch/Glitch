@@ -3,23 +3,24 @@
 public class CheckPoint : MonoBehaviour {
 
 	public bool active = false;
-    public Renderer renderer;
-    public Player player;
 
 	void OnTriggerEnter(Collider coll){
 		if((coll.gameObject.name == "Player") && !active)
         {
-			setThisAsCheckPoint();
+			setThisAsCheckPoint(coll.gameObject);
 		}
 	}
 
-	protected void setThisAsCheckPoint()
+	protected void setThisAsCheckPoint(GameObject playerRef)
     {
+		Player player = playerRef.GetComponent<Player> ();
 		player.lastCheckPoint = this;
 		player.healCompletely();
 
         // Changes color of checkpoint
+		Renderer renderer = GetComponent<Renderer>();
 		renderer.material.color = new Color (1, 0, 0, renderer.material.color.a);
+
 		active = true;
 	}
 }
