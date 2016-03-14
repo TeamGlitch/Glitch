@@ -9,6 +9,9 @@ public class Player : MonoBehaviour {
 	public DeadMenuScript deadMenuScript;		//Reference to the death menu script
 	public CheckPoint lastCheckPoint;			//Reference to the last checkpoint
 
+	//Internal references
+	private CharacterController characterController;
+
 	// Player element
 	public PlayerController playerController;	//Reference to the player controller
     public SpriteRenderer sprite;
@@ -31,15 +34,18 @@ public class Player : MonoBehaviour {
 
 	void Awake () {
 
+		characterController = GetComponent<CharacterController>();
+
 		glitchPartPool = new ObjectPool(glitchPart);
 		lives = 3;
         items = 0;
 
 		//Instantiate the glitch fragments to avoid lag later in the game
 		GameObject[] parts = new GameObject[100];
-        for (int i = 0; i < 100; i++)
-        {
-            parts[i] = glitchPartPool.getObject();
+		for (int i = 0; i < 100; i++) {
+			parts [i] = glitchPartPool.getObject ();
+		}
+		for (int i = 0; i < 100; i++) {
             parts[i].SetActive(false);
         }
 	}
@@ -89,6 +95,8 @@ public class Player : MonoBehaviour {
 
 			//Deactivate the sprite renderer
 			sprite.enabled = false;
+			characterController.detectCollisions = false;
+
 		}
 	}
 		
@@ -113,7 +121,8 @@ public class Player : MonoBehaviour {
 	public void Resurrected()
     {
 		moveToCheckpoint = false;
-		GetComponent<SpriteRenderer>().enabled = true;
+		sprite.enabled = true;
+		characterController.detectCollisions = true;
 		playerController.state = PlayerController.player_state.JUMPING;
 		transform.position = lastCheckPoint.gameObject.transform.position;
 	}

@@ -80,7 +80,12 @@ public class PlayerController : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit coll)
     {
-        if (!coll.gameObject.CompareTag("ErrorBox"))
+		
+		//   /\     /~~  /\  |\  /||~~\~|~  /\  |~~\|||
+		//  /__\   |    /__\ | \/ ||--< |  /__\ |__/|||
+		// /    \   \__/    \|    ||__/_|_/    \|  \...
+
+		if (coll.gameObject.GetComponent<MeshRenderer>() != null)
         {
             if (coll.gameObject.CompareTag("Floor"))
             {
