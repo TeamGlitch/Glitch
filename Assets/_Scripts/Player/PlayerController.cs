@@ -324,14 +324,17 @@ public class PlayerController : MonoBehaviour
 	private bool ActivatingTeleport(){
 
 		if (InputManager.ActiveDevice.Action3.WasPressed && (!teleportCooldown)) 
-        {	
-			// We create a coroutine to do a delay in the teleport and the state of player is changed to teleporting
-			StartCoroutine ("ActivateTeleport");
-			ActivateTeleport();
-			state = player_state.TELEPORTING;
-			vSpeed = 0;
+        {
+            if (teleport.CheckTeleport(controller))
+            {
+                // We create a coroutine to do a delay in the teleport and the state of player is changed to teleporting
+                StartCoroutine("ActivateTeleport");
+                ActivateTeleport();
+                state = player_state.TELEPORTING;
+                vSpeed = 0;
 
-			return true;
+                return true;
+            }
 		}
 		return false;
 	}
