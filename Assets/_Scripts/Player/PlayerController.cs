@@ -121,6 +121,9 @@ public class PlayerController : MonoBehaviour
 					fallRecovery = jumpRest;
 					state = player_state.JUMPING;
 				}
+
+                // To control movement of player
+                Movement(moveDirection);
 				break;
 
 			case player_state.FALL_RECOVERING:
@@ -131,6 +134,8 @@ public class PlayerController : MonoBehaviour
 					state = player_state.IN_GROUND;
 				}
 
+                // To control movement of player
+                Movement(moveDirection);
 				break;
 
 			case player_state.IN_GROUND: 
@@ -159,6 +164,9 @@ public class PlayerController : MonoBehaviour
 						vSpeed = 0;
 					}
 				}
+
+                // To control movement of player
+                Movement(moveDirection);
 				break;
 
 			case player_state.JUMPING:
@@ -209,6 +217,9 @@ public class PlayerController : MonoBehaviour
 						}
 					}
 				}
+
+                // To control movement of player
+                Movement(moveDirection);
 				break;
 
 			case player_state.WHIPING:
@@ -229,37 +240,6 @@ public class PlayerController : MonoBehaviour
 				}
 				break;
         }
-
-		//Non state-changing operations
-		if (state != player_state.DEATH &&
-			state != player_state.TELEPORTING &&
-			state != player_state.WHIPING) 
-        {	
-			// Gravity
-			vSpeed -= gravity * Time.deltaTime;
-
-			// Control of movemente in X axis
-			moveDirection.x = InputManager.ActiveDevice.LeftStickX.Value;
-			moveDirection = transform.TransformDirection (moveDirection);
-			moveDirection *= speed;
-
-			// Flips the sprite renderer if is changing direction
-			if ((moveDirection.x > 0) && (spriteRenderer.flipX == true)) 
-            {
-				spriteRenderer.flipX = false;
-			} else if ((moveDirection.x < 0) && (spriteRenderer.flipX == false)) {
-				spriteRenderer.flipX = true;
-			}
-			moveDirection.y = vSpeed;
-
-			controller.Move(moveDirection * Time.deltaTime);
-			if (transform.position.z != zPosition)
-			{
-				Vector3 pos = transform.position;
-				pos.z = zPosition;
-				transform.position = pos;
-			}
-		}
 
 		//If a player-induced jump is checked but the jump key is not longer
 		//being held, set it to false so it can jump again
@@ -320,6 +300,36 @@ public class PlayerController : MonoBehaviour
         }
 
 	}
+
+    private void Movement(Vector3 moveDirection)
+    {
+        // Gravity
+        vSpeed -= gravity * Time.deltaTime;
+
+        // Control of movemente in X axis
+        moveDirection.x = InputManager.ActiveDevice.LeftStickX.Value;
+        moveDirection = transform.TransformDirection(moveDirection);
+        moveDirection *= speed;
+
+        // Flips the sprite renderer if is changing direction
+        if ((moveDirection.x > 0) && (spriteRenderer.flipX == true))
+        {
+            spriteRenderer.flipX = false;
+        }
+        else if ((moveDirection.x < 0) && (spriteRenderer.flipX == false))
+        {
+            spriteRenderer.flipX = true;
+        }
+        moveDirection.y = vSpeed;
+
+        controller.Move(moveDirection * Time.deltaTime);
+        if (transform.position.z != zPosition)
+        {
+            Vector3 pos = transform.position;
+            pos.z = zPosition;
+            transform.position = pos;
+        }
+    }
 
 	private bool ActivatingTeleport(){
 
