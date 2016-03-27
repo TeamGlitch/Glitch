@@ -78,6 +78,7 @@ public class TextureSwapper : MonoBehaviour {
 
 			camPosition.x *= guiRectTrans.rect.width / Camera.main.pixelWidth; 
 			camPosition.y *= guiRectTrans.rect.height / Camera.main.pixelHeight; 
+			Debug.Log (camPosition);
 
 			sightRectTransform.anchoredPosition = camPosition;
 

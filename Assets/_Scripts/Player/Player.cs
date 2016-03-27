@@ -31,6 +31,16 @@ public class Player : MonoBehaviour {
 	private Vector3 speedToCheckpoint = new Vector3 (0,0,0);		// Speed vector to the checkpoint
 	private float stopMoving;										// When to stop moving
 
+	private int numberOfBoxesActivable = 0;
+	private int numberOfBoxesVisible = 0;
+	public GameObject boxUIActivated;
+	public GameObject boxUIDeactivated;
+	public Canvas gui;
+	private RectTransform boxUIActivatedRectTransform;
+	private RectTransform boxUIDeactivatedRectTransform;
+	private RectTransform guiRectTrans;
+
+
 
 	void Awake () {
 
@@ -48,6 +58,13 @@ public class Player : MonoBehaviour {
 		for (int i = 0; i < 100; i++) {
             parts[i].SetActive(false);
         }
+
+		boxUIActivatedRectTransform = boxUIActivated.GetComponent<RectTransform> ();
+		boxUIActivated.SetActive (false);
+		boxUIDeactivatedRectTransform = boxUIDeactivated.GetComponent<RectTransform> ();
+		boxUIDeactivated.SetActive (false);
+		guiRectTrans = gui.GetComponent<RectTransform>();
+
 	}
 
 	void OnTriggerEnter(Collider coll){
@@ -107,6 +124,19 @@ public class Player : MonoBehaviour {
         {
             transform.position += speedToCheckpoint * Time.deltaTime;
         }
+
+		if (numberOfBoxesActivable > 0 || numberOfBoxesVisible > 0) {
+			//Sight position
+			Vector3 boxUIPosition = new Vector3(transform.position.x, transform.position.y + 4.0f, 0);
+			Vector3 camPosition = Camera.main.WorldToScreenPoint(boxUIPosition);
+
+			camPosition.x *= guiRectTrans.rect.width / Camera.main.pixelWidth; 
+			camPosition.y *= guiRectTrans.rect.height / Camera.main.pixelHeight; 
+
+			boxUIActivatedRectTransform.anchoredPosition = camPosition;
+			boxUIDeactivatedRectTransform.anchoredPosition = camPosition;
+
+		}
 	
 	}
 		
@@ -132,4 +162,41 @@ public class Player : MonoBehaviour {
 		lives = 3;
 		guiLife.UpdateLives();
 	}
+
+	public void IncreaseActivableBox()
+	{
+/*		if (numberOfBoxesActivable == 0) {
+			boxUIActivated.SetActive (true);
+			boxUIDeactivated.SetActive (false);
+		}
+		++numberOfBoxesActivable;
+*/	}
+
+	public void DecreaseActivableBox()
+	{
+		/*		--numberOfBoxesActivable;
+		if (numberOfBoxesActivable == 0 && numberOfBoxesVisible == 0) {
+			boxUIActivated.SetActive (false);
+			boxUIDeactivated.SetActive (false);
+		} else if (numberOfBoxesActivable == 0) {
+			boxUIActivated.SetActive (false);
+			boxUIDeactivated.SetActive (true);
+		}
+*/	}
+
+	public void IncreaseVisibleBox()
+	{
+/*		if (numberOfBoxesVisible == 0 && numberOfBoxesActivable == 0) {
+			boxUIDeactivated.SetActive (true);
+		}
+		++numberOfBoxesVisible;
+*/	}
+
+	public void DecreaseVisibleBox()
+	{
+/*		--numberOfBoxesVisible;
+		if (numberOfBoxesVisible == 0) {
+			boxUIDeactivated.SetActive (false);
+		}
+*/	}
 }
