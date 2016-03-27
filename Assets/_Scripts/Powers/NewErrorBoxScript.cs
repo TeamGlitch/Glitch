@@ -14,6 +14,8 @@ public class NewErrorBoxScript : MonoBehaviour
 	public GameObject boxUIDeactivated1;
 	public GameObject boxUIActivated2;
 	public GameObject boxUIDeactivated2;
+	public GameObject boxUIActivated3;
+	public GameObject boxUIDeactivated3;
 	public Canvas gui;
 
 	private int UIBoxUsed = 0;
@@ -22,6 +24,8 @@ public class NewErrorBoxScript : MonoBehaviour
 	private RectTransform boxUIDeactivatedRectTransform1;
 	private RectTransform boxUIActivatedRectTransform2;
 	private RectTransform boxUIDeactivatedRectTransform2;
+	private RectTransform boxUIActivatedRectTransform3;
+	private RectTransform boxUIDeactivatedRectTransform3;
 	private RectTransform guiRectTrans;
 
 	private int framesInCurrentStateWhenFlickering = 0;
@@ -44,11 +48,15 @@ public class NewErrorBoxScript : MonoBehaviour
 		boxUIActivated1.SetActive (false);
 		boxUIDeactivatedRectTransform1 = boxUIDeactivated1.GetComponent<RectTransform> ();
 		boxUIDeactivated1.SetActive (false);
-		guiRectTrans = gui.GetComponent<RectTransform>();
 		boxUIActivatedRectTransform2 = boxUIActivated2.GetComponent<RectTransform> ();
 		boxUIActivated2.SetActive (false);
 		boxUIDeactivatedRectTransform2 = boxUIDeactivated2.GetComponent<RectTransform> ();
 		boxUIDeactivated2.SetActive (false);
+		boxUIActivatedRectTransform3 = boxUIActivated3.GetComponent<RectTransform> ();
+		boxUIActivated3.SetActive (false);
+		boxUIDeactivatedRectTransform3 = boxUIDeactivated3.GetComponent<RectTransform> ();
+		boxUIDeactivated3.SetActive (false);
+		guiRectTrans = gui.GetComponent<RectTransform>();
 
 	}
 
@@ -69,7 +77,10 @@ public class NewErrorBoxScript : MonoBehaviour
 				boxUIActivatedRectTransform2.anchoredPosition = camPosition;
 				boxUIDeactivatedRectTransform2.anchoredPosition = camPosition;
 			}
-
+			else if (UIBoxUsed == 3) {
+				boxUIActivatedRectTransform3.anchoredPosition = camPosition;
+				boxUIDeactivatedRectTransform3.anchoredPosition = camPosition;
+			}
 		}
 
 		if (visible && !activated && InputManager.ActiveDevice.Action4.WasPressed)
@@ -89,6 +100,10 @@ public class NewErrorBoxScript : MonoBehaviour
 			} else if (UIBoxUsed == 2) {
 				boxUIActivated2.SetActive (false);
 				boxUIDeactivated2.SetActive (true);
+			}
+			else if (UIBoxUsed == 3) {
+				boxUIActivated3.SetActive (false);
+				boxUIDeactivated3.SetActive (true);
 			}
 		}
 		else if (activated && timeActivated < timeActive && timeActivated >= (timeActive - timeFlickering))
@@ -126,6 +141,9 @@ public class NewErrorBoxScript : MonoBehaviour
 			} else if (UIBoxUsed == 2) {
 				boxUIActivated2.SetActive (true);
 				boxUIDeactivated2.SetActive (false);
+			} else if (UIBoxUsed == 3) {
+				boxUIActivated3.SetActive (true);
+				boxUIDeactivated3.SetActive (false);
 			}
 
 		}
@@ -159,12 +177,20 @@ public class NewErrorBoxScript : MonoBehaviour
 
 				boxUIActivatedRectTransform1.anchoredPosition = camPosition;
 				boxUIDeactivatedRectTransform1.anchoredPosition = camPosition;
-			} else {
+			}
+			else if (!boxUIActivated2.activeSelf && !boxUIDeactivated2.activeSelf) {
 				UIBoxUsed = 2;
 				boxUIActivated2.SetActive (true);
 
 				boxUIActivatedRectTransform2.anchoredPosition = camPosition;
 				boxUIDeactivatedRectTransform2.anchoredPosition = camPosition;
+			}
+			else {
+				UIBoxUsed = 3;
+				boxUIActivated3.SetActive (true);
+
+				boxUIActivatedRectTransform3.anchoredPosition = camPosition;
+				boxUIDeactivatedRectTransform3.anchoredPosition = camPosition;
 			}
 		} else {
 
@@ -174,12 +200,20 @@ public class NewErrorBoxScript : MonoBehaviour
 
 				boxUIActivatedRectTransform1.anchoredPosition = camPosition;
 				boxUIDeactivatedRectTransform1.anchoredPosition = camPosition;
-			} else {
+			}
+			else if (!boxUIActivated2.activeSelf && !boxUIDeactivated2.activeSelf) {
 				UIBoxUsed = 2;
 				boxUIDeactivated2.SetActive (true);
 
 				boxUIActivatedRectTransform2.anchoredPosition = camPosition;
 				boxUIDeactivatedRectTransform2.anchoredPosition = camPosition;
+			}
+			else {
+				UIBoxUsed = 3;
+				boxUIDeactivated3.SetActive (true);
+
+				boxUIActivatedRectTransform3.anchoredPosition = camPosition;
+				boxUIDeactivatedRectTransform3.anchoredPosition = camPosition;
 			}
 		}
 		visible = true;
@@ -195,6 +229,9 @@ public class NewErrorBoxScript : MonoBehaviour
 		} else if (UIBoxUsed == 2) {
 			boxUIActivated2.SetActive (false);
 			boxUIDeactivated2.SetActive (false);
+		} else if (UIBoxUsed == 3) {
+			boxUIActivated3.SetActive (false);
+			boxUIDeactivated3.SetActive (false);
 		}
 
 		UIBoxUsed = 0;
