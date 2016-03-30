@@ -25,8 +25,28 @@ public class DialogueScript : MonoBehaviour {
 		//We check if we're printing something and we can print the next letter
 		if (printing && Time.time > nextLetterTime) {
 
+			//Go to the next letter
+			printLetter++;
 
+			if(printLetter >= messageToPrint.Length){
 
+				//If the end has been reached, put the message directly and restore variables
+				dialogueBoxText.text = messageToPrint;
+				printing = false;
+				printLetter = 0;
+
+			} else {
+
+				//If not, we send the message to print with color tags that make it invisible from the print
+				//letter to the end. We do this rather than doing subscripts because they mess the paragraph aligment
+				string newMessage = messageToPrint.Insert(printLetter, "<color=#00000000>");
+				newMessage = newMessage.Insert(newMessage.Length, "</color>");
+				dialogueBoxText.text = newMessage;
+
+				//Finally we determine when the next letter will appear
+				nextLetterTime = Time.time + waitBetweenLetters;
+
+			}
 
 
 
