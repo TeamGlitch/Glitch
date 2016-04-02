@@ -13,9 +13,9 @@ public class KnightAI : MonoBehaviour {
 
     // Constants
     public const float maxSightPatrol = 8.0f;
-    public const float maxSightChase = 16.0f;
+    public const float maxSightChase = 14.0f;
     public const float maxSightAttack = 1.0f;
-    public const float maxSightSearch = 18.0f;
+    public const float maxSightSearch = 16.0f;
     public const float searchingTime = 5.0f;
 
     // Variables
@@ -68,7 +68,6 @@ public class KnightAI : MonoBehaviour {
         // then changes his state to Chase and changes his speed too.
         if (sight == false)
         {
-            print("Patrolling");
             ray.origin = transform.position;
             ray.direction = transform.TransformDirection(Vector3.forward);
 
@@ -154,20 +153,21 @@ public class KnightAI : MonoBehaviour {
                     // Searching logic
                     // SEARCH ANIMATION HERE
 
+                    ray.origin = transform.position;
+                    ray.direction = transform.TransformDirection(Vector3.forward);
+
+                    if ((Physics.Raycast(ray, out hit, maxSightSearch)) && (hit.collider.gameObject.tag == "Player"))
+                    {
+                        speed = 6.0f;
+                        states = enemy_states.CHASE;
+
+                    }
+
                     // If is returning enemy advances to last patrol point, 
                     // else search looking to one side and the other
                     if (returning == false)
                     {
-                        ray.origin = transform.position;
-                        ray.direction = transform.TransformDirection(Vector3.forward);
-
-                        if ((Physics.Raycast(ray, out hit, maxSightSearch)) && (hit.collider.gameObject.tag == "Player"))
-                        {
-                            speed = 6.0f;
-                            states = enemy_states.CHASE;
-
-                        }
-                        else
+                        if (states == enemy_states.SEARCH)
                         {
                             time -= Time.deltaTime;
                             if (time <= 0.0f)
@@ -203,12 +203,15 @@ public class KnightAI : MonoBehaviour {
                     }
                     else
                     {
-                        transform.Translate(Vector3.forward * speed * Time.deltaTime);
-                        if ((transform.position.x < lastPosition.x + 1) && (transform.position.x > lastPosition.x - 1))
+                        if (states == enemy_states.SEARCH)
                         {
-                            returning = false;
-                            sight = false;
-                            states = enemy_states.PATROL;
+                            transform.Translate(Vector3.forward * speed * Time.deltaTime);
+                            if ((transform.position.x < lastPosition.x + 1) && (transform.position.x > lastPosition.x - 1))
+                            {
+                                returning = false;
+                                sight = false;
+                                states = enemy_states.PATROL;
+                            }
                         }
                     }
                     break;
