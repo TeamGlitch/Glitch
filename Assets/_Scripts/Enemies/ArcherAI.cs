@@ -16,6 +16,7 @@ public class ArcherAI : MonoBehaviour {
     public const float maxSightPersecution = 8.0f;
     public const float maxSightMeleeAttack = 4.0f;
     public const float maxSightShoot = 20.0f;
+    public const float maxJump = 8.0f;
 
     // Variables
     public bool sight = false;
@@ -30,31 +31,15 @@ public class ArcherAI : MonoBehaviour {
     private float searchRotationTime = 1.0f;
     private bool returning = false;
 
-
-    // Trigger that detect collisions with patrol points and limit points
-    void OnTriggerEnter(Collider coll)
+    // Trigger that detect collisions with player and limit points
+    void OnTriggerStay(Collider coll)
     {
         // If is in a limit he stops and search glitch
-        if (coll.gameObject.tag == "LimitPoint")
+        if (coll.gameObject.tag == "Player")
         {
-            // Calcular espacio de vacío para saltar y saltar si puede
-        }
-    }
-
-    void Update()
-    {
-        // if the enemy hasn't seen Glitch he patrols and if he detects him with the raycast
-        // then changes his state to Chase and changes his speed too.
-        if (sight == false)
-        {
-
-            ray.origin = transform.position;
-            ray.direction = transform.TransformDirection(Vector3.forward);
-
-            // Patrolling logic
-            transform.Translate(Vector3.forward * speed * Time.deltaTime);
-
-            if ((Physics.Raycast(ray, out hit, maxSightShoot)) && (hit.collider.gameObject.tag == "Player"))
+            ray = new Ray(transform.localPosition, playerPos.position - transform.localPosition);
+            Debug.DrawRay(transform.localPosition, playerPos.position - transform.localPosition);
+            if ((states != enemy_states.SHOOT) && (Physics.Raycast(ray, out hit)) && (hit.collider.gameObject.tag == "Player"))
             {
                 sight = true;
                 speed = 6.0f;
@@ -62,7 +47,29 @@ public class ArcherAI : MonoBehaviour {
                 states = enemy_states.SHOOT;
             }
         }
-        else
+    }
+
+    void Update()
+    {
+        // If the enemy hasn't seen Glitch he patrols and if he detects him with the raycast
+        // then changes his state to Chase and changes his speed too.
+        //if (sight == false)
+        //{
+
+        //    ray.origin = transform.position;
+        //    ray.direction = transform.TransformDirection(Vector3.forward);
+
+        //    // Waiting logic
+        //    transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        //    if ((Physics.Raycast(ray, out hit, maxSightShoot)) && (hit.collider.gameObject.tag == "Player"))
+        //    {
+        //        sight = true;
+        //        speed = 6.0f;
+        //        initialPosition = transform.position;      // We save the initial point to return later
+        //        states = enemy_states.SHOOT;
+        //    }
+        //}
+        if (sight == true)
         {
             switch (states)
             {
@@ -72,6 +79,8 @@ public class ArcherAI : MonoBehaviour {
                     print("Shoot");
                     // Shooting logic
                     // SHOOT ANIMATION AND LOGIC HERE
+
+
 
                     // If distance to Glitch is minus than chase field of view then changes to Chase state.
                     // If Glitch is in melee attack scope then enemy attacks to him with daggers, changing her state to Melee attack
@@ -142,7 +151,6 @@ public class ArcherAI : MonoBehaviour {
                     }
                    
                     break;
-
             }
         }
     }
