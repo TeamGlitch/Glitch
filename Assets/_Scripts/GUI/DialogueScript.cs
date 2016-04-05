@@ -6,6 +6,8 @@ using InControl;
 
 public class DialogueScript : MonoBehaviour {
 
+	////////////////////////Dialogue Box////////////////////////
+
 	public enum dialogueBoxState
 	{
 		PREPARE_TEXT,
@@ -24,36 +26,46 @@ public class DialogueScript : MonoBehaviour {
 	//State
 	private dialogueBoxState state = dialogueBoxState.PREPARE_TEXT;
 
-	//Dialogue Box
+	//References
 	public Text dialogueBoxText;				//The dialogue box text reference
 	public GameObject continueButton;			//The continue button reference
 
-	//Writting state
-	public float waitBetweenLetters = 0.03f;	//How much time there is between letter and letter printing
-
+	//Message variables
 	private List<string> messageList = new List<string>();  //Messages to print in the dialogue box  
 	private string messageToPrint;							//Message being printed actually
 	private string cleanMessage;                            //Message without tags
 
+	//Writting variables
 	private int letterIndex = 0;                //Index of the currently printing letter
 	private int cleanIndex = 0;                    //Index of the currently printing letter in the clean message
 	private float nextLetterTime = 0f;			//Time when the next letter will be printed
 
+	//Bug effect on writting pointer
+	private bool showPointerBug = true;
 	private int currentRandomLetter = 0;				//Current bugged letter in the writting effect
 	private float waitBetweenBuggedLetters = 0.02f;		//Wait between bugged letter changes
 	private float nextBuggedLetterTime = 0f;			//When the next bugged letter will appear
 
-	//Waiting state
+	//Bug effect on waiting state
 	private int corruptedPosition = -1;			//What index letter is corrupted
 	private char originalChar;					//What original character was in it
 	private float timeToSolve = 0;				//When the corruption will be solved
 
+	//Writting properties
+	private float defaultWaitBetweenLetters = 0.03f;
+	private float waitBetweenLetters = 0.03f;	//How much time there is between letter and letter printing
+	private bool autoJump = false;				//The current text goes to the next text automatically
+	private bool skipable = true;				//The user can skip this text
 
 	// Use this for initialization
 	void Start () {
 		continueButton.SetActive(false);
-		messageList.Add("Pack my box with five dozen liquor jugs. <speed=0.09>The five boxing wizards jump quickly. <speed=0.03>How vexingly quick daft zebras jump!");
-		messageList.Add("The five boxing wizards jump quickly! I just said quickly! QUICKLYYYYYY!!!");
+		messageList.Add("Hello! You can go to the next message with A.");
+		messageList.Add("I can also skip it automatically.<wait=1.5><skip>");
+		messageList.Add("<noskip>And you can't skip this text! Go on! Try it!<wait=2>\nSee?<wait=0.5> Told ya.");
+		messageList.Add("I can talk <wait=1><speed=0>really fast <wait=1><speed=0.5>or really slow.");
+		messageList.Add("I can also add...<wait=2>uh...<wait=2>Oh!<wait=0.5> Right!<wait=0.5> Pauses!");
+		messageList.Add("So yeah, have fun.");
 	}
 	
 	// Update is called once per frame
@@ -83,17 +95,22 @@ public class DialogueScript : MonoBehaviour {
 					}
 				}
 
-				//Starts writting
+				//Sets the properties to default and starts writting
+				letterIndex = -1;
+				cleanIndex = -1;
+
+				autoJump = false;
+				waitBetweenLetters = defaultWaitBetweenLetters;
+				skipable = true;
+
 				state = dialogueBoxState.WRITTING;
-				letterIndex = 0;
-				cleanIndex = 0;
 
 			break;
 
 			case dialogueBoxState.WRITTING: //Currently writting in the dialogue box
 
 				//If A is pressed, skip message
-				if (InputManager.ActiveDevice.Action1.WasPressed) {
+				if (InputManager.ActiveDevice.Action1.WasPressed && skipable) {
 					letterIndex  = messageToPrint.Length;
 					nextLetterTime = 0;
 				}
@@ -114,63 +131,86 @@ public class DialogueScript : MonoBehaviour {
 						//Go to wait, remove the message from the list and activate the continue button
 						state = dialogueBoxState.WAITING;
 						messageList.RemoveAt(0);
-						continueButton.SetActive(true);
+						if (!autoJump) {
+							continueButton.SetActive(true);
+						}
 
 					} else {
 
-						//If not, read all the tags in this position (if there's any)
+						//If not, we determine when the next letter will appear
+						nextLetterTime = Time.time + waitBetweenLetters;
+						
+						//If the pointer is not visible, show it
+						showPointerBug = true;
+
+						//Read all the tags in this position (if there's any)
 						while (letterIndex < messageToPrint.Length && messageToPrint[letterIndex] == '<') {
 							ReadTag();
 						}
 
-						//If not, we send the message to print with color tags that make it invisible from the print
+						//We send the message to print with color tags that make it invisible from the print
 						//letter to the end. We do this rather than doing subscripts because they mess the paragraph aligment
-						dialogueBoxText.text = cleanMessage.Insert(cleanIndex, randomLetters [currentRandomLetter] + "<color=#00000000>") + "</color>";
-
-						//Finally we determine when the next letter will appear
-						nextLetterTime = Time.time + waitBetweenLetters;
+						string pointer = "";
+						if (showPointerBug) {
+							pointer += randomLetters[currentRandomLetter];
+						}
+						dialogueBoxText.text = cleanMessage.Insert(cleanIndex, pointer + "<color=#00000000>") + "</color>";
 
 					}
 
 				} else if (Time.time > nextBuggedLetterTime) {
 
 					//We change the writting pointer's currently showed sign and we determine the next sign change
-					currentRandomLetter = Random.Range (0, randomLetters.Length);
-					dialogueBoxText.text = cleanMessage.Insert(cleanIndex, randomLetters [currentRandomLetter] + "<color=#00000000>") + "</color>";
-					nextBuggedLetterTime = Time.time + waitBetweenBuggedLetters;
+					if(showPointerBug){
+						currentRandomLetter = Random.Range (0, randomLetters.Length);
+						dialogueBoxText.text = cleanMessage.Insert(cleanIndex, randomLetters[currentRandomLetter] + "<color=#00000000>") + "</color>";
+						nextBuggedLetterTime = Time.time + waitBetweenBuggedLetters;
+					}
 				}
 					
 			break;
 
 			case dialogueBoxState.WAITING: //Message on dialogue box. Waiting for next instruction
 
-				//If there is no corruption on the message
-				if (corruptedPosition == -1) {
-				
-					//0.75% chance to corrupt a char
-					if(Random.value > 0.9925f){
+				if (InputManager.ActiveDevice.Action1.WasPressed || autoJump) {
 
-						//Selects a position, stores it's value and sets a duration
-						corruptedPosition = Random.Range(0, dialogueBoxText.text.Length);
-						originalChar = dialogueBoxText.text[corruptedPosition];
-						timeToSolve = Time.time + Random.Range(0.05f, 0.4f);
-
-						//Changes the position to a random symbol
-						string newText = dialogueBoxText.text.Remove(corruptedPosition, 1);
-						newText = newText.Insert(corruptedPosition, randomLetters[Random.Range(0, randomLetters.Length)]);
-						dialogueBoxText.text = newText;
-					}
-					
-				}
-				//If there is corruption and its duration has ended
-				else if (Time.time > timeToSolve){
-
-					//Fixes the corrupted char
-					string newText = dialogueBoxText.text.Remove(corruptedPosition, 1);
-					newText = newText.Insert(corruptedPosition, originalChar.ToString());
-					dialogueBoxText.text = newText;
 					corruptedPosition = -1;
+					continueButton.SetActive(false);
 
+					if (messageList.Count > 0) {
+						state = dialogueBoxState.PREPARE_TEXT;
+					}
+
+				} else {
+				
+					//If there is no corruption on the message
+					if (corruptedPosition == -1) {
+
+						//0.75% chance to corrupt a char
+						if(Random.value > 0.9925f){
+
+							//Selects a position, stores it's value and sets a duration
+							corruptedPosition = Random.Range(0, dialogueBoxText.text.Length);
+							originalChar = dialogueBoxText.text[corruptedPosition];
+							timeToSolve = Time.time + Random.Range(0.05f, 0.4f);
+
+							//Changes the position to a random symbol
+							string newText = dialogueBoxText.text.Remove(corruptedPosition, 1);
+							newText = newText.Insert(corruptedPosition, randomLetters[Random.Range(0, randomLetters.Length)]);
+							dialogueBoxText.text = newText;
+						}
+
+					}
+					//If there is corruption and its duration has ended
+					else if (Time.time > timeToSolve){
+
+						//Fixes the corrupted char
+						string newText = dialogueBoxText.text.Remove(corruptedPosition, 1);
+						newText = newText.Insert(corruptedPosition, originalChar.ToString());
+						dialogueBoxText.text = newText;
+						corruptedPosition = -1;
+
+					}
 				}
 
 			break;
@@ -206,11 +246,26 @@ public class DialogueScript : MonoBehaviour {
 		//If it ended with '>' (not unclosed tag), search in the effects
 		if (messageToPrint[letterIndex] == '>') {
 
+			letterIndex++;
+
 			//Text speed
 			if (tag == "speed") {
 				waitBetweenLetters = float.Parse(value);
+				return;
 			}
-
+			if (tag == "wait") {
+				nextLetterTime = Time.time + float.Parse(value);
+				showPointerBug = false;
+				return;
+			}
+			if (tag == "skip") {
+				autoJump = true;
+				return;
+			}
+			if (tag == "noskip") {
+				skipable = false;
+				return;
+			}
 		}
 	}
 }
