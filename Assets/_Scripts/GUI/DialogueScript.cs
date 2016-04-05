@@ -8,6 +8,7 @@ public class DialogueScript : MonoBehaviour {
 
 	public enum dialogueBoxState
 	{
+		PREPARE_TEXT,
 		WRITTING,
 		WAITING
 	};
@@ -21,18 +22,21 @@ public class DialogueScript : MonoBehaviour {
 	};
 
 	//State
-	private dialogueBoxState state = dialogueBoxState.WRITTING;
+	private dialogueBoxState state = dialogueBoxState.PREPARE_TEXT;
 
 	//Dialogue Box
 	public Text dialogueBoxText;				//The dialogue box text reference
 	public GameObject continueButton;			//The continue button reference
 
 	//Writting state
-	public float waitBetweenLetters = 0.05f;	//How much time there is between letter and letter printing
+	public float waitBetweenLetters = 0.03f;	//How much time there is between letter and letter printing
 
-	private List<string> messageToPrint = new List<string>();	//Message to print in the dialogue box
+	private List<string> messageList = new List<string>();  //Messages to print in the dialogue box  
+	private string messageToPrint;							//Message being printed actually
+	private string cleanMessage;                            //Message without tags
 
-	private int printLetter = 0;				//Index of the currently printing letter
+	private int letterIndex = 0;                //Index of the currently printing letter
+	private int cleanIndex = 0;                    //Index of the currently printing letter in the clean message
 	private float nextLetterTime = 0f;			//Time when the next letter will be printed
 
 	private int currentRandomLetter = 0;				//Current bugged letter in the writting effect
@@ -48,8 +52,8 @@ public class DialogueScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		continueButton.SetActive(false);
-		messageToPrint.Add("Pack my box with five dozen liquor jugs. The five boxing wizards jump quickly. How vexingly quick daft zebras jump!");
-		messageToPrint.Add("The five boxing wizards jump quickly! I just said quickly! QUICKLYYYYYY!!!");
+		messageList.Add("Pack my box with five dozen liquor jugs. <speed=0.09>The five boxing wizards jump quickly. <speed=0.03>How vexingly quick daft zebras jump!");
+		messageList.Add("The five boxing wizards jump quickly! I just said quickly! QUICKLYYYYYY!!!");
 	}
 	
 	// Update is called once per frame
@@ -57,10 +61,40 @@ public class DialogueScript : MonoBehaviour {
 
 		switch (state) {
 
+			case dialogueBoxState.PREPARE_TEXT: //Preparing the message to write
+
+				//Sets the message to print to the first message in the list
+				messageToPrint = messageList[0];
+
+				//Cleans the tags and stores it as the clean message
+				int i = 0;
+				cleanMessage = "";
+				while (i < messageToPrint.Length) {
+					if (messageToPrint[i] == '<') {
+						while (i < messageToPrint.Length && messageToPrint[i] != '>') {
+							i++;
+						}
+						if (messageToPrint[i] == '>') {
+							i++;
+						}
+					} else {
+						cleanMessage += messageToPrint[i];
+						i++;
+					}
+				}
+
+				//Starts writting
+				state = dialogueBoxState.WRITTING;
+				letterIndex = 0;
+				cleanIndex = 0;
+
+			break;
+
 			case dialogueBoxState.WRITTING: //Currently writting in the dialogue box
 
+				//If A is pressed, skip message
 				if (InputManager.ActiveDevice.Action1.WasPressed) {
-					printLetter = messageToPrint[0].Length;
+					letterIndex  = messageToPrint.Length;
 					nextLetterTime = 0;
 				}
 				
@@ -68,23 +102,30 @@ public class DialogueScript : MonoBehaviour {
 				if (Time.time > nextLetterTime) {
 
 					//Go to the next letter
-					printLetter++;
+					letterIndex++;
+					cleanIndex++;
 
-					if (printLetter >= messageToPrint[0].Length) {
+					//If the end has been reached
+					if (letterIndex >= messageToPrint.Length) {
 
-						//If the end has been reached, put the message directly and restore variables
-						dialogueBoxText.text = messageToPrint[0];
+						//Put the message directly
+						dialogueBoxText.text = cleanMessage;
 
+						//Go to wait, remove the message from the list and activate the continue button
 						state = dialogueBoxState.WAITING;
-						printLetter = 0;
-						messageToPrint.RemoveAt(0);
+						messageList.RemoveAt(0);
 						continueButton.SetActive(true);
 
 					} else {
 
+						//If not, read all the tags in this position (if there's any)
+						while (letterIndex < messageToPrint.Length && messageToPrint[letterIndex] == '<') {
+							ReadTag();
+						}
+
 						//If not, we send the message to print with color tags that make it invisible from the print
 						//letter to the end. We do this rather than doing subscripts because they mess the paragraph aligment
-						dialogueBoxText.text = messageToPrint[0].Insert (printLetter, randomLetters [currentRandomLetter] + "<color=#00000000>") + "</color>";
+						dialogueBoxText.text = cleanMessage.Insert(cleanIndex, randomLetters [currentRandomLetter] + "<color=#00000000>") + "</color>";
 
 						//Finally we determine when the next letter will appear
 						nextLetterTime = Time.time + waitBetweenLetters;
@@ -93,9 +134,9 @@ public class DialogueScript : MonoBehaviour {
 
 				} else if (Time.time > nextBuggedLetterTime) {
 
-					//We change the currently showed sign and we determine the next sign change
+					//We change the writting pointer's currently showed sign and we determine the next sign change
 					currentRandomLetter = Random.Range (0, randomLetters.Length);
-					dialogueBoxText.text = messageToPrint[0].Insert (printLetter, randomLetters [currentRandomLetter] + "<color=#00000000>") + "</color>";
+					dialogueBoxText.text = cleanMessage.Insert(cleanIndex, randomLetters [currentRandomLetter] + "<color=#00000000>") + "</color>";
 					nextBuggedLetterTime = Time.time + waitBetweenBuggedLetters;
 				}
 					
@@ -135,7 +176,41 @@ public class DialogueScript : MonoBehaviour {
 			break;
 
 		}
+	}
 
+	void ReadTag(){
 
+		string tag = "";		//The tag name
+		string value = "";		//The tag value
+		bool tagging = true;	//Where writting the tag? Else, we're writting the value
+		letterIndex++;
+
+		//Do until the '>' or the message end
+		while (letterIndex < messageToPrint.Length && messageToPrint[letterIndex] != '>') {
+
+			//If it's the =, we're now writting the value
+			if (messageToPrint[letterIndex] == '=') {
+				tagging = false;
+			} else {
+				
+				//Store the value where needed
+				if (tagging) {
+					tag += messageToPrint[letterIndex];
+				} else {
+					value += messageToPrint[letterIndex];
+				}
+			}
+			letterIndex++;
+		}
+
+		//If it ended with '>' (not unclosed tag), search in the effects
+		if (messageToPrint[letterIndex] == '>') {
+
+			//Text speed
+			if (tag == "speed") {
+				waitBetweenLetters = float.Parse(value);
+			}
+
+		}
 	}
 }
