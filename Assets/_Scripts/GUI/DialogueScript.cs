@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using InControl;
+using System.Xml;
 
 public class DialogueScript : MonoBehaviour {
 
@@ -10,6 +11,7 @@ public class DialogueScript : MonoBehaviour {
 
 	public enum dialogueBoxState
 	{
+		OFF,
 		PREPARE_TEXT,
 		WRITTING,
 		WAITING
@@ -23,10 +25,15 @@ public class DialogueScript : MonoBehaviour {
 		"★","☂","♞","☯","☭","☢","☎","❄"
 	};
 
+	//Level Dialogue XML
+	public TextAsset XMLAsset;
+	private XmlDocument xmlDoc;
+
 	//State
-	private dialogueBoxState state = dialogueBoxState.PREPARE_TEXT;
+	private dialogueBoxState state;
 
 	//References
+	public GameObject dialogueBox;				//The dialogue box reference
 	public Text dialogueBoxText;				//The dialogue box text reference
 	public GameObject continueButton;			//The continue button reference
 
@@ -59,13 +66,15 @@ public class DialogueScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+		//Read the XML document
+		xmlDoc = new XmlDocument();
+		xmlDoc.LoadXml(XMLAsset.text);
+
+		//Make initial preparations
+		state = dialogueBoxState.OFF;
+		dialogueBox.SetActive(false);
 		continueButton.SetActive(false);
-		messageList.Add("Hello! You can go to the next message with A.");
-		messageList.Add("I can also skip it automatically.<wait=1.5><skip>");
-		messageList.Add("<noskip>And you can't skip this text! Go on! Try it!<wait=2>\nSee?<wait=0.5> Told ya.");
-		messageList.Add("I can talk <wait=1><speed=0>really fast <wait=1><speed=0.5>or really slow.");
-		messageList.Add("I can also add...<wait=2>uh...<wait=2>Oh!<wait=0.5> Right!<wait=0.5> Pauses!");
-		messageList.Add("So yeah, have fun.");
 	}
 	
 	// Update is called once per frame
@@ -82,11 +91,11 @@ public class DialogueScript : MonoBehaviour {
 				int i = 0;
 				cleanMessage = "";
 				while (i < messageToPrint.Length) {
-					if (messageToPrint[i] == '<') {
-						while (i < messageToPrint.Length && messageToPrint[i] != '>') {
+					if (messageToPrint[i] == '[') {
+						while (i < messageToPrint.Length && messageToPrint[i] != ']') {
 							i++;
 						}
-						if (messageToPrint[i] == '>') {
+						if (messageToPrint[i] == ']') {
 							i++;
 						}
 					} else {
@@ -144,7 +153,7 @@ public class DialogueScript : MonoBehaviour {
 						showPointerBug = true;
 
 						//Read all the tags in this position (if there's any)
-						while (letterIndex < messageToPrint.Length && messageToPrint[letterIndex] == '<') {
+						while (letterIndex < messageToPrint.Length && messageToPrint[letterIndex] == '[') {
 							ReadTag();
 						}
 
@@ -172,13 +181,17 @@ public class DialogueScript : MonoBehaviour {
 
 			case dialogueBoxState.WAITING: //Message on dialogue box. Waiting for next instruction
 
+				//The wait ends
 				if (InputManager.ActiveDevice.Action1.WasPressed || autoJump) {
 
 					corruptedPosition = -1;
 					continueButton.SetActive(false);
 
+					//If there are more text, we return to the prepare_text state
 					if (messageList.Count > 0) {
 						state = dialogueBoxState.PREPARE_TEXT;
+					} else {
+						dialogueBox.SetActive(false);
 					}
 
 				} else {
@@ -218,15 +231,15 @@ public class DialogueScript : MonoBehaviour {
 		}
 	}
 
-	void ReadTag(){
+	private void ReadTag(){
 
 		string tag = "";		//The tag name
 		string value = "";		//The tag value
 		bool tagging = true;	//Where writting the tag? Else, we're writting the value
 		letterIndex++;
 
-		//Do until the '>' or the message end
-		while (letterIndex < messageToPrint.Length && messageToPrint[letterIndex] != '>') {
+		//Do until the ']' or the message end
+		while (letterIndex < messageToPrint.Length && messageToPrint[letterIndex] != ']') {
 
 			//If it's the =, we're now writting the value
 			if (messageToPrint[letterIndex] == '=') {
@@ -243,8 +256,8 @@ public class DialogueScript : MonoBehaviour {
 			letterIndex++;
 		}
 
-		//If it ended with '>' (not unclosed tag), search in the effects
-		if (messageToPrint[letterIndex] == '>') {
+		//If it ended with ']' (not unclosed tag), search in the effects
+		if (messageToPrint[letterIndex] == ']') {
 
 			letterIndex++;
 
@@ -267,5 +280,20 @@ public class DialogueScript : MonoBehaviour {
 				return;
 			}
 		}
+	}
+
+	public void callScene(int sceneNum){
+
+		//We read the scene text of the given id
+		XmlNode scene = xmlDoc.SelectSingleNode("/Dialogue[@lang = \"English\"]/Scene[@id = \"" + sceneNum + "\"]");
+
+		//We add the lines to the message list 
+		for (int i = 0; i < scene.ChildNodes.Count; i++) {
+			messageList.Add (scene.ChildNodes[i].InnerText);
+		}
+
+		//We prepare the text
+		dialogueBox.SetActive(true);
+		state = dialogueBoxState.PREPARE_TEXT;
 	}
 }
