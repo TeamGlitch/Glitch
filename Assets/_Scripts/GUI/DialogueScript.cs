@@ -36,6 +36,7 @@ public class DialogueScript : MonoBehaviour {
 	public GameObject dialogueBox;				//The dialogue box reference
 	public Text dialogueBoxText;				//The dialogue box text reference
 	public GameObject continueButton;			//The continue button reference
+	private AudioSource audio;					//The audio source
 
 	//Message variables
 	private List<string> messageList = new List<string>();  //Messages to print in the dialogue box  
@@ -70,6 +71,10 @@ public class DialogueScript : MonoBehaviour {
 		//Read the XML document
 		xmlDoc = new XmlDocument();
 		xmlDoc.LoadXml(XMLAsset.text);
+
+		//Set references
+		audio = gameObject.GetComponent<AudioSource>();
+		audio.pitch = 0.9f;
 
 		//Make initial preparations
 		state = dialogueBoxState.OFF;
@@ -156,6 +161,8 @@ public class DialogueScript : MonoBehaviour {
 						while (letterIndex < messageToPrint.Length && messageToPrint[letterIndex] == '[') {
 							ReadTag();
 						}
+
+						audio.Play();
 
 						//We send the message to print with color tags that make it invisible from the print
 						//letter to the end. We do this rather than doing subscripts because they mess the paragraph aligment
