@@ -16,4 +16,5 @@ public class HUDCollects : MonoBehaviour {
     {
         itemNumber.text = player.items.ToString();
     }
+
 }

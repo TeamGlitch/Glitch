@@ -46,7 +46,6 @@ public class GlitchOffsetCamera : ImageEffectBase {
 					} else {
 						texture.SetPixel (0, z, new Color32 (1, 0, 0, 0));
 					}
-
 				}
 				texture.filterMode = FilterMode.Point;
 				texture.Apply();

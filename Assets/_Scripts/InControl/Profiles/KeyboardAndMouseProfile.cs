@@ -47,7 +47,7 @@ namespace CustomProfileExample
 				{
 					Handle = "Hook",
 					Target = InputControlType.Action4,
-					Source = KeyCodeButton( KeyCode.Z )
+					Source = KeyCodeButton( KeyCode.LeftShift )
 				},
 				new InputControlMapping
 				{

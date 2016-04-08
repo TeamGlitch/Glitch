@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour
 		state = player_state.IN_GROUND;
 	}
 
-    void OnControllerColliderHit(ControllerColliderHit coll)
+/*    void OnControllerColliderHit(ControllerColliderHit coll)
     {
 		
 		//   /\     /~~  /\  |\  /||~~\~|~  /\  |~~\|||
@@ -100,7 +100,7 @@ public class PlayerController : MonoBehaviour
 		if ((controller.collisionFlags & CollisionFlags.Above) != 0)
 			vSpeed = 0;
     }
-
+*/
 	void Update () 
 	{
 		
@@ -240,6 +240,10 @@ public class PlayerController : MonoBehaviour
 
 			// Control of movemente in X axis
 			moveDirection.x = InputManager.ActiveDevice.LeftStickX.Value;
+            if (moveDirection.x > 0.0)
+                moveDirection.x = 1.0f;
+            if (moveDirection.x < 0.0)
+                moveDirection.x = -1.0f;
 			moveDirection = transform.TransformDirection (moveDirection);
 			moveDirection *= speed;
 
@@ -369,6 +373,11 @@ public class PlayerController : MonoBehaviour
 		state = player_state.JUMPING;
 		vSpeed = jumpSpeed;
 		rigidBody.isKinematic = true;
+	}
+
+	public void RestartTeleportCooldown()
+	{
+		teleportCooldown = false;
 	}
 
 }

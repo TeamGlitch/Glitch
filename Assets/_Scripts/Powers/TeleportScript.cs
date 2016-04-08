@@ -15,22 +15,22 @@ public class TeleportScript : MonoBehaviour {
         {
             directionVertical = 0;
         }
-        
+
         // Vector to know if the position to teleport is occupied
         Vector3 newPosition;
 		newPosition.x = controller.transform.position.x + (controller.transform.localScale.x * teleportDistance) * directionHorizontal;
-		newPosition.y = controller.transform.position.y + (controller.transform.localScale.y * teleportDistance) * directionVertical + 0.1f;
+		newPosition.y = controller.transform.position.y + (controller.transform.localScale.y * teleportDistance) * directionVertical;
         newPosition.z = controller.transform.position.z;
 
-        if (!Physics.CheckCapsule(newPosition, newPosition, controller.transform.localScale.x / 2))
-        {
-            // Teleport always moves the player twice it's width in X axis 
-			controller.transform.Translate((controller.transform.localScale.x * teleportDistance) * directionHorizontal, directionVertical * controller.transform.localScale.y, 0.0f);
-            if (!controller.isGrounded)
-            {
-                return true;
-            }
-        }
+		if (!Physics.CheckCapsule (newPosition, newPosition, controller.transform.localScale.x / 2)) {
+			// Teleport always moves the player twice it's width in X axis 
+			controller.transform.Translate ((controller.transform.localScale.x * teleportDistance) * directionHorizontal, (controller.transform.localScale.y * teleportDistance) * directionVertical, 0.0f);
+			if (!controller.isGrounded) {
+				return true;
+			}
+		} else {
+			Debug.Log ("BOOM EN TU CARA");
+		}
         return false;
     }
 }

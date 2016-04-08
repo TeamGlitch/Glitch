@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class World : MonoBehaviour {
 
@@ -11,6 +12,8 @@ public class World : MonoBehaviour {
     public GameObject powers;
     public GameObject gui;
 
+	private List<GameObject> gameObjectList;
+
 	void Start()
     {
 		// We begin the game activating camera and movements of player
@@ -18,6 +21,7 @@ public class World : MonoBehaviour {
         gui.SetActive(true);
         powers.SetActive(true);
         player.enabled = true;
+		gameObjectList = new List<GameObject> ();
     }
 	
     // Modifies fps of world (included enemies)

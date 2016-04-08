@@ -10,22 +10,10 @@ public class NewErrorBoxScript : MonoBehaviour
 	public int framesBeforeChangeStateWhenFlickering = 6;
 	public Player playerScript;
 
-	public GameObject boxUIActivated1;
-	public GameObject boxUIDeactivated1;
-	public GameObject boxUIActivated2;
-	public GameObject boxUIDeactivated2;
-	public GameObject boxUIActivated3;
-	public GameObject boxUIDeactivated3;
+	public GameObject boxUIActivated;
 	public Canvas gui;
 
-	private int UIBoxUsed = 0;
-
-	private RectTransform boxUIActivatedRectTransform1;
-	private RectTransform boxUIDeactivatedRectTransform1;
-	private RectTransform boxUIActivatedRectTransform2;
-	private RectTransform boxUIDeactivatedRectTransform2;
-	private RectTransform boxUIActivatedRectTransform3;
-	private RectTransform boxUIDeactivatedRectTransform3;
+	private RectTransform boxUIActivatedRectTransform;
 	private RectTransform guiRectTrans;
 
 	private int framesInCurrentStateWhenFlickering = 0;
@@ -34,6 +22,15 @@ public class NewErrorBoxScript : MonoBehaviour
 	private SpriteRenderer spriteRenderer;
 	private bool activated = false;
 	private bool visible = false;
+
+	private float timeBoxDissapeared;
+
+	public Camera cam;
+	CameraGlitchedToBoxes cameraGlitchedToBoxes;
+
+	public float timeCooldownBox = 2.0f;
+	private float timeBoxDeactivated = 0.0f;
+	private bool onCooldown = false;
 
 	void Start()
 	{
@@ -44,48 +41,23 @@ public class NewErrorBoxScript : MonoBehaviour
 		boxColor.a = 0.0f;
 		spriteRenderer.color = boxColor;
 
-		boxUIActivatedRectTransform1 = boxUIActivated1.GetComponent<RectTransform> ();
-		boxUIActivated1.SetActive (false);
-		boxUIDeactivatedRectTransform1 = boxUIDeactivated1.GetComponent<RectTransform> ();
-		boxUIDeactivated1.SetActive (false);
-		boxUIActivatedRectTransform2 = boxUIActivated2.GetComponent<RectTransform> ();
-		boxUIActivated2.SetActive (false);
-		boxUIDeactivatedRectTransform2 = boxUIDeactivated2.GetComponent<RectTransform> ();
-		boxUIDeactivated2.SetActive (false);
-		boxUIActivatedRectTransform3 = boxUIActivated3.GetComponent<RectTransform> ();
-		boxUIActivated3.SetActive (false);
-		boxUIDeactivatedRectTransform3 = boxUIDeactivated3.GetComponent<RectTransform> ();
-		boxUIDeactivated3.SetActive (false);
+		boxUIActivatedRectTransform = boxUIActivated.GetComponent<RectTransform> ();
+		boxUIActivated.SetActive (false);
 		guiRectTrans = gui.GetComponent<RectTransform>();
+
+		timeBoxDissapeared = 0.0f;
+
+		cameraGlitchedToBoxes = cam.GetComponent<CameraGlitchedToBoxes> ();
 
 	}
 
 	// Update is called once per frame
 	void Update ()
 	{
-		if (UIBoxUsed != 0) {
-			Vector3 boxUIPosition = new Vector3(transform.position.x, transform.position.y + 4.0f, 0);
-			Vector3 camPosition = Camera.main.WorldToScreenPoint(boxUIPosition);
-			camPosition.x *= guiRectTrans.rect.width / Camera.main.pixelWidth; 
-			camPosition.y *= guiRectTrans.rect.height / Camera.main.pixelHeight; 
-
-
-			if (UIBoxUsed == 1) {
-				boxUIActivatedRectTransform1.anchoredPosition = camPosition;
-				boxUIDeactivatedRectTransform1.anchoredPosition = camPosition;
-			} else if (UIBoxUsed == 2) {
-				boxUIActivatedRectTransform2.anchoredPosition = camPosition;
-				boxUIDeactivatedRectTransform2.anchoredPosition = camPosition;
-			}
-			else if (UIBoxUsed == 3) {
-				boxUIActivatedRectTransform3.anchoredPosition = camPosition;
-				boxUIDeactivatedRectTransform3.anchoredPosition = camPosition;
-			}
-		}
-
-		if (visible && !activated && InputManager.ActiveDevice.Action4.WasPressed)
+		if (visible && !activated && InputManager.ActiveDevice.Action4.WasPressed && !onCooldown)
 		{
 			playerScript.DecreaseActivableBox ();
+			cameraGlitchedToBoxes.RemoveBox (transform.position);
 			Color boxColor = spriteRenderer.color;
 			boxColor.a = 1.0f;
 			spriteRenderer.color = boxColor;
@@ -94,17 +66,6 @@ public class NewErrorBoxScript : MonoBehaviour
 			activated = true;
 			framesInCurrentStateWhenFlickering = 0;
 
-			if (UIBoxUsed == 1) {
-				boxUIActivated1.SetActive (false);
-				boxUIDeactivated1.SetActive (true);
-			} else if (UIBoxUsed == 2) {
-				boxUIActivated2.SetActive (false);
-				boxUIDeactivated2.SetActive (true);
-			}
-			else if (UIBoxUsed == 3) {
-				boxUIActivated3.SetActive (false);
-				boxUIDeactivated3.SetActive (true);
-			}
 		}
 		else if (activated && timeActivated < timeActive && timeActivated >= (timeActive - timeFlickering))
 		{
@@ -130,22 +91,19 @@ public class NewErrorBoxScript : MonoBehaviour
 		{
 			Color boxColor = spriteRenderer.color;
 			boxCollider.enabled = false;
-			boxColor.a = 0.5f;
+			boxColor.a = 0.0f;
 			spriteRenderer.color = boxColor;
 			activated = false;
-			playerScript.IncreaseActivableBox ();
-
-			if (UIBoxUsed == 1) {
-				boxUIActivated1.SetActive (true);
-				boxUIDeactivated1.SetActive (false);
-			} else if (UIBoxUsed == 2) {
-				boxUIActivated2.SetActive (true);
-				boxUIDeactivated2.SetActive (false);
-			} else if (UIBoxUsed == 3) {
-				boxUIActivated3.SetActive (true);
-				boxUIDeactivated3.SetActive (false);
+			onCooldown = true;
+			timeBoxDeactivated = Time.time;
+		}
+		else if(onCooldown && (Time.time - timeBoxDeactivated > 2.0f))
+		{
+			if (visible) {
+				playerScript.IncreaseActivableBox ();
+				cameraGlitchedToBoxes.AddBox (transform.position);
 			}
-
+			onCooldown = false;
 		}
 		else if (activated)
 		{
@@ -154,96 +112,43 @@ public class NewErrorBoxScript : MonoBehaviour
 			boxColor.a = 0.0f;
 			spriteRenderer.color = boxColor;
 			activated = false;
-
+			onCooldown = true;
+			timeBoxDeactivated = Time.time;
 		}
 	}
 
 	void OnTriggerEnter (Collider other)
 	{
-		Vector3 boxUIPosition = new Vector3(transform.position.x, transform.position.y + 4.0f, 0);
-		Vector3 camPosition = Camera.main.WorldToScreenPoint(boxUIPosition);
-		camPosition.x *= guiRectTrans.rect.width / Camera.main.pixelWidth; 
-		camPosition.y *= guiRectTrans.rect.height / Camera.main.pixelHeight; 
+		if(other.tag == "Player")
+		{
+			Vector3 boxUIPosition = new Vector3(transform.position.x, transform.position.y + 4.0f, 0);
+			Vector3 camPosition = Camera.main.WorldToScreenPoint(boxUIPosition);
+			camPosition.x *= guiRectTrans.rect.width / Camera.main.pixelWidth; 
+			camPosition.y *= guiRectTrans.rect.height / Camera.main.pixelHeight; 
 
-		if (!activated) {
-			Color boxColor = spriteRenderer.color;
-			boxColor.a = 0.5f;
-			spriteRenderer.color = boxColor;
-			playerScript.IncreaseActivableBox ();
-
-			if (!boxUIActivated1.activeSelf && !boxUIDeactivated1.activeSelf) {
-				UIBoxUsed = 1;
-				boxUIActivated1.SetActive (true);
-
-				boxUIActivatedRectTransform1.anchoredPosition = camPosition;
-				boxUIDeactivatedRectTransform1.anchoredPosition = camPosition;
+			if (!activated && !onCooldown) {
+				Color boxColor = spriteRenderer.color;
+				spriteRenderer.color = boxColor;
+				playerScript.IncreaseActivableBox ();
+				cameraGlitchedToBoxes.AddBox (transform.position);
 			}
-			else if (!boxUIActivated2.activeSelf && !boxUIDeactivated2.activeSelf) {
-				UIBoxUsed = 2;
-				boxUIActivated2.SetActive (true);
-
-				boxUIActivatedRectTransform2.anchoredPosition = camPosition;
-				boxUIDeactivatedRectTransform2.anchoredPosition = camPosition;
-			}
-			else {
-				UIBoxUsed = 3;
-				boxUIActivated3.SetActive (true);
-
-				boxUIActivatedRectTransform3.anchoredPosition = camPosition;
-				boxUIDeactivatedRectTransform3.anchoredPosition = camPosition;
-			}
-		} else {
-
-			if (!boxUIActivated1.activeSelf && !boxUIDeactivated1.activeSelf) {
-				UIBoxUsed = 1;
-				boxUIDeactivated1.SetActive (true);
-
-				boxUIActivatedRectTransform1.anchoredPosition = camPosition;
-				boxUIDeactivatedRectTransform1.anchoredPosition = camPosition;
-			}
-			else if (!boxUIActivated2.activeSelf && !boxUIDeactivated2.activeSelf) {
-				UIBoxUsed = 2;
-				boxUIDeactivated2.SetActive (true);
-
-				boxUIActivatedRectTransform2.anchoredPosition = camPosition;
-				boxUIDeactivatedRectTransform2.anchoredPosition = camPosition;
-			}
-			else {
-				UIBoxUsed = 3;
-				boxUIDeactivated3.SetActive (true);
-
-				boxUIActivatedRectTransform3.anchoredPosition = camPosition;
-				boxUIDeactivatedRectTransform3.anchoredPosition = camPosition;
-			}
+			visible = true;
 		}
-		visible = true;
-		playerScript.IncreaseVisibleBox ();
-
 	}
 
 	void OnTriggerExit (Collider other)
 	{
-		if (UIBoxUsed == 1) {
-			boxUIActivated1.SetActive (false);
-			boxUIDeactivated1.SetActive (false);
-		} else if (UIBoxUsed == 2) {
-			boxUIActivated2.SetActive (false);
-			boxUIDeactivated2.SetActive (false);
-		} else if (UIBoxUsed == 3) {
-			boxUIActivated3.SetActive (false);
-			boxUIDeactivated3.SetActive (false);
+		if(other.tag == "Player")
+		{
+			if (!activated && !onCooldown) {
+				playerScript.DecreaseActivableBox ();
+				cameraGlitchedToBoxes.RemoveBox (transform.position);
+				boxCollider.enabled = false;
+				Color boxColor = spriteRenderer.color;
+				boxColor.a = 0.0f;
+				spriteRenderer.color = boxColor;
+			}
+			visible = false;
 		}
-
-		UIBoxUsed = 0;
-
-		if (!activated) {
-			playerScript.DecreaseActivableBox ();
-			boxCollider.enabled = false;
-			Color boxColor = spriteRenderer.color;
-			boxColor.a = 0.0f;
-			spriteRenderer.color = boxColor;
-		}
-		visible = false;
-		playerScript.DecreaseVisibleBox ();
 	}
 }

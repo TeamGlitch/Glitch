@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class Player : MonoBehaviour {
 
 	// External references
@@ -24,7 +25,7 @@ public class Player : MonoBehaviour {
 
 	// Properties
 	public int lives;							// Actual lives
-	public int items;						// Items collected
+	public int items = 0;						// Items collected
 
 	// State
 	private bool moveToCheckpoint = false;							// If it's moving to the last checkpoint
@@ -32,15 +33,13 @@ public class Player : MonoBehaviour {
 	private float stopMoving;										// When to stop moving
 
 	private int numberOfBoxesActivable = 0;
-	private int numberOfBoxesVisible = 0;
 	public GameObject boxUIActivated;
-	public GameObject boxUIDeactivated;
 	public Canvas gui;
 	private RectTransform boxUIActivatedRectTransform;
-	private RectTransform boxUIDeactivatedRectTransform;
 	private RectTransform guiRectTrans;
 
-
+	public delegate void PlayerDeadDelegate();
+	public event PlayerDeadDelegate PlayerDeadEvent;
 
 	void Awake () {
 
@@ -61,8 +60,6 @@ public class Player : MonoBehaviour {
 
 		boxUIActivatedRectTransform = boxUIActivated.GetComponent<RectTransform> ();
 		boxUIActivated.SetActive (false);
-		boxUIDeactivatedRectTransform = boxUIDeactivated.GetComponent<RectTransform> ();
-		boxUIDeactivated.SetActive (false);
 		guiRectTrans = gui.GetComponent<RectTransform>();
 
 	}
@@ -104,10 +101,10 @@ public class Player : MonoBehaviour {
 			}
 
 			//If it is the last life, activate the dead menu
-			if(lastLife)
-            {
-				deadMenuScript.gameObject.SetActive(true);
-				deadMenuScript.PlayerDead();
+			if (lastLife)
+			{
+				deadMenuScript.gameObject.SetActive (true);
+				deadMenuScript.PlayerDead ();
 			}
 
 			//Deactivate the sprite renderer
@@ -125,16 +122,15 @@ public class Player : MonoBehaviour {
             transform.position += speedToCheckpoint * Time.deltaTime;
         }
 
-		if (numberOfBoxesActivable > 0 || numberOfBoxesVisible > 0) {
+		if (numberOfBoxesActivable > 0) {
 			//Sight position
-			Vector3 boxUIPosition = new Vector3(transform.position.x, transform.position.y + 4.0f, 0);
+			Vector3 boxUIPosition = new Vector3(transform.position.x, transform.position.y + 2.0f, 0);
 			Vector3 camPosition = Camera.main.WorldToScreenPoint(boxUIPosition);
 
 			camPosition.x *= guiRectTrans.rect.width / Camera.main.pixelWidth; 
 			camPosition.y *= guiRectTrans.rect.height / Camera.main.pixelHeight; 
 
 			boxUIActivatedRectTransform.anchoredPosition = camPosition;
-			boxUIDeactivatedRectTransform.anchoredPosition = camPosition;
 
 		}
 	
@@ -150,6 +146,9 @@ public class Player : MonoBehaviour {
 
 	public void Resurrected()
     {
+		if (PlayerDeadEvent != null) {
+			PlayerDeadEvent ();
+		}
 		moveToCheckpoint = false;
 		sprite.enabled = true;
 		characterController.detectCollisions = true;
@@ -165,38 +164,29 @@ public class Player : MonoBehaviour {
 
 	public void IncreaseActivableBox()
 	{
-/*		if (numberOfBoxesActivable == 0) {
+		if (numberOfBoxesActivable == 0) {
 			boxUIActivated.SetActive (true);
-			boxUIDeactivated.SetActive (false);
 		}
 		++numberOfBoxesActivable;
-*/	}
+	}
 
 	public void DecreaseActivableBox()
 	{
-		/*		--numberOfBoxesActivable;
-		if (numberOfBoxesActivable == 0 && numberOfBoxesVisible == 0) {
+		--numberOfBoxesActivable;
+		if (numberOfBoxesActivable == 0) {
 			boxUIActivated.SetActive (false);
-			boxUIDeactivated.SetActive (false);
-		} else if (numberOfBoxesActivable == 0) {
-			boxUIActivated.SetActive (false);
-			boxUIDeactivated.SetActive (true);
 		}
-*/	}
+	}
 
-	public void IncreaseVisibleBox()
+	public void IncreaseItem()
 	{
-/*		if (numberOfBoxesVisible == 0 && numberOfBoxesActivable == 0) {
-			boxUIDeactivated.SetActive (true);
-		}
-		++numberOfBoxesVisible;
-*/	}
+		++items;
+		guiItem.GUIItemRepresent ();
+	}
 
-	public void DecreaseVisibleBox()
+	public void DecreaseItem()
 	{
-/*		--numberOfBoxesVisible;
-		if (numberOfBoxesVisible == 0) {
-			boxUIDeactivated.SetActive (false);
-		}
-*/	}
+		--items;
+		guiItem.GUIItemRepresent ();
+	}
 }
