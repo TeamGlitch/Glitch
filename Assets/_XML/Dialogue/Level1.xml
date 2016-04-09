@@ -1,11 +1,14 @@
 ﻿<!--?xml version=”1.0” encoding=”UTF-8”?-->
 <Dialogue lang="English">
 	<Scene id="0">
-		<T>Hello! You can go to the next message with A.</T>
+		<T>[face=Glitch]Hello! You can go to the next message with A.</T>
 		<T>I can also skip it automatically.[wait=1.5][skip]</T>
 		<T>[noskip]And you can't skip this text! Go on! Try it![wait=2]&#xA;See?[wait=0.5] Told ya.</T>
 		<T>I can talk [wait=1][speed=0]really fast [wait=1][speed=0.5]or really slow.</T>
 		<T>I can also add...[wait=2]uh...[wait=2]Oh![wait=0.5] Right![wait=0.5] Pauses!</T>
-		<T>So yeah, have fun.</T>
+		<T>[face=Bug]There's also a tag for changing the showing face, including pitch!</T>
+		<T>[face=Glitch]And you don't have to make any sprite references! It is automatically readed with a resource.loadAll()</T>
+		<T>[face=Bug]But don't worry! If it's called once, it is stored for fast future use, so you there's no performance drop!</T>
+		<T>[face=Glitch]So yeah, have fun.</T>
 	</Scene>
 </Dialogue>

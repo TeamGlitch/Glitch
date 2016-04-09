@@ -36,7 +36,8 @@ public class DialogueScript : MonoBehaviour {
 	public GameObject dialogueBox;				//The dialogue box reference
 	public Text dialogueBoxText;				//The dialogue box text reference
 	public GameObject continueButton;			//The continue button reference
-	private AudioSource audio;					//The audio source
+	private AudioSource audio;					//The audio source reference
+	public Image face;							//The face reference
 
 	//Message variables
 	private List<string> messageList = new List<string>();  //Messages to print in the dialogue box  
@@ -65,6 +66,13 @@ public class DialogueScript : MonoBehaviour {
 	private bool autoJump = false;				//The current text goes to the next text automatically
 	private bool skipable = true;				//The user can skip this text
 
+	//Face animation
+	private DialogueCharacterDB dialogueCharacterDB;				//Class that stores character information
+	public List<Sprite> faceAnimationSprites = new List<Sprite>();	//The face animation sprites
+	private int animationIndex = 0;									//The current sprite index
+	private float nextAnimationStep = 0f;							//When to go to the next sprite
+	private float faceAnimationSpeed = 0.35f;						//Time between sprites
+
 	// Use this for initialization
 	void Start () {
 
@@ -74,7 +82,7 @@ public class DialogueScript : MonoBehaviour {
 
 		//Set references
 		audio = gameObject.GetComponent<AudioSource>();
-		audio.pitch = 0.9f;
+		dialogueCharacterDB = new DialogueCharacterDB();
 
 		//Make initial preparations
 		state = dialogueBoxState.OFF;
@@ -112,6 +120,7 @@ public class DialogueScript : MonoBehaviour {
 				//Sets the properties to default and starts writting
 				letterIndex = -1;
 				cleanIndex = -1;
+				animationIndex = 0;
 
 				autoJump = false;
 				waitBetweenLetters = defaultWaitBetweenLetters;
@@ -125,8 +134,23 @@ public class DialogueScript : MonoBehaviour {
 
 				//If A is pressed, skip message
 				if (InputManager.ActiveDevice.Action1.WasPressed && skipable) {
-					letterIndex  = messageToPrint.Length;
+				
+					letterIndex = messageToPrint.Length;
 					nextLetterTime = 0;
+
+				} 
+				//If it's time to put the next animation sprite
+				else if (Time.time > nextAnimationStep) {
+					
+					//Get it's index
+					animationIndex++;
+					if (animationIndex == faceAnimationSprites.Count) {
+						animationIndex = 0;
+					}
+
+					//Change the sprite and set the next change time
+					face.sprite = faceAnimationSprites[animationIndex];
+					nextAnimationStep = Time.time + faceAnimationSpeed;
 				}
 				
 				//If we can print the next letter
@@ -142,8 +166,14 @@ public class DialogueScript : MonoBehaviour {
 						//Put the message directly
 						dialogueBoxText.text = cleanMessage;
 
-						//Go to wait, remove the message from the list and activate the continue button
+						//Go to wait
 						state = dialogueBoxState.WAITING;
+
+						//Stop the animation in the first frame
+						animationIndex = 0;
+						face.sprite = faceAnimationSprites[0];
+
+						//Remove the message from the list and activate the continue button (if it doesn't autojump)
 						messageList.RemoveAt(0);
 						if (!autoJump) {
 							continueButton.SetActive(true);
@@ -161,7 +191,7 @@ public class DialogueScript : MonoBehaviour {
 						while (letterIndex < messageToPrint.Length && messageToPrint[letterIndex] == '[') {
 							ReadTag();
 						}
-
+						
 						audio.Play();
 
 						//We send the message to print with color tags that make it invisible from the print
@@ -268,20 +298,36 @@ public class DialogueScript : MonoBehaviour {
 
 			letterIndex++;
 
+			//Change the face
+			if (tag == "face"){
+				
+				//Recovers the character data from the DB and sets its values
+				CharacterEntry character = dialogueCharacterDB.loadCharacter(value);
+
+				faceAnimationSprites = character.faceAnimation;
+				animationIndex = 0;
+				face.sprite = faceAnimationSprites[animationIndex];
+
+				audio.pitch = character.pitch;
+
+			}
 			//Text speed
 			if (tag == "speed") {
 				waitBetweenLetters = float.Parse(value);
 				return;
 			}
+			//Wait x time
 			if (tag == "wait") {
 				nextLetterTime = Time.time + float.Parse(value);
 				showPointerBug = false;
 				return;
 			}
+			//Skip this text upon ending
 			if (tag == "skip") {
 				autoJump = true;
 				return;
 			}
+			//Don't allow to skip this text
 			if (tag == "noskip") {
 				skipable = false;
 				return;
