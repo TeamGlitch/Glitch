@@ -33,11 +33,13 @@ public class DialogueScript : MonoBehaviour {
 	private dialogueBoxState state;
 
 	//References
-	public GameObject dialogueBox;				//The dialogue box reference
-	public Text dialogueBoxText;				//The dialogue box text reference
-	public GameObject continueButton;			//The continue button reference
-	private AudioSource audio;					//The audio source reference
-	public Image face;							//The face reference
+	public GameObject dialogueBox;						//The dialogue box reference
+	private Image face;									//The face reference
+	private Text dialogueBoxText;						//The dialogue box text reference
+	private RectTransform dialogueBoxTextRectTransform;	//The RecTransform of the dialogueBoxText
+	private Image background;							//The dialogue box background
+	private GameObject continueButton;					//The continue button reference
+	private AudioSource audio;							//The audio source reference
 
 	//Message variables
 	private List<string> messageList = new List<string>();  //Messages to print in the dialogue box  
@@ -69,7 +71,7 @@ public class DialogueScript : MonoBehaviour {
 	//Face animation
 	private DialogueCharacterDB dialogueCharacterDB;				//Class that stores character information
 	public List<Sprite> faceAnimationSprites = new List<Sprite>();	//The face animation sprites
-	private int animationIndex = 0;									//The current sprite index
+	private int animationIndex = 0;									//The current sprite index. If it's -1, there's no face
 	private float nextAnimationStep = 0f;							//When to go to the next sprite
 	private float faceAnimationSpeed = 0.35f;						//Time between sprites
 
@@ -81,7 +83,17 @@ public class DialogueScript : MonoBehaviour {
 		xmlDoc.LoadXml(XMLAsset.text);
 
 		//Set references
+		Transform content = dialogueBox.transform.FindChild("Content");
+
+		dialogueBoxText = content.FindChild("Text").gameObject.GetComponent<Text>();
+		dialogueBoxTextRectTransform = dialogueBoxText.gameObject.GetComponent<RectTransform>();
+		face = content.FindChild("Head").gameObject.GetComponent<Image>();
+
 		audio = gameObject.GetComponent<AudioSource>();
+		background = dialogueBox.transform.FindChild("background").gameObject.GetComponent<Image>();
+		continueButton = dialogueBox.transform.FindChild("ContinueButton").gameObject;
+
+		//Initialize variables
 		dialogueCharacterDB = new DialogueCharacterDB();
 
 		//Make initial preparations
@@ -120,7 +132,7 @@ public class DialogueScript : MonoBehaviour {
 				//Sets the properties to default and starts writting
 				letterIndex = -1;
 				cleanIndex = -1;
-				animationIndex = 0;
+				if(animationIndex != -1) animationIndex = 0;
 
 				autoJump = false;
 				waitBetweenLetters = defaultWaitBetweenLetters;
@@ -139,8 +151,8 @@ public class DialogueScript : MonoBehaviour {
 					nextLetterTime = 0;
 
 				} 
-				//If it's time to put the next animation sprite
-				else if (Time.time > nextAnimationStep) {
+				//If there's a face and it's time to put the next animation sprite
+				else if (animationIndex != -1 && Time.time > nextAnimationStep) {
 					
 					//Get it's index
 					animationIndex++;
@@ -169,8 +181,8 @@ public class DialogueScript : MonoBehaviour {
 						//Go to wait
 						state = dialogueBoxState.WAITING;
 
-						//Stop the animation in the first frame
-						animationIndex = 0;
+						//If there's a face, stop the animation in the first frame
+						if(animationIndex != -1) animationIndex = 0;
 						face.sprite = faceAnimationSprites[0];
 
 						//Remove the message from the list and activate the continue button (if it doesn't autojump)
@@ -304,12 +316,27 @@ public class DialogueScript : MonoBehaviour {
 				//Recovers the character data from the DB and sets its values
 				CharacterEntry character = dialogueCharacterDB.loadCharacter(value);
 
-				faceAnimationSprites = character.faceAnimation;
-				animationIndex = 0;
-				face.sprite = faceAnimationSprites[animationIndex];
+				if (character.faceAnimation.Count > 0) {
+					
+					//If it's a character, restore the interface if it was in "none" mode
+					if (animationIndex == -1) {
+						face.gameObject.SetActive(true);
+						dialogueBoxTextRectTransform.offsetMin = new Vector2(200f, dialogueBoxTextRectTransform.offsetMin.y);
+					}
+
+					faceAnimationSprites = character.faceAnimation;
+					animationIndex = 0;
+					face.sprite = faceAnimationSprites[animationIndex];
+
+
+				} //If it's "none" and it previously wasn't, set the interface to "none" mode
+				else if (animationIndex != -1) { 
+						animationIndex = -1;
+						face.gameObject.SetActive(false);
+						dialogueBoxTextRectTransform.offsetMin = new Vector2(0f, dialogueBoxTextRectTransform.offsetMin.y);
+				}
 
 				audio.pitch = character.pitch;
-
 			}
 			//Text speed
 			if (tag == "speed") {

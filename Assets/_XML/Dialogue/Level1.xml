@@ -9,6 +9,7 @@
 		<T>[face=Bug]There's also a tag for changing the showing face, including pitch!</T>
 		<T>[face=Glitch]And you don't have to make any sprite references! It is automatically readed with a resource.loadAll()</T>
 		<T>[face=Bug]But don't worry! If it's called once, it is stored for fast future use, so you there's no performance drop!</T>
+		<T>[face=None]If you put "none" on the face tag, this is what happens. Ideal for narration!</T>
 		<T>[face=Glitch]So yeah, have fun.</T>
 	</Scene>
 </Dialogue>
