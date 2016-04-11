@@ -98,7 +98,10 @@ public class PlayerController : MonoBehaviour
         }
 
 		if ((controller.collisionFlags & CollisionFlags.Above) != 0)
-			vSpeed = 0;
+		{
+			vSpeed = -7;
+			startJumpPress = -1;
+		}
     }
 
 	void Update () 
@@ -306,7 +309,7 @@ public class PlayerController : MonoBehaviour
         // Gravity
         vSpeed -= gravity * Time.deltaTime;
 
-        // Control of movemente in X axis
+        // Control of movement in X axis
         moveDirection.x = InputManager.ActiveDevice.LeftStickX.Value;
         moveDirection = transform.TransformDirection(moveDirection);
         moveDirection *= speed;
