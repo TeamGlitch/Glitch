@@ -1,0 +1,129 @@
+fileFormatVersion: 2
+guid: c3aaf5c3f49c24343bc72358eecdf3d3
+timeCreated: 1459809269
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: grandullon_botas_mesh
+    100002: grandullon_brazaletes_mesh
+    100004: grandullon_cabeza_mesh
+    100006: grandullon_cinturon_mesh
+    100008: grandullon_correa_der_mesh
+    100010: grandullon_correa_izq_mesh
+    100012: grandullon_falda_mesh
+    100014: grandullon_pelo_mesh
+    100016: grandullon_piernas_mesh
+    100018: grandullon_torso_mesh
+    100020: hombreras_mesh_grandullon
+    100022: //RootNode
+    400000: grandullon_botas_mesh
+    400002: grandullon_brazaletes_mesh
+    400004: grandullon_cabeza_mesh
+    400006: grandullon_cinturon_mesh
+    400008: grandullon_correa_der_mesh
+    400010: grandullon_correa_izq_mesh
+    400012: grandullon_falda_mesh
+    400014: grandullon_pelo_mesh
+    400016: grandullon_piernas_mesh
+    400018: grandullon_torso_mesh
+    400020: hombreras_mesh_grandullon
+    400022: //RootNode
+    2300000: grandullon_botas_mesh
+    2300002: grandullon_brazaletes_mesh
+    2300004: grandullon_cabeza_mesh
+    2300006: grandullon_cinturon_mesh
+    2300008: grandullon_correa_der_mesh
+    2300010: grandullon_correa_izq_mesh
+    2300012: grandullon_falda_mesh
+    2300014: grandullon_pelo_mesh
+    2300016: grandullon_piernas_mesh
+    2300018: grandullon_torso_mesh
+    2300020: hombreras_mesh_grandullon
+    3300000: grandullon_botas_mesh
+    3300002: grandullon_brazaletes_mesh
+    3300004: grandullon_cabeza_mesh
+    3300006: grandullon_cinturon_mesh
+    3300008: grandullon_correa_der_mesh
+    3300010: grandullon_correa_izq_mesh
+    3300012: grandullon_falda_mesh
+    3300014: grandullon_pelo_mesh
+    3300016: grandullon_piernas_mesh
+    3300018: grandullon_torso_mesh
+    3300020: hombreras_mesh_grandullon
+    4300000: hombreras_mesh_grandullon
+    4300002: grandullon_botas_mesh
+    4300004: grandullon_torso_mesh
+    4300006: grandullon_cabeza_mesh
+    4300008: grandullon_pelo_mesh
+    4300010: grandullon_piernas_mesh
+    4300012: grandullon_brazaletes_mesh
+    4300014: grandullon_correa_der_mesh
+    4300016: grandullon_correa_izq_mesh
+    4300018: grandullon_cinturon_mesh
+    4300020: grandullon_falda_mesh
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

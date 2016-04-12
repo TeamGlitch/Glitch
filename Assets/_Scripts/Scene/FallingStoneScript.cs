@@ -5,6 +5,7 @@ public class FallingStoneScript : MonoBehaviour {
 
 	Rigidbody rb;
 	Vector3 initPos;
+	Quaternion initRotation;
 	float lastTime;
 	Vector3 previousVelocity;
 
@@ -12,6 +13,7 @@ public class FallingStoneScript : MonoBehaviour {
 	void Start () {
 		rb = gameObject.GetComponent<Rigidbody> ();
 		initPos = transform.position;
+		initRotation = transform.rotation;
 	}
 		
 	public void DoUpdate(float timeToUpdate) {
@@ -30,6 +32,7 @@ public class FallingStoneScript : MonoBehaviour {
 	{
 		rb.useGravity = false;
 		transform.position = initPos;
+		transform.rotation = initRotation;
 		rb.velocity = Vector3.zero;
 		rb.angularVelocity = Vector3.zero;
 	}

@@ -22,7 +22,7 @@ public class DynamicCamera : MonoBehaviour {
 	private dynamic_camera_state state = dynamic_camera_state.PANNING;
     private float delay = 5.0f;
 	private int offsetX = 7;
-	private int zPosition = -20;
+	private int zPosition = -12;
 
 	private Vector3 zoomSpeedVector;
 

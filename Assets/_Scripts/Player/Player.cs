@@ -41,6 +41,8 @@ public class Player : MonoBehaviour {
 	public delegate void PlayerDeadDelegate();
 	public event PlayerDeadDelegate PlayerDeadEvent;
 
+	private SlowFPS slowFPS;
+
 	void Awake () {
 
 		characterController = GetComponent<CharacterController>();
@@ -61,6 +63,7 @@ public class Player : MonoBehaviour {
 		boxUIActivatedRectTransform = boxUIActivated.GetComponent<RectTransform> ();
 		boxUIActivated.SetActive (false);
 		guiRectTrans = gui.GetComponent<RectTransform>();
+		slowFPS = transform.GetChild (0).GetComponentInChildren<SlowFPS> ();
 
 	}
 
@@ -107,13 +110,16 @@ public class Player : MonoBehaviour {
 				deadMenuScript.PlayerDead ();
 			}
 
+			slowFPS.RestartCooldowns ();;
+
+
 			//Deactivate the sprite renderer
 			sprite.enabled = false;
 			characterController.detectCollisions = false;
 
 		}
 	}
-		
+
 	void Update(){
 	
 		//If it's moving to the checkpoint, do so until the time to move it's over

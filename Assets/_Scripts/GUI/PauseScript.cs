@@ -43,7 +43,7 @@ public class PauseScript : MonoBehaviour {
 	public void restartPress()
 	{
 		Time.timeScale = 1.0f;
-		SceneManager.LoadScene ("forest");
+		SceneManager.LoadScene ("testDesign");
 	}
 
 	public void menuPress()

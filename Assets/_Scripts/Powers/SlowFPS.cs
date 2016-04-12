@@ -92,4 +92,10 @@ public class SlowFPS : MonoBehaviour {
 		
 	}
 
+	public void RestartCooldowns()
+	{
+		timeRemaining = MAXTime;
+		deactivatePower ();
+	}
+
 }

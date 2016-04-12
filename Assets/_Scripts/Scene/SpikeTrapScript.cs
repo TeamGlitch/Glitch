@@ -7,9 +7,13 @@ public class SpikeTrapScript : MonoBehaviour
 	public World world;
 	public float timeTrapWaitsInActivation = 1.0f;
 	public float timeTrapWaitsInDeactivation = 2.0f;
-	public float verticalMovementWhenActivated = 1.0f;
+	public float lerpTime = 1.0f;
+	public Vector3 moveDistance = new Vector3 (0f, 1.5f, 0f);
 
-	private float initialYPos;
+	Vector3 startPosition;
+	Vector3 endPosition;
+	float currentLerpTime;
+
 	private bool activated = false;
 	private bool deactivated = false;
 	private float timeWhenActivated;
@@ -20,81 +24,90 @@ public class SpikeTrapScript : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		initialYPos = transform.position.y;
 		slowFpsScript.SlowFPSActivated += ActivateFPS;
 		slowFpsScript.SlowFPSDeactivated += DeactivateFPS;
+		startPosition = transform.position;
+		endPosition = transform.position + moveDistance;
+		currentLerpTime = 0.0f;
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
 		if (isFPSActive) {
-			if (world.doUpdate) {
-				if (activated && (timeWhenActivated > timeTrapWaitsInActivation)) {
-					if (transform.position.y - initialYPos < verticalMovementWhenActivated) {
-						Vector3 temporalPos = transform.position;
-						temporalPos.y += 0.1f;
-						transform.position = temporalPos;
-					} else {
-						activated = false;
-					}
-				}
-				else if (activated) {
-					timeWhenActivated += timeInFPS/2.0f;
-				}
-				else if (deactivated && (timeWhenDeactivated > timeTrapWaitsInDeactivation)) {
-					if (transform.position.y > initialYPos) {
-						Vector3 temporalPos = transform.position;
-						temporalPos.y -= 0.1f;
-						transform.position = temporalPos;
-					} else {
-						deactivated = false;
-					}
-				}
-				else if(deactivated) {
-					timeWhenDeactivated += timeInFPS/2.0f;
-				}
-			}
 			timeInFPS += Time.deltaTime;
 		}
-		if (world.doUpdate) {
-			if (activated && (timeWhenActivated > timeTrapWaitsInActivation)) {
-				if (transform.position.y - initialYPos < verticalMovementWhenActivated) {
-					Vector3 temporalPos = transform.position;
-					temporalPos.y += 0.1f;
-					transform.position = temporalPos;
-				} else {
-					activated = false;
-				}
+		if (activated && (timeWhenActivated > timeTrapWaitsInActivation)) {
+			if (isFPSActive) {
+				currentLerpTime += timeInFPS / 2.0f;
+				timeInFPS = 0.0f;
 			}
-			else if (activated) {
+			else
+				currentLerpTime += Time.deltaTime;
+			float lerpPercentage = currentLerpTime / lerpTime;
+			if (lerpPercentage > 1.0f) {
+				currentLerpTime = 1.0f;
+				activated = false;
+			}
+			Vector3 temporalPos = Vector3.Lerp (startPosition, endPosition, lerpPercentage);
+			transform.position = temporalPos;
+				if (currentLerpTime == 1.0f) {
+				activated = false;
+				timeWhenDeactivated = 0.0f;
+				currentLerpTime = 0.0f;
+				deactivated = true;
+			}
+		}
+		else if (activated) {
+			if (isFPSActive) {
+				timeWhenActivated += timeInFPS / 2.0f;
+				timeInFPS = 0.0f;
+			}
+			else
 				timeWhenActivated += Time.deltaTime;
+		}
+		else if (deactivated && (timeWhenDeactivated > timeTrapWaitsInDeactivation)) {
+			if (isFPSActive) {
+				currentLerpTime += timeInFPS / 2.0f;
+				timeInFPS = 0.0f;
 			}
-			else if (deactivated && (timeWhenDeactivated > timeTrapWaitsInDeactivation)) {
-				if (transform.position.y > initialYPos) {
-					Vector3 temporalPos = transform.position;
-					temporalPos.y -= 0.1f;
-					transform.position = temporalPos;
-				} else {
-					deactivated = false;
-				}
+			else
+				currentLerpTime += Time.deltaTime;
+			float lerpPercentage = currentLerpTime / lerpTime;
+			if (lerpPercentage > 1.0f) {
+				currentLerpTime = 1.0f;
+				deactivated = false;
 			}
-			else if(deactivated) {
+			Vector3 temporalPos = Vector3.Lerp (endPosition, startPosition, lerpPercentage);
+			transform.position = temporalPos;
+					if(currentLerpTime == 1.0f)
+				deactivated = false;
+		}
+		else if(deactivated) {
+			if (isFPSActive) {
+				timeWhenDeactivated += timeInFPS / 2.0f;
+				timeInFPS = 0.0f;
+			}
+			else
 				timeWhenDeactivated += Time.deltaTime;
-			}
 		}
 	}
 
 	void OnTriggerEnter (Collider other)
 	{
 		timeWhenActivated = 0.0f;
+		currentLerpTime = 0.0f;
 		activated = true;
 	}
 
 	void OnTriggerExit (Collider other)
 	{
-		timeWhenDeactivated = 0.0f;
-		deactivated = true;
+		if (!activated)
+		{
+			timeWhenDeactivated = 0.0f;
+			currentLerpTime = 0.0f;
+			deactivated = true;
+		}
 	}
 
 	void ActivateFPS()
