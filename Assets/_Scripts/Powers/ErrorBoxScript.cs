@@ -2,7 +2,7 @@
 using System.Collections;
 using InControl;
 
-public class NewErrorBoxScript : MonoBehaviour
+public class ErrorBoxScript : MonoBehaviour
 {
 
 	public float timeActive = 5.0f;
