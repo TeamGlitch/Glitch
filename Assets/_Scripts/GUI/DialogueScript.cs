@@ -32,7 +32,10 @@ public class DialogueScript : MonoBehaviour {
 	//State
 	private dialogueBoxState state;
 
-	//References
+	//External References
+	public PlayerController player;						//The player reference
+
+	//Internal References
 	public GameObject dialogueBox;						//The dialogue box reference
 	private Image face;									//The face reference
 	private Text dialogueBoxText;						//The dialogue box text reference
@@ -358,6 +361,36 @@ public class DialogueScript : MonoBehaviour {
 			if (tag == "noskip") {
 				skipable = false;
 				return;
+			}
+			//Change background transparency
+			if (tag == "bga"){
+				Color bgcolor = background.color;
+				bgcolor.a = float.Parse(value);
+				background.color = bgcolor;
+				return;
+			}
+			//Change text align
+			if (tag == "align"){
+				if (value == "center") {
+					dialogueBoxText.alignment = TextAnchor.MiddleCenter;
+				} else if (value == "left") {
+					dialogueBoxText.alignment = TextAnchor.MiddleLeft;
+				} else if (value == "right") {
+					dialogueBoxText.alignment = TextAnchor.MiddleRight;
+				}
+			}
+			//Allow or not the player to move
+			if (tag == "playermove"){
+				if (value == "true"){
+					player.allowMovement = true;
+				} else if (value == "false") {
+					player.allowMovement = false;
+				}
+			}
+			//Message ends instantaneously
+			if (tag == "end"){
+				nextLetterTime = 0;
+				letterIndex = messageToPrint.Length - 1;
 			}
 		}
 	}

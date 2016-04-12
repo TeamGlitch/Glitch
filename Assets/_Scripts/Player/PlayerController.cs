@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
 
 	//State
 	public player_state state;
+	public bool allowMovement;
 	private bool godMode = false;
 
 	//Player Components
@@ -47,7 +48,7 @@ public class PlayerController : MonoBehaviour
 	public float gravity = 50.0f;				// Gravity
 	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
-    public float vSpeed = 0.0f;
+    public float vSpeed = 0.0f;					// The vertical speed
 
 	private float startJumpPress = -1;				//When the extended jump started
 	private float preparingJump = 0;				//Jump preparing time left
@@ -76,6 +77,7 @@ public class PlayerController : MonoBehaviour
 	{
 		zPosition = transform.position.z;
 		state = player_state.IN_GROUND;
+		allowMovement = true;
 	}
 
     void OnControllerColliderHit(ControllerColliderHit coll)
@@ -147,7 +149,7 @@ public class PlayerController : MonoBehaviour
 
 					//If the jump key is being pressed but it has been released since the
 					//last jump
-					if (InputManager.ActiveDevice.Action1.IsPressed && !playerActivedJump) 
+					if (InputManager.ActiveDevice.Action1.IsPressed && allowMovement && !playerActivedJump) 
 					{
 						//Start jump and set the player-activated jump to true so it
 						//can't jump without releasing the button
@@ -206,7 +208,7 @@ public class PlayerController : MonoBehaviour
 						//vSpeed momentum - that gets gradually smaller - to get a
 						//higher jump. Do until the press time gets to his max.
 						//If the player releases the button, stop giving extra momentum to the jump.
-						if ((startJumpPress != -1) && (InputManager.ActiveDevice.Action1.IsPressed)
+						if ((startJumpPress != -1) && (InputManager.ActiveDevice.Action1.IsPressed) & allowMovement
 							&& ((Time.time - startJumpPress) <= maxJumpTime)) 
                         {
 							vSpeed = jumpSpeed;
@@ -243,7 +245,7 @@ public class PlayerController : MonoBehaviour
 
 		//If a player-induced jump is checked but the jump key is not longer
 		//being held, set it to false so it can jump again
-		if (playerActivedJump && !InputManager.ActiveDevice.Action1.IsPressed)
+		if (playerActivedJump && !InputManager.ActiveDevice.Action1.IsPressed && allowMovement)
 			playerActivedJump = false;
 
         // To active God mode camera
@@ -306,20 +308,25 @@ public class PlayerController : MonoBehaviour
         // Gravity
         vSpeed -= gravity * Time.deltaTime;
 
-        // Control of movemente in X axis
-        moveDirection.x = InputManager.ActiveDevice.LeftStickX.Value;
-        moveDirection = transform.TransformDirection(moveDirection);
-        moveDirection *= speed;
+		//If the player is allowed to move
+		if (allowMovement) {
+			
+			// Control of movemente in X axis
+			moveDirection.x = InputManager.ActiveDevice.LeftStickX.Value;
+			moveDirection = transform.TransformDirection (moveDirection);
+			moveDirection *= speed;
 
-        // Flips the sprite renderer if is changing direction
-        if ((moveDirection.x > 0) && (spriteRenderer.flipX == true))
-        {
-            spriteRenderer.flipX = false;
-        }
-        else if ((moveDirection.x < 0) && (spriteRenderer.flipX == false))
-        {
-            spriteRenderer.flipX = true;
-        }
+			// Flips the sprite renderer if is changing direction
+			if ((moveDirection.x > 0) && (spriteRenderer.flipX == true)) {
+				spriteRenderer.flipX = false;
+			} else if ((moveDirection.x < 0) && (spriteRenderer.flipX == false)) {
+				spriteRenderer.flipX = true;
+			}
+
+		} else {
+			moveDirection.x = 0;
+		}
+
         moveDirection.y = vSpeed;
 
         controller.Move(moveDirection * Time.deltaTime);
@@ -333,7 +340,7 @@ public class PlayerController : MonoBehaviour
 
 	private bool ActivatingTeleport(){
 
-		if (InputManager.ActiveDevice.Action3.WasPressed && (!teleportCooldown)) 
+		if (InputManager.ActiveDevice.Action3.WasPressed && allowMovement && (!teleportCooldown)) 
         {
             if (teleport.CheckTeleport(controller))
             {
