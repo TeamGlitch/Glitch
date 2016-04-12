@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
 
 	//State
 	public player_state state;
+	public bool allowMovement;
 	private bool godMode = false;
 
 	//Player Components
@@ -47,7 +48,7 @@ public class PlayerController : MonoBehaviour
 	public float gravity = 50.0f;				// Gravity
 	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
-    public float vSpeed = 0.0f;
+    public float vSpeed = 0.0f;					// The vertical speed
 
 	private float startJumpPress = -1;				//When the extended jump started
 	private float preparingJump = 0;				//Jump preparing time left
@@ -76,6 +77,7 @@ public class PlayerController : MonoBehaviour
 	{
 		zPosition = transform.position.z;
 		state = player_state.IN_GROUND;
+		allowMovement = true;
 	}
 
 /*    void OnControllerColliderHit(ControllerColliderHit coll)
@@ -121,6 +123,9 @@ public class PlayerController : MonoBehaviour
 					fallRecovery = jumpRest;
 					state = player_state.JUMPING;
 				}
+
+                // To control movement of player
+                Movement(moveDirection);
 				break;
 
 			case player_state.FALL_RECOVERING:
@@ -131,6 +136,8 @@ public class PlayerController : MonoBehaviour
 					state = player_state.IN_GROUND;
 				}
 
+                // To control movement of player
+                Movement(moveDirection);
 				break;
 
 			case player_state.IN_GROUND: 
@@ -142,7 +149,7 @@ public class PlayerController : MonoBehaviour
 
 					//If the jump key is being pressed but it has been released since the
 					//last jump
-					if (InputManager.ActiveDevice.Action1.IsPressed && !playerActivedJump) 
+					if (InputManager.ActiveDevice.Action1.IsPressed && allowMovement && !playerActivedJump) 
 					{
 						//Start jump and set the player-activated jump to true so it
 						//can't jump without releasing the button
@@ -159,6 +166,9 @@ public class PlayerController : MonoBehaviour
 						vSpeed = 0;
 					}
 				}
+
+                // To control movement of player
+                Movement(moveDirection);
 				break;
 
 			case player_state.JUMPING:
@@ -198,7 +208,7 @@ public class PlayerController : MonoBehaviour
 						//vSpeed momentum - that gets gradually smaller - to get a
 						//higher jump. Do until the press time gets to his max.
 						//If the player releases the button, stop giving extra momentum to the jump.
-						if ((startJumpPress != -1) && (InputManager.ActiveDevice.Action1.IsPressed)
+						if ((startJumpPress != -1) && (InputManager.ActiveDevice.Action1.IsPressed) & allowMovement
 							&& ((Time.time - startJumpPress) <= maxJumpTime)) 
                         {
 							vSpeed = jumpSpeed;
@@ -209,6 +219,9 @@ public class PlayerController : MonoBehaviour
 						}
 					}
 				}
+
+                // To control movement of player
+                Movement(moveDirection);
 				break;
 
 			case player_state.WHIPING:
@@ -264,10 +277,9 @@ public class PlayerController : MonoBehaviour
 				transform.position = pos;
 			}
 		}
-
 		//If a player-induced jump is checked but the jump key is not longer
 		//being held, set it to false so it can jump again
-		if (playerActivedJump && !InputManager.ActiveDevice.Action1.IsPressed)
+		if (playerActivedJump && !InputManager.ActiveDevice.Action1.IsPressed && allowMovement)
 			playerActivedJump = false;
 
         // To active God mode camera
@@ -325,17 +337,55 @@ public class PlayerController : MonoBehaviour
 
 	}
 
+    private void Movement(Vector3 moveDirection)
+    {
+        // Gravity
+        vSpeed -= gravity * Time.deltaTime;
+
+		//If the player is allowed to move
+		if (allowMovement) {
+			
+			// Control of movemente in X axis
+			moveDirection.x = InputManager.ActiveDevice.LeftStickX.Value;
+			moveDirection = transform.TransformDirection (moveDirection);
+			moveDirection *= speed;
+
+			// Flips the sprite renderer if is changing direction
+			if ((moveDirection.x > 0) && (spriteRenderer.flipX == true)) {
+				spriteRenderer.flipX = false;
+			} else if ((moveDirection.x < 0) && (spriteRenderer.flipX == false)) {
+				spriteRenderer.flipX = true;
+			}
+
+		} else {
+			moveDirection.x = 0;
+		}
+
+        moveDirection.y = vSpeed;
+
+        controller.Move(moveDirection * Time.deltaTime);
+        if (transform.position.z != zPosition)
+        {
+            Vector3 pos = transform.position;
+            pos.z = zPosition;
+            transform.position = pos;
+        }
+    }
+
 	private bool ActivatingTeleport(){
 
-		if (InputManager.ActiveDevice.Action3.WasPressed && (!teleportCooldown)) 
-        {	
-			// We create a coroutine to do a delay in the teleport and the state of player is changed to teleporting
-			StartCoroutine ("ActivateTeleport");
-			ActivateTeleport();
-			state = player_state.TELEPORTING;
-			vSpeed = 0;
+		if (InputManager.ActiveDevice.Action3.WasPressed && allowMovement && (!teleportCooldown)) 
+        {
+            if (teleport.CheckTeleport(controller))
+            {
+                // We create a coroutine to do a delay in the teleport and the state of player is changed to teleporting
+                StartCoroutine("ActivateTeleport");
+                ActivateTeleport();
+                state = player_state.TELEPORTING;
+                vSpeed = 0;
 
-			return true;
+                return true;
+            }
 		}
 		return false;
 	}

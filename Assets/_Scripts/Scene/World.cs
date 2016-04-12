@@ -3,16 +3,27 @@ using System.Collections.Generic;
 
 public class World : MonoBehaviour {
 
-	// Moving objects look at this to know if they should move or not.
-	// Changed by the slowfps power up. Can also be used for other pauses.
-	public bool doUpdate = true;
-	public float slowDown = 1;			//This is intended to be a global slowdown scale during slowfps
+	public enum update_status
+	{
+		REGULAR_UPDATE,			//Just return the delta time
+		WAITING,				//Don't do anything (doUpdate == false)
+		UPDATE_REQUESTED,		//DoUpdate = true in the next Update cycle
+		UPDATING				//DoUpdate returns to false
+	};
+
 	public PlayerController player;
     public Camera mainCamera;
     public GameObject powers;
     public GameObject gui;
 
-	private List<GameObject> gameObjectList;
+	private update_status state = update_status.REGULAR_UPDATE;
+
+	// Moving objects look at this to know if they should move or not.
+	// Changed by the slowfps power up. Can also be used for other pauses.
+	public bool doUpdate = true;
+
+	// How much can the world move in this update
+	public float lag = 1.0f;
 
 	void Start()
     {
@@ -21,15 +32,45 @@ public class World : MonoBehaviour {
         gui.SetActive(true);
         powers.SetActive(true);
         player.enabled = true;
-		gameObjectList = new List<GameObject> ();
     }
-	
+
+	void Update(){
+
+		switch (state) {
+
+		case update_status.REGULAR_UPDATE:
+			
+			lag = Time.deltaTime;
+			break;
+
+		case update_status.UPDATE_REQUESTED:
+
+			doUpdate = true;
+			state = update_status.UPDATING;
+			break;
+
+		case update_status.UPDATING:
+			doUpdate = false;
+			state = update_status.WAITING;
+			break;
+		}
+		
+	}
+
+	//When in SlowFPS, request to mark "doUpdate" as true in the next World update
+	//inputLag is the lag this update will have
+	public void requestUpdate(float inputLag){
+		lag = inputLag;
+		state = update_status.UPDATE_REQUESTED;
+	}
+
     // Modifies fps of world (included enemies)
 	public void toggleSlowFPS (){
-		if (slowDown == 1) {
-			slowDown = 0.5f;
+		if (state != update_status.REGULAR_UPDATE) {
+			state = update_status.REGULAR_UPDATE;
+			doUpdate = true;
 		} else {
-			slowDown = 1.0f;
+			state = update_status.WAITING;
 		}
 	}
 }

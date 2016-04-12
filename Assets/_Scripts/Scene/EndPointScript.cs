@@ -7,7 +7,6 @@ public class EndPointScript : MonoBehaviour {
     public GameObject titlesGameObject;
     public Text title;
     public Text subtitle;
-    public PlayerController player;
 
 	private float endGame = -1;
 
@@ -19,7 +18,7 @@ public class EndPointScript : MonoBehaviour {
 			title.text = "Level Complete!";
 			title.color = Color.red;
 			subtitle.text = "Good work not screwing up";
-			player.state = PlayerController.player_state.DEATH;
+			coll.gameObject.GetComponent<PlayerController>().allowMovement = false;
 			endGame = Time.time + 3.0f;
             enabled = true;
 		}

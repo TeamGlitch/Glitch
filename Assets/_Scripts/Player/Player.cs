@@ -78,6 +78,7 @@ public class Player : MonoBehaviour {
 
 			//Set the character to dead and disable vSpeed
 			playerController.state = PlayerController.player_state.DEATH;
+			playerController.allowMovement = false;
 			playerController.vSpeed = 0;
 
 			//Determine if it's the last life
