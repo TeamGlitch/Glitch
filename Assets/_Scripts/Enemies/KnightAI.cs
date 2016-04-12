@@ -80,14 +80,7 @@ public class KnightAI : MonoBehaviour {
                 player.DecrementLives(damageAttack);
 
                 // To impulse player from enemy
-                if (transform.position.x > player.transform.position.x)
-                {
-                    player.transform.Translate(-5.0f, 0.0f, 0.0f);
-                }
-                else
-                {
-                    player.transform.Translate(5.0f, 0.0f, 0.0f);
-                }
+                player.ReactToAttack(transform.position.x);
             }
             else
             {

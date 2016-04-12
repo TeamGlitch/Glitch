@@ -19,7 +19,7 @@ public class JumpScript : MonoBehaviour {
         {
             if (coll.gameObject.CompareTag("Archer"))
             {
-                coll.transform.Translate((Vector3.forward.x*forwardForce), upForce, 0.0f);
+                coll.GetComponent<Rigidbody>().AddForce((Vector3.forward.x * forwardForce), upForce, 0.0f, ForceMode.Impulse);
             }
         }
     }

@@ -155,6 +155,18 @@ public class Player : MonoBehaviour {
                 part.GetComponent<glitchFragment>().restart(lastCheckPoint.gameObject.transform.position, lastLife);
             }
         }
+    }
 
+    public void ReactToAttack(float enemyX)
+    {
+        // To impulse player from enemy
+        if (enemyX > transform.position.x)
+        {
+            transform.Translate(-5.0f, 0.0f, 0.0f);
+        }
+        else
+        {
+            transform.Translate(5.0f, 0.0f, 0.0f);
+        }
     }
 }
