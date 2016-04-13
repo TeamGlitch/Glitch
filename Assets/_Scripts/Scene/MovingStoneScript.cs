@@ -67,5 +67,23 @@ public class MovingStoneScript : MonoBehaviour {
 	{
 		isFPSActive = false;
 	}
+	void OnTriggerEnter (Collider collision)
+	{
+		if (collision.gameObject.tag == "Player")
+		{
+			collision.gameObject.transform.parent = transform;
+		}
+	}
+
+	void OnTriggerExit (Collider collision)
+	{
+		if (collision.gameObject.tag == "Player")
+		{
+			transform.DetachChildren();
+		}
+	}
 
 }
+
+
+// 932530910

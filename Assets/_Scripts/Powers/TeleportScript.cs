@@ -48,7 +48,7 @@ public class TeleportScript : MonoBehaviour {
         {
             return true;
         }
-
+		Debug.Log("BOOM EN TU CARA");
         return false;
     }
 }

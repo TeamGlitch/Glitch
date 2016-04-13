@@ -22,7 +22,7 @@ public class DeadMenuScript : MonoBehaviour {
 		menuButton = transform.FindChild("Main Menu").GetComponent<Button>();
 		gameObject.SetActive(false);
 		playerPowers.SetActive (false);
-		restartButton.Select ();
+//		restartButton.Select ();
 	}
 
 	// Update is called once per frame
