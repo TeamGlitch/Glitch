@@ -27,9 +27,11 @@ public class ArcherAI : MonoBehaviour {
     public float speed = 0.0f;
     public Player player;
     public bool motionless = false;
-    public GameObject arrow;
-    public ArrowScript arrowLogic;
+    public World world;
+    public GameObject arrow;				//Reference to an arrow prefab
 
+    private ObjectPool arrowPool;			//Arrows pool
+    private ArrowScript arrowLogic;
     private Vector3 initialPosition;
     private enemy_states states = enemy_states.WAIT;
     private Ray ray;
@@ -74,7 +76,7 @@ public class ArcherAI : MonoBehaviour {
         {
             ray = new Ray(transform.localPosition, player.transform.position - transform.localPosition);
             Debug.DrawRay(transform.localPosition, player.transform.position - transform.localPosition);
-            if ((Physics.Raycast(ray, out hit) && (sight == false)) && (hit.collider.gameObject.tag == "Player"))
+            if ((Physics.Raycast(ray, out hit) && (sight == false)) && (hit.collider.gameObject.CompareTag("Player")))
             {
                 sight = true;
                 speed = shootSpeed;
@@ -82,6 +84,11 @@ public class ArcherAI : MonoBehaviour {
                 states = enemy_states.SHOOT;
             }
         }
+    }
+
+    void Start()
+    {
+        arrowPool = new ObjectPool(arrow);
     }
 
     void Update()
@@ -100,9 +107,11 @@ public class ArcherAI : MonoBehaviour {
                         // Shooting logic
                         // SHOOT ANIMATION AND LOGIC HERE
 
-                        if (!arrowLogic.gameObject.activeInHierarchy)
+                        if ((arrow == null) || (!arrow.activeInHierarchy))
                         {
-                            arrowLogic.transform.position = transform.position;
+                            arrow = arrowPool.getObject();
+                            arrowLogic = arrow.GetComponent<ArrowScript>();
+                            arrow.transform.position = transform.position;
                             arrowLogic.player = player;
                             float x = transform.position.x - hit.point.x;
                             float y = transform.position.y - hit.point.y;
@@ -121,8 +130,8 @@ public class ArcherAI : MonoBehaviour {
                                 arrowLogic.transform.Rotate(0.0f, 0.0f, alfa);
                                 arrowLogic.isInLeft = true;
                             }
-                            arrow.SetActive(true);
                         }
+                        arrow.SetActive(true);
 
                         // If distance to Glitch is minus than chase field of view then changes to Chase state.
                         // If Glitch is in melee attack scope then enemy attacks to him with daggers, changing her state to Melee attack
@@ -194,7 +203,7 @@ public class ArcherAI : MonoBehaviour {
                             speed = chaseSpeed;
                             states = enemy_states.CHASE;
                         }
-
+                        
                         break;
                 }
             }
