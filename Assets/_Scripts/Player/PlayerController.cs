@@ -80,13 +80,12 @@ public class PlayerController : MonoBehaviour
 		allowMovement = true;
 	}
 
-/*    void OnControllerColliderHit(ControllerColliderHit coll)
+   void OnControllerColliderHit(ControllerColliderHit coll)
     {
-		
+		/*
 		//   /\     /~~  /\  |\  /||~~\~|~  /\  |~~\|||
 		//  /__\   |    /__\ | \/ ||--< |  /__\ |__/|||
 		// /    \   \__/    \|    ||__/_|_/    \|  \...
-
 		if (coll.gameObject.GetComponent<MeshRenderer>() != null)
         {
             if (coll.gameObject.CompareTag("Floor"))
@@ -98,14 +97,11 @@ public class PlayerController : MonoBehaviour
                 TextureEffects.TextureFlickerRepeat(coll.gameObject, brokenTexture);
             }
         }
-
+		*/
 		if ((controller.collisionFlags & CollisionFlags.Above) != 0)
-		{
-			vSpeed = -7;
-			startJumpPress = -1;
-		}
+			vSpeed = 0;
     }
-*/
+
 	void Update () 
 	{
 		
