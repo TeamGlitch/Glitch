@@ -100,7 +100,10 @@ public class PlayerController : MonoBehaviour
         }
 
 		if ((controller.collisionFlags & CollisionFlags.Above) != 0)
-			vSpeed = 0;
+		{
+			vSpeed = -7;
+			startJumpPress = -1;
+		}
     }
 */
 	void Update () 

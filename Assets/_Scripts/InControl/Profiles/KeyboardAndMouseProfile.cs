@@ -76,14 +76,16 @@ namespace CustomProfileExample
 					Handle = "Move X",
 					Target = InputControlType.LeftStickX,
 					// KeyCodeAxis splits the two KeyCodes over an axis. The first is negative, the second positive.
-					Source = KeyCodeAxis( KeyCode.A, KeyCode.D )
+					Source = KeyCodeAxis( KeyCode.A, KeyCode.D ),
+					Raw = true
 				},
 				new InputControlMapping
 				{
 					Handle = "Move Y",
 					Target = InputControlType.LeftStickY,
 					// Notes that up is positive in Unity, therefore the order of KeyCodes is down, up.
-					Source = KeyCodeAxis( KeyCode.S, KeyCode.W )
+					Source = KeyCodeAxis( KeyCode.S, KeyCode.W ),
+					Raw = true
 				},
 				new InputControlMapping {
 					Handle = "Move X Alternate",

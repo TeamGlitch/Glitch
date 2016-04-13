@@ -3,11 +3,13 @@ using InControl;
 
 public class TeleportScript : MonoBehaviour {
 
+	//Teleport movement scale
 	public float teleportDistance = 4.0f;
 
     private float directionVertical;
     private float directionHorizontal;
 
+	//Teleports the character. Returns true if there's cooldown.
     public bool Teleport(CharacterController controller)
     {
     
@@ -16,16 +18,20 @@ public class TeleportScript : MonoBehaviour {
             directionVertical = 0;
         }
       
-        // Teleport always moves the player twice it's width in X axis 
-		controller.transform.Translate((controller.transform.localScale.x * teleportDistance) * directionHorizontal, directionVertical * controller.transform.localScale.y, 0.0f);
-        if (!controller.isGrounded)
+        // Teleport moves the character in a scale proportional to its size
+		float x = (controller.transform.localScale.x * teleportDistance) * directionHorizontal;
+		float y = (controller.transform.localScale.y * teleportDistance) * directionVertical;
+		controller.transform.Translate(x, y, 0.0f);
+
+        if (controller.isGrounded)
         {
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
+	//Checks if it can teleport to the given position
     public bool CheckTeleport(CharacterController controller)
     {
         // We catch the direction to teleport
