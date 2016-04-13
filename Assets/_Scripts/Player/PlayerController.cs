@@ -43,9 +43,9 @@ public class PlayerController : MonoBehaviour
 	private bool playerActivedJump = false;		// The jump state is cause of a player jump? (If not, it could be a fall)
 
 	private float zPosition;					// Position on the z axis. Unvariable
-	public float speed = 12.0f;					// Horizontal speed
-	public float jumpSpeed = 13.5f;				// Base jump speed
-	public float gravity = 50.0f;				// Gravity
+	public float speed = 7.2f;					// Horizontal speed
+	public float jumpSpeed = 8.0f;				// Base jump speed
+	public float gravity = 22.0f;				// Gravity
 	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
     public float vSpeed = 0.0f;					// The vertical speed
@@ -98,8 +98,10 @@ public class PlayerController : MonoBehaviour
             }
         }
 		*/
-		if ((controller.collisionFlags & CollisionFlags.Above) != 0)
-			vSpeed = 0;
+		if ((controller.collisionFlags & CollisionFlags.Above) != 0) {
+			vSpeed = -7;
+			startJumpPress = -1;
+		}
     }
 
 	void Update () 

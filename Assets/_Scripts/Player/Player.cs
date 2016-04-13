@@ -157,6 +157,7 @@ public class Player : MonoBehaviour {
 			PlayerDeadEvent ();
 		}
 		moveToCheckpoint = false;
+		playerController.allowMovement = true;
 		sprite.enabled = true;
 		characterController.detectCollisions = true;
 		playerController.state = PlayerController.player_state.JUMPING;
