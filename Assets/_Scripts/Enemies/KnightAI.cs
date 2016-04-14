@@ -12,17 +12,22 @@ public class KnightAI : MonoBehaviour {
     }
 
     // Constants
-    public const float maxSightPatrol = 8.0f;
-    public const float maxSightChase = 16.0f;
-    public const float maxSightAttack = 1.0f;
-    public const float maxSightSearch = 18.0f;
-    public const float searchingTime = 5.0f;
+    private const float maxSightPatrol = 8.0f;
+    private const float maxSightChase = 14.0f;
+    private const float maxSightAttack = 1.0f;
+    private const float maxSightSearch = 16.0f;
+    private const float searchingTime = 5.0f;
+    private const float patrolSpeed = 2.0f;
+    private const float chaseSpeed = 6.0f;
+    private const float searchSpeed = 4.0f;
+    private const float attackSpeed = 6.0f;
 
     // Variables
     public bool sight = false;
     public float speed = 2.0f;
-    public Transform playerPos;
+    public Player player;
 
+    private Transform playerPos;
     private Vector3 lastPosition;
     private enemy_states states = enemy_states.PATROL;
     private Ray ray;
@@ -31,13 +36,19 @@ public class KnightAI : MonoBehaviour {
     private float rotationTime = 0.0f;
     private float searchRotationTime = 1.0f;
     private bool returning = false;
+    private float damageAttack = 0.5f;
+    private int lives = 2;
 
+    void Start()
+    {
+        playerPos = player.GetComponent<Transform>();
+    }
 
     // Trigger that detect collisions with patrol points and limit points
     void OnTriggerEnter(Collider coll)
     {
         // Only detect collisions with patrol points when enemy is patrolling
-        if ((coll.gameObject.tag == "PatrolPoint") && (states == enemy_states.PATROL))
+        if ((coll.gameObject.CompareTag("PatrolPoint")) && (states == enemy_states.PATROL))
         {
             // ANIMATION OF ROTATION HERE
 
@@ -51,13 +62,42 @@ public class KnightAI : MonoBehaviour {
                 transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
             }
         }
-        else
+        // If is in a limit he stops and search glitch
+        else if (coll.gameObject.CompareTag("LimitPoint"))
         {
-            // If is in a limit he stops and search glitch
-            if (coll.gameObject.tag == "LimitPoint")
+            states = enemy_states.SEARCH;
+            time = searchingTime;
+        }
+    }
+
+    void OnCollisionEnter(Collision coll)
+    {
+        if (coll.gameObject.CompareTag("Player"))
+        {
+            // If is attacking a collison hurts player
+            if (states == enemy_states.ATTACK)
             {
-                states = enemy_states.SEARCH;
-                time = searchingTime;
+                player.DecrementLives(damageAttack);
+
+                // To impulse player from enemy
+                player.ReactToAttack(transform.position.x);
+            }
+            else
+            {
+                // If knight loses sight of player and collides means that is colliding over knight
+                Ray ray = new Ray(transform.position, player.transform.position - transform.position);
+                Physics.Raycast(ray, out hit);
+
+                // The ray is from knight to player, then collides down of player (-transform.up = down)
+                if (hit.normal == -transform.up)
+                {
+                    --lives;
+
+                    if (lives == 0)
+                    {
+                        gameObject.SetActive(false);
+                    }
+                }
             }
         }
     }
@@ -77,7 +117,7 @@ public class KnightAI : MonoBehaviour {
             if ((Physics.Raycast(ray, out hit, maxSightPatrol)) && (hit.collider.gameObject.tag == "Player"))
             {
                 sight = true;
-                speed = 6.0f;
+                speed = chaseSpeed;
                 lastPosition = transform.position;      // We save the point in the patrol to return later
                 states = enemy_states.CHASE;
             }
@@ -86,7 +126,7 @@ public class KnightAI : MonoBehaviour {
         {
             switch (states)
             {
-                    // Enemy chases Glitch until reach him, reach a limit point or lose sight of Glitch
+                // Enemy chases Glitch until reach him, reach a limit point or lose sight of Glitch
                 case enemy_states.CHASE:
 
                     // Chasing logic
@@ -115,7 +155,7 @@ public class KnightAI : MonoBehaviour {
 
                     if (Vector3.Distance(playerPos.position, transform.position) > maxSightChase)
                     {
-                        speed = 4.0f;
+                        speed = searchSpeed;
                         states = enemy_states.SEARCH;
                         time = searchingTime;
                     }
@@ -136,7 +176,7 @@ public class KnightAI : MonoBehaviour {
                     // else if Glitch isn't in attack scope then enemy chases him
                     if (Vector3.Distance(playerPos.position, transform.position) > maxSightChase)
                     {
-                        speed = 4.0f;
+                        speed = searchSpeed;
                         states = enemy_states.SEARCH;
                         time = searchingTime;
                     }
@@ -153,20 +193,21 @@ public class KnightAI : MonoBehaviour {
                     // Searching logic
                     // SEARCH ANIMATION HERE
 
+                    ray.origin = transform.position;
+                    ray.direction = transform.TransformDirection(Vector3.forward);
+
+                    if ((Physics.Raycast(ray, out hit, maxSightSearch)) && (hit.collider.gameObject.tag == "Player"))
+                    {
+                        speed = chaseSpeed;
+                        states = enemy_states.CHASE;
+
+                    }
+
                     // If is returning enemy advances to last patrol point, 
                     // else search looking to one side and the other
                     if (returning == false)
                     {
-                        ray.origin = transform.position;
-                        ray.direction = transform.TransformDirection(Vector3.forward);
-
-                        if ((Physics.Raycast(ray, out hit, maxSightSearch)) && (hit.collider.gameObject.tag == "Player"))
-                        {
-                            speed = 6.0f;
-                            states = enemy_states.CHASE;
-
-                        }
-                        else
+                        if (states == enemy_states.SEARCH)
                         {
                             time -= Time.deltaTime;
                             if (time <= 0.0f)
@@ -185,7 +226,7 @@ public class KnightAI : MonoBehaviour {
                                         transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
                                     }
                                 }
-                                speed = 2.0f;
+                                speed = patrolSpeed;
                                 returning = true;
                                 searchRotationTime = 1.0f;
                             }
@@ -202,12 +243,15 @@ public class KnightAI : MonoBehaviour {
                     }
                     else
                     {
-                        transform.Translate(Vector3.forward * speed * Time.deltaTime);
-                        if ((transform.position.x < lastPosition.x + 1) && (transform.position.x > lastPosition.x - 1))
+                        if (states == enemy_states.SEARCH)
                         {
-                            returning = false;
-                            sight = false;
-                            states = enemy_states.PATROL;
+                            transform.Translate(Vector3.forward * speed * Time.deltaTime);
+                            if ((transform.position.x < lastPosition.x + 1) && (transform.position.x > lastPosition.x - 1))
+                            {
+                                returning = false;
+                                sight = false;
+                                states = enemy_states.PATROL;
+                            }
                         }
                     }
                     break;

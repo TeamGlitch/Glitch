@@ -12,6 +12,7 @@ public class Player : MonoBehaviour {
 
 	//Internal references
 	private CharacterController characterController;
+    private BoxCollider trigger;
 
 	// Player element
 	public PlayerController playerController;	//Reference to the player controller
@@ -24,7 +25,7 @@ public class Player : MonoBehaviour {
 	private ObjectPool glitchPartPool;			//Fragments pool
 
 	// Properties
-	public int lives;							// Actual lives
+	public float lives;							// Actual lives
 	public int items = 0;						// Items collected
 
 	// State
@@ -37,6 +38,7 @@ public class Player : MonoBehaviour {
 	public Canvas gui;
 	private RectTransform boxUIActivatedRectTransform;
 	private RectTransform guiRectTrans;
+    private bool lastLife = false;
 
 	public delegate void PlayerDeadDelegate();
 	public event PlayerDeadDelegate PlayerDeadEvent;
@@ -46,6 +48,7 @@ public class Player : MonoBehaviour {
 	void Awake () {
 
 		characterController = GetComponent<CharacterController>();
+        trigger = GetComponent<BoxCollider>();
 
 		glitchPartPool = new ObjectPool(glitchPart);
 		lives = 3;
@@ -69,56 +72,11 @@ public class Player : MonoBehaviour {
 
 	void OnTriggerEnter(Collider coll){
 
-		//If there's a collision with death
-		if(coll.CompareTag("Death"))
+		//If there's a collision with some lethal thing in scene
+		if(coll.gameObject.CompareTag("Death"))
         {
-			//Decrement lives and update the GUI
-			lives -= 1;
-			guiLife.UpdateLives();
-
-			//Set the character to dead and disable vSpeed
-			playerController.state = PlayerController.player_state.DEATH;
-			playerController.allowMovement = false;
-			playerController.vSpeed = 0;
-
-			//Determine if it's the last life
-            bool lastLife = false;
-            if (lives == 0)
-            {
-                lastLife = true;
-            }
-
-			//Restart the fragments
-			for (int i = 0; i < 100; i++) 
-            {		
-				GameObject part = glitchPartPool.getObject();
-				part.transform.position = transform.position;
-
-				if (i == 0) 
-                {
-					part.GetComponent<glitchFragment> ().restart (lastCheckPoint.gameObject.transform.position, lastLife, this);
-				} 
-                else 
-                {
-					part.GetComponent<glitchFragment> ().restart (lastCheckPoint.gameObject.transform.position, lastLife);
-				}
-			}
-
-			//If it is the last life, activate the dead menu
-			if (lastLife)
-			{
-				deadMenuScript.gameObject.SetActive (true);
-				deadMenuScript.PlayerDead ();
-			}
-
-			slowFPS.RestartCooldowns ();;
-
-
-			//Deactivate the sprite renderer
-			sprite.enabled = false;
-			characterController.detectCollisions = false;
-
-		}
+            DecrementLives(1);
+        }
 	}
 
 	void Update(){
@@ -159,6 +117,7 @@ public class Player : MonoBehaviour {
 		moveToCheckpoint = false;
 		playerController.allowMovement = true;
 		sprite.enabled = true;
+        trigger.enabled = true;
 		characterController.detectCollisions = true;
 		playerController.state = PlayerController.player_state.JUMPING;
 		transform.position = lastCheckPoint.gameObject.transform.position;
@@ -197,4 +156,78 @@ public class Player : MonoBehaviour {
 		--items;
 		guiItem.GUIItemRepresent ();
 	}
+	
+	//Decrement lives and update the GUI
+    public void DecrementLives(float damage)
+    {
+        if ((lives % 1 == 0) || ((lives - damage) > Mathf.FloorToInt(lives)))
+        {
+            lives -= damage;
+        }
+        else
+        {
+            lives = Mathf.FloorToInt(lives);
+            if (lives <= 0)
+            {
+                lives = 0;
+                lastLife = true;
+            }
+
+            //If it is the last life, activate the dead menu
+            if (lastLife)
+            {
+                Death();
+                deadMenuScript.gameObject.SetActive(true);
+                deadMenuScript.PlayerDead();
+            }
+        }
+ 
+        guiLife.UpdateLives();
+
+        if (lives % 1 == 0)
+        {
+            Death();
+        }
+    }
+
+    public void Death()
+    {
+        //Set the character to dead and disable vSpeed
+        playerController.state = PlayerController.player_state.DEATH;
+        playerController.vSpeed = 0;
+
+        //Deactivate the sprite renderer
+        sprite.enabled = false;
+        characterController.detectCollisions = false;
+        trigger.enabled = false;
+
+        //Restart the fragments
+        for (int i = 0; i < 100; i++)
+        {
+            GameObject part = glitchPartPool.getObject();
+            part.transform.position = transform.position;
+
+            if (i == 0)
+            {
+                part.GetComponent<glitchFragment>().restart(lastCheckPoint.gameObject.transform.position, lastLife, this);
+            }
+            else
+            {
+                part.GetComponent<glitchFragment>().restart(lastCheckPoint.gameObject.transform.position, lastLife);
+            }
+        }
+    }
+
+    public void ReactToAttack(float enemyX)
+    {
+        // To impulse player from enemy
+        if (enemyX > transform.position.x)
+        {
+            transform.Translate(-5.0f, 0.0f, 0.0f);
+        }
+        else
+        {
+            transform.Translate(5.0f, 0.0f, 0.0f);
+        }
+    }
 }
