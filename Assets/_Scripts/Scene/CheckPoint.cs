@@ -22,7 +22,7 @@ public class CheckPoint : MonoBehaviour {
 		MedPortal = gameObject.transform.FindChild("MedPortal").gameObject;
 		OuterPortal = gameObject.transform.FindChild("OuterPortal").gameObject;
 		cylinderRenderer = gameObject.transform.FindChild ("Cylinder").gameObject.GetComponent<Renderer>();
-		//cylinderRenderer.gameObject.SetActive(false);
+		cylinderRenderer.gameObject.SetActive(false);
 	}
 
 	void OnTriggerEnter(Collider coll){
@@ -35,7 +35,8 @@ public class CheckPoint : MonoBehaviour {
 
 			//Activates the grow animation
 			growStart = Time.time;
-			growEnd = growStart + 2.5f;
+			growEnd = growStart + 1.7f;
+			cylinderRenderer.gameObject.SetActive(true);
 		}
 
 	}
@@ -101,21 +102,117 @@ public class CheckPoint : MonoBehaviour {
 			speed = Mathf.Lerp (9.0f, 36.0f, animationFrame);
 		
 
-			var cilinderFrame = Mathf.Pow (animationFrame, 0.28f);
+			///////CILINDER///////
 
-			//Vector2 actualOffset = cylinderRenderer.material.GetTextureOffset("_MainTex");
-			//actualOffset.x += Mathf.Lerp(
-			//cylinderRenderer.material.SetTextureOffset("_MainTex", actualOffset);
+			///ANIMACION 01///
 
-			float cilinderScale = Mathf.Lerp(0.25f,1.0f,cilinderFrame);
-			cylinderRenderer.gameObject.transform.localScale = new Vector3 (cilinderScale, cilinderScale * 2, cilinderScale);
+			/*
+			float cilinderFrame = Mathf.Pow(animationFrame, 0.28f);
+			float cilinderHeight;
+			float cilinderWidth;
+			Vector2 actualTiling = cylinderRenderer.material.mainTextureScale;
+			Vector2 actualOffset = cylinderRenderer.material.GetTextureOffset("_MainTex");
+
+			if (cilinderFrame < 0.5) {
+
+				cilinderFrame = cilinderFrame * 2;
+
+				cilinderHeight = Mathf.Lerp(0.25f,2.0f,cilinderFrame);
+				cilinderWidth = Mathf.Lerp (0.25f,1.0f, cilinderFrame);
+
+				actualTiling.x = Mathf.Lerp(3f, 5f,cilinderFrame);
+				actualTiling.y = Mathf.Lerp(2f, 5f,cilinderFrame);
+
+				actualOffset.x += Mathf.Lerp (0.0f, 0.45f, cilinderFrame);
+
+			} else {
+
+				cilinderFrame = (cilinderFrame * 2) - 1;
+
+				cilinderHeight = Mathf.SmoothStep(2.0f, 0.02f,cilinderFrame);
+				cilinderWidth = Mathf.Lerp(1.0f, 6.0f, cilinderFrame);
+
+				actualTiling.x = Mathf.Lerp(5f, 40f,cilinderFrame);
+				actualTiling.y = Mathf.Lerp(5f, 1f,cilinderFrame);
+
+				actualOffset.x += Mathf.Lerp (0.45f, 0.045f, cilinderFrame);
+
+				Color color = cylinderRenderer.material.color;
+				color.a = Mathf.Lerp(1.0f, 0.6f,cilinderFrame);
+				cylinderRenderer.material.color = color;
+			
+			}
+				
+			cylinderRenderer.gameObject.transform.localScale = new Vector3(cilinderWidth, cilinderHeight, cilinderWidth);
+
+			cylinderRenderer.material.mainTextureScale = actualTiling;
+			cylinderRenderer.material.SetTextureOffset("_MainTex", actualOffset);
+
 			Vector3 cilinderPosition = cylinderRenderer.gameObject.transform.localPosition;
-			cilinderPosition.y = (cilinderScale*2) - 1;
+			cilinderPosition.y = cilinderHeight - 1;
 			cylinderRenderer.gameObject.transform.localPosition = cilinderPosition;
+
+
+			*/
+
+			///ANIMACION 02///
+
+
+			float cilinderFrame = Mathf.Pow(animationFrame, 0.28f);
+			float cilinderHeight;
+			float cilinderWidth;
+			Vector2 actualTiling = cylinderRenderer.material.mainTextureScale;
+			Vector2 actualOffset = cylinderRenderer.material.GetTextureOffset("_MainTex");
+			Color color = cylinderRenderer.material.color;
+
+			if (cilinderFrame < 0.5) {
+
+				cilinderFrame = cilinderFrame * 2;
+
+				cilinderHeight = Mathf.Lerp(0.20f,0.25f,cilinderFrame);
+				cilinderWidth = Mathf.Lerp (0.20f,1.5f, cilinderFrame);
+
+				actualTiling.x = Mathf.Lerp(3.0f, 12f,cilinderFrame);
+				actualTiling.y = Mathf.Lerp(3.0f, 2f,cilinderFrame);
+
+				actualOffset.x += Mathf.Lerp (0.0f, 0.45f, cilinderFrame);
+
+				color.a = Mathf.Lerp(0.0f, 1.0f,cilinderFrame);
+
+
+			} else {
+
+				cilinderFrame = (cilinderFrame * 2) - 1;
+
+				cilinderHeight = Mathf.SmoothStep(0.25f, 10.0f,cilinderFrame);
+				cilinderWidth = Mathf.Lerp(1.5f, 0.2f, cilinderFrame);
+
+				actualTiling.x = Mathf.Lerp(12f, 2f,cilinderFrame);
+				actualTiling.y = Mathf.Lerp(2f, 10f,cilinderFrame);
+
+				actualOffset.x += Mathf.Lerp (0.45f, 0.045f, cilinderFrame);
+
+				color.a = Mathf.SmoothStep(1.0f, 0.0f,cilinderFrame);
+
+			}
+
+			cylinderRenderer.gameObject.transform.localScale = new Vector3(cilinderWidth, cilinderHeight, cilinderWidth);
+
+			cylinderRenderer.material.mainTextureScale = actualTiling;
+			cylinderRenderer.material.SetTextureOffset("_MainTex", actualOffset);
+			cylinderRenderer.material.color = color;
+
+
+			Vector3 cilinderPosition = cylinderRenderer.gameObject.transform.localPosition;
+			cilinderPosition.y = cilinderHeight - 1;
+			cylinderRenderer.gameObject.transform.localPosition = cilinderPosition;
+
+
 
 			//After all the calculations, do growStart = -1 to stop doing the animation
 			if (actualTime >= growEnd) {
 				growStart = -1;
+				cylinderRenderer.gameObject.SetActive(false);
 			}
 		}
 	}
