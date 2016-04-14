@@ -2,8 +2,8 @@
 
 public class CheckPoint : MonoBehaviour {
 
-	public ParticleSystem particles;
 	public bool active = false;
+	private ParticleSystem particles;
 
 	//Animation
 	private float growStart = -1;
@@ -12,7 +12,7 @@ public class CheckPoint : MonoBehaviour {
 	private GameObject InnerPortal = null; 
 	private GameObject MedPortal = null; 
 	private GameObject OuterPortal = null;
-	public Renderer cylinderRenderer = null;
+	private Renderer cylinderRenderer = null;
 	private float speed = 9.0f;
 
 	void Start(){
@@ -196,18 +196,11 @@ public class CheckPoint : MonoBehaviour {
 
 			}
 
-			cylinderRenderer.gameObject.transform.localScale = new Vector3(cilinderWidth, cilinderHeight, cilinderWidth);
+			cylinderRenderer.gameObject.transform.localScale = new Vector3(cilinderWidth  * 0.1f, cilinderHeight  * 0.1f, cilinderWidth  * 0.1f);
 
 			cylinderRenderer.material.mainTextureScale = actualTiling;
 			cylinderRenderer.material.SetTextureOffset("_MainTex", actualOffset);
 			cylinderRenderer.material.color = color;
-
-
-			Vector3 cilinderPosition = cylinderRenderer.gameObject.transform.localPosition;
-			cilinderPosition.y = cilinderHeight - 1;
-			cylinderRenderer.gameObject.transform.localPosition = cilinderPosition;
-
-
 
 			//After all the calculations, do growStart = -1 to stop doing the animation
 			if (actualTime >= growEnd) {
