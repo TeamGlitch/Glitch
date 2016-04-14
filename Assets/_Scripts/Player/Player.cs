@@ -167,21 +167,22 @@ public class Player : MonoBehaviour {
         else
         {
             lives = Mathf.FloorToInt(lives);
-            if (lives <= 0)
-            {
-                lives = 0;
-                lastLife = true;
-            }
-
-            //If it is the last life, activate the dead menu
-            if (lastLife)
-            {
-                Death();
-                deadMenuScript.gameObject.SetActive(true);
-                deadMenuScript.PlayerDead();
-            }
         }
- 
+
+        if (lives <= 0)
+        {
+            lives = 0;
+            lastLife = true;
+        }
+
+        //If it is the last life, activate the dead menu
+        if (lastLife)
+        {
+            Death();
+            deadMenuScript.gameObject.SetActive(true);
+            deadMenuScript.PlayerDead();
+        }
+
         guiLife.UpdateLives();
 
         if (lives % 1 == 0)
