@@ -48,7 +48,7 @@ public class Player : MonoBehaviour {
 	void Awake () {
 
 		characterController = GetComponent<CharacterController>();
-        trigger = GetComponent<BoxCollider>();
+        trigger = GetComponentInChildren<BoxCollider>();
 
 		glitchPartPool = new ObjectPool(glitchPart);
 		lives = 3;
