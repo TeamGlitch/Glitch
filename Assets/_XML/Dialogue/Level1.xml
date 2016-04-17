@@ -20,4 +20,18 @@
 		<T>[align=left]...with tags!</T>
 		<T>So yeah, have fun.</T>
 	</Scene>
+	<Scene id="1">
+		<T>[face=None][noskip]Welcome to Artichoke Kingdom!</T>
+		<T>Move using the left pad.</T>
+		<T>[noskip]And jump using A button.</T>
+	</Scene>
+	<Scene id="2">
+		<T>[face=None][noskip]Use teleport using X button.</T>
+	</Scene>
+	<Scene id="3">
+		<T>[face=None][noskip]Put boxes when you see the "!" pressing the Y button.</T>
+	</Scene>
+	<Scene id="4">
+		<T>[face=None][noskip]You can make the time go slower pressing LB.</T>
+	</Scene>
 </Dialogue>
