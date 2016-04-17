@@ -22,7 +22,7 @@ public class ArrowScript : MonoBehaviour {
 	
 	void Update () 
     {
-        transform.Translate(Vector2.up * Time.deltaTime*speed);
+        transform.Translate(Vector2.down * Time.deltaTime*speed);
 
         timeAlive -= Time.deltaTime;
         if (timeAlive <= 0)
@@ -36,11 +36,11 @@ public class ArrowScript : MonoBehaviour {
     {
         if (isInLeft)
         {
-            transform.eulerAngles = new Vector3(0.0f, 0.0f, 90.0f);
+            transform.eulerAngles = new Vector3(0.0f, 180.0f, 90.0f);
         }
         else
         {
-            transform.eulerAngles = new Vector3(0.0f, 180.0f, 90.0f);
+            transform.eulerAngles = new Vector3(0.0f, 0.0f, 90.0f);
         }
         gameObject.SetActive(false);
     }

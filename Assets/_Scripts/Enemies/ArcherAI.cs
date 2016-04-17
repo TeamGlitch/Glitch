@@ -40,6 +40,8 @@ public class ArcherAI : MonoBehaviour {
     private float searchRotationTime = 1.0f;
     private bool returning = false;
     private float meleeDamage = 0.25f;
+    private Vector3 origin;
+    private Animator animator;
 
     void OnCollisionEnter(Collision coll)
     {
@@ -55,7 +57,8 @@ public class ArcherAI : MonoBehaviour {
             }
             else
             {
-                // If knight loses sight of player and collides means that is colliding over knight
+
+                // If archer loses sight of player and collides means that is colliding over archer
                 Ray ray = new Ray(transform.position, player.transform.position - transform.position);
                 Physics.Raycast(ray, out hit);
 
@@ -74,10 +77,14 @@ public class ArcherAI : MonoBehaviour {
         // If is the player and between player and archer isn't anything then shoot him
         if (coll.CompareTag("Player"))
         {
-            ray = new Ray(transform.localPosition, player.transform.position - transform.localPosition);
-            Debug.DrawRay(transform.localPosition, player.transform.position - transform.localPosition);
+            origin = transform.position;
+            origin.y += transform.localScale.y*0.75f;
+
+            ray = new Ray(origin, player.transform.position - origin);
+            Debug.DrawRay(origin, player.transform.position - origin);
             if ((Physics.Raycast(ray, out hit) && (sight == false)) && (hit.collider.gameObject.CompareTag("Player")))
             {
+                animator.SetBool("sighted", true);
                 sight = true;
                 speed = shootSpeed;
                 initialPosition = transform.position;      // We save the initial point to return later
@@ -89,45 +96,46 @@ public class ArcherAI : MonoBehaviour {
     void Start()
     {
         arrowPool = new ObjectPool(arrow);
+        animator = GetComponent<Animator>();
+        animator.SetBool("motionless", motionless);
     }
 
     void Update()
     {
-        if (player.playerController.state != PlayerController.player_state.DEATH)
+        animator.SetInteger("state", (int)states);
+        if (sight == true)
         {
-            if (sight == true)
+            if (player.playerController.state != PlayerController.player_state.DEATH)
             {
                 switch (states)
                 {
 
                     // Enemy shoot arrows to Glitch
                     case enemy_states.SHOOT:
-                        print("Shoot");
-
                         // Shooting logic
-                        // SHOOT ANIMATION AND LOGIC HERE
-
                         if ((arrow == null) || (!arrow.activeInHierarchy))
                         {
+                            animator.SetBool("shoot", true);
                             arrow = arrowPool.getObject();
                             arrowLogic = arrow.GetComponent<ArrowScript>();
-                            arrow.transform.position = transform.position;
+                            arrow.transform.position = origin;
                             arrowLogic.player = player;
-                            float x = transform.position.x - hit.point.x;
-                            float y = transform.position.y - hit.point.y;
+                            float x = origin.x - hit.point.x;
+                            float y = origin.y - hit.point.y;
                             float alfa = Mathf.Atan(y / x);
                             alfa = (180.0f * alfa) / 3.14f;
+                            animator.SetBool("shoot", true);
 
-                            if (player.transform.position.x > transform.position.x)
+                            if (player.transform.position.x > origin.x)
                             {
-                                arrowLogic.transform.eulerAngles = new Vector3(0.0f, 180.0f, 90.0f);
+                                arrowLogic.transform.eulerAngles = new Vector3(0.0f, 0.0f, 90.0f);
                                 arrowLogic.transform.Rotate(0.0f, 0.0f, -alfa);
                                 arrowLogic.isInLeft = false;
                             }
                             else
                             {
-                                arrowLogic.transform.eulerAngles = new Vector3(0.0f, 0.0f, 90.0f);
-                                arrowLogic.transform.Rotate(0.0f, 0.0f, alfa);
+                                arrowLogic.transform.eulerAngles = new Vector3(0.0f, 180.0f, 90.0f);
+                                arrowLogic.transform.Rotate(0.0f, 0.0f, -alfa);
                                 arrowLogic.isInLeft = true;
                             }
                         }
@@ -152,7 +160,6 @@ public class ArcherAI : MonoBehaviour {
 
                     // Enemy chases Glitch until reach him or lose sight of Glitch
                     case enemy_states.CHASE:
-                        print("Chase");
 
                         // Chasing logic
                         if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
@@ -206,6 +213,10 @@ public class ArcherAI : MonoBehaviour {
                         
                         break;
                 }
+            }
+            else
+            {
+                states = enemy_states.WAIT;
             }
         }
     }
