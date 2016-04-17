@@ -147,7 +147,10 @@ public class PlayerController : MonoBehaviour
 				if (!ActivatingTeleport())
 				{
 					teleportCooldown = false;
-
+					if(transform.parent != null)
+					{
+						gameObject.transform.rotation = transform.parent.rotation;
+					} 
 					//If the jump key is being pressed but it has been released since the
 					//last jump
 					if (InputManager.ActiveDevice.Action1.IsPressed && allowMovement && !playerActivedJump) 
