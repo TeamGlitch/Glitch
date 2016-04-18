@@ -8,7 +8,8 @@ public class ArcherAI : MonoBehaviour {
         WAIT,
         SHOOT,
         MELEE_ATTACK,
-        CHASE
+        CHASE,
+        DEATH
     }
 
     // Constants
@@ -20,7 +21,6 @@ public class ArcherAI : MonoBehaviour {
     private const float waitSpeed = 0.0f;
     private const float meleeAttackSpeed = 10.0f;
     private const float shootSpeed = 6.0f;
-    private const float maxJump = 8.0f;
 
     // Variables
     public bool sight = false;
@@ -42,10 +42,11 @@ public class ArcherAI : MonoBehaviour {
     private float meleeDamage = 0.25f;
     private Vector3 origin;
     private Animator animator;
+    private bool shooted = false;
 
     void OnCollisionEnter(Collision coll)
     {
-        if (coll.gameObject.CompareTag("Player"))
+        if ((states != enemy_states.DEATH) && (coll.gameObject.CompareTag("Player")))
         {
             // If is attacking a collison hurts player
             if (states == enemy_states.MELEE_ATTACK)
@@ -65,7 +66,8 @@ public class ArcherAI : MonoBehaviour {
                 // The ray is from knight to player, then collides down of player (-transform.up = down)
                 if (hit.normal == -transform.up)
                 {
-                    gameObject.SetActive(false);
+                    states = enemy_states.DEATH;
+                    animator.SetBool("dead", true);
                 }
             }
         }
@@ -75,7 +77,7 @@ public class ArcherAI : MonoBehaviour {
     void OnTriggerStay(Collider coll)
     {
         // If is the player and between player and archer isn't anything then shoot him
-        if (coll.CompareTag("Player"))
+        if ((states != enemy_states.DEATH) && (coll.CompareTag("Player")))
         {
             origin = transform.position;
             origin.y += transform.localScale.y*0.75f;
@@ -97,14 +99,44 @@ public class ArcherAI : MonoBehaviour {
     {
         arrowPool = new ObjectPool(arrow);
         animator = GetComponent<Animator>();
-        animator.SetBool("motionless", motionless);
     }
 
     void Update()
     {
-        animator.SetInteger("state", (int)states);
-        if (sight == true)
+        if (states != enemy_states.DEATH)
         {
+            animator.SetInteger("state", (int)states);
+            if ((animator.IsInTransition(0)) && (animator.GetNextAnimatorStateInfo(0).IsName("Idle")))
+            {
+                if (shooted == true)
+                {
+                    arrow = arrowPool.getObject();
+                    arrowLogic = arrow.GetComponent<ArrowScript>();
+                    arrow.transform.position = origin;
+                    arrowLogic.player = player;
+                    float x = origin.x - hit.point.x;
+                    float y = origin.y - hit.point.y;
+                    float alfa = Mathf.Atan(y / x);
+                    alfa = (180.0f * alfa) / 3.14f;
+
+                    if (player.transform.position.x > origin.x)
+                    {
+                        arrowLogic.transform.eulerAngles = new Vector3(0.0f, 0.0f, 90.0f);
+                        arrowLogic.transform.Rotate(0.0f, 0.0f, -alfa);
+                        arrowLogic.isInLeft = false;
+                    }
+                    else
+                    {
+                        arrowLogic.transform.eulerAngles = new Vector3(0.0f, 180.0f, 90.0f);
+                        arrowLogic.transform.Rotate(0.0f, 0.0f, -alfa);
+                        arrowLogic.isInLeft = true;
+                    }
+                    arrow.SetActive(true);
+                    animator.SetBool("shoot", false);
+                    shooted = false;
+                }
+            }
+
             if (player.playerController.state != PlayerController.player_state.DEATH)
             {
                 switch (states)
@@ -112,34 +144,13 @@ public class ArcherAI : MonoBehaviour {
 
                     // Enemy shoot arrows to Glitch
                     case enemy_states.SHOOT:
+
                         // Shooting logic
-                        if ((arrow == null) || (!arrow.activeInHierarchy))
+                        if ((shooted == false) && ((arrow == null) || (!arrow.activeInHierarchy)))
                         {
                             animator.SetBool("shoot", true);
-                            arrow = arrowPool.getObject();
-                            arrowLogic = arrow.GetComponent<ArrowScript>();
-                            arrow.transform.position = origin;
-                            arrowLogic.player = player;
-                            float x = origin.x - hit.point.x;
-                            float y = origin.y - hit.point.y;
-                            float alfa = Mathf.Atan(y / x);
-                            alfa = (180.0f * alfa) / 3.14f;
-                            animator.SetBool("shoot", true);
-
-                            if (player.transform.position.x > origin.x)
-                            {
-                                arrowLogic.transform.eulerAngles = new Vector3(0.0f, 0.0f, 90.0f);
-                                arrowLogic.transform.Rotate(0.0f, 0.0f, -alfa);
-                                arrowLogic.isInLeft = false;
-                            }
-                            else
-                            {
-                                arrowLogic.transform.eulerAngles = new Vector3(0.0f, 180.0f, 90.0f);
-                                arrowLogic.transform.Rotate(0.0f, 0.0f, -alfa);
-                                arrowLogic.isInLeft = true;
-                            }
+                            shooted = true;
                         }
-                        arrow.SetActive(true);
 
                         // If distance to Glitch is minus than chase field of view then changes to Chase state.
                         // If Glitch is in melee attack scope then enemy attacks to him with daggers, changing her state to Melee attack
@@ -166,7 +177,9 @@ public class ArcherAI : MonoBehaviour {
                         {
                             if (player.transform.position.x > transform.position.x)
                             {
-                                transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
+                                animator.SetBool("turn left", true);
+
+                                //transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
                                 rotationTime = 0.2f;
                             }
                         }
@@ -174,7 +187,9 @@ public class ArcherAI : MonoBehaviour {
                         {
                             if (player.transform.position.x < transform.position.x)
                             {
-                                transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
+                                animator.SetBool("turn right", true);
+
+                                //transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
                                 rotationTime = 0.2f;
                             }
                         }
@@ -210,7 +225,7 @@ public class ArcherAI : MonoBehaviour {
                             speed = chaseSpeed;
                             states = enemy_states.CHASE;
                         }
-                        
+
                         break;
                 }
             }
