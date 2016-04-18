@@ -232,6 +232,8 @@ public class ArcherAI : MonoBehaviour {
             else
             {
                 states = enemy_states.WAIT;
+                sight = false;
+                animator.SetBool("sighted", false);
             }
         }
     }
