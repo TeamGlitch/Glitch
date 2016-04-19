@@ -113,7 +113,7 @@ public class CameraGlitchedToBoxes : ImageEffectBase {
 	{
 		for (int w = 0; w < boxesPositions.Count; ++w)
 		{
-			if (x > boxPositionInPercentage [w].x - 10.0f && x < boxPositionInPercentage [w].x + 6.0f && y > boxPositionInPercentage [w].y - 10 && y < boxPositionInPercentage [w].y + 10)
+			if (x > boxPositionInPercentage [w].x - 4.0f && x < boxPositionInPercentage [w].x + 6.0f && y > boxPositionInPercentage [w].y - 10 && y < boxPositionInPercentage [w].y + 10)
 				return true;
 		}
 		return false;

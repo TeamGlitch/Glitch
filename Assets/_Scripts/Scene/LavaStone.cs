@@ -7,6 +7,7 @@ public class LavaStone : MonoBehaviour {
 	public float waitingTimeToAddForce = 10.0f;
 	public float possibleVariation = 1.0f;
 	public float forceApplied = 800.0f;
+    public float rotationApplied = 1.0f;
 	public SlowFPS slowFpsScript;
 	Rigidbody rb;
 	float timeWaiting = 0.0f;

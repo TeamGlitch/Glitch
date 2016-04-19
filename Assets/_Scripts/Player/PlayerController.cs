@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
 
 	//Player Components
 	public SpriteRenderer spriteRenderer;			//Reference to the sprite renderer
+	private Animator plAnimation;
 	public CharacterController controller;
 	public Rigidbody rigidBody;
 
@@ -56,7 +57,6 @@ public class PlayerController : MonoBehaviour
 
 	///// Powers
 	//Teleport
-    private bool teleportCooldown = false;
 	public TeleportScript teleport;
 
 	//Slow FPS
@@ -75,6 +75,8 @@ public class PlayerController : MonoBehaviour
 
 	void Start ()
 	{
+		plAnimation = GetComponent<Animator>();
+
 		zPosition = transform.position.z;
 		state = player_state.IN_GROUND;
 		allowMovement = true;
@@ -123,6 +125,8 @@ public class PlayerController : MonoBehaviour
 					startJumpPress = Time.time;
 					fallRecovery = jumpRest;
 					state = player_state.JUMPING;
+					plAnimation.SetBool ("Jump", true);	
+					plAnimation.SetBool ("Run", false);
 				}
 
                 // To control movement of player
@@ -146,7 +150,7 @@ public class PlayerController : MonoBehaviour
 				// If it's not teleporting
 				if (!ActivatingTeleport())
 				{
-					teleportCooldown = false;
+					teleport.teleportUsed = false;
 
 					//If the jump key is being pressed but it has been released since the
 					//last jump
@@ -161,6 +165,8 @@ public class PlayerController : MonoBehaviour
 					else if (!controller.isGrounded) 
 					{
 						state = player_state.JUMPING;
+						plAnimation.SetBool ("Falling", true);
+						plAnimation.SetBool ("Run", false);
 					}
 					else 
 					{
@@ -174,6 +180,11 @@ public class PlayerController : MonoBehaviour
 
 			case player_state.JUMPING:
 
+				if (vSpeed < 0 && plAnimation.GetBool ("Falling") == false) {
+					plAnimation.SetBool ("Jump", false);
+					plAnimation.SetBool ("Falling", true);
+				}
+
 				// If it's not teleporting
 				if (!ActivatingTeleport())
 				{
@@ -181,6 +192,7 @@ public class PlayerController : MonoBehaviour
 					if (controller.isGrounded) 
                     {
 						state = player_state.FALL_RECOVERING;
+						plAnimation.SetBool ("Falling", false);
 					} 
 					else 
 					{
@@ -244,40 +256,6 @@ public class PlayerController : MonoBehaviour
 				break;
         }
 
-		//Non state-changing operations
-		if (state != player_state.DEATH &&
-			state != player_state.TELEPORTING &&
-			state != player_state.WHIPING) 
-        {	
-			// Gravity
-			vSpeed -= gravity * Time.deltaTime;
-
-			// Control of movemente in X axis
-			moveDirection.x = InputManager.ActiveDevice.LeftStickX.Value;
-            if (moveDirection.x > 0.0)
-                moveDirection.x = 1.0f;
-            if (moveDirection.x < 0.0)
-                moveDirection.x = -1.0f;
-			moveDirection = transform.TransformDirection (moveDirection);
-			moveDirection *= speed;
-
-			// Flips the sprite renderer if is changing direction
-			if ((moveDirection.x > 0) && (spriteRenderer.flipX == true)) 
-            {
-				spriteRenderer.flipX = false;
-			} else if ((moveDirection.x < 0) && (spriteRenderer.flipX == false)) {
-				spriteRenderer.flipX = true;
-			}
-			moveDirection.y = vSpeed;
-
-			controller.Move(moveDirection * Time.deltaTime);
-			if (transform.position.z != zPosition)
-			{
-				Vector3 pos = transform.position;
-				pos.z = zPosition;
-				transform.position = pos;
-			}
-		}
 		//If a player-induced jump is checked but the jump key is not longer
 		//being held, set it to false so it can jump again
 		if (playerActivedJump && !InputManager.ActiveDevice.Action1.IsPressed && allowMovement)
@@ -371,14 +349,23 @@ public class PlayerController : MonoBehaviour
             pos.z = zPosition;
             transform.position = pos;
         }
+
+		if (state == player_state.IN_GROUND) {
+			if(moveDirection.x != 0){
+				if (plAnimation.GetBool("Run") == false) {
+					plAnimation.SetBool("Run", true);
+				}
+			} else if(plAnimation.GetBool("Run") == true){
+				plAnimation.SetBool("Run",false);
+			}
+		}
     }
 
 	private bool ActivatingTeleport(){
 
-		if (InputManager.ActiveDevice.Action3.WasPressed && allowMovement && (!teleportCooldown)) 
-        {
-            if (teleport.CheckTeleport(controller))
-            {
+		if (InputManager.ActiveDevice.Action3.WasPressed && allowMovement
+			&& (!teleport.teleportUsed) && teleport.CheckTeleport(controller))
+		{
                 // We create a coroutine to do a delay in the teleport and the state of player is changed to teleporting
                 StartCoroutine("ActivateTeleport");
                 ActivateTeleport();
@@ -386,7 +373,6 @@ public class PlayerController : MonoBehaviour
                 vSpeed = 0;
 
                 return true;
-            }
 		}
 		return false;
 	}
@@ -394,7 +380,7 @@ public class PlayerController : MonoBehaviour
     // Function that active teleport. Necessary to Coroutine work
     IEnumerator ActivateTeleport()
     {
-		teleportCooldown = true;
+		teleport.teleportUsed = true;
         
         if (controller.isGrounded)
         {
@@ -407,7 +393,7 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
 
-		teleportCooldown = teleport.Teleport(controller);
+		teleport.teleportUsed = teleport.Teleport(controller);
 		state = player_state.JUMPING;
     }
 
@@ -424,11 +410,6 @@ public class PlayerController : MonoBehaviour
 		state = player_state.JUMPING;
 		vSpeed = jumpSpeed;
 		rigidBody.isKinematic = true;
-	}
-
-	public void RestartTeleportCooldown()
-	{
-		teleportCooldown = false;
 	}
 
 }
