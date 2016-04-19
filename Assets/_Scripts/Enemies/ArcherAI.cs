@@ -9,6 +9,7 @@ public class ArcherAI : MonoBehaviour {
         SHOOT,
         MELEE_ATTACK,
         CHASE,
+        TURN,
         DEATH
     }
 
@@ -29,6 +30,9 @@ public class ArcherAI : MonoBehaviour {
     public bool motionless = false;
     public World world;
     public GameObject arrow;				//Reference to an arrow prefab
+    public BoxCollider collider;
+    public Rigidbody rigid;
+    public BoxCollider fieldOfView;
 
     private ObjectPool arrowPool;			//Arrows pool
     private ArrowScript arrowLogic;
@@ -39,10 +43,9 @@ public class ArcherAI : MonoBehaviour {
     private float rotationTime = 0.0f;
     private float searchRotationTime = 1.0f;
     private bool returning = false;
-    private float meleeDamage = 0.25f;
+    private float meleeDamage = 1.0f;
     private Vector3 origin;
     private Animator animator;
-    private bool shooted = false;
 
     void OnCollisionEnter(Collision coll)
     {
@@ -58,16 +61,17 @@ public class ArcherAI : MonoBehaviour {
             }
             else
             {
-
-                // If archer loses sight of player and collides means that is colliding over archer
                 Ray ray = new Ray(transform.position, player.transform.position - transform.position);
                 Physics.Raycast(ray, out hit);
 
-                // The ray is from knight to player, then collides down of player (-transform.up = down)
+                // The ray is from archer to player, then collides down of player (-transform.up = down)
                 if (hit.normal == -transform.up)
                 {
                     states = enemy_states.DEATH;
-                    animator.SetBool("dead", true);
+                    animator.SetBool("Dead", true);
+                    rigid.isKinematic = true;
+                    collider.enabled = false;
+                    fieldOfView.enabled = false;
                 }
             }
         }
@@ -77,20 +81,39 @@ public class ArcherAI : MonoBehaviour {
     void OnTriggerStay(Collider coll)
     {
         // If is the player and between player and archer isn't anything then shoot him
-        if ((states != enemy_states.DEATH) && (coll.CompareTag("Player")))
+        if (coll.CompareTag("Player"))
         {
             origin = transform.position;
             origin.y += transform.localScale.y*0.75f;
 
             ray = new Ray(origin, player.transform.position - origin);
-            Debug.DrawRay(origin, player.transform.position - origin);
+            //Debug.DrawRay(origin, player.transform.position - origin);
             if ((Physics.Raycast(ray, out hit) && (sight == false)) && (hit.collider.gameObject.CompareTag("Player")))
             {
-                animator.SetBool("sighted", true);
+                animator.SetBool("Sighted", true);
                 sight = true;
                 speed = shootSpeed;
                 initialPosition = transform.position;      // We save the initial point to return later
                 states = enemy_states.SHOOT;
+            }
+        }
+    }
+
+    // Trigger for when she loses of sight Glitch 
+    void OnTriggerExit(Collider coll)
+    {
+        if (coll.CompareTag("Player"))
+        {
+            sight = false;
+            animator.SetBool("Sighted", false);
+            if (Vector3.Distance(player.transform.position, transform.position) < maxSightShoot)
+            {
+                states = enemy_states.TURN;
+            }
+            else
+            {
+                speed = waitSpeed;
+                states = enemy_states.WAIT;
             }
         }
     }
@@ -105,37 +128,7 @@ public class ArcherAI : MonoBehaviour {
     {
         if (states != enemy_states.DEATH)
         {
-            animator.SetInteger("state", (int)states);
-            if ((animator.IsInTransition(0)) && (animator.GetNextAnimatorStateInfo(0).IsName("Idle")))
-            {
-                if (shooted == true)
-                {
-                    arrow = arrowPool.getObject();
-                    arrowLogic = arrow.GetComponent<ArrowScript>();
-                    arrow.transform.position = origin;
-                    arrowLogic.player = player;
-                    float x = origin.x - hit.point.x;
-                    float y = origin.y - hit.point.y;
-                    float alfa = Mathf.Atan(y / x);
-                    alfa = (180.0f * alfa) / 3.14f;
-
-                    if (player.transform.position.x > origin.x)
-                    {
-                        arrowLogic.transform.eulerAngles = new Vector3(0.0f, 0.0f, 90.0f);
-                        arrowLogic.transform.Rotate(0.0f, 0.0f, -alfa);
-                        arrowLogic.isInLeft = false;
-                    }
-                    else
-                    {
-                        arrowLogic.transform.eulerAngles = new Vector3(0.0f, 180.0f, 90.0f);
-                        arrowLogic.transform.Rotate(0.0f, 0.0f, -alfa);
-                        arrowLogic.isInLeft = true;
-                    }
-                    arrow.SetActive(true);
-                    animator.SetBool("shoot", false);
-                    shooted = false;
-                }
-            }
+            animator.SetInteger("State", (int)states);
 
             if (player.playerController.state != PlayerController.player_state.DEATH)
             {
@@ -146,10 +139,9 @@ public class ArcherAI : MonoBehaviour {
                     case enemy_states.SHOOT:
 
                         // Shooting logic
-                        if ((shooted == false) && ((arrow == null) || (!arrow.activeInHierarchy)))
+                        if ((arrow == null) || (!arrow.activeInHierarchy))
                         {
-                            animator.SetBool("shoot", true);
-                            shooted = true;
+                            animator.SetBool("Shoot", true);
                         }
 
                         // If distance to Glitch is minus than chase field of view then changes to Chase state.
@@ -161,39 +153,12 @@ public class ArcherAI : MonoBehaviour {
                             speed = chaseSpeed;
                             states = enemy_states.CHASE;
                         }
-                        else if (Vector3.Distance(player.transform.position, transform.position) > maxSightShoot)
-                        {
-                            speed = waitSpeed;
-                            states = enemy_states.WAIT;
-                            sight = false;
-                        }
                         break;
 
                     // Enemy chases Glitch until reach him or lose sight of Glitch
                     case enemy_states.CHASE:
 
                         // Chasing logic
-                        if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
-                        {
-                            if (player.transform.position.x > transform.position.x)
-                            {
-                                animator.SetBool("turn left", true);
-
-                                //transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
-                                rotationTime = 0.2f;
-                            }
-                        }
-                        else
-                        {
-                            if (player.transform.position.x < transform.position.x)
-                            {
-                                animator.SetBool("turn right", true);
-
-                                //transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
-                                rotationTime = 0.2f;
-                            }
-                        }
-
                         rotationTime -= Time.deltaTime;
                         if (rotationTime <= 0.0f)
                         {
@@ -213,6 +178,18 @@ public class ArcherAI : MonoBehaviour {
 
                         break;
 
+                    case enemy_states.TURN:
+                        if ((player.transform.position.x > transform.position.x) && (transform.eulerAngles.y == 270.0f))
+                        {
+                            animator.SetBool("Turn left", true);
+                        }
+                        else if ((player.transform.position.x < transform.position.x) && (transform.eulerAngles.y == 90.0f))
+                        {
+                            animator.SetBool("Turn right", true);
+                        }
+                        
+                        break;
+
                     // Enemy attacks to Glitch with her daggers
                     case enemy_states.MELEE_ATTACK:
                         print("Melee Attack");
@@ -229,12 +206,52 @@ public class ArcherAI : MonoBehaviour {
                         break;
                 }
             }
-            else
-            {
-                states = enemy_states.WAIT;
-                sight = false;
-                animator.SetBool("sighted", false);
-            }
         }
+    }
+
+    public void ShootedTrigger()
+    {
+        arrow = arrowPool.getObject();
+        arrowLogic = arrow.GetComponent<ArrowScript>();
+        arrow.transform.position = origin;
+        arrowLogic.player = player;
+        float x = origin.x - hit.point.x;
+        float y = origin.y - hit.point.y;
+        float alfa = Mathf.Atan(y / x);
+        alfa = (180.0f * alfa) / 3.14f;
+
+        if (player.transform.position.x > origin.x)
+        {
+            arrowLogic.transform.eulerAngles = new Vector3(0.0f, 0.0f, 90.0f);
+            arrowLogic.transform.Rotate(0.0f, 0.0f, -alfa);
+            arrowLogic.isInLeft = false;
+        }
+        else
+        {
+            arrowLogic.transform.eulerAngles = new Vector3(0.0f, 180.0f, 90.0f);
+            arrowLogic.transform.Rotate(0.0f, 0.0f, -alfa);
+            arrowLogic.isInLeft = true;
+        }
+        arrow.SetActive(true);
+        animator.SetBool("Shoot", false);
+    }
+
+    public void TurnTrigger()
+    {
+        if ((player.transform.position.x > transform.position.x) && (transform.eulerAngles.y == 270.0f))
+        {
+            animator.SetBool("Turn left", false);
+
+            transform.eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
+            rotationTime = 0.2f;
+        }
+        else if ((player.transform.position.x < transform.position.x) && (transform.eulerAngles.y == 90.0f))
+        {
+            animator.SetBool("Turn right", false);
+
+            transform.eulerAngles = new Vector3(0.0f, 270.0f, 0.0f);
+            rotationTime = 0.2f;
+        }
+        states = enemy_states.WAIT;
     }
 }

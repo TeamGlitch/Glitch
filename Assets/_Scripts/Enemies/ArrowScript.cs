@@ -8,7 +8,7 @@ public class ArrowScript : MonoBehaviour {
     public bool isInLeft = false;
 
     private float timeAlive = 5.0f;
-    private float damage = 0.5f;
+    private float damage = 1.0f;
 
     void OnCollisionEnter(Collision coll)
     {
