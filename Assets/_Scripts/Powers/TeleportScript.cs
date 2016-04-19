@@ -6,6 +6,8 @@ public class TeleportScript : MonoBehaviour {
 	//Teleport movement scale
 	public float teleportDistance = 4.0f;
 
+	public bool teleportUsed = false;
+
     private float directionVertical;
     private float directionHorizontal;
 
@@ -19,8 +21,8 @@ public class TeleportScript : MonoBehaviour {
         }
       
         // Teleport moves the character in a scale proportional to its size
-		float x = (controller.transform.localScale.x * teleportDistance) * directionHorizontal;
-		float y = (controller.transform.localScale.y * teleportDistance) * directionVertical;
+		float x = teleportDistance * directionHorizontal;
+		float y = teleportDistance * directionVertical;
 		controller.transform.Translate(x, y, 0.0f);
 
         if (controller.isGrounded)
@@ -34,21 +36,21 @@ public class TeleportScript : MonoBehaviour {
 	//Checks if it can teleport to the given position
     public bool CheckTeleport(CharacterController controller)
     {
-        // We catch the direction to teleport
+        // We get the teleport direction
         directionVertical = InputManager.ActiveDevice.LeftStickY.Value;
         directionHorizontal = InputManager.ActiveDevice.LeftStickX.Value;
 
         // Vector to know if the position to teleport is occupied
-        Vector3 newPosition;
-        newPosition.x = controller.transform.position.x + (controller.transform.localScale.x * teleportDistance) * directionHorizontal;
-        newPosition.y = controller.transform.position.y + (controller.transform.localScale.y * teleportDistance) * directionVertical + 0.1f;
-        newPosition.z = controller.transform.position.z;
+		Vector3 newPosition = controller.transform.position;
+		newPosition.x += teleportDistance * directionHorizontal;
+		newPosition.y += (teleportDistance * directionVertical) + 0.1f;
 
-        if (!Physics.CheckCapsule(newPosition, newPosition, controller.transform.localScale.x / 2))
+		LayerMask mask = -1;
+		if (!Physics.CheckCapsule(newPosition, newPosition, controller.radius, mask, QueryTriggerInteraction.Ignore))
         {
             return true;
         }
-		Debug.Log("BOOM EN TU CARA");
+
         return false;
     }
 }

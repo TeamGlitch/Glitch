@@ -22,7 +22,7 @@ public class SpringPlantScript : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other)
 	{
-		if (other.tag == "Player")
+		if (other.CompareTag("Player"))
 		{
 			playerController.vSpeed = forceToPlayerWhenEnter;
 			_animator.SetBool ("PlayerInside", true);
@@ -31,11 +31,11 @@ public class SpringPlantScript : MonoBehaviour {
 
 	void OnTriggerExit(Collider other)
 	{
-		if (other.tag == "Player")
+		if (other.CompareTag("Player"))
 		{
 			if(InputManager.ActiveDevice.Action1.IsPressed)
 				playerController.vSpeed = forceToPlayerWhenEnterAndJump;
-			playerController.RestartTeleportCooldown ();
+			playerController.teleport.teleportUsed = false;
 		}
 	}
 
