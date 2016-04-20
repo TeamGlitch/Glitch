@@ -15,6 +15,7 @@ public class World : MonoBehaviour {
     public Camera mainCamera;
     public GameObject powers;
     public GameObject gui;
+	public GameObject dialogues;
 
 	private update_status state = update_status.REGULAR_UPDATE;
 
@@ -31,6 +32,7 @@ public class World : MonoBehaviour {
         mainCamera.gameObject.SetActive(true);
         gui.SetActive(true);
         powers.SetActive(true);
+		dialogues.SetActive(true);
         player.enabled = true;
     }
 
