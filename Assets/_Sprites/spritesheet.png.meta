@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: dce4f7110ef9bfa40bc244e6fce95cd3
-timeCreated: 1461075959
+guid: a03d53a44d759d1418c21d0343433629
+timeCreated: 1461107056
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -17,10 +17,23 @@ TextureImporter:
     21300020: spritesheet_10
     21300022: spritesheet_11
     21300024: spritesheet_12
+    21300026: spritesheet_13
+    21300028: spritesheet_14
+    21300030: spritesheet_15
+    21300032: spritesheet_16
+    21300034: spritesheet_17
+    21300036: spritesheet_18
+    21300038: spritesheet_19
+    21300040: spritesheet_20
+    21300042: spritesheet_21
+    21300044: spritesheet_22
+    21300046: spritesheet_23
+    21300048: spritesheet_24
+    21300050: spritesheet_25
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -42,8 +55,8 @@ TextureImporter:
   textureFormat: -1
   maxTextureSize: 2048
   textureSettings:
-    filterMode: -1
-    aniso: 16
+    filterMode: 0
+    aniso: 1
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
@@ -67,7 +80,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 80
+        y: 160
         width: 27
         height: 40
       alignment: 0
@@ -77,8 +90,8 @@ TextureImporter:
     - name: spritesheet_1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 40
+        x: 27
+        y: 160
         width: 27
         height: 40
       alignment: 0
@@ -88,6 +101,149 @@ TextureImporter:
     - name: spritesheet_2
       rect:
         serializedVersion: 2
+        x: 0
+        y: 120
+        width: 27
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: spritesheet_3
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 120
+        width: 27
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: spritesheet_4
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 120
+        width: 27
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: spritesheet_5
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 120
+        width: 27
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: spritesheet_6
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 120
+        width: 27
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: spritesheet_7
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 120
+        width: 27
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: spritesheet_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 80
+        width: 27
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: spritesheet_9
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 80
+        width: 27
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: spritesheet_10
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 80
+        width: 27
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: spritesheet_11
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 80
+        width: 27
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: spritesheet_12
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 80
+        width: 27
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: spritesheet_13
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 80
+        width: 27
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: spritesheet_14
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 40
+        width: 27
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: spritesheet_15
+      rect:
+        serializedVersion: 2
         x: 27
         y: 40
         width: 27
@@ -96,7 +252,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: spritesheet_3
+    - name: spritesheet_16
       rect:
         serializedVersion: 2
         x: 54
@@ -107,7 +263,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: spritesheet_4
+    - name: spritesheet_17
       rect:
         serializedVersion: 2
         x: 81
@@ -118,7 +274,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: spritesheet_5
+    - name: spritesheet_18
       rect:
         serializedVersion: 2
         x: 108
@@ -129,7 +285,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: spritesheet_6
+    - name: spritesheet_19
       rect:
         serializedVersion: 2
         x: 135
@@ -140,7 +296,29 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: spritesheet_7
+    - name: spritesheet_20
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 40
+        width: 27
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: spritesheet_21
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 40
+        width: 27
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: spritesheet_22
       rect:
         serializedVersion: 2
         x: 0
@@ -151,7 +329,7 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: spritesheet_8
+    - name: spritesheet_23
       rect:
         serializedVersion: 2
         x: 27
@@ -162,43 +340,10 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: spritesheet_9
+    - name: spritesheet_24
       rect:
         serializedVersion: 2
         x: 54
-        y: 0
-        width: 27
-        height: 40
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-    - name: spritesheet_10
-      rect:
-        serializedVersion: 2
-        x: 81
-        y: 0
-        width: 27
-        height: 40
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-    - name: spritesheet_11
-      rect:
-        serializedVersion: 2
-        x: 108
-        y: 0
-        width: 27
-        height: 40
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-    - name: spritesheet_12
-      rect:
-        serializedVersion: 2
-        x: 135
         y: 0
         width: 27
         height: 40

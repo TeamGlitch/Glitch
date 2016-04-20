@@ -54,6 +54,7 @@ public class PlayerController : MonoBehaviour
 	private float startJumpPress = -1;				//When the extended jump started
 	private float preparingJump = 0;				//Jump preparing time left
 	private float fallRecovery = 0;					//Fall recovery time left
+	private int nonGroundedFrames = 0;				// How many frames the player has being on air.
 
 	///// Powers
 	//Teleport
@@ -158,8 +159,10 @@ public class PlayerController : MonoBehaviour
 					{
 						//Start jump and set the player-activated jump to true so it
 						//can't jump without releasing the button
+						//We also assign 3 to nonGroundedFrames so the walking animation doesn't show
 						preparingJump = jumpRest;
 						playerActivedJump = true;
+						nonGroundedFrames = 3;
 						state = player_state.PREPARING_JUMP;
 					} 
 					else if (!controller.isGrounded) 
@@ -191,12 +194,19 @@ public class PlayerController : MonoBehaviour
 					//If it's grounded
 					if (controller.isGrounded) 
                     {
+						//Start fall recovering and set the bools
 						state = player_state.FALL_RECOVERING;
 						plAnimation.SetBool ("Falling", false);
+						if (plAnimation.GetBool ("Jump") == true) 
+						{
+ 							plAnimation.SetBool ("Jump", false);
+ 						}
+ 						nonGroundedFrames = 0;
 					} 
 					else 
 					{
 						//If it's in the air
+						nonGroundedFrames++;
 						Vector3 eulerAngles = gameObject.transform.rotation.eulerAngles;
 						float rotationZ = 0.0f;
 
@@ -350,7 +360,13 @@ public class PlayerController : MonoBehaviour
             transform.position = pos;
         }
 
-		if (state == player_state.IN_GROUND) {
+		//Play or stop the run animation if it's on ground or the character
+ 		//is in a minor fall. The nonGroundedFrames point out how many frames the
+ 		//character has been non-grounded, so the idle/falling animation doesn't
+ 		//play on minor falls and slopes.
+ 		//TODO: Maybe change to time?
+ 		if ((state == player_state.IN_GROUND) || (nonGroundedFrames < 3)) 
+		{
 			if(moveDirection.x != 0){
 				if (plAnimation.GetBool("Run") == false) {
 					plAnimation.SetBool("Run", true);
