@@ -70,6 +70,11 @@ public class Player : MonoBehaviour {
 
 	}
 
+    void Start()
+    {
+        characterController.detectCollisions = false;
+    }
+
 	void OnTriggerEnter(Collider coll){
 
 		//If there's a collision with some lethal thing in scene
@@ -199,7 +204,6 @@ public class Player : MonoBehaviour {
 
         //Deactivate the sprite renderer
         sprite.enabled = false;
-        characterController.detectCollisions = false;
         trigger.enabled = false;
 
         //Restart the fragments

@@ -132,6 +132,7 @@ public class ArcherAI : MonoBehaviour {
 
             if (player.playerController.state != PlayerController.player_state.DEATH)
             {
+
                 switch (states)
                 {
 
@@ -179,15 +180,18 @@ public class ArcherAI : MonoBehaviour {
                         break;
 
                     case enemy_states.TURN:
+                        //animator.SetBool("Turn", true);
                         if ((player.transform.position.x > transform.position.x) && (transform.eulerAngles.y == 270.0f))
                         {
-                            animator.SetBool("Turn left", true);
+                            transform.eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
+                            rotationTime = 0.5f;
                         }
                         else if ((player.transform.position.x < transform.position.x) && (transform.eulerAngles.y == 90.0f))
                         {
-                            animator.SetBool("Turn right", true);
+                            transform.eulerAngles = new Vector3(0.0f, 270.0f, 0.0f);
+                            rotationTime = 0.5f;
                         }
-                        
+                        states = enemy_states.WAIT;
                         break;
 
                     // Enemy attacks to Glitch with her daggers
@@ -211,6 +215,9 @@ public class ArcherAI : MonoBehaviour {
 
     public void ShootedTrigger()
     {
+        origin = transform.position;
+        origin.y += transform.localScale.y * 0.75f;
+
         arrow = arrowPool.getObject();
         arrowLogic = arrow.GetComponent<ArrowScript>();
         arrow.transform.position = origin;
@@ -223,7 +230,7 @@ public class ArcherAI : MonoBehaviour {
         if (player.transform.position.x > origin.x)
         {
             arrowLogic.transform.eulerAngles = new Vector3(0.0f, 0.0f, 90.0f);
-            arrowLogic.transform.Rotate(0.0f, 0.0f, -alfa);
+            arrowLogic.transform.Rotate(0.0f, 0.0f, alfa);
             arrowLogic.isInLeft = false;
         }
         else
@@ -238,20 +245,23 @@ public class ArcherAI : MonoBehaviour {
 
     public void TurnTrigger()
     {
+
+        animator.SetBool("Turn", false);
         if ((player.transform.position.x > transform.position.x) && (transform.eulerAngles.y == 270.0f))
         {
-            animator.SetBool("Turn left", false);
-
             transform.eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
-            rotationTime = 0.2f;
+            rotationTime = 0.5f;
         }
         else if ((player.transform.position.x < transform.position.x) && (transform.eulerAngles.y == 90.0f))
         {
-            animator.SetBool("Turn right", false);
-
             transform.eulerAngles = new Vector3(0.0f, 270.0f, 0.0f);
-            rotationTime = 0.2f;
+            rotationTime = 0.5f;
         }
         states = enemy_states.WAIT;
+    }
+
+    public void DeadRandomTrigger()
+    {
+        animator.SetInteger("DeadRandom", Random.Range(0, 4));
     }
 }
