@@ -4,6 +4,10 @@ using System.Collections;
 public class LavaStone1 : MonoBehaviour {
 
 	public World world;
+	public GameObject lavaContainer;
+	private Animator splashAnimator;
+	private Transform fireParticle;
+	private ParticleSystem splashParticle;
 
 	private bool jumping;
 
@@ -18,12 +22,16 @@ public class LavaStone1 : MonoBehaviour {
 	private float lastUpdateTime = 0f;
 	private float nextJump;
 
+
 	// Use this for initialization
 	void Start () {
 		initialY = transform.position.y;
 		jumpStart = Time.time;
 		lastUpdateTime = Time.time;
 		jumping = true;
+		splashAnimator = transform.parent.GetChild(1).gameObject.GetComponent<Animator>();
+		fireParticle = transform.parent.GetChild(2).GetChild(0);
+		splashParticle = transform.parent.GetChild(2).GetChild(1).gameObject.GetComponent<ParticleSystem>();
 	}
 	
 	// Update is called once per frame
@@ -61,6 +69,7 @@ public class LavaStone1 : MonoBehaviour {
 				newPos.y = initialY + (2 * jumpAltitude * Mathf.Pow (Mathf.Sin (calc), 2));
 
 				transform.position = newPos;
+				fireParticle.position = newPos;
 
 				//Decorative rotation
 				transform.Rotate(Vector3.Lerp(new Vector3(20f,10f,20f), new Vector3(1.3f, 1.2f, 1.3f), timePassed * 1.5f));
@@ -69,8 +78,23 @@ public class LavaStone1 : MonoBehaviour {
 			//If we're not jumping but the time to jump has come
 			else if (Time.time > nextJump) {
 				jumpStart = Time.time;
+				lastUpdateTime = Time.time;
 				jumping = true;
 			}
+		}
+	}
+
+	void OnTriggerEnter(Collider other) {
+		if (other.gameObject == lavaContainer) {
+			splashAnimator.Play ("Lava_Boulder_Splash");
+
+		}
+	}
+
+	void OnTriggerExit(Collider other) {
+		if (other.gameObject == lavaContainer) {
+			splashAnimator.Play ("Lava_Boulder_Splash");
+			splashParticle.Play();
 		}
 	}
 }
