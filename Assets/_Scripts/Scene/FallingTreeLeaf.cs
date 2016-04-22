@@ -8,11 +8,13 @@ public class FallingTreeLeaf : MonoBehaviour {
 	Rigidbody rb;
 	bool colliderTouched;
 	Vector3 initPos;
+	Quaternion initRot;
 
 	// Use this for initialization
 	void Start () {
 		rb = gameObject.GetComponent<Rigidbody> ();
 		initPos = transform.position;
+		initRot = transform.rotation;
 	}
 
 	void Update() {
@@ -25,6 +27,7 @@ public class FallingTreeLeaf : MonoBehaviour {
 			colliderTouched = false;
 			rb.isKinematic = true;
 			transform.position = initPos;
+			transform.rotation = initRot;
 			timeSinceColliderTouched = 0.0f;
 		}
 	}
