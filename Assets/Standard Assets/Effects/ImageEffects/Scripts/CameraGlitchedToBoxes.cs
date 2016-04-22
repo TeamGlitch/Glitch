@@ -17,6 +17,11 @@ public class CameraGlitchedToBoxes : ImageEffectBase {
 	public Canvas gui;
 	private RectTransform guiRectTrans;
 
+	// Needs to be divided by the zoom
+	private float correctionMarkerWidth = (-13.59751f*11.02f);
+	private float correctionMarkerHeight = (-13.59751f*14.9f);
+	private float correctionDueToAspect = 1.777605f;
+
 	public List<Vector3> boxesPositions;
 	public List<Vector2> boxPositionInPercentage;
 
@@ -36,6 +41,9 @@ public class CameraGlitchedToBoxes : ImageEffectBase {
 	void OnRenderImage (RenderTexture source, RenderTexture destination) {
 		CalculatebBoxPositionsInPercentage ();
 		//If the glitch cycle has ended
+		float horizontalPercentage = (correctionDueToAspect/Camera.main.aspect)*(correctionMarkerWidth / Camera.main.transform.position.z) / 2.0f;
+		float verticalPercentage = (correctionMarkerHeight / Camera.main.transform.position.z) / 2.0f;
+	
 		if (Time.time >= cycleEnd) {
 			//Checks if the new glitch cycle has glitch effect
 			if (Random.value < frequency) {
@@ -46,7 +54,7 @@ public class CameraGlitchedToBoxes : ImageEffectBase {
 				texture = new Texture2D(100,100);
 				for (int z = 0; z < 100; z += 1) {
 					for (int w = 0; w < 100; ++w) {
-						if (InsideBox(z,w)) {
+						if (InsideBox(z,w, horizontalPercentage, verticalPercentage)) {
 							if (Random.value < inestability) {
 								if (Random.value > 0.5) {
 									texture.SetPixel (z, w, new Color32 (0, 0, 0, 0));
@@ -92,11 +100,8 @@ public class CameraGlitchedToBoxes : ImageEffectBase {
 	public void RemoveBox(Vector3 position)
 	{
 		int index = boxesPositions.FindIndex(a => a == position);
-//		if(index != -1)
-//		{
-			boxesPositions.RemoveAt (index);
-			boxPositionInPercentage.RemoveAt (index);
-//		}
+		boxesPositions.RemoveAt (index);
+		boxPositionInPercentage.RemoveAt (index);
 	}
 
 	private void CalculatebBoxPositionsInPercentage()
@@ -109,11 +114,11 @@ public class CameraGlitchedToBoxes : ImageEffectBase {
 		}
 	}
 
-	private bool InsideBox(int x, int y)
+	private bool InsideBox(int x, int y, float horizontalPercentage, float verticalPercentage)
 	{
 		for (int w = 0; w < boxesPositions.Count; ++w)
 		{
-			if (x > boxPositionInPercentage [w].x - 4.0f && x < boxPositionInPercentage [w].x + 6.0f && y > boxPositionInPercentage [w].y - 10 && y < boxPositionInPercentage [w].y + 10)
+			if (x > boxPositionInPercentage [w].x - horizontalPercentage && x < boxPositionInPercentage [w].x + horizontalPercentage && y > boxPositionInPercentage [w].y - verticalPercentage && y < boxPositionInPercentage [w].y + verticalPercentage)
 				return true;
 		}
 		return false;

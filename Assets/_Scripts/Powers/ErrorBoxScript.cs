@@ -9,12 +9,7 @@ public class ErrorBoxScript : MonoBehaviour
     public float timeFlickering = 1.0f;
     public int framesBeforeChangeStateWhenFlickering = 6;
     public Player playerScript;
-
-    public GameObject boxUIActivated;
-    public Canvas gui;
-
-    private RectTransform boxUIActivatedRectTransform;
-    private RectTransform guiRectTrans;
+	public float timeToBecomeBig = 0.5f;
 
     private int framesInCurrentStateWhenFlickering = 0;
     private float timeActivated = 0.0f;
@@ -40,11 +35,7 @@ public class ErrorBoxScript : MonoBehaviour
         Color boxColor = spriteRenderer.color;
         boxColor.a = 0.0f;
         spriteRenderer.color = boxColor;
-
-        boxUIActivatedRectTransform = boxUIActivated.GetComponent<RectTransform>();
-        boxUIActivated.SetActive(false);
-        guiRectTrans = gui.GetComponent<RectTransform>();
-
+	
         timeBoxDissapeared = 0.0f;
 
         cameraGlitchedToBoxes = cam.GetComponent<CameraGlitchedToBoxes>();
@@ -65,6 +56,7 @@ public class ErrorBoxScript : MonoBehaviour
             timeActivated = 0.0f;
             activated = true;
             framesInCurrentStateWhenFlickering = 0;
+			transform.localScale = new Vector3 (0f, 0f, 0f);
 
         }
         else if (activated && timeActivated < timeActive && timeActivated >= (timeActive - timeFlickering))
@@ -84,7 +76,23 @@ public class ErrorBoxScript : MonoBehaviour
             }
             spriteRenderer.color = boxColor;
             ++framesInCurrentStateWhenFlickering;
+
+			float tempTime = timeActive - timeActivated;
+			if (tempTime > timeToBecomeBig)
+				tempTime = timeToBecomeBig;
+			float size = Mathf.Lerp (0.0f, 0.75f, tempTime / timeToBecomeBig);
+			transform.localScale = new Vector3 (size, size, size);
+
         }
+		else if (activated && timeActivated < timeToBecomeBig)
+		{
+			timeActivated += Time.deltaTime;
+			float tempTime = timeActivated;
+			if (tempTime > timeToBecomeBig)
+				tempTime = timeToBecomeBig;
+			float size = Mathf.Lerp (0.0f, 0.75f, tempTime / timeToBecomeBig);
+			transform.localScale = new Vector3 (size, size, size);
+		}
         else if (activated && timeActivated < timeActive)
         {
             timeActivated += Time.deltaTime;
@@ -117,6 +125,7 @@ public class ErrorBoxScript : MonoBehaviour
             activated = false;
             onCooldown = true;
             timeBoxDeactivated = Time.time;
+			transform.localScale = new Vector3 (0.75f, 0.75f, 0.75f);
         }
     }
 
@@ -125,10 +134,6 @@ public class ErrorBoxScript : MonoBehaviour
         if (other.tag == "Player")
         {
             Vector3 boxUIPosition = new Vector3(transform.position.x, transform.position.y + 4.0f, 0);
-            Vector3 camPosition = Camera.main.WorldToScreenPoint(boxUIPosition);
-            camPosition.x *= guiRectTrans.rect.width / Camera.main.pixelWidth;
-            camPosition.y *= guiRectTrans.rect.height / Camera.main.pixelHeight;
-
             if (!activated && !onCooldown)
             {
                 Color boxColor = spriteRenderer.color;

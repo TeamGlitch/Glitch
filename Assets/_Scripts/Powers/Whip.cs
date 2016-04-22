@@ -3,7 +3,7 @@ using System.Collections;
 using InControl;
 
 public class Whip : MonoBehaviour {
-
+/*
 	public GameObject chainPrefab;
 	public float distanceToWhip;
 	public GameObject sphereRotatorPrefab;
@@ -131,5 +131,5 @@ public class Whip : MonoBehaviour {
 				}		
 			}
 		}
-	}
+	}*/
 }
