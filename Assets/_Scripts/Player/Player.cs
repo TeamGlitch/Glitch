@@ -43,6 +43,9 @@ public class Player : MonoBehaviour {
 	public delegate void PlayerDeadDelegate();
 	public event PlayerDeadDelegate PlayerDeadEvent;
 
+	private float correctionFactorForExclamation = -11.02155f;
+	private Vector2 exclamationSize;
+
 	private SlowFPS slowFPS;
 
 	void Awake () {
@@ -64,6 +67,7 @@ public class Player : MonoBehaviour {
         }
 
 		boxUIActivatedRectTransform = boxUIActivated.GetComponent<RectTransform> ();
+		exclamationSize = boxUIActivatedRectTransform.sizeDelta;
 		boxUIActivated.SetActive (false);
 		guiRectTrans = gui.GetComponent<RectTransform>();
 		slowFPS = transform.GetChild (0).GetComponentInChildren<SlowFPS> ();
@@ -93,6 +97,11 @@ public class Player : MonoBehaviour {
         }
 
 		if (numberOfBoxesActivable > 0) {
+
+			float correction = Camera.main.transform.position.z / correctionFactorForExclamation;
+
+			boxUIActivatedRectTransform.sizeDelta = new Vector2 (exclamationSize.x/correction, exclamationSize.y/correction);
+
 			//Sight position
 			Vector3 boxUIPosition = new Vector3(transform.position.x, transform.position.y + 2.0f, 0);
 			Vector3 camPosition = Camera.main.WorldToScreenPoint(boxUIPosition);

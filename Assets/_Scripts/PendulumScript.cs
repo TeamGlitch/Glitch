@@ -3,26 +3,50 @@ using System.Collections;
 
 public class PendulumScript : MonoBehaviour {
 
+	public Vector3 rotateVector;
 	public float maxAngle = 60.0f;
 	public float startAngle = -30.0f;
 	public float timeToSwing = 2.0f;
+	public SlowFPS slowFpsScript;
+	public World world;
+	public Vector3 _rotateOffset;
+
 	private float _timeSwinging = 0.0f;
 	private Vector3 _rotatePosition;
-	public Vector3 _rotateOffset;
 	private float _previousAngle = 0f;
 	private bool movingRight = true;
+	private float timeInFPS;
+	private bool isFPSActive = false;
 
 	// Use this for initialization
 	void Start () {
 		_rotatePosition = transform.position + _rotateOffset;
-		transform.RotateAround (_rotatePosition, new Vector3(0f,0f,1f), startAngle);
+		transform.RotateAround (_rotatePosition, rotateVector, startAngle);
+
+		slowFpsScript.SlowFPSActivated += ActivateFPS;
+		slowFpsScript.SlowFPSDeactivated += DeactivateFPS;
+		timeInFPS = 0.0f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		_timeSwinging += Time.deltaTime;
+
+		if (isFPSActive)
+		{
+			timeInFPS += Time.deltaTime;
+			if(world.doUpdate)
+			{
+				_timeSwinging += timeInFPS / 2.0f;
+				timeInFPS = 0.0f;
+			}
+		}
+		else
+		{
+			_timeSwinging += Time.deltaTime;
+		}
 		if (_timeSwinging > timeToSwing)
 			_timeSwinging = timeToSwing;
+
 		float angle;
 		float t = _timeSwinging / timeToSwing;
 		t = t*t*t*(t*(6f*t - 15f) +10f);
@@ -34,7 +58,7 @@ public class PendulumScript : MonoBehaviour {
 		float moveAngle = angle - _previousAngle;
 		_previousAngle = angle;
 
-		transform.RotateAround(_rotatePosition, new Vector3(0f,0f,1f), moveAngle);
+		transform.RotateAround(_rotatePosition, rotateVector, moveAngle);
 		if (_timeSwinging >= timeToSwing)
 		{
 			movingRight = !movingRight;
@@ -58,5 +82,16 @@ public class PendulumScript : MonoBehaviour {
 		{
 			collision.gameObject.transform.parent = null;
 		}
+	}
+
+	void ActivateFPS()
+	{
+		isFPSActive = true;
+		timeInFPS = 0.0f;
+	}
+
+	void DeactivateFPS()
+	{
+		isFPSActive = false;
 	}
 }

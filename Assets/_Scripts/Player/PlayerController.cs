@@ -14,7 +14,6 @@ public class PlayerController : MonoBehaviour
         JUMPING,
 		FALL_RECOVERING,
         TELEPORTING,
-		WHIPING,
 		DEATH
     };
 
@@ -62,10 +61,6 @@ public class PlayerController : MonoBehaviour
 
 	//Slow FPS
 	public SlowFPS slowFPS;
-
-	//Whip
-	public float whipForce = 5.0f;
-	public float maxAngleWhipForce = 60.0f;
 	
 	///// Other
 	//Broken effect
@@ -246,24 +241,6 @@ public class PlayerController : MonoBehaviour
                 // To control movement of player
                 Movement(moveDirection);
 				break;
-
-			case player_state.WHIPING:
-			
-				if(gameObject.transform.rotation.eulerAngles.z > 360.0f-maxAngleWhipForce || 
-					gameObject.transform.rotation.eulerAngles.z < maxAngleWhipForce)
-				{
-					float whipDirection = InputManager.ActiveDevice.LeftStickX.Value;
-
-					if (whipDirection == 1.0f)
-					{
-						rigidBody.AddForce (new Vector3 (whipForce, 0.0f, 0.0f));
-					} 
-					else if (whipDirection == -1.0f)
-					{
-						rigidBody.AddForce (new Vector3 (-whipForce, 0.0f, 0.0f));
-					}
-				}
-				break;
         }
 
 		//If a player-induced jump is checked but the jump key is not longer
@@ -412,20 +389,5 @@ public class PlayerController : MonoBehaviour
 		teleport.teleportUsed = teleport.Teleport(controller);
 		state = player_state.JUMPING;
     }
-
-	public void StartWhip()
-	{
-		state = player_state.WHIPING;
-		vSpeed = 0;
-		rigidBody.isKinematic = false;
-	}
-
-	public void EndWhip()
-	{
-		startJumpPress = Time.time;
-		state = player_state.JUMPING;
-		vSpeed = jumpSpeed;
-		rigidBody.isKinematic = true;
-	}
 
 }
