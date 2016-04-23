@@ -16,7 +16,7 @@ public class ArcherAI : MonoBehaviour {
     // Constants
     private const float maxSightChase = 9.0f;
     private const float maxSightPersecution = 10.0f;
-    private const float maxSightMeleeAttack = 1.0f;
+    private const float maxSightMeleeAttack = 4.0f;
     private const float maxSightShoot = 20.0f;
     private const float chaseSpeed = 10.0f;
     private const float waitSpeed = 0.0f;
@@ -33,6 +33,7 @@ public class ArcherAI : MonoBehaviour {
     public BoxCollider collider;
     public Rigidbody rigid;
     public BoxCollider fieldOfView;
+    public BoxCollider kickCollider;
 
     private ObjectPool arrowPool;			//Arrows pool
     private ArrowScript arrowLogic;
@@ -46,16 +47,21 @@ public class ArcherAI : MonoBehaviour {
     private float meleeDamage = 1.0f;
     private Vector3 origin;
     private Animator animator;
+    private float timePerKick = 0.0f;
 
     void OnCollisionEnter(Collision coll)
     {
         if ((states != enemy_states.DEATH) && (coll.gameObject.CompareTag("Player")))
         {
-            // If is attacking a collison hurts player
+            // If is attacking hurts player
             if (states == enemy_states.MELEE_ATTACK)
             {
                 player.DecrementLives(meleeDamage);
-                
+                animator.SetBool("Near", false);
+                animator.SetBool("Sighted", false);
+                sight = false;
+                states = enemy_states.WAIT;
+
                 // To impulse player from enemy
                 player.ReactToAttack(transform.position.x);
             }
@@ -67,11 +73,13 @@ public class ArcherAI : MonoBehaviour {
                 // The ray is from archer to player, then collides down of player (-transform.up = down)
                 if (hit.normal == -transform.up)
                 {
-                    states = enemy_states.DEATH;
                     animator.SetBool("Dead", true);
+                    animator.SetBool("Near", false);
                     rigid.isKinematic = true;
                     collider.enabled = false;
+                    kickCollider.enabled = false;
                     fieldOfView.enabled = false;
+                    states = enemy_states.DEATH;
                 }
             }
         }
@@ -128,7 +136,7 @@ public class ArcherAI : MonoBehaviour {
     {
         if (states != enemy_states.DEATH)
         {
-            animator.SetInteger("State", (int)states);
+            //animator.SetInteger("State", (int)states);
 
             if (player.playerController.state != PlayerController.player_state.DEATH)
             {
@@ -154,6 +162,13 @@ public class ArcherAI : MonoBehaviour {
                             speed = chaseSpeed;
                             states = enemy_states.CHASE;
                         }
+
+                        if (Vector3.Distance(player.transform.position, transform.position) <= maxSightMeleeAttack)
+                        {
+                            speed = meleeAttackSpeed;
+                            timePerKick = 0.0f;
+                            states = enemy_states.MELEE_ATTACK;
+                        }
                         break;
 
                     // Enemy chases Glitch until reach him or lose sight of Glitch
@@ -174,6 +189,7 @@ public class ArcherAI : MonoBehaviour {
                         else if (Vector3.Distance(player.transform.position, transform.position) <= maxSightMeleeAttack)
                         {
                             speed = meleeAttackSpeed;
+                            timePerKick = 0.0f;
                             states = enemy_states.MELEE_ATTACK;
                         }
 
@@ -181,12 +197,12 @@ public class ArcherAI : MonoBehaviour {
 
                     case enemy_states.TURN:
                         //animator.SetBool("Turn", true);
-                        if ((player.transform.position.x > transform.position.x) && (transform.eulerAngles.y == 270.0f))
+                        if ((player.transform.position.x > transform.position.x) && (transform.eulerAngles.y > 269.0f))
                         {
                             transform.eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
                             rotationTime = 0.5f;
                         }
-                        else if ((player.transform.position.x < transform.position.x) && (transform.eulerAngles.y == 90.0f))
+                        else if ((player.transform.position.x < transform.position.x) && (transform.eulerAngles.y < 91.0f))
                         {
                             transform.eulerAngles = new Vector3(0.0f, 270.0f, 0.0f);
                             rotationTime = 0.5f;
@@ -196,15 +212,25 @@ public class ArcherAI : MonoBehaviour {
 
                     // Enemy attacks to Glitch with her daggers
                     case enemy_states.MELEE_ATTACK:
-                        print("Melee Attack");
-
                         // Melee attack logic
-                        // MELEE ATTACK ANIMATION HERE
+                        timePerKick -= Time.deltaTime;
+                        if (timePerKick <= 0.0f)
+                        {
+                            animator.SetBool("Near", true);
+                        }
 
                         if (Vector3.Distance(player.transform.position, transform.position) > maxSightMeleeAttack)
                         {
-                            speed = chaseSpeed;
-                            states = enemy_states.CHASE;
+                            if (motionless == false)
+                            {
+                                speed = chaseSpeed;
+                                states = enemy_states.CHASE;
+                            }
+                            else
+                            {
+                                speed = shootSpeed;
+                                states = enemy_states.SHOOT;
+                            }
                         }
 
                         break;
@@ -246,7 +272,7 @@ public class ArcherAI : MonoBehaviour {
     public void TurnTrigger()
     {
 
-        animator.SetBool("Turn", false);
+        //animator.SetBool("Turn", false);
         if ((player.transform.position.x > transform.position.x) && (transform.eulerAngles.y == 270.0f))
         {
             transform.eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
@@ -262,6 +288,12 @@ public class ArcherAI : MonoBehaviour {
 
     public void DeadRandomTrigger()
     {
-        animator.SetInteger("DeadRandom", Random.Range(0, 4));
+        animator.SetInteger("DeadRandom", Random.Range(0, 3));
+    }
+
+    public void FinishKickTrigger()
+    {
+        animator.SetBool("Near", false);
+        timePerKick = 3.0f;
     }
 }

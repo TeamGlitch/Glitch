@@ -24,6 +24,7 @@ Guia frames animaciones:
 	-pose glitch:240
 	-animacion glitch correr:216-239
 	-animacion glitch random:241-256
+	-patada:257-287
 -Caballero:
 	-reposo:51-80
 	-andar:1-24
@@ -33,3 +34,5 @@ Guia frames animaciones:
 	-pose glitch:117
 	-animacion glitch correr:118-143
 	-animacion glitch random:144-160
+	-girarse:161-197
+	-buscar:198-247

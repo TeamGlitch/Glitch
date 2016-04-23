@@ -1,16 +1,16 @@
 fileFormatVersion: 2
-guid: d6e4fd4a73271a644a176ab792494c41
-timeCreated: 1460827147
+guid: fbfffc5d4db3501498ef72ac3ee86cc9
+timeCreated: 1461279346
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: arco_arco
-    100002: arco_arco 1
-    100004: arco_gp
-    100006: arco_pCylinder1
-    100008: arquera
-    100010: //RootNode
+    100000: //RootNode
+    100002: arco_arco
+    100004: arco_arco 1
+    100006: arco_gp
+    100008: arco_pCylinder1
+    100010: arquera
     100012: carcaj_carcaj
     100014: carcaj_flecha
     100016: carcaj_flecha1
@@ -168,12 +168,12 @@ ModelImporter:
     100320: jt_tobillo_izq
     100322: nurbsCircle13
     100324: nurbsCircle14
-    400000: arco_arco
-    400002: arco_arco 1
-    400004: arco_gp
-    400006: arco_pCylinder1
-    400008: arquera
-    400010: //RootNode
+    400000: //RootNode
+    400002: arco_arco
+    400004: arco_arco 1
+    400006: arco_gp
+    400008: arco_pCylinder1
+    400010: arquera
     400012: carcaj_carcaj
     400014: carcaj_flecha
     400016: carcaj_flecha1
@@ -442,20 +442,19 @@ ModelImporter:
     4300072: carcaj_pCube9
     4300074: arco_arco
     4300076: arco_pCylinder1
-    7400000: Run
-    7400002: Walk
-    7400004: Idle
-    7400006: Jump
-    7400008: Shoot
-    7400010: Hitted
-    7400012: Dead
-    7400014: Turn
-    7400016: Dead pose
-    7400018: Glitch pose
-    7400020: Glitch run
-    7400022: Glitch random
-    7400024: Turn
-    7400026: Turn right
+    7400000: T Pose
+    7400002: Run
+    7400004: Walk
+    7400006: Idle
+    7400008: Jump
+    7400010: Shoot
+    7400012: Hitted
+    7400014: Dead
+    7400016: Turn
+    7400018: Glitch Pose
+    7400020: Glitch Run
+    7400022: Glitch Random
+    7400024: Kick
     9500000: //RootNode
     13700000: arco_arco 1
     13700002: arco_pCylinder1
@@ -481,6 +480,395 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     clipAnimations:
+    - serializedVersion: 16
+      name: T Pose
+      takeName: clip
+      firstFrame: 0
+      lastFrame: 0
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: 1
+        functionName: DeadRandomTrigger
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      transformMask:
+      - path: 
+        weight: 1
+      - path: arco_gp
+        weight: 1
+      - path: arco_gp/arco_arco
+        weight: 1
+      - path: arco_gp/arco_arco/arco_arco 1
+        weight: 1
+      - path: arco_gp/arco_arco/arco_pCylinder1
+        weight: 1
+      - path: arco_gp/jt_centro_arco
+        weight: 1
+      - path: arco_gp/jt_centro_arco/ikHandle1
+        weight: 1
+      - path: arco_gp/jt_centro_arco/jt_flexion_bot_1
+        weight: 1
+      - path: arco_gp/jt_centro_arco/jt_flexion_bot_1/jt_flexion_bot_2
+        weight: 1
+      - path: arco_gp/jt_centro_arco/jt_flexion_bot_1/jt_flexion_bot_2/jt_flexion_bot_3
+        weight: 1
+      - path: arco_gp/jt_centro_arco/jt_flexion_bot_1/jt_flexion_bot_2/jt_flexion_bot_3/jt_flexion_bot_punta
+        weight: 1
+      - path: arco_gp/jt_centro_arco/jt_flexion_top_1
+        weight: 1
+      - path: arco_gp/jt_centro_arco/jt_flexion_top_1/jt_flexion_top_2
+        weight: 1
+      - path: arco_gp/jt_centro_arco/jt_flexion_top_1/jt_flexion_top_2/jt_flexion_top_3
+        weight: 1
+      - path: arco_gp/jt_centro_arco/jt_flexion_top_1/jt_flexion_top_2/jt_flexion_top_3/jt_flexion_top_punta
+        weight: 1
+      - path: arco_gp/jt_centro_arco/jt_flexion_top_1/jt_flexion_top_2/jt_flexion_top_3/jt_flexion_top_punta/jt_cuerda
+        weight: 1
+      - path: arquera
+        weight: 1
+      - path: ctrl_pers_total
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_carcaj
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha/carcaj_pCube1
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha/carcaj_pCube2
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha/carcaj_pCube6
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha/carcaj_pCube7
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha/carcaj_pCube8
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha/carcaj_pCube9
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha/carcaj_pCylinder2
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha1
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha1/carcaj_pCube1
+          1
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha1/carcaj_pCube2
+          1
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha1/carcaj_pCube6
+          1
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha1/carcaj_pCube7
+          1
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha1/carcaj_pCube8
+          1
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha1/carcaj_pCube9
+          1
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha1/carcaj_pCylinder2
+          1
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha2
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha2/carcaj_pCube1
+          2
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha2/carcaj_pCube2
+          2
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha2/carcaj_pCube6
+          2
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha2/carcaj_pCube7
+          2
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha2/carcaj_pCube8
+          2
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha2/carcaj_pCube9
+          2
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha2/carcaj_pCylinder2
+          2
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha3
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha3/carcaj_pCube1
+          3
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha3/carcaj_pCube2
+          3
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha3/carcaj_pCube6
+          3
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha3/carcaj_pCube7
+          3
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha3/carcaj_pCube8
+          3
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha3/carcaj_pCube9
+          3
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha3/carcaj_pCylinder2
+          3
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha4
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha4/carcaj_pCube1
+          4
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha4/carcaj_pCube2
+          4
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha4/carcaj_pCube6
+          4
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha4/carcaj_pCube7
+          4
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha4/carcaj_pCube8
+          4
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha4/carcaj_pCube9
+          4
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/carjac1/carcaj_flecha4/carcaj_pCylinder2
+          4
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_cabeza
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_anular_menique_parte1_der
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_anular_menique_parte1_der/ctrl_anular_menique_parte2_der
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_anular_menique_parte1_der/ctrl_anular_menique_parte2_der/ctrl_anular_menique_parte3_der
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_corazon_parte1_der
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_corazon_parte1_der/ctrl_corazon_parte2_der
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_corazon_parte1_der/ctrl_corazon_parte2_der/ctrl_corazon_parte3_der
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_indice_parte1_der
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_indice_parte1_der/ctrl_indice_parte2_der
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_indice_parte1_der/ctrl_indice_parte2_der/ctrl_indice_parte3_der
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_pulgar_parte1_der
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_pulgar_parte1_der/nurbsCircle14
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq/ctrl_codo_izq
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq/ctrl_codo_izq/ctrl_muneca_izq
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq/ctrl_codo_izq/ctrl_muneca_izq/ctrl_anular_menique_parte1_izq
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq/ctrl_codo_izq/ctrl_muneca_izq/ctrl_anular_menique_parte1_izq/ctrl_anular_menique_parte2_izq
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq/ctrl_codo_izq/ctrl_muneca_izq/ctrl_anular_menique_parte1_izq/ctrl_anular_menique_parte2_izq/ctrl_anular_menique_parte3_izq
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq/ctrl_codo_izq/ctrl_muneca_izq/ctrl_arco_total
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq/ctrl_codo_izq/ctrl_muneca_izq/ctrl_arco_total/ctrl_bot_1
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq/ctrl_codo_izq/ctrl_muneca_izq/ctrl_arco_total/ctrl_bot_1/ctrl_bot2
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq/ctrl_codo_izq/ctrl_muneca_izq/ctrl_arco_total/ctrl_cuerda
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq/ctrl_codo_izq/ctrl_muneca_izq/ctrl_arco_total/ctrl_top1
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq/ctrl_codo_izq/ctrl_muneca_izq/ctrl_arco_total/ctrl_top1/ctrl_top2
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq/ctrl_codo_izq/ctrl_muneca_izq/ctrl_corazon_parte1_izq
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq/ctrl_codo_izq/ctrl_muneca_izq/ctrl_corazon_parte1_izq/ctrl_corazon_parte2_izq
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq/ctrl_codo_izq/ctrl_muneca_izq/ctrl_corazon_parte1_izq/ctrl_corazon_parte2_izq/ctrl_corazon_parte3_izq
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq/ctrl_codo_izq/ctrl_muneca_izq/ctrl_indice_parte1_izq
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq/ctrl_codo_izq/ctrl_muneca_izq/ctrl_indice_parte1_izq/ctrl_indice_parte2_izq
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq/ctrl_codo_izq/ctrl_muneca_izq/ctrl_indice_parte1_izq/ctrl_indice_parte2_izq/ctrl_indice_parte3_izq
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq/ctrl_codo_izq/ctrl_muneca_izq/ctrl_pulgar_parte1_izq
+        weight: 1
+      - path: ctrl_pers_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq/ctrl_hombro_izq/ctrl_codo_izq/ctrl_muneca_izq/ctrl_pulgar_parte1_izq/nurbsCircle13
+        weight: 1
+      - path: ctrl_pers_total/ctrl_pie_der
+        weight: 1
+      - path: ctrl_pers_total/ctrl_pie_der/ctrl_dedos_pie_der
+        weight: 1
+      - path: ctrl_pers_total/ctrl_pie_der/ctrl_rodilla_der
+        weight: 1
+      - path: ctrl_pers_total/ctrl_pie_izq
+        weight: 1
+      - path: ctrl_pers_total/ctrl_pie_izq/ctrl_dedos_pie_izq
+        weight: 1
+      - path: ctrl_pers_total/ctrl_pie_izq/ctrl_rodilla_izq
+        weight: 1
+      - path: ctrl_pers_total/gp_ik_pierna_der
+        weight: 1
+      - path: ctrl_pers_total/gp_ik_pierna_der/ik_pierna_der
+        weight: 1
+      - path: ctrl_pers_total/gp_ik_pierna_izq
+        weight: 1
+      - path: ctrl_pers_total/gp_ik_pierna_izq/ik_pierna_izq
+        weight: 1
+      - path: jt_cadera
+        weight: 1
+      - path: jt_cadera/jt_cintura
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_der
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_der/jt_hombro_der
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_der/jt_hombro_der/jt_codo_der
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_der/jt_hombro_der/jt_codo_der/jt_muneca_der
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_der/jt_hombro_der/jt_codo_der/jt_muneca_der/jt_anular_menique_parte1_der
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_der/jt_hombro_der/jt_codo_der/jt_muneca_der/jt_anular_menique_parte1_der/jt_anular_menique_parte2_der
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_der/jt_hombro_der/jt_codo_der/jt_muneca_der/jt_anular_menique_parte1_der/jt_anular_menique_parte2_der/jt_anular_menique_parte3_der
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_der/jt_hombro_der/jt_codo_der/jt_muneca_der/jt_anular_menique_parte1_der/jt_anular_menique_parte2_der/jt_anular_menique_parte3_der/jt_anular_menique_punta_der
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_der/jt_hombro_der/jt_codo_der/jt_muneca_der/jt_corazon_parte1_der
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_der/jt_hombro_der/jt_codo_der/jt_muneca_der/jt_corazon_parte1_der/jt_corazon_parte2_der
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_der/jt_hombro_der/jt_codo_der/jt_muneca_der/jt_corazon_parte1_der/jt_corazon_parte2_der/jt_corazon_parte3_der
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_der/jt_hombro_der/jt_codo_der/jt_muneca_der/jt_corazon_parte1_der/jt_corazon_parte2_der/jt_corazon_parte3_der/jt_corazon_punta_der
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_der/jt_hombro_der/jt_codo_der/jt_muneca_der/jt_indice_parte1_der
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_der/jt_hombro_der/jt_codo_der/jt_muneca_der/jt_indice_parte1_der/jt_indice_parte2_der
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_der/jt_hombro_der/jt_codo_der/jt_muneca_der/jt_indice_parte1_der/jt_indice_parte2_der/jt_indice_parte3_der
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_der/jt_hombro_der/jt_codo_der/jt_muneca_der/jt_indice_parte1_der/jt_indice_parte2_der/jt_indice_parte3_der/jt_indice_punta_der
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_der/jt_hombro_der/jt_codo_der/jt_muneca_der/jt_pulgar_parte1_der
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_der/jt_hombro_der/jt_codo_der/jt_muneca_der/jt_pulgar_parte1_der/jt_pulgar_parte2_der
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_der/jt_hombro_der/jt_codo_der/jt_muneca_der/jt_pulgar_parte1_der/jt_pulgar_parte2_der/jt_pulgar_punta_der
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_izq
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_izq/jt_hombro_izq
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_izq/jt_hombro_izq/jt_codo_izq
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_izq/jt_hombro_izq/jt_codo_izq/jt_muneca_izq
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_izq/jt_hombro_izq/jt_codo_izq/jt_muneca_izq/jt_anular_menique_parte1_izq
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_izq/jt_hombro_izq/jt_codo_izq/jt_muneca_izq/jt_anular_menique_parte1_izq/jt_anular_menique_parte2_izq
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_izq/jt_hombro_izq/jt_codo_izq/jt_muneca_izq/jt_anular_menique_parte1_izq/jt_anular_menique_parte2_izq/jt_anular_menique_parte3_izq
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_izq/jt_hombro_izq/jt_codo_izq/jt_muneca_izq/jt_anular_menique_parte1_izq/jt_anular_menique_parte2_izq/jt_anular_menique_parte3_izq/jt_anular_menique_punta_izq
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_izq/jt_hombro_izq/jt_codo_izq/jt_muneca_izq/jt_corazon_parte1_izq
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_izq/jt_hombro_izq/jt_codo_izq/jt_muneca_izq/jt_corazon_parte1_izq/jt_corazon_parte2_izq
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_izq/jt_hombro_izq/jt_codo_izq/jt_muneca_izq/jt_corazon_parte1_izq/jt_corazon_parte2_izq/jt_corazon_parte3_izq
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_izq/jt_hombro_izq/jt_codo_izq/jt_muneca_izq/jt_corazon_parte1_izq/jt_corazon_parte2_izq/jt_corazon_parte3_izq/jt_corazon_punta_izq
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_izq/jt_hombro_izq/jt_codo_izq/jt_muneca_izq/jt_indice_parte1_izq
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_izq/jt_hombro_izq/jt_codo_izq/jt_muneca_izq/jt_indice_parte1_izq/jt_indice_parte2_izq
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_izq/jt_hombro_izq/jt_codo_izq/jt_muneca_izq/jt_indice_parte1_izq/jt_indice_parte2_izq/jt_indice_parte3_izq
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_izq/jt_hombro_izq/jt_codo_izq/jt_muneca_izq/jt_indice_parte1_izq/jt_indice_parte2_izq/jt_indice_parte3_izq/jt_indice_punta_izq
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_izq/jt_hombro_izq/jt_codo_izq/jt_muneca_izq/jt_pulgar_parte1_izq
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_izq/jt_hombro_izq/jt_codo_izq/jt_muneca_izq/jt_pulgar_parte1_izq/jt_pulgar_parte2_izq
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_clavicula_izq/jt_hombro_izq/jt_codo_izq/jt_muneca_izq/jt_pulgar_parte1_izq/jt_pulgar_parte2_izq/jt_pulgar_punta_izq
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_cuello
+        weight: 1
+      - path: jt_cadera/jt_cintura/jt_pecho/jt_cuello/jt_cabeza
+        weight: 1
+      - path: jt_cadera/jt_muslo_der
+        weight: 1
+      - path: jt_cadera/jt_muslo_der/jt_rodilla_der
+        weight: 1
+      - path: jt_cadera/jt_muslo_der/jt_rodilla_der/jt_tobillo_der
+        weight: 1
+      - path: jt_cadera/jt_muslo_der/jt_rodilla_der/jt_tobillo_der/jt_pie_der
+        weight: 1
+      - path: jt_cadera/jt_muslo_der/jt_rodilla_der/jt_tobillo_der/jt_pie_der/jt_dedos_pie_der
+        weight: 1
+      - path: jt_cadera/jt_muslo_izq
+        weight: 1
+      - path: jt_cadera/jt_muslo_izq/jt_rodilla_izq
+        weight: 1
+      - path: jt_cadera/jt_muslo_izq/jt_rodilla_izq/jt_tobillo_izq
+        weight: 1
+      - path: jt_cadera/jt_muslo_izq/jt_rodilla_izq/jt_tobillo_izq/jt_pie_izq
+        weight: 1
+      - path: jt_cadera/jt_muslo_izq/jt_rodilla_izq/jt_tobillo_izq/jt_pie_izq/jt_dedos_pie_izq
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: Run
       takeName: clip
@@ -2033,7 +2421,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.78215224
+      - time: 0.7167071
         functionName: ShootedTrigger
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -3163,10 +3551,10 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Dead pose
+      name: Turn
       takeName: clip
-      firstFrame: 0
-      lastFrame: 0
+      firstFrame: 191
+      lastFrame: 204
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -3185,14 +3573,7 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events:
-      - time: 1
-        functionName: DeadRandomTrigger
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
+      events: []
       transformMask:
       - path: 
         weight: 1
@@ -3552,7 +3933,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Glitch pose
+      name: Glitch Pose
       takeName: clip
       firstFrame: 240
       lastFrame: 240
@@ -3574,14 +3955,7 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events:
-      - time: 1
-        functionName: DeadRandomTrigger
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
+      events: []
       transformMask:
       - path: 
         weight: 1
@@ -3941,7 +4315,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Glitch run
+      name: Glitch Run
       takeName: clip
       firstFrame: 216
       lastFrame: 239
@@ -3963,14 +4337,7 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events:
-      - time: 1
-        functionName: DeadRandomTrigger
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
+      events: []
       transformMask:
       - path: 
         weight: 1
@@ -4330,7 +4697,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Glitch random
+      name: Glitch Random
       takeName: clip
       firstFrame: 241
       lastFrame: 256
@@ -4352,14 +4719,7 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events:
-      - time: 1
-        functionName: DeadRandomTrigger
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
+      events: []
       transformMask:
       - path: 
         weight: 1
@@ -4719,10 +5079,10 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Turn
+      name: Kick
       takeName: clip
-      firstFrame: 191
-      lastFrame: 203
+      firstFrame: 257
+      lastFrame: 287
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -4742,8 +5102,8 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 1
-        functionName: TurnTrigger
+      - time: 0.76902884
+        functionName: FinishKickTrigger
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
