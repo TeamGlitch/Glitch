@@ -1,0 +1,863 @@
+fileFormatVersion: 2
+guid: ad9cfb237d574e24e9f92b0bbc298bb0
+timeCreated: 1461365279
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: SpritesheetContraste_0
+    21300002: SpritesheetContraste_1
+    21300004: SpritesheetContraste_2
+    21300006: SpritesheetContraste_3
+    21300008: SpritesheetContraste_4
+    21300010: SpritesheetContraste_5
+    21300012: SpritesheetContraste_6
+    21300014: SpritesheetContraste_7
+    21300016: SpritesheetContraste_8
+    21300018: SpritesheetContraste_9
+    21300020: SpritesheetContraste_10
+    21300022: SpritesheetContraste_11
+    21300024: SpritesheetContraste_12
+    21300026: SpritesheetContraste_13
+    21300028: SpritesheetContraste_14
+    21300030: SpritesheetContraste_15
+    21300032: SpritesheetContraste_16
+    21300034: SpritesheetContraste_17
+    21300036: SpritesheetContraste_18
+    21300038: SpritesheetContraste_19
+    21300040: SpritesheetContraste_20
+    21300042: SpritesheetContraste_21
+    21300044: SpritesheetContraste_22
+    21300046: SpritesheetContraste_23
+    21300048: SpritesheetContraste_24
+    21300050: SpritesheetContraste_25
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: SpritesheetContraste_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 640
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 6, y: -56}
+        - {x: 6, y: -74}
+        - {x: 7, y: -76}
+        - {x: 45, y: -76}
+        - {x: 46, y: -67}
+        - {x: 46, y: 14}
+        - {x: 30, y: 73}
+        - {x: 24, y: 76}
+        - {x: -20, y: 76}
+        - {x: -27, y: 67}
+        - {x: -38, y: 47}
+        - {x: -38, y: -74}
+        - {x: -37, y: -76}
+        - {x: 4, y: -76}
+        - {x: 6, y: -74}
+        - {x: 6, y: -62}
+        - {x: 4, y: -60}
+    - name: SpritesheetContraste_1
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 640
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 6, y: -52}
+        - {x: 6, y: -74}
+        - {x: 8, y: -76}
+        - {x: 36, y: -76}
+        - {x: 38, y: -74}
+        - {x: 38, y: -58}
+        - {x: 35, y: -53}
+        - {x: 46, y: -44}
+        - {x: 46, y: 80}
+        - {x: -20, y: 80}
+        - {x: -27, y: 71}
+        - {x: -38, y: 37}
+        - {x: -38, y: -76}
+        - {x: 4, y: -76}
+        - {x: 6, y: -74}
+        - {x: 6, y: -62}
+        - {x: 4, y: -60}
+    - name: SpritesheetContraste_2
+      rect:
+        serializedVersion: 2
+        x: 756
+        y: 640
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -20, y: 31}
+        - {x: -15, y: 30}
+        - {x: 16, y: 30}
+        - {x: 16, y: 69}
+        - {x: -11, y: 78}
+        - {x: -44, y: 78}
+        - {x: -53, y: 74}
+        - {x: -53, y: 37}
+        - {x: -49, y: 30}
+        - {x: -29, y: 30}
+        - {x: -24, y: 31}
+        - {x: -17, y: 41}
+        - {x: -20, y: 36}
+        - {x: -21, y: 33}
+      - - {x: 16, y: 77}
+        - {x: 16, y: 30}
+        - {x: 48, y: 30}
+        - {x: 48, y: 77}
+    - name: SpritesheetContraste_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 480
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -30, y: 68}
+        - {x: -30, y: -46}
+        - {x: -25, y: -80}
+        - {x: 25, y: -80}
+        - {x: 34, y: -74}
+        - {x: 34, y: 33}
+        - {x: 31, y: 59}
+        - {x: 28, y: 68}
+    - name: SpritesheetContraste_4
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 480
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -29, y: 80}
+        - {x: -30, y: 77}
+        - {x: -30, y: -78}
+        - {x: -28, y: -80}
+        - {x: 2, y: -80}
+        - {x: 30, y: -65}
+        - {x: 30, y: 80}
+    - name: SpritesheetContraste_5
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 480
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -27, y: 72}
+        - {x: -43, y: 68}
+        - {x: -50, y: 3}
+        - {x: -50, y: -72}
+        - {x: 54, y: -72}
+        - {x: 54, y: -17}
+        - {x: 25, y: 72}
+    - name: SpritesheetContraste_6
+      rect:
+        serializedVersion: 2
+        x: 324
+        y: 480
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -26, y: 68}
+        - {x: -26, y: -77}
+        - {x: -20, y: -80}
+        - {x: 25, y: -80}
+        - {x: 23, y: -65}
+        - {x: 30, y: -28}
+        - {x: 30, y: 68}
+    - name: SpritesheetContraste_7
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 480
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -26, y: 80}
+        - {x: -34, y: 51}
+        - {x: -34, y: -56}
+        - {x: -31, y: -76}
+        - {x: -20, y: -80}
+        - {x: 46, y: -80}
+        - {x: 46, y: 80}
+    - name: SpritesheetContraste_8
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 480
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 49, y: 33}
+        - {x: 30, y: 72}
+        - {x: -26, y: 72}
+        - {x: -40, y: 68}
+        - {x: -42, y: 48}
+        - {x: -42, y: -59}
+        - {x: -38, y: -72}
+        - {x: 16, y: -72}
+        - {x: 42, y: -71}
+        - {x: 54, y: -63}
+        - {x: 54, y: 0}
+    - name: SpritesheetContraste_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 320
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 30, y: 80}
+        - {x: -28, y: 80}
+        - {x: -42, y: 48}
+        - {x: -42, y: -59}
+        - {x: -39, y: -71}
+        - {x: -22, y: -80}
+        - {x: 21, y: -80}
+        - {x: 27, y: -75}
+        - {x: 46, y: -26}
+        - {x: 46, y: 44}
+    - name: SpritesheetContraste_10
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 320
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -50, y: 80}
+        - {x: -50, y: -80}
+        - {x: 6, y: -80}
+        - {x: 54, y: -63}
+        - {x: 54, y: 20}
+        - {x: 28, y: 80}
+    - name: SpritesheetContraste_11
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 320
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -22, y: 80}
+        - {x: -31, y: 71}
+        - {x: -30, y: 30}
+        - {x: -28, y: 28}
+        - {x: -30, y: 28}
+        - {x: -30, y: 30}
+        - {x: -31, y: 34}
+        - {x: -53, y: 33}
+        - {x: -54, y: 32}
+        - {x: -54, y: -68}
+        - {x: 54, y: -68}
+        - {x: 54, y: 35}
+        - {x: 22, y: 80}
+    - name: SpritesheetContraste_12
+      rect:
+        serializedVersion: 2
+        x: 324
+        y: 320
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -31, y: 76}
+        - {x: -54, y: 56}
+        - {x: -54, y: 32}
+        - {x: -49, y: 8}
+        - {x: -54, y: -27}
+        - {x: -54, y: -62}
+        - {x: -53, y: -66}
+        - {x: -38, y: -68}
+        - {x: 46, y: -68}
+        - {x: 54, y: -50}
+        - {x: 54, y: 31}
+        - {x: 26, y: 76}
+      - - {x: -54, y: 20}
+        - {x: -54, y: 0}
+        - {x: -52, y: 0}
+        - {x: -50, y: 2}
+        - {x: -50, y: 18}
+        - {x: -52, y: 20}
+    - name: SpritesheetContraste_13
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 320
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 26, y: 72}
+        - {x: -46, y: 72}
+        - {x: -50, y: 63}
+        - {x: -50, y: -35}
+        - {x: -25, y: -76}
+        - {x: 12, y: -76}
+        - {x: 25, y: -56}
+        - {x: 42, y: 1}
+        - {x: 42, y: 58}
+      - - {x: -54, y: 20}
+        - {x: -54, y: 4}
+        - {x: -52, y: 4}
+        - {x: -50, y: 6}
+        - {x: -50, y: 18}
+        - {x: -52, y: 20}
+    - name: SpritesheetContraste_14
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 320
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -30, y: 68}
+        - {x: -34, y: 59}
+        - {x: -34, y: -47}
+        - {x: -22, y: -80}
+        - {x: 14, y: -80}
+        - {x: 16, y: -79}
+        - {x: 30, y: -63}
+        - {x: 30, y: 52}
+        - {x: 27, y: 68}
+    - name: SpritesheetContraste_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 160
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -42, y: 80}
+        - {x: -46, y: 41}
+        - {x: -46, y: -56}
+        - {x: -41, y: -76}
+        - {x: -27, y: -80}
+        - {x: 8, y: -80}
+        - {x: 46, y: -64}
+        - {x: 46, y: 63}
+        - {x: 43, y: 80}
+    - name: SpritesheetContraste_16
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 160
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 20, y: -20}
+        - {x: 18, y: -20}
+        - {x: 18, y: -18}
+        - {x: 16, y: -16}
+        - {x: 18, y: -16}
+        - {x: 18, y: -18}
+        - {x: 20, y: -20}
+        - {x: 32, y: -20}
+        - {x: 42, y: -17}
+        - {x: 42, y: 31}
+        - {x: 35, y: 70}
+        - {x: 20, y: 80}
+        - {x: -24, y: 80}
+        - {x: -35, y: 75}
+        - {x: -50, y: 11}
+        - {x: -50, y: -14}
+        - {x: -46, y: -80}
+        - {x: 0, y: -80}
+        - {x: 42, y: -43}
+        - {x: 42, y: -37}
+        - {x: 33, y: -27}
+    - name: SpritesheetContraste_17
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 160
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 20, y: -20}
+        - {x: 18, y: -20}
+        - {x: 18, y: -18}
+        - {x: 16, y: -16}
+        - {x: 18, y: -16}
+        - {x: 18, y: -18}
+        - {x: 20, y: -20}
+        - {x: 33, y: -21}
+        - {x: 42, y: -18}
+        - {x: 42, y: 49}
+        - {x: 38, y: 72}
+        - {x: 19, y: 80}
+        - {x: -23, y: 80}
+        - {x: -36, y: 76}
+        - {x: -38, y: 74}
+        - {x: -38, y: 66}
+        - {x: -54, y: 15}
+        - {x: -54, y: 0}
+        - {x: -47, y: -15}
+        - {x: -43, y: -20}
+        - {x: -48, y: -41}
+        - {x: -47, y: -59}
+        - {x: -36, y: -80}
+        - {x: -2, y: -80}
+        - {x: 42, y: -46}
+        - {x: 42, y: -33}
+        - {x: 37, y: -27}
+    - name: SpritesheetContraste_18
+      rect:
+        serializedVersion: 2
+        x: 324
+        y: 160
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -37, y: 80}
+        - {x: -44, y: 75}
+        - {x: -54, y: 49}
+        - {x: -54, y: -67}
+        - {x: -51, y: -80}
+        - {x: -4, y: -80}
+        - {x: 46, y: -66}
+        - {x: 46, y: 80}
+    - name: SpritesheetContraste_19
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 160
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -43, y: -36}
+        - {x: -53, y: -42}
+        - {x: -54, y: -45}
+        - {x: -54, y: -60}
+        - {x: -44, y: -80}
+        - {x: -19, y: -80}
+        - {x: -18, y: -77}
+        - {x: -18, y: -46}
+        - {x: -22, y: -36}
+      - - {x: -46, y: 80}
+        - {x: -54, y: 72}
+        - {x: -54, y: -72}
+        - {x: 21, y: -72}
+        - {x: 50, y: -49}
+        - {x: 50, y: 70}
+        - {x: 26, y: 80}
+    - name: SpritesheetContraste_20
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 160
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -43, y: -36}
+        - {x: -53, y: -42}
+        - {x: -54, y: -45}
+        - {x: -54, y: -60}
+        - {x: -44, y: -80}
+        - {x: -19, y: -80}
+        - {x: -18, y: -77}
+        - {x: -18, y: -46}
+        - {x: -22, y: -36}
+      - - {x: 6, y: 80}
+        - {x: 6, y: 68}
+        - {x: 6, y: 80}
+        - {x: -48, y: 80}
+        - {x: -54, y: 37}
+        - {x: -54, y: -3}
+        - {x: -42, y: -22}
+        - {x: -26, y: -64}
+        - {x: -11, y: -72}
+        - {x: 21, y: -72}
+        - {x: 50, y: -42}
+        - {x: 50, y: 30}
+        - {x: 27, y: 80}
+      - - {x: 20, y: 24}
+        - {x: 18, y: 22}
+        - {x: 18, y: 14}
+        - {x: 20, y: 12}
+        - {x: 36, y: 12}
+        - {x: 38, y: 14}
+        - {x: 38, y: 22}
+        - {x: 36, y: 24}
+    - name: SpritesheetContraste_21
+      rect:
+        serializedVersion: 2
+        x: 648
+        y: 160
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -54, y: -44}
+        - {x: -54, y: -55}
+        - {x: -47, y: -63}
+        - {x: -44, y: -64}
+        - {x: -36, y: -64}
+        - {x: -34, y: -62}
+        - {x: -34, y: -64}
+        - {x: -40, y: -64}
+        - {x: -42, y: -66}
+        - {x: -44, y: -79}
+        - {x: -42, y: -80}
+        - {x: -18, y: -80}
+        - {x: -18, y: -54}
+        - {x: -33, y: -44}
+      - - {x: 6, y: 64}
+        - {x: 5, y: 68}
+        - {x: 2, y: 78}
+        - {x: 1, y: 80}
+        - {x: -22, y: 80}
+        - {x: -40, y: 75}
+        - {x: -54, y: 47}
+        - {x: -54, y: -21}
+        - {x: -34, y: -70}
+        - {x: -30, y: -72}
+        - {x: 36, y: -72}
+        - {x: 50, y: -66}
+        - {x: 50, y: 48}
+        - {x: 40, y: 80}
+        - {x: 6, y: 80}
+      - - {x: -40, y: -36}
+        - {x: -42, y: -38}
+        - {x: -42, y: -46}
+        - {x: -40, y: -48}
+        - {x: -24, y: -48}
+        - {x: -22, y: -46}
+        - {x: -22, y: -38}
+        - {x: -24, y: -36}
+      - - {x: 20, y: 24}
+        - {x: 18, y: 22}
+        - {x: 18, y: 14}
+        - {x: 20, y: 12}
+        - {x: 36, y: 12}
+        - {x: 38, y: 14}
+        - {x: 38, y: 22}
+        - {x: 36, y: 24}
+    - name: SpritesheetContraste_22
+      rect:
+        serializedVersion: 2
+        x: 756
+        y: 160
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -26, y: -44}
+        - {x: -54, y: -44}
+        - {x: -54, y: -56}
+        - {x: -44, y: -64}
+        - {x: -36, y: -64}
+        - {x: -41, y: -66}
+        - {x: -44, y: -80}
+        - {x: -23, y: -80}
+        - {x: -21, y: -79}
+        - {x: -18, y: -73}
+        - {x: -18, y: -53}
+      - - {x: -22, y: -62}
+        - {x: -19, y: -68}
+        - {x: 14, y: -68}
+        - {x: 14, y: -52}
+        - {x: 12, y: -45}
+        - {x: 10, y: -44}
+        - {x: -18, y: -44}
+        - {x: -22, y: -45}
+      - - {x: 6, y: -44}
+        - {x: 6, y: -56}
+        - {x: 16, y: -56}
+        - {x: 18, y: -54}
+        - {x: 18, y: -46}
+        - {x: 16, y: -44}
+      - - {x: 33, y: -28}
+        - {x: 22, y: -45}
+        - {x: 22, y: -56}
+        - {x: 35, y: -56}
+        - {x: 46, y: -39}
+        - {x: 46, y: -28}
+      - - {x: -40, y: -36}
+        - {x: -42, y: -38}
+        - {x: -42, y: -46}
+        - {x: -40, y: -48}
+        - {x: -24, y: -48}
+        - {x: -22, y: -46}
+        - {x: -22, y: -38}
+        - {x: -24, y: -36}
+      - - {x: -12, y: -32}
+        - {x: -14, y: -34}
+        - {x: -14, y: -42}
+        - {x: -12, y: -44}
+        - {x: -4, y: -44}
+        - {x: -2, y: -42}
+        - {x: -2, y: -34}
+        - {x: -4, y: -32}
+      - - {x: 8, y: 28}
+        - {x: 6, y: 26}
+        - {x: 6, y: 28}
+        - {x: 8, y: 28}
+        - {x: 10, y: 30}
+        - {x: 33, y: 34}
+        - {x: 34, y: 38}
+        - {x: 34, y: 57}
+        - {x: 30, y: 64}
+        - {x: -3, y: 64}
+        - {x: -38, y: 40}
+        - {x: -38, y: -3}
+        - {x: 1, y: -44}
+        - {x: 29, y: -44}
+        - {x: 30, y: -40}
+        - {x: 30, y: 8}
+        - {x: 17, y: 29}
+      - - {x: -26, y: -24}
+        - {x: -26, y: -36}
+        - {x: -14, y: -36}
+        - {x: -14, y: -24}
+      - - {x: -2, y: -16}
+        - {x: -14, y: -16}
+        - {x: -14, y: -29}
+        - {x: -11, y: -32}
+        - {x: 1, y: -32}
+        - {x: 2, y: -30}
+        - {x: 2, y: -20}
+      - - {x: -54, y: 16}
+        - {x: -54, y: -12}
+        - {x: -41, y: -24}
+        - {x: -14, y: -24}
+        - {x: -14, y: -2}
+        - {x: -31, y: 16}
+      - - {x: 48, y: 0}
+        - {x: 30, y: 0}
+        - {x: 26, y: -9}
+        - {x: 26, y: -20}
+        - {x: 42, y: -20}
+        - {x: 50, y: -13}
+        - {x: 50, y: -2}
+      - - {x: 20, y: 24}
+        - {x: 18, y: 22}
+        - {x: 18, y: 14}
+        - {x: 20, y: 12}
+        - {x: 36, y: 12}
+        - {x: 38, y: 14}
+        - {x: 38, y: 22}
+        - {x: 36, y: 24}
+      - - {x: -38, y: 76}
+        - {x: -38, y: 61}
+        - {x: -33, y: 48}
+        - {x: -18, y: 48}
+        - {x: -14, y: 55}
+        - {x: -14, y: 68}
+        - {x: -23, y: 76}
+      - - {x: 2, y: 68}
+        - {x: 2, y: 80}
+        - {x: -18, y: 80}
+        - {x: -18, y: 68}
+      - - {x: 8, y: 80}
+        - {x: 6, y: 78}
+        - {x: 6, y: 70}
+        - {x: 8, y: 68}
+        - {x: 16, y: 68}
+        - {x: 18, y: 70}
+        - {x: 18, y: 78}
+        - {x: 16, y: 80}
+    - name: SpritesheetContraste_23
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -40, y: 52}
+        - {x: -42, y: 46}
+        - {x: -42, y: 38}
+        - {x: -40, y: 36}
+        - {x: -42, y: 36}
+        - {x: -42, y: 38}
+        - {x: -44, y: 40}
+        - {x: -53, y: 41}
+        - {x: -54, y: 38}
+        - {x: -54, y: 13}
+        - {x: -36, y: 0}
+        - {x: -1, y: 0}
+        - {x: 18, y: 8}
+        - {x: 18, y: 44}
+        - {x: -5, y: 52}
+      - - {x: 46, y: 26}
+        - {x: 46, y: 18}
+        - {x: 48, y: 16}
+        - {x: 54, y: 16}
+        - {x: 54, y: 28}
+        - {x: 48, y: 28}
+      - - {x: 46, y: 38}
+        - {x: 46, y: 30}
+        - {x: 48, y: 28}
+        - {x: 54, y: 28}
+        - {x: 54, y: 40}
+        - {x: 48, y: 40}
+    - name: SpritesheetContraste_24
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 0
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 0, y: 56}
+        - {x: -43, y: 56}
+        - {x: -54, y: 51}
+        - {x: -54, y: -4}
+        - {x: -13, y: -4}
+        - {x: 11, y: 0}
+        - {x: 14, y: 11}
+        - {x: 14, y: 47}
+      - - {x: 46, y: 22}
+        - {x: 46, y: 14}
+        - {x: 48, y: 12}
+        - {x: 54, y: 12}
+        - {x: 54, y: 24}
+        - {x: 48, y: 24}
+      - - {x: 46, y: 34}
+        - {x: 46, y: 26}
+        - {x: 48, y: 24}
+        - {x: 54, y: 24}
+        - {x: 54, y: 36}
+        - {x: 48, y: 36}
+    - name: SpritesheetContraste_25
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 0
+        width: 108
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -54, y: 56}
+        - {x: -54, y: -4}
+        - {x: -12, y: -4}
+        - {x: 14, y: 7}
+        - {x: 14, y: 40}
+        - {x: -12, y: 56}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
