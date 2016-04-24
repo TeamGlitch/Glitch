@@ -31,4 +31,5 @@ sysinfo.txt
 !/[Pp]rojectSettings/TagManager.asset
 !/[Pp]rojectSettings/EditorSettings.asset
 !/[Pp]rojectSettings/ProjectSettings.asset
+!/[Pp]rojectSettings/DynamicsManager.asset
 !/[Pp]rojectSettings/Physics2DSettings.asset
