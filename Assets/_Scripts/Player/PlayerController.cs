@@ -247,6 +247,17 @@ public class PlayerController : MonoBehaviour
                 // To control movement of player
                 Movement(moveDirection);
 				break;
+
+			case player_state.TELEPORTING:
+
+				transform.position = teleport.returnPosition();
+
+				if (teleport.teleportUsed == false) {
+					state = player_state.JUMPING;
+					plAnimation.speed = 1;
+				}
+
+				break;
         }
 
 		//If a player-induced jump is checked but the jump key is not longer
@@ -365,35 +376,15 @@ public class PlayerController : MonoBehaviour
 		if (InputManager.ActiveDevice.Action3.WasPressed && allowMovement
 			&& (!teleport.teleportUsed) && teleport.CheckTeleport(controller))
 		{
-                // We create a coroutine to do a delay in the teleport and the state of player is changed to teleporting
-                StartCoroutine("ActivateTeleport");
-                ActivateTeleport();
-                state = player_state.TELEPORTING;
-                vSpeed = 0;
+                // We set the state to teleporting and determine when it will end
+				state = player_state.TELEPORTING;
+				vSpeed = 0;
+				plAnimation.Play("Glitch_Teleport");
+				plAnimation.speed = 1 / teleport.getDuration();
 
                 return true;
 		}
 		return false;
 	}
-
-    // Function that active teleport. Necessary to Coroutine work
-    IEnumerator ActivateTeleport()
-    {
-		teleport.teleportUsed = true;
-        
-        if (controller.isGrounded)
-        {
-            // Wait for 0.3 seconds
-            yield return new WaitForSeconds(0.3f);
-        }
-        else
-        {
-            // Wait for 0.5 seconds
-            yield return new WaitForSeconds(0.5f);
-        }
-
-		teleport.teleportUsed = teleport.Teleport(controller);
-		state = player_state.JUMPING;
-    }
 
 }
