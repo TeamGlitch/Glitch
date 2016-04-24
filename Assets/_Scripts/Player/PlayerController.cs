@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
 	private bool godMode = false;
 
 	//Player Components
-	public SpriteRenderer spriteRenderer;			//Reference to the sprite renderer
+	private SpriteRenderer spriteRenderer;			//Reference to the sprite renderer
 	private Animator plAnimation;
 	public CharacterController controller;
 	public Rigidbody rigidBody;
@@ -71,7 +71,8 @@ public class PlayerController : MonoBehaviour
 
 	void Start ()
 	{
-		plAnimation = GetComponent<Animator>();
+		spriteRenderer = transform.GetComponentInChildren<SpriteRenderer>();
+		plAnimation = transform.GetComponentInChildren<Animator>();
 
 		zPosition = transform.position.z;
 		state = player_state.IN_GROUND;

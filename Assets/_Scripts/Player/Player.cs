@@ -16,7 +16,7 @@ public class Player : MonoBehaviour {
 
 	// Player element
 	public PlayerController playerController;	//Reference to the player controller
-    public SpriteRenderer sprite;
+    private SpriteRenderer sprite;
 
 	// Prefabs
 	public GameObject glitchPart;				//Reference to a glitch fragment created upon death
@@ -52,6 +52,7 @@ public class Player : MonoBehaviour {
 
 		characterController = GetComponent<CharacterController>();
         trigger = GetComponentInChildren<BoxCollider>();
+		sprite = transform.GetComponentInChildren<SpriteRenderer>();
 
 		glitchPartPool = new ObjectPool(glitchPart);
 		lives = 3;
