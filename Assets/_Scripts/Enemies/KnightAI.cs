@@ -50,6 +50,7 @@ public class KnightAI : MonoBehaviour {
     private Animator animator;
     private float timePerAttack = 0.0f;
     private Vector3 origin;
+    private int layerMask = (~((1 << 13) | (1 << 2))) | (1 << 9);
 
     void Start()
     {
@@ -86,7 +87,7 @@ public class KnightAI : MonoBehaviour {
 
             ray = new Ray(origin, player.transform.position - origin);
             Debug.DrawRay(origin, player.transform.position - origin);
-            if ((Physics.Raycast(ray, out hit)) && hit.collider.gameObject.CompareTag("Player"))
+            if ((Physics.Raycast(ray, out hit, float.PositiveInfinity, layerMask)) && hit.collider.gameObject.CompareTag("Player"))
             {
                 sight = true;
                 speed = chaseSpeed;
@@ -116,7 +117,7 @@ public class KnightAI : MonoBehaviour {
             {
                 // If knight loses sight of player and collides means that is colliding over knight
                 Ray ray = new Ray(transform.position, player.transform.position - transform.position);
-                Physics.Raycast(ray, out hit);
+                Physics.Raycast(ray, out hit, float.PositiveInfinity, layerMask);
 
                 // The ray is from knight to player, then collides down of player (-transform.up = down)
                 if (hit.normal == -transform.up)
@@ -252,7 +253,7 @@ public class KnightAI : MonoBehaviour {
                 ray = new Ray(origin, player.transform.position - origin);
                 Debug.DrawRay(origin, player.transform.position - origin);
 
-                if ((Physics.Raycast(ray, out hit, maxSightSearch)) && (hit.collider.gameObject.CompareTag("Player")))
+                if ((Physics.Raycast(ray, out hit, maxSightSearch, layerMask)) && (hit.collider.gameObject.CompareTag("Player")))
                 {
                     speed = chaseSpeed;
                     states = enemy_states.CHASE;

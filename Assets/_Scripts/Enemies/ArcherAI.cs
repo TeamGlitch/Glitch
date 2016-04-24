@@ -48,6 +48,7 @@ public class ArcherAI : MonoBehaviour {
     private Vector3 origin;
     private Animator animator;
     private float timePerKick = 0.0f;
+    private int layerMask = (~((1 << 13) | (1 << 2))) | (1 << 9);
 
     void OnCollisionEnter(Collision coll)
     {
@@ -68,7 +69,7 @@ public class ArcherAI : MonoBehaviour {
             else
             {
                 Ray ray = new Ray(transform.position, player.transform.position - transform.position);
-                Physics.Raycast(ray, out hit);
+                Physics.Raycast(ray, out hit, float.PositiveInfinity, layerMask);
 
                 // The ray is from archer to player, then collides down of player (-transform.up = down)
                 if (hit.normal == -transform.up)
@@ -96,7 +97,7 @@ public class ArcherAI : MonoBehaviour {
 
             ray = new Ray(origin, player.transform.position - origin);
             //Debug.DrawRay(origin, player.transform.position - origin);
-            if ((Physics.Raycast(ray, out hit) && (sight == false)) && (hit.collider.gameObject.CompareTag("Player")))
+            if ((Physics.Raycast(ray, out hit, float.PositiveInfinity, layerMask) && (sight == false)) && (hit.collider.gameObject.CompareTag("Player")))
             {
                 animator.SetBool("Sighted", true);
                 sight = true;
