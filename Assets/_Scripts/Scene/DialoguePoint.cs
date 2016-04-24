@@ -10,7 +10,7 @@ public class DialoguePoint : MonoBehaviour {
 	private bool used = false;
 
 	void OnTriggerEnter(Collider coll){
-		if((coll.gameObject.name == "Player") && !used)
+		if((coll.gameObject.CompareTag("Player")) && !used)
 		{
 			dialogueScript.callScene(sceneNum);
 			used = true;

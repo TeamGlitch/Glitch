@@ -18,6 +18,8 @@ public class PendulumScript : MonoBehaviour {
 	private float timeInFPS;
 	private bool isFPSActive = false;
 
+	private Transform previousParent;
+
 	// Use this for initialization
 	void Start () {
 		_rotatePosition = transform.position + _rotateOffset;
@@ -31,56 +33,46 @@ public class PendulumScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (isFPSActive)
-		{
-			timeInFPS += Time.deltaTime;
-			if(world.doUpdate)
+		if(world.doUpdate)
+		{			
+			_timeSwinging += world.lag;
+
+			if (_timeSwinging > timeToSwing)
+				_timeSwinging = timeToSwing;
+
+			float angle;
+			float t = _timeSwinging / timeToSwing;
+			t = t*t*t*(t*(6f*t - 15f) +10f);
+			if(movingRight)
+				angle = Mathf.LerpAngle (0.0f, maxAngle, t);
+			else
+				angle = Mathf.LerpAngle (maxAngle, 0.0f, t);
+
+			float moveAngle = angle - _previousAngle;
+			_previousAngle = angle;
+
+			transform.RotateAround(_rotatePosition, rotateVector, moveAngle);
+			if (_timeSwinging >= timeToSwing)
 			{
-				_timeSwinging += timeInFPS / 2.0f;
-				timeInFPS = 0.0f;
+				movingRight = !movingRight;
+				_timeSwinging = 0.0f;
 			}
-		}
-		else
-		{
-			_timeSwinging += Time.deltaTime;
-		}
-		if (_timeSwinging > timeToSwing)
-			_timeSwinging = timeToSwing;
-
-		float angle;
-		float t = _timeSwinging / timeToSwing;
-		t = t*t*t*(t*(6f*t - 15f) +10f);
-		if(movingRight)
-			angle = Mathf.LerpAngle (0.0f, maxAngle, t);
-		else
-			angle = Mathf.LerpAngle (maxAngle, 0.0f, t);
-
-		float moveAngle = angle - _previousAngle;
-		_previousAngle = angle;
-
-		transform.RotateAround(_rotatePosition, rotateVector, moveAngle);
-		if (_timeSwinging >= timeToSwing)
-		{
-			movingRight = !movingRight;
-			_timeSwinging = 0.0f;
 		}
 	}
 
 	void OnTriggerEnter (Collider collision)
 	{
-		if (collision.gameObject.tag == "Player")
+		if (collision.gameObject.CompareTag("Player"))
 		{
-			collision.gameObject.transform.rotation = transform.rotation;
-			collision.gameObject.transform.parent = transform;
-
+			collision.gameObject.transform.parent.parent = transform;
 		}
 	}
 
 	void OnTriggerExit (Collider collision)
 	{
-		if (collision.gameObject.tag == "Player")
+		if (collision.gameObject.CompareTag("Player"))
 		{
-			collision.gameObject.transform.parent = null;
+			collision.gameObject.transform.parent.parent = null;
 		}
 	}
 

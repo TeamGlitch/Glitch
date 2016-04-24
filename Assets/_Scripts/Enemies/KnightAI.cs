@@ -50,6 +50,7 @@ public class KnightAI : MonoBehaviour {
     private Animator animator;
     private float timePerAttack = 0.0f;
     private Vector3 origin;
+    private int layerMask = (~((1 << 13) | (1 << 2))) | (1 << 9);
 
     void Start()
     {
@@ -86,7 +87,7 @@ public class KnightAI : MonoBehaviour {
 
             ray = new Ray(origin, player.transform.position - origin);
             Debug.DrawRay(origin, player.transform.position - origin);
-            if ((Physics.Raycast(ray, out hit)) && hit.collider.gameObject.CompareTag("Player"))
+            if ((Physics.Raycast(ray, out hit, float.PositiveInfinity, layerMask)) && hit.collider.gameObject.CompareTag("Player"))
             {
                 sight = true;
                 speed = chaseSpeed;
@@ -206,7 +207,7 @@ public class KnightAI : MonoBehaviour {
                 ray = new Ray(origin, player.transform.position - origin);
                 Debug.DrawRay(origin, player.transform.position - origin);
 
-                if ((Physics.Raycast(ray, out hit, maxSightSearch)) && (hit.collider.gameObject.CompareTag("Player")))
+                if ((Physics.Raycast(ray, out hit, maxSightSearch, layerMask)) && (hit.collider.gameObject.CompareTag("Player")))
                 {
                     speed = chaseSpeed;
                     states = enemy_states.CHASE;

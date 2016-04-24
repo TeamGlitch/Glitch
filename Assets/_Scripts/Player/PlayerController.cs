@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
         }
 		*/
 		if ((controller.collisionFlags & CollisionFlags.Above) != 0) {
-			vSpeed = -7;
+			vSpeed = -0;
 			startJumpPress = -1;
 		}
     }
@@ -148,6 +148,11 @@ public class PlayerController : MonoBehaviour
 				{
 					teleport.teleportUsed = false;
 
+					if(transform.parent != null)
+					{	
+						transform.rotation = transform.parent.rotation;
+					} 
+			
 					//If the jump key is being pressed but it has been released since the
 					//last jump
 					if (InputManager.ActiveDevice.Action1.IsPressed && allowMovement && !playerActivedJump) 

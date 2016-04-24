@@ -49,7 +49,7 @@ public class ArcherAI : MonoBehaviour {
     private Vector3 origin;
     private Animator animator;
     private float timePerKick = 0.0f;
-
+    private int layerMask = (~((1 << 13) | (1 << 2))) | (1 << 9);
 
     // Trigger that detect player and change the state to Shoot
     void OnTriggerStay(Collider coll)
@@ -62,7 +62,7 @@ public class ArcherAI : MonoBehaviour {
 
             ray = new Ray(origin, player.transform.position - origin);
             //Debug.DrawRay(origin, player.transform.position - origin);
-            if ((Physics.Raycast(ray, out hit) && (sight == false)) && (hit.collider.gameObject.CompareTag("Player")))
+            if ((Physics.Raycast(ray, out hit, float.PositiveInfinity, layerMask) && (sight == false)) && (hit.collider.gameObject.CompareTag("Player")))
             {
                 animator.SetBool("Sighted", true);
                 sight = true;
