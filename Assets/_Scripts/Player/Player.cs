@@ -235,13 +235,6 @@ public class Player : MonoBehaviour {
     public void ReactToAttack(float enemyX)
     {
         // To impulse player from enemy
-        if (enemyX > transform.position.x)
-        {
-            transform.Translate(-5.0f, 0.0f, 0.0f);
-        }
-        else
-        {
-            transform.Translate(5.0f, 0.0f, 0.0f);
-        }
+        playerController.vSpeed = 20;
     }
 }

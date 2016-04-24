@@ -3,7 +3,7 @@ using System.Collections;
 
 public class KnightAI : MonoBehaviour {
 
-    enum enemy_states
+    public enum enemy_states
     {
         WAIT,
         PATROL,
@@ -36,10 +36,10 @@ public class KnightAI : MonoBehaviour {
     public BoxCollider fieldOfView;
     public Rigidbody rigid;
     public BoxCollider swordCollider;
+    public enemy_states states = enemy_states.PATROL;
 
     private Transform playerPos;
     private Vector3 lastPosition;
-    private enemy_states states = enemy_states.PATROL;
     private Ray ray;
     private RaycastHit hit;
     private float time;
@@ -92,52 +92,6 @@ public class KnightAI : MonoBehaviour {
                 speed = chaseSpeed;
                 lastPosition = transform.position;      // We save the point in the patrol to return later
                 states = enemy_states.CHASE;
-            }
-        }
-    }
-
-    void OnCollisionEnter(Collision coll)
-    {
-        if (coll.gameObject.CompareTag("Player"))
-        {
-            // If is attacking a collison hurts player
-            if (states == enemy_states.ATTACK)
-            {
-                player.DecrementLives(damageAttack);
-                
-                // To impulse player from enemy
-                player.ReactToAttack(transform.position.x);
-
-                animator.SetBool("Near", false);
-                speed = searchSpeed;
-                states = enemy_states.SEARCH;
-            }
-            else
-            {
-                // If knight loses sight of player and collides means that is colliding over knight
-                Ray ray = new Ray(transform.position, player.transform.position - transform.position);
-                Physics.Raycast(ray, out hit);
-
-                // The ray is from knight to player, then collides down of player (-transform.up = down)
-                if (hit.normal == -transform.up)
-                {
-                    animator.SetBool("Near", true);
-                    speed = attackSpeed;
-                    states = enemy_states.ATTACK;
-                    --lives;
-
-                    // To impulse player from enemy
-                    player.ReactToAttack(transform.position.x-5);
-                    if (lives == 0)
-                    {
-                        states = enemy_states.DEATH;
-                        rigid.isKinematic = true;
-                        collider.enabled = false;
-                        swordCollider.enabled = false;
-                        fieldOfView.enabled = false;
-                        animator.SetBool("Near", false);
-                    }
-                }
             }
         }
     }
@@ -311,5 +265,36 @@ public class KnightAI : MonoBehaviour {
     public void DeadRandomTrigger()
     {
         animator.SetInteger("DeadRandom", Random.Range(0, 3));
+    }
+
+    public void Attacked()
+    {
+        animator.SetBool("Near", true);
+        speed = attackSpeed;
+        states = enemy_states.ATTACK;
+        --lives;
+
+        if (lives == 0)
+        {
+            states = enemy_states.DEATH;
+            rigid.isKinematic = true;
+            collider.enabled = false;
+            swordCollider.enabled = false;
+            fieldOfView.enabled = false;
+            animator.SetBool("Near", false);
+        }
+        else
+        {
+            // To impulse player from enemy
+            player.ReactToAttack(transform.position.x);
+        }
+    }
+
+    public void Attack()
+    {
+        player.DecrementLives(damageAttack);
+        animator.SetBool("Near", false);
+        speed = searchSpeed;
+        states = enemy_states.SEARCH;
     }
 }

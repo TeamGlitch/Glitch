@@ -3,7 +3,7 @@ using System.Collections;
 
 public class ArcherAI : MonoBehaviour {
 
-	enum enemy_states
+	public enum enemy_states
     {
         WAIT,
         SHOOT,
@@ -24,6 +24,7 @@ public class ArcherAI : MonoBehaviour {
     private const float shootSpeed = 6.0f;
 
     // Variables
+    public enemy_states states = enemy_states.WAIT;
     public bool sight = false;
     public float speed = 0.0f;
     public Player player;
@@ -34,11 +35,11 @@ public class ArcherAI : MonoBehaviour {
     public Rigidbody rigid;
     public BoxCollider fieldOfView;
     public BoxCollider kickCollider;
+    public SphereCollider killCollider;
 
     private ObjectPool arrowPool;			//Arrows pool
     private ArrowScript arrowLogic;
     private Vector3 initialPosition;
-    private enemy_states states = enemy_states.WAIT;
     private Ray ray;
     private RaycastHit hit;
     private float rotationTime = 0.0f;
@@ -49,41 +50,6 @@ public class ArcherAI : MonoBehaviour {
     private Animator animator;
     private float timePerKick = 0.0f;
 
-    void OnCollisionEnter(Collision coll)
-    {
-        if ((states != enemy_states.DEATH) && (coll.gameObject.CompareTag("Player")))
-        {
-            // If is attacking hurts player
-            if (states == enemy_states.MELEE_ATTACK)
-            {
-                player.DecrementLives(meleeDamage);
-                animator.SetBool("Near", false);
-                animator.SetBool("Sighted", false);
-                sight = false;
-                states = enemy_states.WAIT;
-
-                // To impulse player from enemy
-                player.ReactToAttack(transform.position.x);
-            }
-            else
-            {
-                Ray ray = new Ray(transform.position, player.transform.position - transform.position);
-                Physics.Raycast(ray, out hit);
-
-                // The ray is from archer to player, then collides down of player (-transform.up = down)
-                if (hit.normal == -transform.up)
-                {
-                    animator.SetBool("Dead", true);
-                    animator.SetBool("Near", false);
-                    rigid.isKinematic = true;
-                    collider.enabled = false;
-                    kickCollider.enabled = false;
-                    fieldOfView.enabled = false;
-                    states = enemy_states.DEATH;
-                }
-            }
-        }
-    }
 
     // Trigger that detect player and change the state to Shoot
     void OnTriggerStay(Collider coll)
@@ -295,5 +261,26 @@ public class ArcherAI : MonoBehaviour {
     {
         animator.SetBool("Near", false);
         timePerKick = 3.0f;
+    }
+
+    public void Kick()
+    {
+        player.DecrementLives(meleeDamage);
+        animator.SetBool("Near", false);
+        animator.SetBool("Sighted", false);
+        sight = false;
+        states = enemy_states.WAIT;
+    }
+
+    public void Defeated()
+    {
+        animator.SetBool("Dead", true);
+        animator.SetBool("Near", false);
+        rigid.isKinematic = true;
+        collider.enabled = false;
+        kickCollider.enabled = false;
+        fieldOfView.enabled = false;
+        killCollider.enabled = false;
+        states = enemy_states.DEATH;
     }
 }
