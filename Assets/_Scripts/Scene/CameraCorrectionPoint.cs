@@ -40,9 +40,8 @@ public class CameraCorrectionPoint : MonoBehaviour {
 	}
 		
 	void OnTriggerEnter(Collider coll){
-
 		//If the player has gone trought the collider and is exiting...
-		if (coll.gameObject.name == "Player") {
+		if (coll.gameObject.CompareTag("Player")) {
 			//Get the main camera controller
 			MainCamera controller = Camera.main.GetComponent<MainCamera> ();
 

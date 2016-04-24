@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
         }
 		*/
 		if ((controller.collisionFlags & CollisionFlags.Above) != 0) {
-			vSpeed = -7;
+			vSpeed = -0;
 			startJumpPress = -1;
 		}
     }

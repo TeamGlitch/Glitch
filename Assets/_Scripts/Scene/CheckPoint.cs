@@ -28,7 +28,7 @@ public class CheckPoint : MonoBehaviour {
 	void OnTriggerEnter(Collider coll){
 		
 		//If there's a collision with the player
-		if((coll.gameObject.name == "Player") && !active)
+		if((coll.gameObject.CompareTag("Player")) && !active)
         {
 			//Sets this point as the checkpoint
 			setThisAsCheckPoint(coll.gameObject);

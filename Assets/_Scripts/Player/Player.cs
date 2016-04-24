@@ -76,11 +76,10 @@ public class Player : MonoBehaviour {
 
     void Start()
     {
-        characterController.detectCollisions = false;
+        //characterController.detectCollisions = false;
     }
 
 	void OnTriggerEnter(Collider coll){
-
 		//If there's a collision with some lethal thing in scene
 		if(coll.gameObject.CompareTag("Death"))
         {
@@ -132,7 +131,7 @@ public class Player : MonoBehaviour {
 		playerController.allowMovement = true;
 		sprite.enabled = true;
         trigger.enabled = true;
-		characterController.detectCollisions = true;
+//		characterController.detectCollisions = true;
 		playerController.state = PlayerController.player_state.JUMPING;
 		transform.position = lastCheckPoint.gameObject.transform.position;
 	}
