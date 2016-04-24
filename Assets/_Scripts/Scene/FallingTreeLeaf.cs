@@ -22,7 +22,7 @@ public class FallingTreeLeaf : MonoBehaviour {
 		if (colliderTouched && (timeSinceColliderTouched > timeBeforeFall)) {
 			rb.isKinematic = false;
 		}
-		if(colliderTouched && (timeSinceColliderTouched > (timeBeforeFall+2.0f)))
+		if(colliderTouched && (timeSinceColliderTouched > (timeBeforeFall+10.0f)))
 		{
 			colliderTouched = false;
 			rb.isKinematic = true;

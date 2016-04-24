@@ -265,7 +265,169 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: rebote
+      takeName: rebote
+      firstFrame: 1
+      lastFrame: 16
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: 1
+        functionName: EndAnimation
+        data: 
+        objectReferenceParameter: {fileID: 100112, guid: f29919a5ffa4ab546909d646a2c32c48,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      transformMask:
+      - path: 
+        weight: 1
+      - path: group1
+        weight: 1
+      - path: group1/alcachofa_1:Group2
+        weight: 1
+      - path: group1/alcachofa_1:Group3
+        weight: 1
+      - path: group1/alcachofa_1:Group4
+        weight: 1
+      - path: group1/alcachofa_1:Group5
+        weight: 1
+      - path: group1/alcachofa_1:Group6
+        weight: 1
+      - path: group1/alcachofa_1:Group7
+        weight: 1
+      - path: group1/alcachofa_1:Group8
+        weight: 1
+      - path: group1/alcachofa_1:Group9
+        weight: 1
+      - path: group1/alcachofa_1:Group10
+        weight: 1
+      - path: group1/alcachofa_1:Group11
+        weight: 1
+      - path: group1/alcachofa_1:Group12
+        weight: 1
+      - path: group1/alcachofa_1:Group13
+        weight: 1
+      - path: group1/alcachofa_1:Group14
+        weight: 1
+      - path: group1/alcachofa_1:Group15
+        weight: 1
+      - path: group1/alcachofa_1:Group16
+        weight: 1
+      - path: group1/alcachofa_1:Group17
+        weight: 1
+      - path: group1/alcachofa_1:Group18
+        weight: 1
+      - path: group1/alcachofa_1:Group19
+        weight: 1
+      - path: group1/alcachofa_1:Group20
+        weight: 1
+      - path: group1/alcachofa_1:Group21
+        weight: 1
+      - path: group1/alcachofa_1:Group22
+        weight: 1
+      - path: group1/alcachofa_1:Group23
+        weight: 1
+      - path: group1/alcachofa_1:Group24
+        weight: 1
+      - path: group1/alcachofa_1:Group25
+        weight: 1
+      - path: group1/alcachofa_1:Group26
+        weight: 1
+      - path: group1/alcachofa_1:Group27
+        weight: 1
+      - path: group1/alcachofa_1:Group28
+        weight: 1
+      - path: group1/alcachofa_1:Group29
+        weight: 1
+      - path: group1/alcachofa_1:Group30
+        weight: 1
+      - path: group1/alcachofa_1:Group31
+        weight: 1
+      - path: group1/alcachofa_1:Group32
+        weight: 1
+      - path: group1/alcachofa_1:Group33
+        weight: 1
+      - path: group1/alcachofa_1:Group34
+        weight: 1
+      - path: group1/alcachofa_1:Group35
+        weight: 1
+      - path: group1/alcachofa_1:Group36
+        weight: 1
+      - path: group1/alcachofa_1:Group37
+        weight: 1
+      - path: group1/alcachofa_1:Group38
+        weight: 1
+      - path: group1/alcachofa_1:Group39
+        weight: 1
+      - path: group1/alcachofa_1:Group40
+        weight: 1
+      - path: group1/alcachofa_1:Group41
+        weight: 1
+      - path: group1/alcachofa_1:Group42
+        weight: 1
+      - path: group1/alcachofa_1:Group43
+        weight: 1
+      - path: group1/alcachofa_1:Group44
+        weight: 1
+      - path: group1/alcachofa_1:Group45
+        weight: 1
+      - path: group1/alcachofa_1:Group46
+        weight: 1
+      - path: group1/alcachofa_1:Group47
+        weight: 1
+      - path: group1/alcachofa_1:Group48
+        weight: 1
+      - path: group1/alcachofa_1:Group49
+        weight: 1
+      - path: group1/alcachofa_1:Group50
+        weight: 1
+      - path: group1/alcachofa_1:Group51
+        weight: 1
+      - path: group1/alcachofa_1:Group52
+        weight: 1
+      - path: group1/alcachofa_1:Group53
+        weight: 1
+      - path: group1/alcachofa_1:Group54
+        weight: 1
+      - path: group1/alcachofa_1:Group55
+        weight: 1
+      - path: group1/alcachofa_1:Group56
+        weight: 1
+      - path: group1/alcachofa_1:Group57
+        weight: 1
+      - path: group2
+        weight: 1
+      - path: group3
+        weight: 1
+      - path: squash1Handle
+        weight: 1
+      - path: squash2Handle
+        weight: 1
+      - path: squash3Handle
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 1
     isReadable: 1
   meshes:
     lODScreenPercentages: []

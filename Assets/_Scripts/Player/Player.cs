@@ -76,7 +76,7 @@ public class Player : MonoBehaviour {
 
     void Start()
     {
-        //characterController.detectCollisions = false;
+        characterController.detectCollisions = false;
     }
 
 	void OnTriggerEnter(Collider coll){
