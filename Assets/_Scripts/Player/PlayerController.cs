@@ -30,6 +30,11 @@ public class PlayerController : MonoBehaviour
 	public CharacterController controller;
 	public Rigidbody rigidBody;
 
+	//Particles
+	private ParticleSystem glitchParticles;
+	private ParticleSystem dustParticles;
+	private ParticleSystem jumpParticles;
+
 	//External references
 	public Camera mainCamera;
 	public Camera godCamera;
@@ -73,6 +78,11 @@ public class PlayerController : MonoBehaviour
 	{
 		spriteRenderer = transform.GetComponentInChildren<SpriteRenderer>();
 		plAnimation = transform.GetComponentInChildren<Animator>();
+
+		glitchParticles = transform.FindChild("GlitchParticles").gameObject.GetComponent<ParticleSystem>();
+		jumpParticles = transform.FindChild("JumpParticles").gameObject.GetComponent<ParticleSystem>();
+		dustParticles = transform.FindChild("DustParticles").gameObject.GetComponent<ParticleSystem>();
+		dustParticles.Stop();
 
 		zPosition = transform.position.z;
 		state = player_state.IN_GROUND;
@@ -124,6 +134,7 @@ public class PlayerController : MonoBehaviour
 					state = player_state.JUMPING;
 					plAnimation.SetBool ("Jump", true);	
 					plAnimation.SetBool ("Run", false);
+					jumpParticles.Play();
 				}
 
                 // To control movement of player
@@ -250,9 +261,11 @@ public class PlayerController : MonoBehaviour
 
 			case player_state.TELEPORTING:
 
-				transform.position = teleport.returnPosition();
+				Vector3 position;
+				bool ended = teleport.movePosition(out position);
+				transform.position = position;
 
-				if (teleport.teleportUsed == false) {
+				if (ended) {
 					state = player_state.JUMPING;
 					plAnimation.speed = 1;
 				}
@@ -335,9 +348,29 @@ public class PlayerController : MonoBehaviour
 
 			// Flips the sprite renderer if is changing direction
 			if ((moveDirection.x > 0) && (spriteRenderer.flipX == true)) {
+				
 				spriteRenderer.flipX = false;
+
+				Vector3 dustPosition = dustParticles.gameObject.transform.localPosition;
+				dustPosition.x *= -1;
+				dustParticles.gameObject.transform.localPosition = dustPosition;
+
+				Quaternion dustRotation = dustParticles.gameObject.transform.localRotation;
+				dustRotation.y *= -1;
+				dustParticles.gameObject.transform.localRotation = dustRotation;
+
 			} else if ((moveDirection.x < 0) && (spriteRenderer.flipX == false)) {
+				
 				spriteRenderer.flipX = true;
+
+				Vector3 dustPosition = dustParticles.gameObject.transform.localPosition;
+				dustPosition.x *= -1;
+				dustParticles.gameObject.transform.localPosition = dustPosition;
+
+				Quaternion dustRotation = dustParticles.gameObject.transform.localRotation;
+				dustRotation.y *= -1;
+				dustParticles.gameObject.transform.localRotation = dustRotation;
+
 			}
 
 		} else {
@@ -359,15 +392,21 @@ public class PlayerController : MonoBehaviour
  		//character has been non-grounded, so the idle/falling animation doesn't
  		//play on minor falls and slopes.
  		//TODO: Maybe change to time?
- 		if ((state == player_state.IN_GROUND) || (nonGroundedFrames < 3)) 
-		{
-			if(moveDirection.x != 0){
-				if (plAnimation.GetBool("Run") == false) {
-					plAnimation.SetBool("Run", true);
-				}
-			} else if(plAnimation.GetBool("Run") == true){
-				plAnimation.SetBool("Run",false);
+		if ((state == player_state.IN_GROUND || nonGroundedFrames < 3) && moveDirection.x != 0){
+			if (plAnimation.GetBool("Run") == false) {
+				plAnimation.SetBool("Run", true);
 			}
+		} else if(plAnimation.GetBool("Run") == true){
+			plAnimation.SetBool("Run",false);
+		}
+
+		//Plays the dust particle effect
+		if (state == player_state.IN_GROUND && moveDirection.x != 0) {
+			if (dustParticles.isStopped) {
+				dustParticles.Play();
+			}
+		} else if (dustParticles.isPlaying) {
+			dustParticles.Stop();
 		}
     }
 
@@ -381,10 +420,15 @@ public class PlayerController : MonoBehaviour
 				vSpeed = 0;
 				plAnimation.Play("Glitch_Teleport");
 				plAnimation.speed = 1 / teleport.getDuration();
+				doGlitchParticles();
 
                 return true;
 		}
 		return false;
+	}
+
+	public void doGlitchParticles(){
+		glitchParticles.Play();
 	}
 
 }

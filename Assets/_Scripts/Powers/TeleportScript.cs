@@ -13,17 +13,19 @@ public class TeleportScript : MonoBehaviour {
 	private float initialTime;
 	private float endTime;
 
-	public Vector3 returnPosition(){
+	public bool movePosition(out Vector3 position){
 
 		float timePassed = (Time.time - initialTime) / getDuration();
+		bool ended = false;
 
 		if (timePassed >= 1) {
 			timePassed = 1;
-			teleportUsed = false;
+			ended = true;
 		}
 
-		return Vector3.Lerp(initialPos, endPos, timePassed);
+		position = Vector3.Lerp(initialPos, endPos, timePassed);
 
+		return ended;
 	}
 
 	//Checks if it can teleport to the given position
