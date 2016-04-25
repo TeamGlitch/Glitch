@@ -9,6 +9,10 @@ public class SpikeTrapScript : MonoBehaviour
 	public float lerpTime = 1.0f;
 	public Vector3 moveDistance = new Vector3 (0f, 1.5f, 0f);
 
+	public GameObject leaves;
+	public ParticleSystem leavesParticle;
+	bool leavesJumped = false;
+
 	Vector3 startPosition;
 	Vector3 endPosition;
 	float currentLerpTime;
@@ -53,6 +57,10 @@ public class SpikeTrapScript : MonoBehaviour
 			else if (activated)
 			{
 				timeWhenActivated += world.lag;
+				if (timeWhenActivated > 0.5f && !leavesJumped) {
+					leaves.SetActive(false);
+					leavesJumped = true;
+				}
 			}
 			else if (deactivated && (timeWhenDeactivated > timeTrapWaitsInDeactivation))
 			{
@@ -80,6 +88,9 @@ public class SpikeTrapScript : MonoBehaviour
 		timeWhenActivated = 0.0f;
 		currentLerpTime = 0.0f;
 		activated = true;
+		if (!leavesJumped) {
+			leavesParticle.Play();
+		}
 	}
 
 	void OnTriggerExit (Collider other)
