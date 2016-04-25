@@ -10,7 +10,8 @@ public class ArcherAI : MonoBehaviour {
         MELEE_ATTACK,
         CHASE,
         TURN,
-        DEATH
+        DEATH,
+        HITTED
     }
 
     // Constants
@@ -62,7 +63,7 @@ public class ArcherAI : MonoBehaviour {
 
             ray = new Ray(origin, player.transform.position - origin);
             //Debug.DrawRay(origin, player.transform.position - origin);
-            if ((Physics.Raycast(ray, out hit, float.PositiveInfinity, layerMask) && (sight == false)) && (hit.collider.gameObject.CompareTag("Player")))
+            if ((Physics.Raycast(ray, out hit, float.PositiveInfinity, layerMask) && (sight == false)) && (hit.collider.gameObject.CompareTag("Player")) && (states != enemy_states.HITTED))
             {
                 animator.SetBool("Sighted", true);
                 sight = true;
@@ -200,6 +201,10 @@ public class ArcherAI : MonoBehaviour {
                         }
 
                         break;
+
+                    case enemy_states.HITTED:
+                        // State to put particles or something
+                        break;
                 }
             }
         }
@@ -263,6 +268,13 @@ public class ArcherAI : MonoBehaviour {
         timePerKick = 3.0f;
     }
 
+    public void HittedTrigger()
+    {
+        animator.SetBool("Hit", false);
+        states = enemy_states.DEATH;
+        animator.SetBool("Dead", true);
+    }
+
     public void Kick()
     {
         player.DecrementLives(meleeDamage);
@@ -274,13 +286,16 @@ public class ArcherAI : MonoBehaviour {
 
     public void Defeated()
     {
-        animator.SetBool("Dead", true);
+        // To impulse player from enemy
+        player.ReactToAttack(transform.position.x);
+
+        states = enemy_states.HITTED;
+        animator.SetBool("Hit", true);
         animator.SetBool("Near", false);
         rigid.isKinematic = true;
         collider.enabled = false;
         kickCollider.enabled = false;
         fieldOfView.enabled = false;
         killCollider.enabled = false;
-        states = enemy_states.DEATH;
     }
 }

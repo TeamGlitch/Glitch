@@ -11,7 +11,8 @@ public class KnightAI : MonoBehaviour {
         ATTACK,
         SEARCH,
         DEATH,
-        RETURNING
+        RETURNING,
+        HITTED
     }
 
     // Constants
@@ -50,7 +51,7 @@ public class KnightAI : MonoBehaviour {
     private Animator animator;
     private float timePerAttack = 0.0f;
     private Vector3 origin;
-    private int layerMask = (~((1 << 13) | (1 << 2))) | (1 << 9);
+    private int layerMask = (~((1 << 13) | (1 << 2))) | (1 << 9) | (1 << 0);
 
     void Start()
     {
@@ -80,7 +81,7 @@ public class KnightAI : MonoBehaviour {
     {
         // if the enemy hasn't seen Glitch he patrols and if he detects him with the raycast
         // then changes his state to Chase and changes his speed too.
-        if ((sight == false) && coll.gameObject.CompareTag("Player"))
+        if ((sight == false) && coll.gameObject.CompareTag("Player") && (states != enemy_states.HITTED))
         {
             origin = transform.position;
             origin.y += transform.localScale.y * 0.75f;
@@ -157,6 +158,7 @@ public class KnightAI : MonoBehaviour {
                 if (Vector3.Distance(playerPos.position, transform.position) > maxSightChase)
                 {
                     speed = searchSpeed;
+                    sight = false;
                     states = enemy_states.SEARCH;
                     time = searchingTime;
                 }
@@ -184,6 +186,7 @@ public class KnightAI : MonoBehaviour {
                 {
                     animator.SetBool("Near", false);
                     speed = searchSpeed;
+                    sight = false;
                     states = enemy_states.SEARCH;
                     time = searchingTime;
                 }
@@ -207,11 +210,12 @@ public class KnightAI : MonoBehaviour {
                 ray = new Ray(origin, player.transform.position - origin);
                 Debug.DrawRay(origin, player.transform.position - origin);
 
-                if ((Physics.Raycast(ray, out hit, maxSightSearch, layerMask)) && (hit.collider.gameObject.CompareTag("Player")))
+                if ((Physics.Raycast(ray, out hit, maxSightSearch, layerMask)) && (hit.collider.gameObject.CompareTag("Player")) && (sight == true))
                 {
                     speed = chaseSpeed;
+                    returning = false;
+                    animator.SetBool("Returning", false);
                     states = enemy_states.CHASE;
-
                 }
 
                 // If is returning enemy, advances to last patrol point 
@@ -260,6 +264,9 @@ public class KnightAI : MonoBehaviour {
                 }
                 break;
 
+            case enemy_states.HITTED:
+                // State to put particles or something
+                break;
         }
     }
 
@@ -268,14 +275,19 @@ public class KnightAI : MonoBehaviour {
         animator.SetInteger("DeadRandom", Random.Range(0, 3));
     }
 
+    public void HittedTrigger()
+    {
+        states = enemy_states.ATTACK;
+    }
+
     public void Attacked()
     {
         animator.SetBool("Near", true);
         speed = attackSpeed;
-        states = enemy_states.ATTACK;
+        states = enemy_states.HITTED;
         --lives;
 
-        if (lives == 0)
+        if (lives <= 0)
         {
             states = enemy_states.DEATH;
             rigid.isKinematic = true;
@@ -284,11 +296,9 @@ public class KnightAI : MonoBehaviour {
             fieldOfView.enabled = false;
             animator.SetBool("Near", false);
         }
-        else
-        {
-            // To impulse player from enemy
-            player.ReactToAttack(transform.position.x);
-        }
+
+        // To impulse player from enemy
+        player.ReactToAttack(transform.position.x);
     }
 
     public void Attack()
@@ -296,6 +306,7 @@ public class KnightAI : MonoBehaviour {
         player.DecrementLives(damageAttack);
         animator.SetBool("Near", false);
         speed = searchSpeed;
+        time = searchingTime;
         states = enemy_states.SEARCH;
     }
 }
