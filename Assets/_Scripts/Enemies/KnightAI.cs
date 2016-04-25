@@ -53,6 +53,7 @@ public class KnightAI : MonoBehaviour {
     private float timePerAttack = 0.0f;
     private Vector3 origin;
     private int layerMask = (~((1 << 13) | (1 << 2))) | (1 << 9) | (1 << 0);
+    private bool inLimit = false;
 
     void Start()
     {
@@ -63,33 +64,33 @@ public class KnightAI : MonoBehaviour {
     // Trigger that detect collisions with patrol points and limit points
     void OnTriggerEnter(Collider coll)
     {
+        // Only detect collisions with patrol points when enemy is patrolling
+        if ((coll.gameObject.CompareTag("PatrolPoint")) && (states == enemy_states.PATROL))
+        {
+            states = enemy_states.WAIT;
+            time = waitTime;
+        }
+        // If is in a limit he stops and search glitch
+        else if (coll.gameObject.CompareTag("LimitPoint"))
+        {
+            speed = searchSpeed;
+            states = enemy_states.SEARCH;
+            time = searchingTime;
+            inLimit = true;
+        }
     }
 
     void OnTriggerStay(Collider coll)
     {
-		// Only detect collisions with patrol points when enemy is patrolling
-		if ((coll.gameObject.CompareTag("PatrolPoint")) && (states == enemy_states.PATROL))
-		{
-			states = enemy_states.WAIT;
-			time = waitTime;
-		}
-		// If is in a limit he stops and search glitch
-		else if (coll.gameObject.CompareTag("LimitPoint"))
-		{
-			speed = searchSpeed;
-			states = enemy_states.SEARCH;
-			time = searchingTime;
-		}
-
         // if the enemy hasn't seen Glitch he patrols and if he detects him with the raycast
         // then changes his state to Chase and changes his speed too.
-        else if ((sight == false) && coll.gameObject.CompareTag("Player") && (states != enemy_states.HITTED))
+        if ((sight == false) && coll.gameObject.CompareTag("Player") && (states != enemy_states.HITTED) && (inLimit == false))
         {
             origin = transform.position;
             origin.y += transform.localScale.y * 0.75f;
 
             ray = new Ray(origin, player.transform.position - origin);
-            Debug.DrawRay(origin, player.transform.position - origin);
+            //Debug.DrawRay(origin, player.transform.position - origin);
             if ((Physics.Raycast(ray, out hit, float.PositiveInfinity, layerMask)) && hit.collider.gameObject.CompareTag("Player"))
             {
                 sight = true;
@@ -100,11 +101,18 @@ public class KnightAI : MonoBehaviour {
         }
     }
 
+    void OnTriggerExit(Collider coll)
+    {
+        if (coll.gameObject.CompareTag("LimitPoint")){
+            inLimit = false;
+        }
+    }
+
     void Update()
     {
-        animator.SetInteger("State", (int)states);
         if (world.doUpdate)
         {
+            animator.SetInteger("State", (int)states);
             switch (states)
             {
                 case enemy_states.WAIT:
@@ -211,9 +219,9 @@ public class KnightAI : MonoBehaviour {
                     origin.y += transform.localScale.y * 0.75f;
 
                     ray = new Ray(origin, player.transform.position - origin);
-                    Debug.DrawRay(origin, player.transform.position - origin);
+                    //Debug.DrawRay(origin, player.transform.position - origin);
 
-                    if ((Physics.Raycast(ray, out hit, maxSightSearch, layerMask)) && (hit.collider.gameObject.CompareTag("Player")) && (sight == true))
+                    if ((Physics.Raycast(ray, out hit, maxSightSearch, layerMask)) && (hit.collider.gameObject.CompareTag("Player")) && (sight == true) && (inLimit == false))
                     {
                         speed = chaseSpeed;
                         returning = false;
