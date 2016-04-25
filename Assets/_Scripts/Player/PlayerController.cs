@@ -25,10 +25,15 @@ public class PlayerController : MonoBehaviour
 	private bool godMode = false;
 
 	//Player Components
-	public SpriteRenderer spriteRenderer;			//Reference to the sprite renderer
+	private SpriteRenderer spriteRenderer;			//Reference to the sprite renderer
 	private Animator plAnimation;
 	public CharacterController controller;
 	public Rigidbody rigidBody;
+
+	//Particles
+	private ParticleSystem glitchParticles;
+	private ParticleSystem dustParticles;
+	private ParticleSystem jumpParticles;
 
 	//External references
 	public Camera mainCamera;
@@ -71,7 +76,13 @@ public class PlayerController : MonoBehaviour
 
 	void Start ()
 	{
-		plAnimation = GetComponent<Animator>();
+		spriteRenderer = transform.GetComponentInChildren<SpriteRenderer>();
+		plAnimation = transform.GetComponentInChildren<Animator>();
+
+		glitchParticles = transform.FindChild("GlitchParticles").gameObject.GetComponent<ParticleSystem>();
+		jumpParticles = transform.FindChild("JumpParticles").gameObject.GetComponent<ParticleSystem>();
+		dustParticles = transform.FindChild("DustParticles").gameObject.GetComponent<ParticleSystem>();
+		dustParticles.Stop();
 
 		zPosition = transform.position.z;
 		state = player_state.IN_GROUND;
@@ -123,6 +134,7 @@ public class PlayerController : MonoBehaviour
 					state = player_state.JUMPING;
 					plAnimation.SetBool ("Jump", true);	
 					plAnimation.SetBool ("Run", false);
+					jumpParticles.Play();
 				}
 
                 // To control movement of player
@@ -246,6 +258,19 @@ public class PlayerController : MonoBehaviour
                 // To control movement of player
                 Movement(moveDirection);
 				break;
+
+			case player_state.TELEPORTING:
+
+				Vector3 position;
+				bool ended = teleport.movePosition(out position);
+				transform.position = position;
+
+				if (ended) {
+					state = player_state.JUMPING;
+					plAnimation.speed = 1;
+				}
+
+				break;
         }
 
 		//If a player-induced jump is checked but the jump key is not longer
@@ -323,9 +348,29 @@ public class PlayerController : MonoBehaviour
 
 			// Flips the sprite renderer if is changing direction
 			if ((moveDirection.x > 0) && (spriteRenderer.flipX == true)) {
+				
 				spriteRenderer.flipX = false;
+
+				Vector3 dustPosition = dustParticles.gameObject.transform.localPosition;
+				dustPosition.x *= -1;
+				dustParticles.gameObject.transform.localPosition = dustPosition;
+
+				Quaternion dustRotation = dustParticles.gameObject.transform.localRotation;
+				dustRotation.y *= -1;
+				dustParticles.gameObject.transform.localRotation = dustRotation;
+
 			} else if ((moveDirection.x < 0) && (spriteRenderer.flipX == false)) {
+				
 				spriteRenderer.flipX = true;
+
+				Vector3 dustPosition = dustParticles.gameObject.transform.localPosition;
+				dustPosition.x *= -1;
+				dustParticles.gameObject.transform.localPosition = dustPosition;
+
+				Quaternion dustRotation = dustParticles.gameObject.transform.localRotation;
+				dustRotation.y *= -1;
+				dustParticles.gameObject.transform.localRotation = dustRotation;
+
 			}
 
 		} else {
@@ -347,15 +392,21 @@ public class PlayerController : MonoBehaviour
  		//character has been non-grounded, so the idle/falling animation doesn't
  		//play on minor falls and slopes.
  		//TODO: Maybe change to time?
- 		if ((state == player_state.IN_GROUND) || (nonGroundedFrames < 3)) 
-		{
-			if(moveDirection.x != 0){
-				if (plAnimation.GetBool("Run") == false) {
-					plAnimation.SetBool("Run", true);
-				}
-			} else if(plAnimation.GetBool("Run") == true){
-				plAnimation.SetBool("Run",false);
+		if ((state == player_state.IN_GROUND || nonGroundedFrames < 3) && moveDirection.x != 0){
+			if (plAnimation.GetBool("Run") == false) {
+				plAnimation.SetBool("Run", true);
 			}
+		} else if(plAnimation.GetBool("Run") == true){
+			plAnimation.SetBool("Run",false);
+		}
+
+		//Plays the dust particle effect
+		if (state == player_state.IN_GROUND && moveDirection.x != 0) {
+			if (dustParticles.isStopped) {
+				dustParticles.Play();
+			}
+		} else if (dustParticles.isPlaying) {
+			dustParticles.Stop();
 		}
     }
 
@@ -364,35 +415,20 @@ public class PlayerController : MonoBehaviour
 		if (InputManager.ActiveDevice.Action3.WasPressed && allowMovement
 			&& (!teleport.teleportUsed) && teleport.CheckTeleport(controller))
 		{
-                // We create a coroutine to do a delay in the teleport and the state of player is changed to teleporting
-                StartCoroutine("ActivateTeleport");
-                ActivateTeleport();
-                state = player_state.TELEPORTING;
-                vSpeed = 0;
+                // We set the state to teleporting and determine when it will end
+				state = player_state.TELEPORTING;
+				vSpeed = 0;
+				plAnimation.Play("Glitch_Teleport");
+				plAnimation.speed = 1 / teleport.getDuration();
+				doGlitchParticles();
 
                 return true;
 		}
 		return false;
 	}
 
-    // Function that active teleport. Necessary to Coroutine work
-    IEnumerator ActivateTeleport()
-    {
-		teleport.teleportUsed = true;
-        
-        if (controller.isGrounded)
-        {
-            // Wait for 0.3 seconds
-            yield return new WaitForSeconds(0.3f);
-        }
-        else
-        {
-            // Wait for 0.5 seconds
-            yield return new WaitForSeconds(0.5f);
-        }
-
-		teleport.teleportUsed = teleport.Teleport(controller);
-		state = player_state.JUMPING;
-    }
+	public void doGlitchParticles(){
+		glitchParticles.Play();
+	}
 
 }

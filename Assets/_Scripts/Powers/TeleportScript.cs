@@ -8,49 +8,67 @@ public class TeleportScript : MonoBehaviour {
 
 	public bool teleportUsed = false;
 
-    private float directionVertical;
-    private float directionHorizontal;
+	private Vector3 initialPos;
+	private Vector3 endPos;
+	private float initialTime;
+	private float endTime;
 
-	//Teleports the character. Returns true if there's cooldown.
-    public bool Teleport(CharacterController controller)
-    {
-    
-        if (controller.isGrounded)
-        {
-            directionVertical = 0;
-        }
-      
-        // Teleport moves the character in a scale proportional to its size
-		float x = teleportDistance * directionHorizontal;
-		float y = teleportDistance * directionVertical;
-		controller.transform.Translate(x, y, 0.0f);
+	public bool movePosition(out Vector3 position){
 
-        if (controller.isGrounded)
-        {
-            return false;
-        }
+		float timePassed = (Time.time - initialTime) / getDuration();
+		bool ended = false;
 
-        return true;
-    }
+		if (timePassed >= 1) {
+			timePassed = 1;
+			ended = true;
+		}
+
+		position = Vector3.Lerp(initialPos, endPos, timePassed);
+
+		return ended;
+	}
 
 	//Checks if it can teleport to the given position
     public bool CheckTeleport(CharacterController controller)
     {
         // We get the teleport direction
-        directionVertical = InputManager.ActiveDevice.LeftStickY.Value;
-        directionHorizontal = InputManager.ActiveDevice.LeftStickX.Value;
+        float directionVertical = InputManager.ActiveDevice.LeftStickY.Value;
+        float directionHorizontal = InputManager.ActiveDevice.LeftStickX.Value;
 
         // Vector to know if the position to teleport is occupied
-		Vector3 newPosition = controller.transform.position;
-		newPosition.x += teleportDistance * directionHorizontal;
-		newPosition.y += (teleportDistance * directionVertical) + 0.1f;
+		endPos = controller.transform.position;
+		endPos.x += teleportDistance * directionHorizontal;
+		endPos.y += (teleportDistance * directionVertical) + 0.1f;
 
 		LayerMask mask = -1;
-		if (!Physics.CheckCapsule(newPosition, newPosition, controller.radius, mask, QueryTriggerInteraction.Ignore))
+		if (!Physics.CheckCapsule(endPos, endPos, controller.radius, mask, QueryTriggerInteraction.Ignore))
         {
+			initialPos = transform.position;
+			initialTime = Time.time;
+			teleportUsed = true;
+
+			if (controller.isGrounded)
+			{
+				// Wait for 0.3 seconds
+				endTime = initialTime + 0.3f;
+			}
+			else
+			{
+				// Wait for 0.5 seconds
+				endTime = initialTime + 0.5f;
+			}
+
+			if (controller.isGrounded) {
+				endPos.y = controller.transform.position.y;
+			}
+
             return true;
         }
 
         return false;
     }
+
+	public float getDuration(){
+		return endTime - initialTime;
+	}
 }
