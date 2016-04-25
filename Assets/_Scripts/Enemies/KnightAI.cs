@@ -38,6 +38,7 @@ public class KnightAI : MonoBehaviour {
     public Rigidbody rigid;
     public BoxCollider swordCollider;
     public enemy_states states = enemy_states.PATROL;
+    public World world;
 
     private Transform playerPos;
     private Vector3 lastPosition;
@@ -101,172 +102,174 @@ public class KnightAI : MonoBehaviour {
     void Update()
     {
         animator.SetInteger("State", (int)states);
-        
-        switch (states)
+        if (world.doUpdate)
         {
-            case enemy_states.WAIT:
-                // ANIMATION OF ROTATION HERE
+            switch (states)
+            {
+                case enemy_states.WAIT:
+                    // ANIMATION OF ROTATION HERE
 
-                // In patrol point knight turns and continue with the patrol
-                time -= Time.deltaTime;
-                if (time <= 0.0f)
-                {
+                    // In patrol point knight turns and continue with the patrol
+                    time -= world.lag;
+                    if (time <= 0.0f)
+                    {
+                        if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
+                        {
+                            transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
+                        }
+                        else
+                        {
+                            transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
+                        }
+                        states = enemy_states.PATROL;
+                    }
+                    break;
+
+                case enemy_states.PATROL:
+                    // Patrolling logic
+                    transform.Translate(Vector3.forward * speed * world.lag);
+                    break;
+
+                // Enemy chases Glitch until reach him, reach a limit point or lose sight of Glitch
+                case enemy_states.CHASE:
+
+                    // Chasing logic
                     if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
                     {
-                        transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
+                        if (playerPos.position.x > transform.position.x)
+                        {
+                            transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
+                            rotationTime = 0.5f;
+                        }
                     }
                     else
                     {
-                        transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
+                        if (playerPos.position.x < transform.position.x)
+                        {
+                            transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
+                            rotationTime = 0.5f;
+                        }
                     }
-                    states = enemy_states.PATROL;
-                }
-                break;
 
-            case enemy_states.PATROL:
-                // Patrolling logic
-                transform.Translate(Vector3.forward * speed * Time.deltaTime);
-                break;
-
-            // Enemy chases Glitch until reach him, reach a limit point or lose sight of Glitch
-            case enemy_states.CHASE:
-
-                // Chasing logic
-                if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
-                {
-                    if (playerPos.position.x > transform.position.x)
+                    rotationTime -= world.lag;
+                    if (rotationTime <= 0.0f)
                     {
-                        transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
-                        rotationTime = 0.5f;
+                        transform.Translate(Vector3.forward * speed * world.lag);
                     }
-                }
-                else
-                {
-                    if (playerPos.position.x < transform.position.x)
+
+                    if (Vector3.Distance(playerPos.position, transform.position) > maxSightChase)
                     {
-                        transform.Rotate(0.0f, 270-transform.eulerAngles.y, 0.0f);
-                        rotationTime = 0.5f;
+                        speed = searchSpeed;
+                        sight = false;
+                        states = enemy_states.SEARCH;
+                        time = searchingTime;
                     }
-                }
+                    else if (Vector3.Distance(playerPos.position, transform.position) <= maxSightAttack)
+                    {
+                        states = enemy_states.ATTACK;
+                    }
 
-                rotationTime -= Time.deltaTime;
-                if (rotationTime <= 0.0f)
-                {
-                    transform.Translate(Vector3.forward * speed * Time.deltaTime);
-                }
-
-                if (Vector3.Distance(playerPos.position, transform.position) > maxSightChase)
-                {
-                    speed = searchSpeed;
-                    sight = false;
-                    states = enemy_states.SEARCH;
-                    time = searchingTime;
-                }
-                else if (Vector3.Distance(playerPos.position, transform.position) <= maxSightAttack)
-                {
-                    states = enemy_states.ATTACK;
-                }
-
-                break;
+                    break;
 
                 // Enemy attacks Glitch
-            case enemy_states.ATTACK:
+                case enemy_states.ATTACK:
 
-                // Attacking logic
-                // ATTACK ANIMATION AND LOGIC HERE
-                timePerAttack -= Time.deltaTime;
-                if (timePerAttack <= 0.0f)
-                {
-                    animator.SetBool("Near", true);
-                }
+                    // Attacking logic
+                    // ATTACK ANIMATION AND LOGIC HERE
+                    timePerAttack -= world.lag;
+                    if (timePerAttack <= 0.0f)
+                    {
+                        animator.SetBool("Near", true);
+                    }
 
-                // If distance to Glitch is plus than chase field of view then changes to Search state
-                // else if Glitch isn't in attack scope then enemy chases him
-                if (Vector3.Distance(playerPos.position, transform.position) > maxSightChase)
-                {
-                    animator.SetBool("Near", false);
-                    speed = searchSpeed;
-                    sight = false;
-                    states = enemy_states.SEARCH;
-                    time = searchingTime;
-                }
-                else if (Vector3.Distance(playerPos.position, transform.position) > maxSightAttack)
-                {
-                    animator.SetBool("Near", false);
-                    states = enemy_states.CHASE;
-                }
-                break;
+                    // If distance to Glitch is plus than chase field of view then changes to Search state
+                    // else if Glitch isn't in attack scope then enemy chases him
+                    if (Vector3.Distance(playerPos.position, transform.position) > maxSightChase)
+                    {
+                        animator.SetBool("Near", false);
+                        speed = searchSpeed;
+                        sight = false;
+                        states = enemy_states.SEARCH;
+                        time = searchingTime;
+                    }
+                    else if (Vector3.Distance(playerPos.position, transform.position) > maxSightAttack)
+                    {
+                        animator.SetBool("Near", false);
+                        states = enemy_states.CHASE;
+                    }
+                    break;
 
                 // Enemy looks at one side and the other looking for Glitch. After 5 seconds he returns to last patrol position 
                 // and continues patrolling.
-            case enemy_states.SEARCH:
+                case enemy_states.SEARCH:
 
-                // Searching logic
-                // SEARCH ANIMATION HERE
+                    // Searching logic
+                    // SEARCH ANIMATION HERE
 
-                origin = transform.position;
-                origin.y += transform.localScale.y * 0.75f;
+                    origin = transform.position;
+                    origin.y += transform.localScale.y * 0.75f;
 
-                ray = new Ray(origin, player.transform.position - origin);
-                Debug.DrawRay(origin, player.transform.position - origin);
+                    ray = new Ray(origin, player.transform.position - origin);
+                    Debug.DrawRay(origin, player.transform.position - origin);
 
-                if ((Physics.Raycast(ray, out hit, maxSightSearch, layerMask)) && (hit.collider.gameObject.CompareTag("Player")) && (sight == true))
-                {
-                    speed = chaseSpeed;
-                    returning = false;
-                    animator.SetBool("Returning", false);
-                    states = enemy_states.CHASE;
-                }
-
-                // If is returning enemy, advances to last patrol point 
-                // else search looking to one side and the other
-                if (returning == false)
-                {
-                    if (states == enemy_states.SEARCH)
+                    if ((Physics.Raycast(ray, out hit, maxSightSearch, layerMask)) && (hit.collider.gameObject.CompareTag("Player")) && (sight == true))
                     {
-                        time -= Time.deltaTime;
-                        if (time <= 0.0f)
+                        speed = chaseSpeed;
+                        returning = false;
+                        animator.SetBool("Returning", false);
+                        states = enemy_states.CHASE;
+                    }
+
+                    // If is returning enemy, advances to last patrol point 
+                    // else search looking to one side and the other
+                    if (returning == false)
+                    {
+                        if (states == enemy_states.SEARCH)
                         {
-                            if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
+                            time -= world.lag;
+                            if (time <= 0.0f)
                             {
-                                if (lastPosition.x > transform.position.x)
+                                if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
                                 {
-                                    transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
+                                    if (lastPosition.x > transform.position.x)
+                                    {
+                                        transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                if (lastPosition.x < transform.position.x)
+                                else
                                 {
-                                    transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
+                                    if (lastPosition.x < transform.position.x)
+                                    {
+                                        transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
+                                    }
                                 }
+                                speed = patrolSpeed;
+                                returning = true;
+                                searchRotationTime = 1.0f;
+                                animator.SetBool("Returning", true);
                             }
-                            speed = patrolSpeed;
-                            returning = true;
-                            searchRotationTime = 1.0f;
-                            animator.SetBool("Returning", true);
                         }
                     }
-                }
-                else
-                {
-                    if (states == enemy_states.SEARCH)
+                    else
                     {
-                        transform.Translate(Vector3.forward * speed * Time.deltaTime);
-                        if ((transform.position.x < lastPosition.x + 1) && (transform.position.x > lastPosition.x - 1))
+                        if (states == enemy_states.SEARCH)
                         {
-                            returning = false;
-                            sight = false;
-                            animator.SetBool("Returning", false);
-                            states = enemy_states.PATROL;
+                            transform.Translate(Vector3.forward * speed * world.lag);
+                            if ((transform.position.x < lastPosition.x + 1) && (transform.position.x > lastPosition.x - 1))
+                            {
+                                returning = false;
+                                sight = false;
+                                animator.SetBool("Returning", false);
+                                states = enemy_states.PATROL;
+                            }
                         }
                     }
-                }
-                break;
+                    break;
 
-            case enemy_states.HITTED:
-                // State to put particles or something
-                break;
+                case enemy_states.HITTED:
+                    // State to put particles or something
+                    break;
+            }
         }
     }
 

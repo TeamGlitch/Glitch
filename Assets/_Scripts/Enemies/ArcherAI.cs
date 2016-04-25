@@ -101,110 +101,113 @@ public class ArcherAI : MonoBehaviour {
 
     void Update()
     {
-        if (states != enemy_states.DEATH)
+        if (world.doUpdate)
         {
-            //animator.SetInteger("State", (int)states);
-
-            if (player.playerController.state != PlayerController.player_state.DEATH)
+            if (states != enemy_states.DEATH)
             {
+                //animator.SetInteger("State", (int)states);
 
-                switch (states)
+                if (player.playerController.state != PlayerController.player_state.DEATH)
                 {
 
-                    // Enemy shoot arrows to Glitch
-                    case enemy_states.SHOOT:
+                    switch (states)
+                    {
 
-                        // Shooting logic
-                        if ((arrow == null) || (!arrow.activeInHierarchy))
-                        {
-                            animator.SetBool("Shoot", true);
-                        }
+                        // Enemy shoot arrows to Glitch
+                        case enemy_states.SHOOT:
 
-                        // If distance to Glitch is minus than chase field of view then changes to Chase state.
-                        // If Glitch is in melee attack scope then enemy attacks to him with daggers, changing her state to Melee attack
-                        // If distance to Glitch is plus than Shoot field of view the enemy changes her state to Wait
-                        // If archer is motionless then she can't move
-                        if ((motionless == false) && (Vector3.Distance(player.transform.position, transform.position) < maxSightChase))
-                        {
-                            speed = chaseSpeed;
-                            states = enemy_states.CHASE;
-                        }
+                            // Shooting logic
+                            if ((arrow == null) || (!arrow.activeInHierarchy))
+                            {
+                                animator.SetBool("Shoot", true);
+                            }
 
-                        if (Vector3.Distance(player.transform.position, transform.position) <= maxSightMeleeAttack)
-                        {
-                            speed = meleeAttackSpeed;
-                            timePerKick = 0.0f;
-                            states = enemy_states.MELEE_ATTACK;
-                        }
-                        break;
-
-                    // Enemy chases Glitch until reach him or lose sight of Glitch
-                    case enemy_states.CHASE:
-
-                        // Chasing logic
-                        rotationTime -= Time.deltaTime;
-                        if (rotationTime <= 0.0f)
-                        {
-                            transform.Translate(Vector3.forward * speed * Time.deltaTime);
-                        }
-
-                        if (Vector3.Distance(player.transform.position, transform.position) > maxSightPersecution)
-                        {
-                            speed = shootSpeed;
-                            states = enemy_states.SHOOT;
-                        }
-                        else if (Vector3.Distance(player.transform.position, transform.position) <= maxSightMeleeAttack)
-                        {
-                            speed = meleeAttackSpeed;
-                            timePerKick = 0.0f;
-                            states = enemy_states.MELEE_ATTACK;
-                        }
-
-                        break;
-
-                    case enemy_states.TURN:
-                        //animator.SetBool("Turn", true);
-                        if ((player.transform.position.x > transform.position.x) && (transform.eulerAngles.y > 269.0f))
-                        {
-                            transform.eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
-                            rotationTime = 0.5f;
-                        }
-                        else if ((player.transform.position.x < transform.position.x) && (transform.eulerAngles.y < 91.0f))
-                        {
-                            transform.eulerAngles = new Vector3(0.0f, 270.0f, 0.0f);
-                            rotationTime = 0.5f;
-                        }
-                        states = enemy_states.WAIT;
-                        break;
-
-                    // Enemy attacks to Glitch with her daggers
-                    case enemy_states.MELEE_ATTACK:
-                        // Melee attack logic
-                        timePerKick -= Time.deltaTime;
-                        if (timePerKick <= 0.0f)
-                        {
-                            animator.SetBool("Near", true);
-                        }
-
-                        if (Vector3.Distance(player.transform.position, transform.position) > maxSightMeleeAttack)
-                        {
-                            if (motionless == false)
+                            // If distance to Glitch is minus than chase field of view then changes to Chase state.
+                            // If Glitch is in melee attack scope then enemy attacks to him with daggers, changing her state to Melee attack
+                            // If distance to Glitch is plus than Shoot field of view the enemy changes her state to Wait
+                            // If archer is motionless then she can't move
+                            if ((motionless == false) && (Vector3.Distance(player.transform.position, transform.position) < maxSightChase))
                             {
                                 speed = chaseSpeed;
                                 states = enemy_states.CHASE;
                             }
-                            else
+
+                            if (Vector3.Distance(player.transform.position, transform.position) <= maxSightMeleeAttack)
+                            {
+                                speed = meleeAttackSpeed;
+                                timePerKick = 0.0f;
+                                states = enemy_states.MELEE_ATTACK;
+                            }
+                            break;
+
+                        // Enemy chases Glitch until reach him or lose sight of Glitch
+                        case enemy_states.CHASE:
+
+                            // Chasing logic
+                            rotationTime -= world.lag;
+                            if (rotationTime <= 0.0f)
+                            {
+                                transform.Translate(Vector3.forward * speed * world.lag);
+                            }
+
+                            if (Vector3.Distance(player.transform.position, transform.position) > maxSightPersecution)
                             {
                                 speed = shootSpeed;
                                 states = enemy_states.SHOOT;
                             }
-                        }
+                            else if (Vector3.Distance(player.transform.position, transform.position) <= maxSightMeleeAttack)
+                            {
+                                speed = meleeAttackSpeed;
+                                timePerKick = 0.0f;
+                                states = enemy_states.MELEE_ATTACK;
+                            }
 
-                        break;
+                            break;
 
-                    case enemy_states.HITTED:
-                        // State to put particles or something
-                        break;
+                        case enemy_states.TURN:
+                            //animator.SetBool("Turn", true);
+                            if ((player.transform.position.x > transform.position.x) && (transform.eulerAngles.y > 269.0f))
+                            {
+                                transform.eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
+                                rotationTime = 0.5f;
+                            }
+                            else if ((player.transform.position.x < transform.position.x) && (transform.eulerAngles.y < 91.0f))
+                            {
+                                transform.eulerAngles = new Vector3(0.0f, 270.0f, 0.0f);
+                                rotationTime = 0.5f;
+                            }
+                            states = enemy_states.WAIT;
+                            break;
+
+                        // Enemy attacks to Glitch with her daggers
+                        case enemy_states.MELEE_ATTACK:
+                            // Melee attack logic
+                            timePerKick -= world.lag;
+                            if (timePerKick <= 0.0f)
+                            {
+                                animator.SetBool("Near", true);
+                            }
+
+                            if (Vector3.Distance(player.transform.position, transform.position) > maxSightMeleeAttack)
+                            {
+                                if (motionless == false)
+                                {
+                                    speed = chaseSpeed;
+                                    states = enemy_states.CHASE;
+                                }
+                                else
+                                {
+                                    speed = shootSpeed;
+                                    states = enemy_states.SHOOT;
+                                }
+                            }
+
+                            break;
+
+                        case enemy_states.HITTED:
+                            // State to put particles or something
+                            break;
+                    }
                 }
             }
         }
@@ -219,6 +222,7 @@ public class ArcherAI : MonoBehaviour {
         arrowLogic = arrow.GetComponent<ArrowScript>();
         arrow.transform.position = origin;
         arrowLogic.player = player;
+        arrowLogic.world = world;
         float x = origin.x - hit.point.x;
         float y = origin.y - hit.point.y;
         float alfa = Mathf.Atan(y / x);

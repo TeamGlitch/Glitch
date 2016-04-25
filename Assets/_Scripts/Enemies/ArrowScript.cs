@@ -6,6 +6,7 @@ public class ArrowScript : MonoBehaviour {
     public float speed = 10.0f;
     public Player player;
     public bool isInLeft = false;
+    public World world;
 
     private float timeAlive = 5.0f;
     private float damage = 1.0f;
@@ -22,13 +23,16 @@ public class ArrowScript : MonoBehaviour {
 	
 	void Update () 
     {
-        transform.Translate(Vector2.down * Time.deltaTime*speed);
-
-        timeAlive -= Time.deltaTime;
-        if (timeAlive <= 0)
+        if (world.doUpdate)
         {
-            timeAlive = 5.0f;
-            ResetArrow();
+            transform.Translate(Vector2.down * world.lag * speed);
+
+            timeAlive -= world.lag;
+            if (timeAlive <= 0)
+            {
+                timeAlive = 5.0f;
+                ResetArrow();
+            }
         }
 	}
 
