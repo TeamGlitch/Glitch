@@ -63,26 +63,27 @@ public class KnightAI : MonoBehaviour {
     // Trigger that detect collisions with patrol points and limit points
     void OnTriggerEnter(Collider coll)
     {
-        // Only detect collisions with patrol points when enemy is patrolling
-        if ((coll.gameObject.CompareTag("PatrolPoint")) && (states == enemy_states.PATROL))
-        {
-            states = enemy_states.WAIT;
-            time = waitTime;
-        }
-        // If is in a limit he stops and search glitch
-        else if (coll.gameObject.CompareTag("LimitPoint"))
-        {
-            speed = searchSpeed;
-            states = enemy_states.SEARCH;
-            time = searchingTime;
-        }
     }
 
     void OnTriggerStay(Collider coll)
     {
+		// Only detect collisions with patrol points when enemy is patrolling
+		if ((coll.gameObject.CompareTag("PatrolPoint")) && (states == enemy_states.PATROL))
+		{
+			states = enemy_states.WAIT;
+			time = waitTime;
+		}
+		// If is in a limit he stops and search glitch
+		else if (coll.gameObject.CompareTag("LimitPoint"))
+		{
+			speed = searchSpeed;
+			states = enemy_states.SEARCH;
+			time = searchingTime;
+		}
+
         // if the enemy hasn't seen Glitch he patrols and if he detects him with the raycast
         // then changes his state to Chase and changes his speed too.
-        if ((sight == false) && coll.gameObject.CompareTag("Player") && (states != enemy_states.HITTED))
+        else if ((sight == false) && coll.gameObject.CompareTag("Player") && (states != enemy_states.HITTED))
         {
             origin = transform.position;
             origin.y += transform.localScale.y * 0.75f;

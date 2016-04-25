@@ -21,17 +21,17 @@
 		<T>So yeah, have fun.</T>
 	</Scene>
 	<Scene id="1">
-		<T>[face=None][playermove=false][noskip][noskip]Welcome to Artichoke Kingdom!</T>
-		<T>[noskip]Move using the left pad.</T>
-		<T>[noskip]And jump using A button.[playermove=true]</T>
+		<T>[face=None][playermove=false][noskip]Welcome to Artichoke Kingdom!</T>
+		<T>[noskip]You can move using the left pad.</T>
+		<T>[noskip]And jump pressing the A button.[playermove=true]</T>
 	</Scene>
 	<Scene id="2">
-		<T>[face=None][playermove=false][noskip]Use teleport using X button.[playermove=true]</T>
+		<T>[face=None][playermove=false][noskip]You can use your teleport pressing the X button on the ground or in the air.[playermove=true]</T>
 	</Scene>
 	<Scene id="3">
-		<T>[face=None][playermove=false][noskip]Put boxes when you see the "!" pressing the Y button.[playermove=true]</T>
+		<T>[face=None][playermove=false][noskip]You can create error boxes when you see an exclamation pressing the Y button.[playermove=true]</T>
 	</Scene>
 	<Scene id="4">
-		<T>[face=None][playermove=false][noskip]You can make the time go slower pressing LB.[playermove=true]</T>
+		<T>[face=None][playermove=false][noskip]You can make the time go slower pressing the B button.[playermove=true]</T>
 	</Scene>
 </Dialogue>
