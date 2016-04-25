@@ -36,3 +36,4 @@ Guia frames animaciones:
 	-animacion glitch random:144-160
 	-girarse:161-197
 	-buscar:198-247
+	-recibir golpe: 248-287
