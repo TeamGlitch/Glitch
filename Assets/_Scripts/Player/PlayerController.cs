@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
 	private Animator plAnimation;
 	public CharacterController controller;
 	public Rigidbody rigidBody;
+	private BoxCollider squareCollider;
 
 	//Particles
 	private ParticleSystem glitchParticles;
@@ -78,6 +79,7 @@ public class PlayerController : MonoBehaviour
 	{
 		spriteRenderer = transform.GetComponentInChildren<SpriteRenderer>();
 		plAnimation = transform.GetComponentInChildren<Animator>();
+		squareCollider = transform.GetComponentInChildren<BoxCollider>();
 
 		glitchParticles = transform.FindChild("GlitchParticles").gameObject.GetComponent<ParticleSystem>();
 		jumpParticles = transform.FindChild("JumpParticles").gameObject.GetComponent<ParticleSystem>();
@@ -187,10 +189,13 @@ public class PlayerController : MonoBehaviour
 					{
 						vSpeed = 0;
 					}
+
+					// To control movement of player
+					Movement(moveDirection);
+
 				}
 
-                // To control movement of player
-                Movement(moveDirection);
+
 				break;
 
 			case player_state.JUMPING:
@@ -253,10 +258,13 @@ public class PlayerController : MonoBehaviour
 							startJumpPress = -1;
 						}
 					}
+
+					// To control movement of player
+					Movement(moveDirection);
+
 				}
 
-                // To control movement of player
-                Movement(moveDirection);
+
 				break;
 
 			case player_state.TELEPORTING:
@@ -268,6 +276,8 @@ public class PlayerController : MonoBehaviour
 				if (ended) {
 					state = player_state.JUMPING;
 					plAnimation.speed = 1;
+					squareCollider.enabled = true;
+					controller.enabled = true;
 				}
 
 				break;
@@ -420,6 +430,8 @@ public class PlayerController : MonoBehaviour
 				vSpeed = 0;
 				plAnimation.Play("Glitch_Teleport");
 				plAnimation.speed = 1 / teleport.getDuration();
+				squareCollider.enabled = false;
+				controller.enabled = false;
 				doGlitchParticles();
 
                 return true;
