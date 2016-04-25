@@ -4,6 +4,9 @@ using InControl;
 public class SlowFPS : MonoBehaviour {
 
 	public World world;
+	public FakeFPS fakeFPS;
+	public ParticleSystem glitchParticle;
+
 	public float recoveryRate = 3.0f;			// Time it takes to make a recovery bump
 	public float timeBetweenUpdates = 1;		// Seconds between slow updates
 	public float MAXTime = 10.0f;				// Max time the power can be active
@@ -36,6 +39,8 @@ public class SlowFPS : MonoBehaviour {
 				world.doUpdate = false;
 				timeLastUpdate = Time.time;
 				world.toggleSlowFPS();
+				fakeFPS.SlowActive(slowDown);
+				glitchParticle.Play();
 				if (SlowFPSActivated != null)
 					SlowFPSActivated ();
 			}
@@ -88,6 +93,7 @@ public class SlowFPS : MonoBehaviour {
 	private void deactivatePower(){
 		powerActive = false;
 		world.toggleSlowFPS();
+		fakeFPS.SlowInactive();
 		if (SlowFPSDeactivated != null)
 			SlowFPSDeactivated ();
 		
@@ -96,7 +102,7 @@ public class SlowFPS : MonoBehaviour {
 	public void RestartCooldowns()
 	{
 		timeRemaining = MAXTime;
-		deactivatePower ();
+		deactivatePower();
 	}
 
 }
