@@ -13,12 +13,12 @@ public class EndPointScript : MonoBehaviour {
     // Script is disabled until OnTriggerEnter detects the player
 	void OnTriggerEnter(Collider coll){
 
-		if(coll.gameObject.name == "Player"){
+		if(coll.gameObject.CompareTag("Player")){
             titlesGameObject.SetActive(true);
 			title.text = "Level Complete!";
 			title.color = Color.red;
 			subtitle.text = "Good work not screwing up";
-			coll.gameObject.GetComponent<PlayerController>().allowMovement = false;
+			coll.transform.parent.gameObject.GetComponent<PlayerController>().allowMovement = false;
 			endGame = Time.time + 3.0f;
             enabled = true;
 		}

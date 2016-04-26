@@ -31,7 +31,7 @@ public class SlowFPS : MonoBehaviour {
 	// In the update we control the available time of the power and it's recovery
 	void Update()
 	{
-		if (InputManager.ActiveDevice.LeftBumper.WasPressed)
+		if (InputManager.ActiveDevice.Action2.WasPressed)
 		{
 			if (powerActive == false)
 			{

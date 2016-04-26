@@ -58,7 +58,7 @@ namespace CustomProfileExample
 				new InputControlMapping
 				{
 					Handle = "LowFPS",
-					Target = InputControlType.LeftBumper,
+					Target = InputControlType.Action2,
 					Source = KeyCodeButton( KeyCode.LeftControl )
 				},
 				new InputControlMapping
