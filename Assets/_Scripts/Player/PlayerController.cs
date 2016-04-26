@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviour
 
 	void Update () 
 	{
-		
+
 		Vector3 moveDirection = new Vector3 (0, 0, 0);
 
         // State-changing calculations

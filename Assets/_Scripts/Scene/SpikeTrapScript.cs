@@ -58,7 +58,7 @@ public class SpikeTrapScript : MonoBehaviour
 			{
 				timeWhenActivated += world.lag;
 				if (timeWhenActivated > 0.5f && !leavesJumped) {
-					leaves.SetActive(false);
+					//leaves.SetActive(false);
 					leavesJumped = true;
 				}
 			}
@@ -85,21 +85,27 @@ public class SpikeTrapScript : MonoBehaviour
 
 	void OnTriggerEnter (Collider other)
 	{
-		timeWhenActivated = 0.0f;
-		currentLerpTime = 0.0f;
-		activated = true;
-		if (!leavesJumped) {
-			leavesParticle.Play();
+		if (other.CompareTag ("Player"))
+		{
+			timeWhenActivated = 0.0f;
+			currentLerpTime = 0.0f;
+			activated = true;
+			if (!leavesJumped) {
+				leavesParticle.Play();
+			}
 		}
 	}
 
 	void OnTriggerExit (Collider other)
 	{
-		if (!activated)
+		if (other.CompareTag ("Player"))
 		{
-			timeWhenDeactivated = 0.0f;
-			currentLerpTime = 0.0f;
-			deactivated = true;
+			if (!activated)
+			{
+				timeWhenDeactivated = 0.0f;
+				currentLerpTime = 0.0f;
+				deactivated = true;
+			}
 		}
 	}
 }
