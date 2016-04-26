@@ -103,6 +103,7 @@ public class SlowFPS : MonoBehaviour {
 	{
 		timeRemaining = MAXTime;
 		deactivatePower();
+        world.toggleSlowFPS();
 	}
 
 }

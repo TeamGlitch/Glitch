@@ -4,19 +4,14 @@ using System.Collections;
 
 public class FakeFPS : MonoBehaviour {
 
-	private Text text;
-	private ParticleSystem particles;
+	public Text text;
+	public ParticleSystem particles;
 
 	private bool slow = false;
 	private float nextChange = 0;
 
 	private int corruptedCharacter = -1;
 	private char corruptedValueOriginal;
-
-	void Start(){
-		text = GetComponent<Text>();
-		particles = gameObject.transform.GetComponentInChildren<ParticleSystem>();
-	}
 
 	// Update is called once per frame
 	void Update () {

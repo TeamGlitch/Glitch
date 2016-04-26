@@ -46,8 +46,6 @@ public class Player : MonoBehaviour {
 	private float correctionFactorForExclamation = -11.02155f;
 	private Vector2 exclamationSize;
 
-	private SlowFPS slowFPS;
-
 	void Awake () {
 
 		characterController = GetComponent<CharacterController>();
@@ -71,7 +69,6 @@ public class Player : MonoBehaviour {
 		exclamationSize = boxUIActivatedRectTransform.sizeDelta;
 		boxUIActivated.SetActive (false);
 		guiRectTrans = gui.GetComponent<RectTransform>();
-		slowFPS = transform.GetChild (0).GetComponentInChildren<SlowFPS> ();
 
 	}
 
@@ -135,12 +132,14 @@ public class Player : MonoBehaviour {
 //		characterController.detectCollisions = true;
 		playerController.state = PlayerController.player_state.JUMPING;
 		transform.position = lastCheckPoint.gameObject.transform.position;
+        playerController.slowFPS.RestartCooldowns();
 	}
 
 	public void healCompletely()
     {
 		lives = 3;
 		guiLife.UpdateLives();
+        playerController.slowFPS.RestartCooldowns();
 	}
 
 	public void IncreaseActivableBox()

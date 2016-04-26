@@ -24,7 +24,7 @@ public class World : MonoBehaviour {
 	public bool doUpdate = true;
 
 	// How much can the world move in this update
-	public float lag = 1.0f;
+	public float lag = 0.03f;
 
 	void Start()
     {

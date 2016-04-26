@@ -62,7 +62,7 @@ public class ArcherAI : MonoBehaviour {
             origin.y += transform.localScale.y*0.75f;
 
             ray = new Ray(origin, player.transform.position - origin);
-            //Debug.DrawRay(origin, player.transform.position - origin);
+            Debug.DrawRay(origin, player.transform.position - origin);
             if ((Physics.Raycast(ray, out hit, float.PositiveInfinity, layerMask) && (sight == false)) && (hit.collider.gameObject.CompareTag("Player")) && (states != enemy_states.HITTED))
             {
                 animator.SetBool("Sighted", true);
