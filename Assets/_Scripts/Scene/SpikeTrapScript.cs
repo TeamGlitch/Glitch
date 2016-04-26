@@ -58,7 +58,7 @@ public class SpikeTrapScript : MonoBehaviour
 			{
 				timeWhenActivated += world.lag;
 				if (timeWhenActivated > 0.5f && !leavesJumped) {
-					//leaves.SetActive(false);
+					leaves.SetActive(false);
 					leavesJumped = true;
 				}
 			}
