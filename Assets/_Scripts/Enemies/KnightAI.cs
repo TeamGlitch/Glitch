@@ -289,7 +289,10 @@ public class KnightAI : MonoBehaviour {
 
     public void HittedTrigger()
     {
-        states = enemy_states.ATTACK;
+        if (states != enemy_states.DEATH)
+        {
+            states = enemy_states.ATTACK;
+        }
     }
 
     public void Attacked()
