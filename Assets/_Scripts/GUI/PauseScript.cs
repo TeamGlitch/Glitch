@@ -12,32 +12,14 @@ public class PauseScript : MonoBehaviour {
 	public Button restartButton;
 	public Button menuButton;
 
-
-	void Start () 
-    {
-		pauseMenu.enabled = false;
-	}
-	
-	void Update () 
-    {
-		if (InputManager.ActiveDevice.MenuWasPressed && !pauseMenu.enabled) 
-        {
-			playerPowers.SetActive (false);
-			Time.timeScale = 0.0f;
-			pauseMenu.enabled = true;
-			resumeButton.Select ();
-		} else if (InputManager.ActiveDevice.MenuWasPressed) {
-			playerPowers.SetActive (true);
-			Time.timeScale = 1.0f;
-			pauseMenu.enabled = false;
-		}
-	}
-
 	public void resumePress()
 	{
-		playerPowers.SetActive (true);
-		Time.timeScale = 1.0f;
-		pauseMenu.enabled = false;	
+		if (pauseMenu.enabled)
+		{
+			playerPowers.SetActive (true);
+			Time.timeScale = 1.0f;
+            pauseMenu.gameObject.SetActive(false);
+		}
 	}
 
 	public void restartPress()
@@ -51,4 +33,18 @@ public class PauseScript : MonoBehaviour {
 		Time.timeScale = 1.0f;
 		SceneManager.LoadScene ("menu");
 	}
+
+
+    public void Pause()
+    {
+        resumeButton.Select();
+        Time.timeScale = 0.0f;
+        playerPowers.SetActive(true);
+    }
+
+    public void Unpause()
+    {
+        Time.timeScale = 1.0f;
+        playerPowers.SetActive(true);
+    }
 }

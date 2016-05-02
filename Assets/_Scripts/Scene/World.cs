@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using InControl;
 
 public class World : MonoBehaviour {
 
@@ -16,6 +17,9 @@ public class World : MonoBehaviour {
     public GameObject powers;
     public GameObject gui;
 	public GameObject dialogues;
+
+    public GameObject pauseMenu;
+    private PauseScript pauseScript;
 
 	private update_status state = update_status.REGULAR_UPDATE;
 
@@ -34,9 +38,24 @@ public class World : MonoBehaviour {
         powers.SetActive(true);
 		dialogues.SetActive(true);
         player.enabled = true;
+        pauseMenu.SetActive(false);
+        pauseScript = pauseMenu.GetComponent<PauseScript>();
+        Cursor.visible = false;
     }
 
 	void Update(){
+
+        if (InputManager.ActiveDevice.MenuWasPressed && pauseMenu.activeInHierarchy)
+        {
+            pauseScript.Unpause();
+            pauseMenu.SetActive(false);
+        }
+        else if (InputManager.ActiveDevice.MenuWasPressed)
+        {
+            pauseMenu.SetActive(true);
+            pauseScript.Pause();
+        }
+
 
 		switch (state) {
 
