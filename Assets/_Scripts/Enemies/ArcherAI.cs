@@ -17,7 +17,7 @@ public class ArcherAI : MonoBehaviour {
     // Constants
     private const float maxSightChase = 9.0f;
     private const float maxSightPersecution = 10.0f;
-    private const float maxSightMeleeAttack = 4.0f;
+    private const float maxSightMeleeAttack = 2.5f;
     private const float maxSightShoot = 20.0f;
     private const float chaseSpeed = 10.0f;
     private const float waitSpeed = 0.0f;
@@ -269,7 +269,7 @@ public class ArcherAI : MonoBehaviour {
     public void FinishKickTrigger()
     {
         animator.SetBool("Near", false);
-        timePerKick = 3.0f;
+        timePerKick = 1.0f;
     }
 
     public void HittedTrigger()

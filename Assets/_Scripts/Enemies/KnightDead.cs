@@ -7,6 +7,7 @@ public class KnightDead : MonoBehaviour {
 
     void OnTriggerEnter(Collider coll)
     {
+
         if ((knight.states != KnightAI.enemy_states.DEATH) && (coll.gameObject.CompareTag("Player")))
         {
             knight.Attacked();

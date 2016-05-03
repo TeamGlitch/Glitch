@@ -53,12 +53,20 @@ public class KnightAI : MonoBehaviour {
     private float timePerAttack = 0.0f;
     private Vector3 origin;
     private int layerMask = (~((1 << 13) | (1 << 2))) | (1 << 9) | (1 << 0);
-    private bool inLimit = false;
 
     void Start()
     {
         playerPos = player.GetComponent<Transform>();
         animator = GetComponent<Animator>();
+        swordCollider.enabled = false;
+    }
+
+    void OnCollisionEnter(Collision coll)
+    {
+        if ((coll.contacts[0].thisCollider.CompareTag("Knight")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
+        {
+            Attack();
+        }
     }
 
     // Trigger that detect collisions with patrol points and limit points
@@ -71,12 +79,12 @@ public class KnightAI : MonoBehaviour {
             time = waitTime;
         }
         // If is in a limit he stops and search glitch
-        else if (coll.gameObject.CompareTag("LimitPoint"))
+        else if ((coll.gameObject.CompareTag("LimitPoint")) && (states != enemy_states.SEARCH))
         {
             speed = searchSpeed;
             states = enemy_states.SEARCH;
             time = searchingTime;
-            inLimit = true;
+            sight = false;
         }
     }
 
@@ -84,7 +92,7 @@ public class KnightAI : MonoBehaviour {
     {
         // if the enemy hasn't seen Glitch he patrols and if he detects him with the raycast
         // then changes his state to Chase and changes his speed too.
-        if ((sight == false) && coll.gameObject.CompareTag("Player") && (states != enemy_states.HITTED) && (inLimit == false))
+        if ((sight == false) && coll.gameObject.CompareTag("Player") && (states != enemy_states.HITTED))
         {
             origin = transform.position;
             origin.y += transform.localScale.y * 0.75f;
@@ -98,13 +106,6 @@ public class KnightAI : MonoBehaviour {
                 lastPosition = transform.position;      // We save the point in the patrol to return later
                 states = enemy_states.CHASE;
             }
-        }
-    }
-
-    void OnTriggerExit(Collider coll)
-    {
-        if (coll.gameObject.CompareTag("LimitPoint")){
-            inLimit = false;
         }
     }
 
@@ -166,7 +167,7 @@ public class KnightAI : MonoBehaviour {
                         transform.Translate(Vector3.forward * speed * world.lag);
                     }
 
-                    if (Vector3.Distance(playerPos.position, transform.position) > maxSightChase)
+                    if ((Vector3.Distance(playerPos.position, transform.position) > maxSightChase) || (Mathf.Abs(player.transform.position.y - transform.position.y) > 8.0f))
                     {
                         speed = searchSpeed;
                         sight = false;
@@ -185,17 +186,18 @@ public class KnightAI : MonoBehaviour {
 
                     // Attacking logic
                     // ATTACK ANIMATION AND LOGIC HERE
+                    swordCollider.enabled = true;
                     timePerAttack -= world.lag;
                     if (timePerAttack <= 0.0f)
                     {
-                        animator.SetBool("Near", true);
+                        animator.SetBool("Attack", true);
                     }
 
                     // If distance to Glitch is plus than chase field of view then changes to Search state
                     // else if Glitch isn't in attack scope then enemy chases him
                     if (Vector3.Distance(playerPos.position, transform.position) > maxSightChase)
                     {
-                        animator.SetBool("Near", false);
+                        animator.SetBool("Attack", false);
                         speed = searchSpeed;
                         sight = false;
                         states = enemy_states.SEARCH;
@@ -203,7 +205,7 @@ public class KnightAI : MonoBehaviour {
                     }
                     else if (Vector3.Distance(playerPos.position, transform.position) > maxSightAttack)
                     {
-                        animator.SetBool("Near", false);
+                        animator.SetBool("Attack", false);
                         states = enemy_states.CHASE;
                     }
                     break;
@@ -221,7 +223,7 @@ public class KnightAI : MonoBehaviour {
                     ray = new Ray(origin, player.transform.position - origin);
                     //Debug.DrawRay(origin, player.transform.position - origin);
 
-                    if ((Physics.Raycast(ray, out hit, maxSightSearch, layerMask)) && (hit.collider.gameObject.CompareTag("Player")) && (sight == true) && (inLimit == false))
+                    if ((Physics.Raycast(ray, out hit, maxSightSearch, layerMask)) && (hit.collider.gameObject.CompareTag("Player")) && (sight == true))
                     {
                         speed = chaseSpeed;
                         returning = false;
@@ -238,6 +240,7 @@ public class KnightAI : MonoBehaviour {
                             time -= world.lag;
                             if (time <= 0.0f)
                             {
+                                animator.SetBool("Returning", true);
                                 if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
                                 {
                                     if (lastPosition.x > transform.position.x)
@@ -255,7 +258,6 @@ public class KnightAI : MonoBehaviour {
                                 speed = patrolSpeed;
                                 returning = true;
                                 searchRotationTime = 1.0f;
-                                animator.SetBool("Returning", true);
                             }
                         }
                     }
@@ -291,13 +293,18 @@ public class KnightAI : MonoBehaviour {
     {
         if (states != enemy_states.DEATH)
         {
-            states = enemy_states.ATTACK;
+            states = enemy_states.CHASE;
         }
+    }
+
+    public void AttackTrigger()
+    {
+        swordCollider.enabled = false;
     }
 
     public void Attacked()
     {
-        animator.SetBool("Near", true);
+        animator.SetBool("Attack", true);
         speed = attackSpeed;
         states = enemy_states.HITTED;
         --lives;
@@ -309,7 +316,7 @@ public class KnightAI : MonoBehaviour {
             collider.enabled = false;
             swordCollider.enabled = false;
             fieldOfView.enabled = false;
-            animator.SetBool("Near", false);
+            animator.SetBool("Attack", false);
         }
 
         // To impulse player from enemy
@@ -319,7 +326,8 @@ public class KnightAI : MonoBehaviour {
     public void Attack()
     {
         player.DecrementLives(damageAttack);
-        animator.SetBool("Near", false);
+        animator.SetBool("Attack", false);
+        sight = false;
         speed = searchSpeed;
         time = searchingTime;
         states = enemy_states.SEARCH;
