@@ -40,7 +40,8 @@ public class World : MonoBehaviour {
         player.enabled = true;
         pauseMenu.SetActive(false);
         pauseScript = pauseMenu.GetComponent<PauseScript>();
-        Cursor.visible = false;
+        if(Application.platform != RuntimePlatform.WindowsEditor)
+            Cursor.visible = false;
     }
 
 	void Update(){
