@@ -17,426 +17,120 @@ public class PlayerController : MonoBehaviour
 		DEATH
     };
 
-	///////////// Variables /////////////
+    #region Variable Declaration
 
-	//State
+    //State
 	public player_state state;
 	public bool allowMovement;
 	private bool godMode = false;
 
 	//Player Components
-	private SpriteRenderer spriteRenderer;			//Reference to the sprite renderer
-	private Animator plAnimation;
-	public CharacterController controller;
-	public Rigidbody rigidBody;
+	private SpriteRenderer _spriteRenderer;			//Reference to the sprite renderer
+	private Animator _plAnimation;
+	public Rigidbody _rigidBody;
 
 	//Particles
-	private ParticleSystem glitchParticles;
-	private ParticleSystem dustParticles;
-	private ParticleSystem jumpParticles;
-
-	//External references
-	public Camera mainCamera;
-	public Camera godCamera;
-    public Camera staticCamera1;
-    public Camera staticCamera2;
-    public Camera staticCamera3;
-    public Camera staticCamera4;
+	private ParticleSystem _glitchParticles;
+	private ParticleSystem _dustParticles;
+	private ParticleSystem _jumpParticles;
 
 	//Movement Variables
 
 	private bool playerActivedJump = false;		// The jump state is cause of a player jump? (If not, it could be a fall)
 
-	private float zPosition;					// Position on the z axis. Unvariable
+	private float _zPosition;					// Position on the z axis. Unvariable
 	public float speed = 7.2f;					// Horizontal speed
 	public float jumpSpeed = 8.0f;				// Base jump speed
 	public float gravity = 22.0f;				// Gravity
 	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
+
+    [HideInInspector]
     public float vSpeed = 0.0f;					// The vertical speed
 
-	private float startJumpPress = -1;				//When the extended jump started
 	private float preparingJump = 0;				//Jump preparing time left
 	private float fallRecovery = 0;					//Fall recovery time left
 	private int nonGroundedFrames = 0;				// How many frames the player has being on air.
 
-	///// Powers
-	//Teleport
+	// Powers declarations
+    [HideInInspector]
 	public TeleportScript teleport;
+    [HideInInspector]
+    public SlowFPS slowFPS;
 
-	//Slow FPS
-	public SlowFPS slowFPS;
-	
-	///// Other
-	//Broken effect
-	public Material brokenTexture;
+    private float _distToGround;
+    private BoxCollider _boxCollider;
 
+    #endregion
 
-	///////////// Functions /////////////
+    #region Init and update
 
-	void Start ()
-	{
-		spriteRenderer = transform.GetComponentInChildren<SpriteRenderer>();
-		plAnimation = transform.GetComponentInChildren<Animator>();
-
-		glitchParticles = transform.FindChild("GlitchParticles").gameObject.GetComponent<ParticleSystem>();
-		jumpParticles = transform.FindChild("JumpParticles").gameObject.GetComponent<ParticleSystem>();
-		dustParticles = transform.FindChild("DustParticles").gameObject.GetComponent<ParticleSystem>();
-		dustParticles.Stop();
-
-		zPosition = transform.position.z;
-		state = player_state.IN_GROUND;
-		allowMovement = true;
-	}
-
-   void OnControllerColliderHit(ControllerColliderHit coll)
+    void Start()
     {
-		/*
-		//   /\     /~~  /\  |\  /||~~\~|~  /\  |~~\|||
-		//  /__\   |    /__\ | \/ ||--< |  /__\ |__/|||
-		// /    \   \__/    \|    ||__/_|_/    \|  \...
-		if (coll.gameObject.GetComponent<MeshRenderer>() != null)
-        {
-            if (coll.gameObject.CompareTag("Floor"))
-            {
-                TextureEffects.TextureFlicker(coll.gameObject, brokenTexture);
-            }
-            else
-            {
-                TextureEffects.TextureFlickerRepeat(coll.gameObject, brokenTexture);
-            }
-        }
-		*/
-		if ((controller.collisionFlags & CollisionFlags.Above) != 0) {
-			vSpeed = -0;
-			startJumpPress = -1;
-		}
+        _spriteRenderer = transform.GetComponentInChildren<SpriteRenderer>();
+        _plAnimation = transform.GetComponentInChildren<Animator>();
+
+        _glitchParticles = transform.FindChild("GlitchParticles").GetComponent<ParticleSystem>();
+        _jumpParticles = transform.FindChild("JumpParticles").GetComponent<ParticleSystem>();
+        _dustParticles = transform.FindChild("DustParticles").GetComponent<ParticleSystem>();
+
+        teleport = transform.FindChild("Powers/Teleport").GetComponent<TeleportScript>();
+        slowFPS = transform.FindChild("Powers/SlowFPS").GetComponent<SlowFPS>();
+
+        _boxCollider = transform.GetComponent<BoxCollider>();
+        _distToGround = _boxCollider.bounds.extents.y;
+
+        state = player_state.IN_GROUND;
+        allowMovement = true;
     }
 
-	void Update () 
-	{
-
-		Vector3 moveDirection = new Vector3 (0, 0, 0);
-
-        // State-changing calculations
-        switch (state)
-        {
-			case player_state.PREPARING_JUMP:
-			
-				preparingJump -= Time.deltaTime;
-
-				//If it's ready to jump, start jump and give fall recovery time
-				if (preparingJump <= 0)
-				{
-					vSpeed = jumpSpeed;
-					startJumpPress = Time.time;
-					fallRecovery = jumpRest;
-					state = player_state.JUMPING;
-					plAnimation.SetBool ("Jump", true);	
-					plAnimation.SetBool ("Run", false);
-					jumpParticles.Play();
-				}
-
-                // To control movement of player
-                Movement(moveDirection);
-				break;
-
-			case player_state.FALL_RECOVERING:
-			
-				fallRecovery -= Time.deltaTime;
-
-				if (fallRecovery <= 0){
-					state = player_state.IN_GROUND;
-				}
-
-                // To control movement of player
-                Movement(moveDirection);
-				break;
-
-			case player_state.IN_GROUND: 
-				
-				// If it's not teleporting
-				if (!ActivatingTeleport())
-				{
-					teleport.teleportUsed = false;
-
-					if(transform.parent != null)
-					{	
-						transform.rotation = transform.parent.rotation;
-					} 
-			
-					//If the jump key is being pressed but it has been released since the
-					//last jump
-					if (InputManager.ActiveDevice.Action1.IsPressed && allowMovement && !playerActivedJump) 
-					{
-						//Start jump and set the player-activated jump to true so it
-						//can't jump without releasing the button
-						//We also assign 3 to nonGroundedFrames so the walking animation doesn't show
-						preparingJump = jumpRest;
-						playerActivedJump = true;
-						nonGroundedFrames = 3;
-						state = player_state.PREPARING_JUMP;
-					} 
-					else if (!controller.isGrounded) 
-					{
-						state = player_state.JUMPING;
-						plAnimation.SetBool ("Falling", true);
-						plAnimation.SetBool ("Run", false);
-					}
-					else 
-					{
-						vSpeed = 0;
-					}
-
-					// To control movement of player
-					Movement(moveDirection);
-
-				}
-
-
-				break;
-
-			case player_state.JUMPING:
-
-				if (vSpeed < 0 && plAnimation.GetBool ("Falling") == false) {
-					plAnimation.SetBool ("Jump", false);
-					plAnimation.SetBool ("Falling", true);
-				}
-
-				// If it's not teleporting
-				if (!ActivatingTeleport())
-				{
-					//If it's grounded
-					if (controller.isGrounded) 
-                    {
-						//Start fall recovering and set the bools
-						state = player_state.FALL_RECOVERING;
-						plAnimation.SetBool ("Falling", false);
-						if (plAnimation.GetBool ("Jump") == true) 
-						{
- 							plAnimation.SetBool ("Jump", false);
- 						}
- 						nonGroundedFrames = 0;
-					} 
-					else 
-					{
-						//If it's in the air
-						nonGroundedFrames++;
-						Vector3 eulerAngles = gameObject.transform.rotation.eulerAngles;
-						float rotationZ = 0.0f;
-
-						if (eulerAngles.z < 0.0f) {
-							eulerAngles.z += 360.0f;
-						}
-
-						if (eulerAngles.z != 0.0f) {
-							if (eulerAngles.z <= 3.0f || eulerAngles.z >= 357.0f) 
-                            {
-								rotationZ = 0.0f;
-							}
-							else if (eulerAngles.z <= 180.0f) {
-								rotationZ = eulerAngles.z - 3.0f;
-							} else if (eulerAngles.z > 180.0f) {
-								rotationZ = eulerAngles.z + 3.0f;
-							}
-							gameObject.transform.rotation = Quaternion.Euler(eulerAngles.x, eulerAngles.y, rotationZ);
-						}
-
-						//If the player keeps pushing the jump button give a little
-						//vSpeed momentum - that gets gradually smaller - to get a
-						//higher jump. Do until the press time gets to his max.
-						//If the player releases the button, stop giving extra momentum to the jump.
-						if ((startJumpPress != -1) && (InputManager.ActiveDevice.Action1.IsPressed) & allowMovement
-							&& ((Time.time - startJumpPress) <= maxJumpTime)) 
-                        {
-							vSpeed = jumpSpeed;
-						} 
-                        else 
-                        {
-							startJumpPress = -1;
-						}
-					}
-
-					// To control movement of player
-					Movement(moveDirection);
-
-				}
-
-
-				break;
-
-			case player_state.TELEPORTING:
-
-				Vector3 position;
-				bool ended = teleport.movePosition(out position);
-				transform.position = position;
-
-				if (ended) {
-					state = player_state.JUMPING;
-					plAnimation.speed = 1;
-					rigidBody.detectCollisions = true;
-				}
-
-				break;
-        }
-
-		//If a player-induced jump is checked but the jump key is not longer
-		//being held, set it to false so it can jump again
-		if (playerActivedJump && !InputManager.ActiveDevice.Action1.IsPressed && allowMovement)
-			playerActivedJump = false;
-
-        // To active God mode camera
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            if (godMode == true)
-            {
-                mainCamera.gameObject.SetActive(true);
-                godCamera.gameObject.SetActive(false);
-                godMode = false;
-            }
-            else
-            {
-                godCamera.gameObject.SetActive(true);
-                mainCamera.gameObject.SetActive(false);
-                godMode = true;
-            }
-        }
-
-        // To active a static camera
-        if (mainCamera.isActiveAndEnabled)
-        {
-            if (Input.GetKeyDown(KeyCode.Keypad1))
-            {
-                staticCamera1.gameObject.SetActive(true);
-                mainCamera.gameObject.SetActive(false);
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad2))
-            {
-                staticCamera2.gameObject.SetActive(true);
-                mainCamera.gameObject.SetActive(false);
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad3))
-            {
-                staticCamera3.gameObject.SetActive(true);
-                mainCamera.gameObject.SetActive(false);
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad4))
-            {
-                staticCamera4.gameObject.SetActive(true);
-                mainCamera.gameObject.SetActive(false);
-            }
-        }
-        else
-        {
-            if (Input.GetKeyDown(KeyCode.Keypad0))
-            {
-                mainCamera.gameObject.SetActive(true);
-                staticCamera1.gameObject.SetActive(false);
-                staticCamera2.gameObject.SetActive(false);
-                staticCamera3.gameObject.SetActive(false);
-                staticCamera4.gameObject.SetActive(false);
-            }
-        }
-
-	}
-
-    private void Movement(Vector3 moveDirection)
+    void Update()
     {
-        // Gravity
-        vSpeed -= gravity * Time.deltaTime;
 
-		//If the player is allowed to move
-		if (allowMovement) {
-			
-			// Control of movemente in X axis
-			moveDirection.x = InputManager.ActiveDevice.LeftStickX.Value;
-			moveDirection = transform.TransformDirection (moveDirection);
-			moveDirection *= speed;
-
-			// Flips the sprite renderer if is changing direction
-			if ((moveDirection.x > 0) && (spriteRenderer.flipX == true)) {
-				
-				spriteRenderer.flipX = false;
-
-				Vector3 dustPosition = dustParticles.gameObject.transform.localPosition;
-				dustPosition.x *= -1;
-				dustParticles.gameObject.transform.localPosition = dustPosition;
-
-				Quaternion dustRotation = dustParticles.gameObject.transform.localRotation;
-				dustRotation.y *= -1;
-				dustParticles.gameObject.transform.localRotation = dustRotation;
-
-			} else if ((moveDirection.x < 0) && (spriteRenderer.flipX == false)) {
-				
-				spriteRenderer.flipX = true;
-
-				Vector3 dustPosition = dustParticles.gameObject.transform.localPosition;
-				dustPosition.x *= -1;
-				dustParticles.gameObject.transform.localPosition = dustPosition;
-
-				Quaternion dustRotation = dustParticles.gameObject.transform.localRotation;
-				dustRotation.y *= -1;
-				dustParticles.gameObject.transform.localRotation = dustRotation;
-
-			}
-
-		} else {
-			moveDirection.x = 0;
-		}
-
-        moveDirection.y = vSpeed;
-
-        controller.Move(moveDirection * Time.deltaTime);
-        if (transform.position.z != zPosition)
-        {
-            Vector3 pos = transform.position;
-            pos.z = zPosition;
-            transform.position = pos;
-        }
-
-		//Play or stop the run animation if it's on ground or the character
- 		//is in a minor fall. The nonGroundedFrames point out how many frames the
- 		//character has been non-grounded, so the idle/falling animation doesn't
- 		//play on minor falls and slopes.
- 		//TODO: Maybe change to time?
-		if ((state == player_state.IN_GROUND || nonGroundedFrames < 3) && moveDirection.x != 0){
-			if (plAnimation.GetBool("Run") == false) {
-				plAnimation.SetBool("Run", true);
-			}
-		} else if(plAnimation.GetBool("Run") == true){
-			plAnimation.SetBool("Run",false);
-		}
-
-		//Plays the dust particle effect
-		if (state == player_state.IN_GROUND && moveDirection.x != 0) {
-			if (dustParticles.isStopped) {
-				dustParticles.Play();
-			}
-		} else if (dustParticles.isPlaying) {
-			dustParticles.Stop();
-		}
     }
 
-	private bool ActivatingTeleport(){
+    #endregion
 
-		if (InputManager.ActiveDevice.Action3.WasPressed && allowMovement
-			&& (!teleport.teleportUsed) && teleport.CheckTeleport(controller))
-		{
-                // We set the state to teleporting and determine when it will end
-				state = player_state.TELEPORTING;
-				vSpeed = 0;
-				plAnimation.Play("Glitch_Teleport");
-				plAnimation.speed = 1 / teleport.getDuration();
-				rigidBody.detectCollisions = false;
-				doGlitchParticles();
+    #region Functions
 
-                return true;
-		}
-		return false;
-	}
+    public bool ActivatingTeleport()
+    {
+        if(InputManager.ActiveDevice.Action3.WasPressed && allowMovement && !teleport.teleportUsed && teleport.CheckTeleport(_boxCollider)
+        {
+            state = player_state.TELEPORTING;
+            vSpeed = 0.0f;
+            _plAnimation.SetBool("Teleport", true);
+            _plAnimation.speed = 1.0f / teleport.getDuration();
+            _rigidBody.detectCollisions = false;
+            DoGlitchParticles();
+            return true;
+        }
+        return false;
+    }
 
-	public void doGlitchParticles(){
-		glitchParticles.Play();
-	}
+    private bool IsGrounded()
+    {
+        return Physics.Raycast(transform.position, -Vector3.up, _distToGround + 0.1f;)
+    }
+
+    #endregion
+
+    #region Particles
+
+    public void DoGlitchParticles()
+    {
+        _glitchParticles.Play();
+    }
+
+    #endregion
+
+    #region Colliders
+
+    void OnCollisionEnter(Collision collision)
+    {
+        vSpeed = 0.0f;
+    }
+
+    #endregion
 
 }

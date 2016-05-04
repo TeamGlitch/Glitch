@@ -12,6 +12,7 @@ public class TeleportScript : MonoBehaviour {
 	private Vector3 endPos;
 	private float initialTime;
 	private float endTime;
+    private float distToGround;
 
 	public bool movePosition(out Vector3 position){
 
@@ -29,26 +30,27 @@ public class TeleportScript : MonoBehaviour {
 	}
 
 	//Checks if it can teleport to the given position
-    public bool CheckTeleport(CharacterController controller)
+    public bool CheckTeleport(BoxCollider collider)
     {
+        distToGround = collider.bounds.extents.y;
         // We get the teleport direction
         float directionVertical = InputManager.ActiveDevice.LeftStickY.Value;
         float directionHorizontal = InputManager.ActiveDevice.LeftStickX.Value;
 
         // Vector to know if the position to teleport is occupied
-		endPos = controller.transform.position;
+        endPos = collider.transform.position;
 		endPos.x += teleportDistance * directionHorizontal;
 		endPos.y += (teleportDistance * directionVertical) + 0.1f;
 
 		LayerMask mask = -1;
-		if (!Physics.CheckCapsule(endPos, endPos, controller.radius, mask, QueryTriggerInteraction.Ignore))
+        if (!Physics.CheckCapsule(endPos, endPos, collider.bounds.extents.x, mask, QueryTriggerInteraction.Ignore))
         {
             SoundManager.instance.PlaySingle(TeleportSound);
 			initialPos = transform.position;
 			initialTime = Time.time;
 			teleportUsed = true;
 
-			if (controller.isGrounded)
+            if (IsGrounded())
 			{
 				// Wait for 0.3 seconds
 				endTime = initialTime + 0.3f;
@@ -59,8 +61,9 @@ public class TeleportScript : MonoBehaviour {
 				endTime = initialTime + 0.5f;
 			}
 
-			if (controller.isGrounded) {
-				endPos.y = controller.transform.position.y;
+            if (IsGrounded())
+            {
+				endPos.y = collider.transform.position.y;
 			}
 
             return true;
@@ -72,4 +75,11 @@ public class TeleportScript : MonoBehaviour {
 	public float getDuration(){
 		return endTime - initialTime;
 	}
+
+    private bool IsGrounded()
+    {
+        return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f);
+    }
+
+
 }

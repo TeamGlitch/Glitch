@@ -77,7 +77,7 @@ public class Player : MonoBehaviour {
 
     void Start()
     {
-        characterController.detectCollisions = false;
+
     }
 
 	void OnTriggerEnter(Collider coll){
@@ -135,14 +135,14 @@ public class Player : MonoBehaviour {
 //		characterController.detectCollisions = true;
 		playerController.state = PlayerController.player_state.JUMPING;
 		transform.position = lastCheckPoint.gameObject.transform.position;
-        playerController.slowFPS.RestartCooldowns();
+        slowFPSScript.RestartCooldowns();
 	}
 
 	public void healCompletely()
     {
 		lives = 3;
 		guiLife.UpdateLives();
-        playerController.slowFPS.RestartCooldowns();
+        slowFPSScript.RestartCooldowns();
 	}
 
 	public void IncreaseActivableBox()
