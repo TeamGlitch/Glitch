@@ -8,7 +8,9 @@ public class CollectibleScript : MonoBehaviour {
 
 	void OnTriggerEnter(Collider collider)
 	{
-		player.IncreaseItem ();
-		gameObject.SetActive (false);
+		if (collider.tag == "Player") {
+			player.IncreaseItem ();
+			gameObject.SetActive (false);
+		}
 	}
 }

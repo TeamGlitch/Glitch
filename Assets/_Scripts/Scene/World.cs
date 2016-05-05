@@ -26,6 +26,9 @@ public class World : MonoBehaviour {
 	// How much can the world move in this update
 	public float lag = 0.03f;
 
+	// SlowFPSActived
+	public bool slowFPSActived = false;	
+
 	void Start()
     {
 		// We begin the game activating camera and movements of player
@@ -71,8 +74,10 @@ public class World : MonoBehaviour {
 		if (state != update_status.REGULAR_UPDATE) {
 			state = update_status.REGULAR_UPDATE;
 			doUpdate = true;
+			slowFPSActived = false;
 		} else {
 			state = update_status.WAITING;
+			slowFPSActived = true;
 		}
 	}
 }
