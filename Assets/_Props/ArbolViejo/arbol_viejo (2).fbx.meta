@@ -1,0 +1,194 @@
+fileFormatVersion: 2
+guid: 5f0ec97edd5de5d45a90b984b2951e3f
+timeCreated: 1461354540
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: arbol_viejo_Group10
+    100004: arbol_viejo_Group11
+    100006: arbol_viejo_Group12
+    100008: arbol_viejo_Group13
+    100010: arbol_viejo_Group14
+    100012: arbol_viejo_Group15
+    100014: arbol_viejo_Group16
+    100016: arbol_viejo_Group2
+    100018: arbol_viejo_Group3
+    100020: arbol_viejo_Group4
+    100022: arbol_viejo_Group5
+    100024: arbol_viejo_Group6
+    100026: arbol_viejo_Group7
+    100028: arbol_viejo_Group8
+    100030: arbol_viejo_Group9
+    100032: group10
+    100034: group11
+    100036: group12
+    100038: group13
+    100040: group14
+    100042: group15
+    100044: group16
+    100046: group17
+    100048: group18
+    100050: group9
+    100052: Hojas_Group002
+    100054: Hojas_Group003
+    100056: Hojas_Group004
+    100058: Hojas_Group005
+    100060: Hojas_Group006
+    400000: //RootNode
+    400002: arbol_viejo_Group10
+    400004: arbol_viejo_Group11
+    400006: arbol_viejo_Group12
+    400008: arbol_viejo_Group13
+    400010: arbol_viejo_Group14
+    400012: arbol_viejo_Group15
+    400014: arbol_viejo_Group16
+    400016: arbol_viejo_Group2
+    400018: arbol_viejo_Group3
+    400020: arbol_viejo_Group4
+    400022: arbol_viejo_Group5
+    400024: arbol_viejo_Group6
+    400026: arbol_viejo_Group7
+    400028: arbol_viejo_Group8
+    400030: arbol_viejo_Group9
+    400032: group10
+    400034: group11
+    400036: group12
+    400038: group13
+    400040: group14
+    400042: group15
+    400044: group16
+    400046: group17
+    400048: group18
+    400050: group9
+    400052: Hojas_Group002
+    400054: Hojas_Group003
+    400056: Hojas_Group004
+    400058: Hojas_Group005
+    400060: Hojas_Group006
+    2300000: arbol_viejo_Group10
+    2300002: arbol_viejo_Group11
+    2300004: arbol_viejo_Group12
+    2300006: arbol_viejo_Group13
+    2300008: arbol_viejo_Group14
+    2300010: arbol_viejo_Group15
+    2300012: arbol_viejo_Group16
+    2300014: arbol_viejo_Group2
+    2300016: arbol_viejo_Group3
+    2300018: arbol_viejo_Group4
+    2300020: arbol_viejo_Group5
+    2300022: arbol_viejo_Group6
+    2300024: arbol_viejo_Group7
+    2300026: arbol_viejo_Group8
+    2300028: arbol_viejo_Group9
+    2300030: Hojas_Group002
+    2300032: Hojas_Group003
+    2300034: Hojas_Group004
+    2300036: Hojas_Group005
+    2300038: Hojas_Group006
+    3300000: arbol_viejo_Group10
+    3300002: arbol_viejo_Group11
+    3300004: arbol_viejo_Group12
+    3300006: arbol_viejo_Group13
+    3300008: arbol_viejo_Group14
+    3300010: arbol_viejo_Group15
+    3300012: arbol_viejo_Group16
+    3300014: arbol_viejo_Group2
+    3300016: arbol_viejo_Group3
+    3300018: arbol_viejo_Group4
+    3300020: arbol_viejo_Group5
+    3300022: arbol_viejo_Group6
+    3300024: arbol_viejo_Group7
+    3300026: arbol_viejo_Group8
+    3300028: arbol_viejo_Group9
+    3300030: Hojas_Group002
+    3300032: Hojas_Group003
+    3300034: Hojas_Group004
+    3300036: Hojas_Group005
+    3300038: Hojas_Group006
+    4300000: arbol_viejo_Group2
+    4300002: arbol_viejo_Group3
+    4300004: arbol_viejo_Group4
+    4300006: arbol_viejo_Group5
+    4300008: arbol_viejo_Group6
+    4300010: arbol_viejo_Group7
+    4300012: Hojas_Group005
+    4300014: arbol_viejo_Group8
+    4300016: arbol_viejo_Group9
+    4300018: Hojas_Group006
+    4300020: arbol_viejo_Group10
+    4300022: arbol_viejo_Group11
+    4300024: Hojas_Group003
+    4300026: arbol_viejo_Group12
+    4300028: arbol_viejo_Group13
+    4300030: Hojas_Group004
+    4300032: arbol_viejo_Group14
+    4300034: arbol_viejo_Group15
+    4300036: Hojas_Group002
+    4300038: arbol_viejo_Group16
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
