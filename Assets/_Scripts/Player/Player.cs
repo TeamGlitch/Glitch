@@ -46,6 +46,8 @@ public class Player : MonoBehaviour {
 	private float correctionFactorForExclamation = -11.02155f;
 	private Vector2 exclamationSize;
 
+    private SlowFPS slowFPSScript;
+
 	void Awake () {
 
 		characterController = GetComponent<CharacterController>();
@@ -69,6 +71,7 @@ public class Player : MonoBehaviour {
 		exclamationSize = boxUIActivatedRectTransform.sizeDelta;
 		boxUIActivated.SetActive (false);
 		guiRectTrans = gui.GetComponent<RectTransform>();
+        slowFPSScript = transform.FindChild("Powers").GetComponentInChildren<SlowFPS>();
 
 	}
 
@@ -213,6 +216,8 @@ public class Player : MonoBehaviour {
         //Deactivate the sprite renderer
         sprite.enabled = false;
         trigger.enabled = false;
+
+        slowFPSScript.DeactivatePower();
 
         //Restart the fragments
         for (int i = 0; i < 100; i++)

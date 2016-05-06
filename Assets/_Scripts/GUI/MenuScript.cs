@@ -33,6 +33,7 @@ public class MenuScript : MonoBehaviour {
 		helpMenu.enabled = false;
 		creditsMenu.enabled = false;
 		startText.Select ();
+        Cursor.visible = false;
 	}
 
 	public void ContinuePress()

@@ -5,7 +5,7 @@ public class TeleportScript : MonoBehaviour {
 
 	//Teleport movement scale
 	public float teleportDistance = 4.0f;
-
+    public AudioClip TeleportSound;
 	public bool teleportUsed = false;
 
 	private Vector3 initialPos;
@@ -43,6 +43,7 @@ public class TeleportScript : MonoBehaviour {
 		LayerMask mask = -1;
 		if (!Physics.CheckCapsule(endPos, endPos, controller.radius, mask, QueryTriggerInteraction.Ignore))
         {
+            SoundManager.instance.PlaySingle(TeleportSound);
 			initialPos = transform.position;
 			initialTime = Time.time;
 			teleportUsed = true;

@@ -45,8 +45,8 @@ public class SlowFPS : MonoBehaviour {
 					SlowFPSActivated ();
 			}
 			else
-			{        
-				deactivatePower();
+			{
+                DeactivatePower();
 			}
 		}
 
@@ -58,7 +58,7 @@ public class SlowFPS : MonoBehaviour {
 			if (timeRemaining <= 0.0f)
 			{
 				timeRemaining = 0;
-				deactivatePower();
+                DeactivatePower();
 
 			} else if (world.doUpdate == true) {
 				
@@ -90,7 +90,7 @@ public class SlowFPS : MonoBehaviour {
 		}
 	}
 
-	private void deactivatePower(){
+	public void DeactivatePower(){
 		powerActive = false;
 		world.toggleSlowFPS();
 		fakeFPS.SlowInactive();
@@ -102,7 +102,7 @@ public class SlowFPS : MonoBehaviour {
 	public void RestartCooldowns()
 	{
 		timeRemaining = MAXTime;
-		deactivatePower();
+        DeactivatePower();
         world.toggleSlowFPS();
 	}
 
