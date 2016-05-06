@@ -28,6 +28,7 @@ public class KnightAI : MonoBehaviour {
     private const float waitTime = 3.0f;
     private const float attackTime = 1.0f;
     private const int damageAttack = 1;
+    private const float speedConstant = 0.5f;
 
     // Variables
     public bool sight = false;
@@ -35,8 +36,9 @@ public class KnightAI : MonoBehaviour {
     public Player player;
     public BoxCollider collider;
     public BoxCollider fieldOfView;
-    public Rigidbody rigid;
+    public BoxCollider headCollider;
     public BoxCollider swordCollider;
+    public Rigidbody rigid;
     public enemy_states states = enemy_states.PATROL;
     public World world;
 
@@ -52,7 +54,7 @@ public class KnightAI : MonoBehaviour {
     private Animator animator;
     private float timePerAttack = 0.0f;
     private Vector3 origin;
-    private int layerMask = (~((1 << 13) | (1 << 2))) | (1 << 9) | (1 << 0);
+    private int layerMask = (~((1 << 13) | (1 << 2) | (1 << 11))) | (1 << 9) | (1 << 0);
 
     void Start()
     {
@@ -63,7 +65,11 @@ public class KnightAI : MonoBehaviour {
 
     void OnCollisionEnter(Collision coll)
     {
-        if ((coll.contacts[0].thisCollider.CompareTag("Knight")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
+        if ((coll.contacts[0].thisCollider.CompareTag("Knight")) && (coll.contacts[0].otherCollider.CompareTag("Player")) && (player.transform.position.y > (transform.position.y + transform.lossyScale.y/2)))
+        {
+            Attacked();
+        }
+        else if ((sight == true) && (coll.contacts[0].thisCollider.CompareTag("Knight")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
         {
             Attack();
         }
@@ -96,9 +102,8 @@ public class KnightAI : MonoBehaviour {
         {
             origin = transform.position;
             origin.y += transform.localScale.y * 0.75f;
-
             ray = new Ray(origin, player.transform.position - origin);
-            //Debug.DrawRay(origin, player.transform.position - origin);
+
             if ((Physics.Raycast(ray, out hit, float.PositiveInfinity, layerMask)) && hit.collider.gameObject.CompareTag("Player"))
             {
                 sight = true;
@@ -111,8 +116,10 @@ public class KnightAI : MonoBehaviour {
 
     void Update()
     {
+
         if (world.doUpdate)
         {
+            animator.SetFloat("Speed", speed*speedConstant);
             animator.SetInteger("State", (int)states);
             switch (states)
             {
@@ -219,9 +226,7 @@ public class KnightAI : MonoBehaviour {
 
                     origin = transform.position;
                     origin.y += transform.localScale.y * 0.75f;
-
                     ray = new Ray(origin, player.transform.position - origin);
-                    //Debug.DrawRay(origin, player.transform.position - origin);
 
                     if ((Physics.Raycast(ray, out hit, maxSightSearch, layerMask)) && (hit.collider.gameObject.CompareTag("Player")) && (sight == true))
                     {
@@ -282,6 +287,10 @@ public class KnightAI : MonoBehaviour {
                     break;
             }
         }
+        else
+        {
+            animator.SetFloat("Speed", 0.0f);
+        }
     }
 
     public void DeadRandomTrigger()
@@ -316,6 +325,7 @@ public class KnightAI : MonoBehaviour {
             collider.enabled = false;
             swordCollider.enabled = false;
             fieldOfView.enabled = false;
+            headCollider.enabled = false;
             animator.SetBool("Attack", false);
         }
 
@@ -328,8 +338,17 @@ public class KnightAI : MonoBehaviour {
         player.DecrementLives(damageAttack);
         animator.SetBool("Attack", false);
         sight = false;
-        speed = searchSpeed;
-        time = searchingTime;
-        states = enemy_states.SEARCH;
+        if (player.lives > 0)
+        {
+            speed = searchSpeed;
+            time = searchingTime;
+            states = enemy_states.SEARCH;
+        }
+        else
+        {
+            speed = patrolSpeed;
+            time = waitTime;
+            states = enemy_states.WAIT;
+        }
     }
 }
