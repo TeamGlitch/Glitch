@@ -17,12 +17,13 @@ public class ArcherAI : MonoBehaviour {
     // Constants
     private const float maxSightChase = 9.0f;
     private const float maxSightPersecution = 10.0f;
-    private const float maxSightMeleeAttack = 4.0f;
+    private const float maxSightMeleeAttack = 2.5f;
     private const float maxSightShoot = 20.0f;
     private const float chaseSpeed = 10.0f;
     private const float waitSpeed = 0.0f;
     private const float meleeAttackSpeed = 10.0f;
     private const float shootSpeed = 6.0f;
+    private const float speedConstant = 0.5f;
 
     // Variables
     public enemy_states states = enemy_states.WAIT;
@@ -32,15 +33,14 @@ public class ArcherAI : MonoBehaviour {
     public bool motionless = false;
     public World world;
     public GameObject arrow;				//Reference to an arrow prefab
-    public BoxCollider collider;
     public Rigidbody rigid;
+    public BoxCollider collider;
     public BoxCollider fieldOfView;
     public BoxCollider kickCollider;
-    public SphereCollider killCollider;
+    public BoxCollider headCollider;
 
     private ObjectPool arrowPool;			//Arrows pool
     private ArrowScript arrowLogic;
-    private Vector3 initialPosition;
     private Ray ray;
     private RaycastHit hit;
     private float rotationTime = 0.0f;
@@ -50,7 +50,7 @@ public class ArcherAI : MonoBehaviour {
     private Vector3 origin;
     private Animator animator;
     private float timePerKick = 0.0f;
-    private int layerMask = (~((1 << 13) | (1 << 2))) | (1 << 9);
+    private int layerMask = (~((1 << 13) | (1 << 2) | (1 << 11))) | (1 << 9) | (1 << 0);
 
     // Trigger that detect player and change the state to Shoot
     void OnTriggerStay(Collider coll)
@@ -60,15 +60,13 @@ public class ArcherAI : MonoBehaviour {
         {
             origin = transform.position;
             origin.y += transform.localScale.y*0.75f;
-
             ray = new Ray(origin, player.transform.position - origin);
-            Debug.DrawRay(origin, player.transform.position - origin);
-            if ((Physics.Raycast(ray, out hit, float.PositiveInfinity, layerMask) && (sight == false)) && (hit.collider.gameObject.CompareTag("Player")) && (states != enemy_states.HITTED))
+
+            if (Physics.Raycast(ray, out hit, maxSightShoot, layerMask) && (sight == false) && (states != enemy_states.HITTED) && (hit.collider.gameObject.CompareTag("Player")))
             {
                 animator.SetBool("Sighted", true);
                 sight = true;
                 speed = shootSpeed;
-                initialPosition = transform.position;      // We save the initial point to return later
                 states = enemy_states.SHOOT;
             }
         }
@@ -93,6 +91,14 @@ public class ArcherAI : MonoBehaviour {
         }
     }
 
+    void OnCollisionEnter(Collision coll)
+    {
+        if ((states != enemy_states.DEATH) && (sight == true) && (coll.contacts[0].thisCollider.CompareTag("Archer")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
+        {
+            Kick();
+        }
+    }
+
     void Start()
     {
         arrowPool = new ObjectPool(arrow);
@@ -103,6 +109,7 @@ public class ArcherAI : MonoBehaviour {
     {
         if (world.doUpdate)
         {
+            animator.SetFloat("Speed", speed * speedConstant);
             if (states != enemy_states.DEATH)
             {
                 //animator.SetInteger("State", (int)states);
@@ -269,7 +276,7 @@ public class ArcherAI : MonoBehaviour {
     public void FinishKickTrigger()
     {
         animator.SetBool("Near", false);
-        timePerKick = 3.0f;
+        timePerKick = 1.0f;
     }
 
     public void HittedTrigger()
@@ -293,6 +300,7 @@ public class ArcherAI : MonoBehaviour {
         // To impulse player from enemy
         player.ReactToAttack(transform.position.x);
 
+        sight = false;
         states = enemy_states.HITTED;
         animator.SetBool("Hit", true);
         animator.SetBool("Near", false);
@@ -300,6 +308,6 @@ public class ArcherAI : MonoBehaviour {
         collider.enabled = false;
         kickCollider.enabled = false;
         fieldOfView.enabled = false;
-        killCollider.enabled = false;
+        headCollider.enabled = false;
     }
 }

@@ -1,59 +1,59 @@
 fileFormatVersion: 2
-guid: adef618c2bd4b184ca18afb9c2379cb9
-timeCreated: 1461600294
+guid: 4788eef0dc1765e44bf1ef38b4714e76
+timeCreated: 1462128602
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: //RootNode
-    100002: ctrl_anular_parte1_der
-    100004: ctrl_anular_parte1_izq
-    100006: ctrl_anular_parte2_der
-    100008: ctrl_anular_parte2_izq
-    100010: ctrl_anular_parte3_der
-    100012: ctrl_anular_parte3_izq
-    100014: ctrl_cabeza
-    100016: ctrl_cadera
-    100018: ctrl_cintura
-    100020: ctrl_clavicula_der
-    100022: ctrl_clavicula_izq
-    100024: ctrl_codo_der
-    100026: ctrl_codo_izq
-    100028: ctrl_corazon_parte1_der
-    100030: ctrl_corazon_parte1_izq
-    100032: ctrl_corazon_parte2_der
-    100034: ctrl_corazon_parte2_izq
-    100036: ctrl_corazon_parte3_der
-    100038: ctrl_corazon_parte3_izq
-    100040: ctrL_dedos_pie_der
-    100042: ctrL_dedos_pie_izq
-    100044: ctrl_hombro_der
-    100046: ctrl_hombro_izq
-    100048: ctrl_indice_parte1_der
-    100050: ctrl_indice_parte1_izq
-    100052: ctrl_indice_parte2_der
-    100054: ctrl_indice_parte2_izq
-    100056: ctrl_indice_parte3_der
-    100058: ctrl_indice_parte3_izq
-    100060: ctrl_menique_parte1_der
-    100062: ctrl_menique_parte1_izq
-    100064: ctrl_menique_parte2_der
-    100066: ctrl_menique_parte2_izq
-    100068: ctrl_menique_parte3_der
-    100070: ctrl_menique_parte3_izq
-    100072: ctrl_muneca_der
-    100074: ctrl_muneca_izq
-    100076: ctrl_pecho
-    100078: ctrL_pie_der
-    100080: ctrL_pie_izq
-    100082: ctrl_pulgar_parte1_der
-    100084: ctrl_pulgar_parte1_izq
-    100086: ctrl_pulgar_parte2_der
-    100088: ctrl_pulgar_parte2_izq
-    100090: ctrl_rodilla_der
-    100092: ctrl_rodilla_izq
-    100094: ctrl_total
-    100096: EspadaUV:Group1
+    100000: caballero
+    100002: //RootNode
+    100004: ctrl_anular_parte1_der
+    100006: ctrl_anular_parte1_izq
+    100008: ctrl_anular_parte2_der
+    100010: ctrl_anular_parte2_izq
+    100012: ctrl_anular_parte3_der
+    100014: ctrl_anular_parte3_izq
+    100016: ctrl_cabeza
+    100018: ctrl_cadera
+    100020: ctrl_cintura
+    100022: ctrl_clavicula_der
+    100024: ctrl_clavicula_izq
+    100026: ctrl_codo_der
+    100028: ctrl_codo_izq
+    100030: ctrl_corazon_parte1_der
+    100032: ctrl_corazon_parte1_izq
+    100034: ctrl_corazon_parte2_der
+    100036: ctrl_corazon_parte2_izq
+    100038: ctrl_corazon_parte3_der
+    100040: ctrl_corazon_parte3_izq
+    100042: ctrL_dedos_pie_der
+    100044: ctrL_dedos_pie_izq
+    100046: ctrl_hombro_der
+    100048: ctrl_hombro_izq
+    100050: ctrl_indice_parte1_der
+    100052: ctrl_indice_parte1_izq
+    100054: ctrl_indice_parte2_der
+    100056: ctrl_indice_parte2_izq
+    100058: ctrl_indice_parte3_der
+    100060: ctrl_indice_parte3_izq
+    100062: ctrl_menique_parte1_der
+    100064: ctrl_menique_parte1_izq
+    100066: ctrl_menique_parte2_der
+    100068: ctrl_menique_parte2_izq
+    100070: ctrl_menique_parte3_der
+    100072: ctrl_menique_parte3_izq
+    100074: ctrl_muneca_der
+    100076: ctrl_muneca_izq
+    100078: ctrl_pecho
+    100080: ctrL_pie_der
+    100082: ctrL_pie_izq
+    100084: ctrl_pulgar_parte1_der
+    100086: ctrl_pulgar_parte1_izq
+    100088: ctrl_pulgar_parte2_der
+    100090: ctrl_pulgar_parte2_izq
+    100092: ctrl_rodilla_der
+    100094: ctrl_rodilla_izq
+    100096: ctrl_total
     100098: group1
     100100: ik_gp_der
     100102: ik_gp_izq
@@ -126,59 +126,60 @@ ModelImporter:
     100236: SoldadoArmoredUV_Group2
     100238: SoldadoArmoredUV_Group3
     100240: SoldadoArmoredUV_Group4
-    100242: SoldadoArmoredUV_Group6
-    100244: SoldadoArmoredUV_Group7
-    100246: SoldadoArmoredUV_Group8
-    100248: SoldadoArmoredUV_Group9
-    400000: //RootNode
-    400002: ctrl_anular_parte1_der
-    400004: ctrl_anular_parte1_izq
-    400006: ctrl_anular_parte2_der
-    400008: ctrl_anular_parte2_izq
-    400010: ctrl_anular_parte3_der
-    400012: ctrl_anular_parte3_izq
-    400014: ctrl_cabeza
-    400016: ctrl_cadera
-    400018: ctrl_cintura
-    400020: ctrl_clavicula_der
-    400022: ctrl_clavicula_izq
-    400024: ctrl_codo_der
-    400026: ctrl_codo_izq
-    400028: ctrl_corazon_parte1_der
-    400030: ctrl_corazon_parte1_izq
-    400032: ctrl_corazon_parte2_der
-    400034: ctrl_corazon_parte2_izq
-    400036: ctrl_corazon_parte3_der
-    400038: ctrl_corazon_parte3_izq
-    400040: ctrL_dedos_pie_der
-    400042: ctrL_dedos_pie_izq
-    400044: ctrl_hombro_der
-    400046: ctrl_hombro_izq
-    400048: ctrl_indice_parte1_der
-    400050: ctrl_indice_parte1_izq
-    400052: ctrl_indice_parte2_der
-    400054: ctrl_indice_parte2_izq
-    400056: ctrl_indice_parte3_der
-    400058: ctrl_indice_parte3_izq
-    400060: ctrl_menique_parte1_der
-    400062: ctrl_menique_parte1_izq
-    400064: ctrl_menique_parte2_der
-    400066: ctrl_menique_parte2_izq
-    400068: ctrl_menique_parte3_der
-    400070: ctrl_menique_parte3_izq
-    400072: ctrl_muneca_der
-    400074: ctrl_muneca_izq
-    400076: ctrl_pecho
-    400078: ctrL_pie_der
-    400080: ctrL_pie_izq
-    400082: ctrl_pulgar_parte1_der
-    400084: ctrl_pulgar_parte1_izq
-    400086: ctrl_pulgar_parte2_der
-    400088: ctrl_pulgar_parte2_izq
-    400090: ctrl_rodilla_der
-    400092: ctrl_rodilla_izq
-    400094: ctrl_total
-    400096: EspadaUV:Group1
+    100242: SoldadoArmoredUV_Group5
+    100244: SoldadoArmoredUV_Group6
+    100246: SoldadoArmoredUV_Group7
+    100248: SoldadoArmoredUV_Group8
+    100250: SoldadoArmoredUV_Group9
+    400000: caballero
+    400002: //RootNode
+    400004: ctrl_anular_parte1_der
+    400006: ctrl_anular_parte1_izq
+    400008: ctrl_anular_parte2_der
+    400010: ctrl_anular_parte2_izq
+    400012: ctrl_anular_parte3_der
+    400014: ctrl_anular_parte3_izq
+    400016: ctrl_cabeza
+    400018: ctrl_cadera
+    400020: ctrl_cintura
+    400022: ctrl_clavicula_der
+    400024: ctrl_clavicula_izq
+    400026: ctrl_codo_der
+    400028: ctrl_codo_izq
+    400030: ctrl_corazon_parte1_der
+    400032: ctrl_corazon_parte1_izq
+    400034: ctrl_corazon_parte2_der
+    400036: ctrl_corazon_parte2_izq
+    400038: ctrl_corazon_parte3_der
+    400040: ctrl_corazon_parte3_izq
+    400042: ctrL_dedos_pie_der
+    400044: ctrL_dedos_pie_izq
+    400046: ctrl_hombro_der
+    400048: ctrl_hombro_izq
+    400050: ctrl_indice_parte1_der
+    400052: ctrl_indice_parte1_izq
+    400054: ctrl_indice_parte2_der
+    400056: ctrl_indice_parte2_izq
+    400058: ctrl_indice_parte3_der
+    400060: ctrl_indice_parte3_izq
+    400062: ctrl_menique_parte1_der
+    400064: ctrl_menique_parte1_izq
+    400066: ctrl_menique_parte2_der
+    400068: ctrl_menique_parte2_izq
+    400070: ctrl_menique_parte3_der
+    400072: ctrl_menique_parte3_izq
+    400074: ctrl_muneca_der
+    400076: ctrl_muneca_izq
+    400078: ctrl_pecho
+    400080: ctrL_pie_der
+    400082: ctrL_pie_izq
+    400084: ctrl_pulgar_parte1_der
+    400086: ctrl_pulgar_parte1_izq
+    400088: ctrl_pulgar_parte2_der
+    400090: ctrl_pulgar_parte2_izq
+    400092: ctrl_rodilla_der
+    400094: ctrl_rodilla_izq
+    400096: ctrl_total
     400098: group1
     400100: ik_gp_der
     400102: ik_gp_izq
@@ -251,13 +252,14 @@ ModelImporter:
     400236: SoldadoArmoredUV_Group2
     400238: SoldadoArmoredUV_Group3
     400240: SoldadoArmoredUV_Group4
-    400242: SoldadoArmoredUV_Group6
-    400244: SoldadoArmoredUV_Group7
-    400246: SoldadoArmoredUV_Group8
-    400248: SoldadoArmoredUV_Group9
-    2300000: EspadaUV:Group1
-    3300000: EspadaUV:Group1
-    4300000: EspadaUV:Group1
+    400242: SoldadoArmoredUV_Group5
+    400244: SoldadoArmoredUV_Group6
+    400246: SoldadoArmoredUV_Group7
+    400248: SoldadoArmoredUV_Group8
+    400250: SoldadoArmoredUV_Group9
+    2300000: SoldadoArmoredUV_Group5
+    3300000: SoldadoArmoredUV_Group5
+    4300000: SoldadoArmoredUV_Group5
     4300002: SoldadoArmoredUV_Group1
     4300004: SoldadoArmoredUV_Group2
     4300006: SoldadoArmoredUV_Group3
@@ -291,7 +293,7 @@ ModelImporter:
     13700016: SoldadoArmoredUV_Group8
     13700018: SoldadoArmoredUV_Group9
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
   animations:
@@ -335,7 +337,14 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.93368703
+      - time: 0.54068244
+        functionName: AttackTrigger
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1
         functionName: DeadRandomTrigger
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -344,6 +353,8 @@ ModelImporter:
         messageOptions: 0
       transformMask:
       - path: 
+        weight: 1
+      - path: caballero
         weight: 1
       - path: ctrl_total
         weight: 1
@@ -391,7 +402,7 @@ ModelImporter:
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_pulgar_parte1_der/ctrl_pulgar_parte2_der
         weight: 1
-      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/EspadaUV:Group1
+      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/SoldadoArmoredUV_Group5
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq
         weight: 1
@@ -599,8 +610,8 @@ ModelImporter:
     - serializedVersion: 16
       name: Walk
       takeName: clip
-      firstFrame: 1
-      lastFrame: 24
+      firstFrame: 2
+      lastFrame: 23
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -608,7 +619,7 @@ ModelImporter:
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
-      loopBlend: 0
+      loopBlend: 1
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
@@ -622,6 +633,8 @@ ModelImporter:
       events: []
       transformMask:
       - path: 
+        weight: 1
+      - path: caballero
         weight: 1
       - path: ctrl_total
         weight: 1
@@ -669,7 +682,7 @@ ModelImporter:
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_pulgar_parte1_der/ctrl_pulgar_parte2_der
         weight: 1
-      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/EspadaUV:Group1
+      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/SoldadoArmoredUV_Group5
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq
         weight: 1
@@ -901,6 +914,8 @@ ModelImporter:
       transformMask:
       - path: 
         weight: 1
+      - path: caballero
+        weight: 1
       - path: ctrl_total
         weight: 1
       - path: ctrl_total/ctrl_cadera
@@ -947,7 +962,7 @@ ModelImporter:
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_pulgar_parte1_der/ctrl_pulgar_parte2_der
         weight: 1
-      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/EspadaUV:Group1
+      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/SoldadoArmoredUV_Group5
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq
         weight: 1
@@ -1155,8 +1170,8 @@ ModelImporter:
     - serializedVersion: 16
       name: Idle
       takeName: clip
-      firstFrame: 51
-      lastFrame: 80
+      firstFrame: 52
+      lastFrame: 76
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -1164,7 +1179,7 @@ ModelImporter:
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
-      loopBlend: 0
+      loopBlend: 1
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
@@ -1178,6 +1193,8 @@ ModelImporter:
       events: []
       transformMask:
       - path: 
+        weight: 1
+      - path: caballero
         weight: 1
       - path: ctrl_total
         weight: 1
@@ -1225,7 +1242,7 @@ ModelImporter:
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_pulgar_parte1_der/ctrl_pulgar_parte2_der
         weight: 1
-      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/EspadaUV:Group1
+      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/SoldadoArmoredUV_Group5
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq
         weight: 1
@@ -1457,6 +1474,8 @@ ModelImporter:
       transformMask:
       - path: 
         weight: 1
+      - path: caballero
+        weight: 1
       - path: ctrl_total
         weight: 1
       - path: ctrl_total/ctrl_cadera
@@ -1503,7 +1522,7 @@ ModelImporter:
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_pulgar_parte1_der/ctrl_pulgar_parte2_der
         weight: 1
-      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/EspadaUV:Group1
+      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/SoldadoArmoredUV_Group5
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq
         weight: 1
@@ -1735,6 +1754,8 @@ ModelImporter:
       transformMask:
       - path: 
         weight: 1
+      - path: caballero
+        weight: 1
       - path: ctrl_total
         weight: 1
       - path: ctrl_total/ctrl_cadera
@@ -1781,7 +1802,7 @@ ModelImporter:
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_pulgar_parte1_der/ctrl_pulgar_parte2_der
         weight: 1
-      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/EspadaUV:Group1
+      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/SoldadoArmoredUV_Group5
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq
         weight: 1
@@ -2013,6 +2034,8 @@ ModelImporter:
       transformMask:
       - path: 
         weight: 1
+      - path: caballero
+        weight: 1
       - path: ctrl_total
         weight: 1
       - path: ctrl_total/ctrl_cadera
@@ -2059,7 +2082,7 @@ ModelImporter:
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_pulgar_parte1_der/ctrl_pulgar_parte2_der
         weight: 1
-      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/EspadaUV:Group1
+      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/SoldadoArmoredUV_Group5
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq
         weight: 1
@@ -2287,9 +2310,18 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 1
+        functionName: AttackTrigger
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
+        weight: 1
+      - path: caballero
         weight: 1
       - path: ctrl_total
         weight: 1
@@ -2337,7 +2369,7 @@ ModelImporter:
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_pulgar_parte1_der/ctrl_pulgar_parte2_der
         weight: 1
-      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/EspadaUV:Group1
+      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/SoldadoArmoredUV_Group5
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq
         weight: 1
@@ -2569,6 +2601,8 @@ ModelImporter:
       transformMask:
       - path: 
         weight: 1
+      - path: caballero
+        weight: 1
       - path: ctrl_total
         weight: 1
       - path: ctrl_total/ctrl_cadera
@@ -2615,7 +2649,7 @@ ModelImporter:
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_pulgar_parte1_der/ctrl_pulgar_parte2_der
         weight: 1
-      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/EspadaUV:Group1
+      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/SoldadoArmoredUV_Group5
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq
         weight: 1
@@ -2823,16 +2857,16 @@ ModelImporter:
     - serializedVersion: 16
       name: Search
       takeName: clip
-      firstFrame: 198
-      lastFrame: 247
+      firstFrame: 208
+      lastFrame: 233
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
+      loopTime: 1
+      loopBlend: 1
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
@@ -2846,6 +2880,8 @@ ModelImporter:
       events: []
       transformMask:
       - path: 
+        weight: 1
+      - path: caballero
         weight: 1
       - path: ctrl_total
         weight: 1
@@ -2893,7 +2929,7 @@ ModelImporter:
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_pulgar_parte1_der/ctrl_pulgar_parte2_der
         weight: 1
-      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/EspadaUV:Group1
+      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/SoldadoArmoredUV_Group5
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq
         weight: 1
@@ -3132,6 +3168,8 @@ ModelImporter:
       transformMask:
       - path: 
         weight: 1
+      - path: caballero
+        weight: 1
       - path: ctrl_total
         weight: 1
       - path: ctrl_total/ctrl_cadera
@@ -3178,7 +3216,7 @@ ModelImporter:
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/ctrl_pulgar_parte1_der/ctrl_pulgar_parte2_der
         weight: 1
-      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/EspadaUV:Group1
+      - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_der/ctrl_hombro_der/ctrl_codo_der/ctrl_muneca_der/SoldadoArmoredUV_Group5
         weight: 1
       - path: ctrl_total/ctrl_cadera/ctrl_cintura/ctrl_pecho/ctrl_clavicula_izq
         weight: 1
@@ -3403,7 +3441,7 @@ ModelImporter:
     useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
-    normalImportMode: 0
+    normalImportMode: 1
     tangentImportMode: 3
   importAnimation: 1
   copyAvatar: 0

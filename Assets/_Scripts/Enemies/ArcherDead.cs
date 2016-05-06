@@ -9,7 +9,17 @@ public class ArcherDead : MonoBehaviour {
     {
         if ((archer.states != ArcherAI.enemy_states.DEATH) && (coll.gameObject.CompareTag("Player")))
         {
-            archer.Defeated();
+            if (archer.player.transform.position.y > (transform.position.y + transform.lossyScale.y/2))
+            {
+                archer.Defeated();
+            }
+            else
+            {
+                if (archer.sight == true)
+                {
+                    archer.Kick();
+                }
+            }
         }
     }
 }
