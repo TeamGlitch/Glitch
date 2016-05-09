@@ -31,7 +31,7 @@ public class CheckPoint : MonoBehaviour {
 		if((coll.gameObject.CompareTag("Player")) && !active)
         {
 			//Sets this point as the checkpoint
-			setThisAsCheckPoint(coll.transform.parent.gameObject);
+			setThisAsCheckPoint(coll.transform.gameObject);
 
 			//Activates the grow animation
 			growStart = Time.time;

@@ -39,21 +39,17 @@ public class PlayerController : MonoBehaviour
 	private bool playerActivedJump = false;		// The jump state is cause of a player jump? (If not, it could be a fall)
 
 	private float zPosition;					// Position on the z axis. Unvariable
-	public float speed = 7.2f;					// Horizontal speed
-	public float gravity = 22.0f;				// Gravity
-	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
+	public float speed = 12.5f;					// Horizontal speed
+	public float gravity = -50.0f;				// Gravity
+	public float maxJumpTime = 0.15f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
 
     [SerializeField]
-    private float shortJumpSpeed = 15.0f;				// Base jump speed
-    [SerializeField]
-    private float largeJumpSpeed = 20.0f;				// Base jump speed
+    private float shortJumpSpeed = 20.0f;				// Base jump speed
     [HideInInspector]
     public float vSpeed = 0.0f;					// The vertical speed
 
     private float timePreparingJump = 0.0f;
-    [SerializeField]
-	private float maxTimeToPrepareJump = 0.05f;				//Jump preparing time left
 	private float fallRecovery = 0;					//Fall recovery time left
 
 	// Powers declarations
@@ -93,9 +89,6 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-
-        Vector3 moveDirection = new Vector3(0, 0, 0);
-
         // State-changing calculations
         switch (state)
         {
@@ -110,15 +103,17 @@ public class PlayerController : MonoBehaviour
                 plAnimation.SetBool("Run", false);
                 jumpParticles.Play();
     
-                Movement(moveDirection);
+                Movement();
                 break;
 
             case player_state.FALL_RECOVERING:
 
                 state = player_state.IN_GROUND;
+                vSpeed = 0;
 
                 // To control movement of player
-                Movement(moveDirection);
+                Movement();
+
                 break;
 
 
@@ -141,6 +136,7 @@ public class PlayerController : MonoBehaviour
                         timePreparingJump = 0.0f;
                         playerActivedJump = true;
                         state = player_state.PREPARING_JUMP;
+                        vSpeed = 0;
                     }
                     else if (!IsGrounded())
                     {
@@ -154,7 +150,7 @@ public class PlayerController : MonoBehaviour
                     }
 
                     // To control movement of player
-                    Movement(moveDirection);
+                    Movement();
 
                 }
                 break;
@@ -186,7 +182,7 @@ public class PlayerController : MonoBehaviour
 
                         timePreparingJump += Time.deltaTime;
 
-                        if(playerActivedJump && timePreparingJump < maxJumpTime && InputManager.ActiveDevice.Action1.IsPressed)
+                        if(playerActivedJump && timePreparingJump <= maxJumpTime && InputManager.ActiveDevice.Action1.IsPressed)
                         {
                             vSpeed = shortJumpSpeed;
                         }
@@ -218,7 +214,7 @@ public class PlayerController : MonoBehaviour
                         }
                     }
                     // To control movement of player
-                    Movement(moveDirection);
+                    Movement();
                 }
                 break;
 
@@ -245,19 +241,28 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private void Movement(Vector3 moveDirection)
+    private void Movement()
     {
+        Vector3 moveDirection = Vector3.zero;
+
+        float verticalMove = 0.0f;
         // Gravity
-        vSpeed -= gravity * Time.deltaTime;
+        if(playerActivedJump && timePreparingJump > maxJumpTime && (timePreparingJump - Time.deltaTime < maxJumpTime) && InputManager.ActiveDevice.Action1.IsPressed)
+        {
+            verticalMove = vSpeed * (maxJumpTime - (timePreparingJump - Time.deltaTime));
+            verticalMove += vSpeed * (timePreparingJump - maxJumpTime) + 0.5f * gravity * Mathf.Pow((timePreparingJump - maxJumpTime), 2f);
+        }
+        else
+        {
+            verticalMove = vSpeed * Time.deltaTime + 0.5f * gravity * Mathf.Pow(Time.deltaTime, 2f);
+        }
+        vSpeed += gravity * Time.deltaTime;
 
         //If the player is allowed to move
         if (allowMovement)
         {
-
             // Control of movemente in X axis
             moveDirection.x = InputManager.ActiveDevice.LeftStickX.Value;
-            moveDirection = transform.TransformDirection(moveDirection);
-            moveDirection *= speed;
 
             // Flips the sprite renderer if is changing direction
             if ((moveDirection.x > 0) && (spriteRenderer.flipX == true))
@@ -288,24 +293,21 @@ public class PlayerController : MonoBehaviour
                 dustParticles.gameObject.transform.localRotation = dustRotation;
 
             }
-
         }
         else
         {
             moveDirection.x = 0;
         }
 
-        moveDirection.y = vSpeed;
+        moveDirection.x *= speed * Time.deltaTime;
+        moveDirection.y = verticalMove;
 
-        Debug.Log(moveDirection);
+        Vector3 position = transform.position + moveDirection;
 
-        rigidBody.velocity = moveDirection;
-        if (transform.position.z != zPosition)
-        {
-            Vector3 pos = transform.position;
-            pos.z = zPosition;
-            transform.position = pos;
-        }
+        if (position.z != zPosition)
+            position.z = zPosition;
+
+        rigidBody.MovePosition(position);
 
         if (state == player_state.IN_GROUND && moveDirection.x != 0)
         {
