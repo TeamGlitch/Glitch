@@ -32,18 +32,40 @@ public class TeleportScript : MonoBehaviour {
 	//Checks if it can teleport to the given position
     public bool CheckTeleport(BoxCollider collider)
     {
+
+		float proportion = collider.bounds.extents.y / collider.bounds.extents.x;
+		float teleportVerticalDistance = proportion * teleportDistance;
+
         distToGround = collider.bounds.extents.y;
         // We get the teleport direction
         float directionVertical = InputManager.ActiveDevice.LeftStickY.Value;
         float directionHorizontal = InputManager.ActiveDevice.LeftStickX.Value;
 
+		if(directionHorizontal != 0.0f && directionVertical == 0.0f)
+			directionHorizontal = 1.0f;
+		else if(directionHorizontal == 0.0f && directionVertical != 0.0f)
+			directionVertical = 1.0f;
+		else
+	    {
+			float aux = Mathf.Cos(Mathf.PI / 2.0f);
+			if(directionHorizontal > 0.0f)
+				directionHorizontal = aux;
+			else
+				directionHorizontal = -aux;
+
+			if(directionVertical > 0.0f)
+				directionVertical = aux;
+			else
+				directionVertical = -aux;
+		}
+
         // Vector to know if the position to teleport is occupied
         endPos = collider.transform.position;
 		endPos.x += teleportDistance * directionHorizontal;
-		endPos.y += (teleportDistance * directionVertical) + 0.1f;
+		endPos.y += teleportDistance * directionVertical;
 
 		LayerMask mask = -1;
-        if (!Physics.CheckCapsule(endPos, endPos, collider.bounds.extents.x, mask, QueryTriggerInteraction.Ignore))
+		if (!Physics.CheckBox(endPos, collider.bounds.extents, collider.transform.rotation, mask, QueryTriggerInteraction.Ignore))
         {
             SoundManager.instance.PlaySingle(TeleportSound);
 			initialPos = transform.position;

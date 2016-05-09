@@ -50,7 +50,6 @@ public class PlayerController : MonoBehaviour
     public float vSpeed = 0.0f;					// The vertical speed
 
     private float timePreparingJump = 0.0f;
-	private float fallRecovery = 0;					//Fall recovery time left
 
 	// Powers declarations
     [HideInInspector]
@@ -63,6 +62,8 @@ public class PlayerController : MonoBehaviour
 
     private int layerMask = ~((1 << 1) | (1 << 2) | (1 << 4) | (1 << 5) | (1 << 8) | (1 << 9) | (1 << 10) | (1 << 11) | (1 << 13));
 
+
+	float maxPos = 0.0f;
 
     #endregion
 
@@ -87,17 +88,16 @@ public class PlayerController : MonoBehaviour
         allowMovement = true;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         // State-changing calculations
         switch (state)
         {
             case player_state.PREPARING_JUMP:
 
-                timePreparingJump += Time.deltaTime;
+                timePreparingJump += Time.fixedDeltaTime;
                 vSpeed = shortJumpSpeed;
                 //If it's ready to jump, start jump and give fall recovery time
-                fallRecovery = jumpRest;
                 state = player_state.JUMPING;
                 plAnimation.SetBool("Jump", true);
                 plAnimation.SetBool("Run", false);
@@ -106,10 +106,16 @@ public class PlayerController : MonoBehaviour
                 Movement();
                 break;
 
-            case player_state.FALL_RECOVERING:
+		case player_state.FALL_RECOVERING:
 
-                state = player_state.IN_GROUND;
-                vSpeed = 0;
+
+				state = player_state.IN_GROUND;
+				vSpeed = 0;
+
+				plAnimation.SetBool ("Run", false);
+				plAnimation.SetBool ("Jump", false);
+				plAnimation.SetBool ("Falling", false);
+	
 
                 // To control movement of player
                 Movement();
@@ -180,7 +186,7 @@ public class PlayerController : MonoBehaviour
                     else
                     {
 
-                        timePreparingJump += Time.deltaTime;
+                        timePreparingJump += Time.fixedDeltaTime;
 
                         if(playerActivedJump && timePreparingJump <= maxJumpTime && InputManager.ActiveDevice.Action1.IsPressed)
                         {
@@ -247,16 +253,21 @@ public class PlayerController : MonoBehaviour
 
         float verticalMove = 0.0f;
         // Gravity
-        if(playerActivedJump && timePreparingJump > maxJumpTime && (timePreparingJump - Time.deltaTime < maxJumpTime) && InputManager.ActiveDevice.Action1.IsPressed)
+        if(playerActivedJump && timePreparingJump > maxJumpTime && (timePreparingJump - Time.fixedDeltaTime < maxJumpTime) && InputManager.ActiveDevice.Action1.IsPressed)
         {
-            verticalMove = vSpeed * (maxJumpTime - (timePreparingJump - Time.deltaTime));
+            verticalMove = vSpeed * (maxJumpTime - (timePreparingJump - Time.fixedDeltaTime));
             verticalMove += vSpeed * (timePreparingJump - maxJumpTime) + 0.5f * gravity * Mathf.Pow((timePreparingJump - maxJumpTime), 2f);
+			vSpeed += gravity * (timePreparingJump - maxJumpTime);
         }
+		else if(playerActivedJump && timePreparingJump <= maxJumpTime)
+		{
+			verticalMove = vSpeed * Time.fixedDeltaTime;
+		}
         else
         {
-            verticalMove = vSpeed * Time.deltaTime + 0.5f * gravity * Mathf.Pow(Time.deltaTime, 2f);
+            verticalMove = vSpeed * Time.fixedDeltaTime + 0.5f * gravity * Mathf.Pow(Time.fixedDeltaTime, 2f);
+	        vSpeed += gravity * Time.fixedDeltaTime;
         }
-        vSpeed += gravity * Time.deltaTime;
 
         //If the player is allowed to move
         if (allowMovement)
@@ -299,7 +310,7 @@ public class PlayerController : MonoBehaviour
             moveDirection.x = 0;
         }
 
-        moveDirection.x *= speed * Time.deltaTime;
+        moveDirection.x *= speed * Time.fixedDeltaTime;
         moveDirection.y = verticalMove;
 
         Vector3 position = transform.position + moveDirection;
@@ -358,7 +369,7 @@ public class PlayerController : MonoBehaviour
     private bool IsGrounded()
     {
         RaycastHit hit;
-        if(Physics.Raycast(transform.position, -Vector3.up, out hit, distToGround + 0.1f, layerMask))
+        if(Physics.Raycast(transform.position, -Vector3.up, out hit, distToGround + 0.15f, layerMask))
         {
            // Debug.Log(hit.collider.gameObject.name);
             return true;
