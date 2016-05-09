@@ -40,17 +40,21 @@ public class PlayerController : MonoBehaviour
 
 	private float zPosition;					// Position on the z axis. Unvariable
 	public float speed = 7.2f;					// Horizontal speed
-	public float jumpSpeed = 8.0f;				// Base jump speed
 	public float gravity = 22.0f;				// Gravity
 	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
 	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
 
+    [SerializeField]
+    private float shortJumpSpeed = 15.0f;				// Base jump speed
+    [SerializeField]
+    private float largeJumpSpeed = 20.0f;				// Base jump speed
     [HideInInspector]
     public float vSpeed = 0.0f;					// The vertical speed
 
-	private float preparingJump = 0;				//Jump preparing time left
+    private float timePreparingJump = 0.0f;
+    [SerializeField]
+	private float maxTimeToPrepareJump = 0.05f;				//Jump preparing time left
 	private float fallRecovery = 0;					//Fall recovery time left
-	private int nonGroundedFrames = 0;				// How many frames the player has being on air.
 
 	// Powers declarations
     [HideInInspector]
@@ -60,6 +64,9 @@ public class PlayerController : MonoBehaviour
 
     private float distToGround;
     private BoxCollider boxCollider;
+
+    private int layerMask = ~((1 << 1) | (1 << 2) | (1 << 4) | (1 << 5) | (1 << 8) | (1 << 9) | (1 << 10) | (1 << 11) | (1 << 13));
+
 
     #endregion
 
@@ -92,6 +99,29 @@ public class PlayerController : MonoBehaviour
         // State-changing calculations
         switch (state)
         {
+            case player_state.PREPARING_JUMP:
+
+                timePreparingJump += Time.deltaTime;
+                vSpeed = shortJumpSpeed;
+                //If it's ready to jump, start jump and give fall recovery time
+                fallRecovery = jumpRest;
+                state = player_state.JUMPING;
+                plAnimation.SetBool("Jump", true);
+                plAnimation.SetBool("Run", false);
+                jumpParticles.Play();
+    
+                Movement(moveDirection);
+                break;
+
+            case player_state.FALL_RECOVERING:
+
+                state = player_state.IN_GROUND;
+
+                // To control movement of player
+                Movement(moveDirection);
+                break;
+
+
             case player_state.IN_GROUND:
 
                 // If it's not teleporting
@@ -108,13 +138,15 @@ public class PlayerController : MonoBehaviour
                     //last jump
                     if (InputManager.ActiveDevice.Action1.IsPressed && allowMovement && !playerActivedJump)
                     {
-                        vSpeed = jumpSpeed;
+                        timePreparingJump = 0.0f;
                         playerActivedJump = true;
-                        state = player_state.JUMPING;
+                        state = player_state.PREPARING_JUMP;
                     }
                     else if (!IsGrounded())
                     {
                         state = player_state.JUMPING;
+                        plAnimation.SetBool("Falling", true);
+                        plAnimation.SetBool("Run", false);
                     }
                     else
                     {
@@ -128,6 +160,13 @@ public class PlayerController : MonoBehaviour
                 break;
 
             case player_state.JUMPING:
+
+                if (vSpeed < 0 && plAnimation.GetBool("Falling") == false)
+                {
+                    plAnimation.SetBool("Jump", false);
+                    plAnimation.SetBool("Falling", true);
+                }
+
                 // If it's not teleporting
                 if (!ActivatingTeleport())
                 {
@@ -135,10 +174,23 @@ public class PlayerController : MonoBehaviour
                     if (IsGrounded())
                     {
                         //Start fall recovering and set the bools
-                        state = player_state.IN_GROUND;
+                        state = player_state.FALL_RECOVERING;
+                        plAnimation.SetBool("Falling", false);
+                        if (plAnimation.GetBool("Jump") == true)
+                        {
+                            plAnimation.SetBool("Jump", false);
+                        }
                     }
                     else
                     {
+
+                        timePreparingJump += Time.deltaTime;
+
+                        if(playerActivedJump && timePreparingJump < maxJumpTime && InputManager.ActiveDevice.Action1.IsPressed)
+                        {
+                            vSpeed = shortJumpSpeed;
+                        }
+
                         //If it's in the air
                         Vector3 eulerAngles = gameObject.transform.rotation.eulerAngles;
                         float rotationZ = 0.0f;
@@ -245,12 +297,26 @@ public class PlayerController : MonoBehaviour
 
         moveDirection.y = vSpeed;
 
+        Debug.Log(moveDirection);
+
         rigidBody.velocity = moveDirection;
         if (transform.position.z != zPosition)
         {
             Vector3 pos = transform.position;
             pos.z = zPosition;
             transform.position = pos;
+        }
+
+        if (state == player_state.IN_GROUND && moveDirection.x != 0)
+        {
+            if (plAnimation.GetBool("Run") == false)
+            {
+                plAnimation.SetBool("Run", true);
+            }
+        }
+        else if (plAnimation.GetBool("Run") == true)
+        {
+            plAnimation.SetBool("Run", false);
         }
 
         //Plays the dust particle effect
@@ -278,7 +344,7 @@ public class PlayerController : MonoBehaviour
         {
             state = player_state.TELEPORTING;
             vSpeed = 0.0f;
-            plAnimation.SetBool("Teleport", true);
+            plAnimation.SetTrigger("Teleport");
             plAnimation.speed = 1.0f / teleport.getDuration();
             rigidBody.detectCollisions = false;
             DoGlitchParticles();
@@ -289,9 +355,13 @@ public class PlayerController : MonoBehaviour
 
     private bool IsGrounded()
     {
-        return Physics.CheckBox(boxCollider.bounds.center,new Vector3(boxCollider.bounds.center.x,boxCollider.bounds.min.y-0.1f,boxCollider.bounds.center.z));
-
-//        return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f);
+        RaycastHit hit;
+        if(Physics.Raycast(transform.position, -Vector3.up, out hit, distToGround + 0.1f, layerMask))
+        {
+           // Debug.Log(hit.collider.gameObject.name);
+            return true;
+        }
+        return false;
     }
 
     #endregion
