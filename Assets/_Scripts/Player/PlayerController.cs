@@ -235,6 +235,7 @@ public class PlayerController : MonoBehaviour
                     state = player_state.JUMPING;
                     plAnimation.speed = 1;
                     rigidBody.detectCollisions = true;
+                    boxCollider.enabled = true;
                 }
 
                 break;
@@ -360,6 +361,7 @@ public class PlayerController : MonoBehaviour
             plAnimation.SetTrigger("Teleport");
             plAnimation.speed = 1.0f / teleport.getDuration();
             rigidBody.detectCollisions = false;
+            boxCollider.enabled = false;
             DoGlitchParticles();
             return true;
         }

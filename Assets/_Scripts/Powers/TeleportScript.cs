@@ -41,13 +41,17 @@ public class TeleportScript : MonoBehaviour {
         float directionVertical = InputManager.ActiveDevice.LeftStickY.Value;
         float directionHorizontal = InputManager.ActiveDevice.LeftStickX.Value;
 
-		if(directionHorizontal != 0.0f && directionVertical == 0.0f)
+		if(directionHorizontal > 0.0f && directionVertical == 0.0f)
 			directionHorizontal = 1.0f;
-		else if(directionHorizontal == 0.0f && directionVertical != 0.0f)
+        else if (directionHorizontal < 0.0f && directionVertical == 0.0f)
+            directionHorizontal = -1.0f;
+        else if (directionHorizontal == 0.0f && directionVertical > 0.0f)
 			directionVertical = 1.0f;
-		else
+        else if (directionHorizontal == 0.0f && directionVertical < 0.0f)
+            directionVertical = -1.0f;
+        else
 	    {
-			float aux = Mathf.Cos(Mathf.PI / 2.0f);
+			float aux = Mathf.Cos(Mathf.PI / 4.0f);
 			if(directionHorizontal > 0.0f)
 				directionHorizontal = aux;
 			else
@@ -59,10 +63,13 @@ public class TeleportScript : MonoBehaviour {
 				directionVertical = -aux;
 		}
 
+        Debug.Log("DIRECTIONAL HORIZONTAL: " + directionHorizontal);
+        Debug.Log("DIRECTIONAL VERTICAL: " + directionVertical);
+
         // Vector to know if the position to teleport is occupied
         endPos = collider.transform.position;
-		endPos.x += teleportDistance * directionHorizontal;
-		endPos.y += teleportDistance * directionVertical;
+        endPos.x += teleportDistance * collider.bounds.extents.x * 2.0f * directionHorizontal;
+        endPos.y += teleportDistance * collider.bounds.extents.y * 2.0f * directionVertical + 0.1f;
 
 		LayerMask mask = -1;
 		if (!Physics.CheckBox(endPos, collider.bounds.extents, collider.transform.rotation, mask, QueryTriggerInteraction.Ignore))
