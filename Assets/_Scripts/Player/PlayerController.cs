@@ -176,6 +176,7 @@ public class PlayerController : MonoBehaviour
                     if (IsGrounded())
                     {
                         //Start fall recovering and set the bools
+						vSpeed = 0;
                         state = player_state.FALL_RECOVERING;
                         plAnimation.SetBool("Falling", false);
                         if (plAnimation.GetBool("Jump") == true)
@@ -228,13 +229,14 @@ public class PlayerController : MonoBehaviour
 
                 Vector3 position;
                 bool ended = teleport.movePosition(out position);
-                transform.position = position;
+                rigidBody.MovePosition(position);
 
                 if (ended)
                 {
                     state = player_state.JUMPING;
                     plAnimation.speed = 1;
                     rigidBody.detectCollisions = true;
+					boxCollider.enabled = true;
                 }
 
                 break;
@@ -360,6 +362,7 @@ public class PlayerController : MonoBehaviour
             plAnimation.SetTrigger("Teleport");
             plAnimation.speed = 1.0f / teleport.getDuration();
             rigidBody.detectCollisions = false;
+            boxCollider.enabled = false;
             DoGlitchParticles();
             return true;
         }
@@ -368,13 +371,7 @@ public class PlayerController : MonoBehaviour
 
     private bool IsGrounded()
     {
-        RaycastHit hit;
-        if(Physics.Raycast(transform.position, -Vector3.up, out hit, distToGround + 0.15f, layerMask))
-        {
-           // Debug.Log(hit.collider.gameObject.name);
-            return true;
-        }
-        return false;
+        return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f, layerMask);
     }
 
     #endregion
