@@ -45,14 +45,16 @@ public class TeleportScript : MonoBehaviour {
 		if(directionHorizontal > 0.0f && directionVertical == 0.0f)
         {
             endPos.x += collider.bounds.extents.x * 2.0f + teleportDistance;
+            endPos.y += 0.1f;
         }
 		else if(directionHorizontal < 0.0f && directionVertical == 0.0f)
         {
             endPos.x -= (collider.bounds.extents.x * 2.0f + teleportDistance);
+            endPos.y += 0.1f;
         }
 		else if(directionHorizontal == 0.0f && directionVertical > 0.0f)
         {
-            endPos.y += collider.bounds.extents.y * 2.0f + teleportDistance;
+            endPos.y += collider.bounds.extents.y * 2.0f + teleportDistance + 0.1f;
         }
 		else if(directionHorizontal == 0.0f && directionVertical < 0.0f)
         {
@@ -72,28 +74,30 @@ public class TeleportScript : MonoBehaviour {
 
 			if(directionVertical > 0.0f)
             {
-        		endPos.y += collider.bounds.extents.y * 2.0f + teleportDistance * aux;
+        		endPos.y += collider.bounds.extents.y * 2.0f + teleportDistance * aux + 0.1f;
             }
 			else
             {
                 endPos.y -= (collider.bounds.extents.y * 2.0f + teleportDistance * aux);
             }
 		}
-
-        Debug.DrawLine(new Vector3(endPos.x - collider.bounds.extents.x, endPos.y + collider.bounds.extents.y, endPos.z),
-            new Vector3(endPos.x + collider.bounds.extents.x, endPos.y + collider.bounds.extents.y, endPos.z),
-            Color.red, 100.0f, false);
-        Debug.DrawLine(new Vector3(endPos.x + collider.bounds.extents.x, endPos.y + collider.bounds.extents.y, endPos.z),
-            new Vector3(endPos.x + collider.bounds.extents.x, endPos.y - collider.bounds.extents.y, endPos.z),
-            Color.red, 100.0f, false);
-        Debug.DrawLine(new Vector3(endPos.x - collider.bounds.extents.x, endPos.y - collider.bounds.extents.y, endPos.z),
-            new Vector3(endPos.x + collider.bounds.extents.x, endPos.y - collider.bounds.extents.y, endPos.z),
-            Color.red, 100.0f, false);
-        Debug.DrawLine(new Vector3(endPos.x - collider.bounds.extents.x, endPos.y + collider.bounds.extents.y, endPos.z),
-            new Vector3(endPos.x - collider.bounds.extents.x, endPos.y - collider.bounds.extents.y, endPos.z),
-            Color.red, 100.0f, false);
-
-		LayerMask mask = -1;
+        
+        
+            Debug.DrawLine(new Vector3(endPos.x - collider.bounds.extents.x, endPos.y + collider.bounds.extents.y, endPos.z),
+                new Vector3(endPos.x + collider.bounds.extents.x, endPos.y + collider.bounds.extents.y, endPos.z),
+                Color.red, 100.0f, false);
+            Debug.DrawLine(new Vector3(endPos.x + collider.bounds.extents.x, endPos.y + collider.bounds.extents.y, endPos.z),
+                new Vector3(endPos.x + collider.bounds.extents.x, endPos.y - collider.bounds.extents.y, endPos.z),
+                Color.red, 100.0f, false);
+            Debug.DrawLine(new Vector3(endPos.x - collider.bounds.extents.x, endPos.y - collider.bounds.extents.y, endPos.z),
+                new Vector3(endPos.x + collider.bounds.extents.x, endPos.y - collider.bounds.extents.y, endPos.z),
+                Color.red, 100.0f, false);
+            Debug.DrawLine(new Vector3(endPos.x - collider.bounds.extents.x, endPos.y + collider.bounds.extents.y, endPos.z),
+                new Vector3(endPos.x - collider.bounds.extents.x, endPos.y - collider.bounds.extents.y, endPos.z),
+                Color.red, 100.0f, false);
+        
+		
+        LayerMask mask = -1;
 		if (!Physics.CheckBox(endPos, collider.bounds.extents, collider.transform.rotation, mask, QueryTriggerInteraction.Ignore))
         {
             SoundManager.instance.PlaySingle(TeleportSound);
@@ -114,7 +118,7 @@ public class TeleportScript : MonoBehaviour {
 			}
             return true;
         }
-
+        Debug.Log("FALSE");
         return false;
     }
 
