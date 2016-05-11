@@ -12,7 +12,8 @@ public class BerserkerAI : MonoBehaviour
         DEATH,
         FALL,
         IMPACT,
-        HITTED
+        HITTED,
+        RETURNING
     }
 
     // Constants
@@ -41,7 +42,7 @@ public class BerserkerAI : MonoBehaviour
     public World world;
 
     private Transform playerPos;
-    private Vector3 lastPosition;
+    private Vector3 initialPosition;
     private Ray ray;
     private RaycastHit hit;
     private float rotationTime = 0.0f;
@@ -58,7 +59,7 @@ public class BerserkerAI : MonoBehaviour
         playerPos = player.GetComponent<Transform>();
         animator = GetComponent<Animator>();
         axeCollider1.enabled = false;
-        lastPosition = transform.position;
+        initialPosition = transform.position;
     }
 
     void OnCollisionEnter(Collision coll)
@@ -176,6 +177,10 @@ public class BerserkerAI : MonoBehaviour
                 case enemy_states.HITTED:
                     // State to put particles or something
                     break;
+
+                case enemy_states.RETURNING:
+                    transform.Translate(Vector3.forward * speed * world.lag);
+                    break;
             }
         }
         else
@@ -206,6 +211,7 @@ public class BerserkerAI : MonoBehaviour
     {
         axeCollider1.enabled = false;
         axeCollider2.enabled = false;
+        animator.SetBool("Attack", false);
     }
 
     public void Attacked()
