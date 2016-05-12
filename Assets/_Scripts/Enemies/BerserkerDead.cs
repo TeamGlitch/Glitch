@@ -9,18 +9,26 @@ public class BerserkerDead : MonoBehaviour {
     void OnTriggerEnter(Collider coll)
     {
 
-        if ((berserker.states != BerserkerAI.enemy_states.DEATH) && (coll.gameObject.CompareTag("Player")))
+        if (berserker.states != BerserkerAI.enemy_states.DEATH)
         {
-            if (berserker.player.transform.position.y >= (transform.position.y + headCollider.bounds.extents.y))
+            if (coll.gameObject.CompareTag("Player"))
             {
-                berserker.Attacked();
+                if (berserker.player.transform.position.y >= (transform.position.y + headCollider.bounds.extents.y))
+                {
+                    berserker.Attacked();
+                }
+                else
+                {
+                    if (berserker.sight == true)
+                    {
+                        berserker.Attack();
+                    }
+                }
             }
             else
             {
-                if (berserker.sight == true)
-                {
-                    berserker.Attack();
-                }
+                if ((!coll.gameObject.CompareTag("PatrolPoint")) && (!coll.gameObject.CompareTag("LimitPoint")))
+                berserker.states = BerserkerAI.enemy_states.IMPACT;
             }
         }
     }

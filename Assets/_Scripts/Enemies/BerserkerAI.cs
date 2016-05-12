@@ -84,10 +84,6 @@ public class BerserkerAI : MonoBehaviour
             {
                 states = enemy_states.FALL;
             }
-            else 
-            {
-                states = enemy_states.IMPACT;
-            }
             speed = fallSpeed;
             sight = false;
         }
@@ -194,7 +190,7 @@ public class BerserkerAI : MonoBehaviour
         animator.SetInteger("DeadRandom", Random.Range(0, 3));
     }
 
-    public void ImpactTrigger()
+    public void RecoverTrigger()
     {
         states = enemy_states.WAIT;
     }
