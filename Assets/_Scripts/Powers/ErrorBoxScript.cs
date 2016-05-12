@@ -18,8 +18,6 @@ public class ErrorBoxScript : MonoBehaviour
     private bool activated = false;
     private bool visible = false;
 
-    private float timeBoxDissapeared;
-
     public Camera cam;
     CameraGlitchedToBoxes cameraGlitchedToBoxes;
 
@@ -36,8 +34,6 @@ public class ErrorBoxScript : MonoBehaviour
         boxColor.a = 0.0f;
         spriteRenderer.color = boxColor;
 	
-        timeBoxDissapeared = 0.0f;
-
         cameraGlitchedToBoxes = cam.GetComponent<CameraGlitchedToBoxes>();
 
     }
@@ -133,7 +129,6 @@ public class ErrorBoxScript : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            Vector3 boxUIPosition = new Vector3(transform.position.x, transform.position.y + 4.0f, 0);
             if (!activated && !onCooldown)
             {
                 Color boxColor = spriteRenderer.color;

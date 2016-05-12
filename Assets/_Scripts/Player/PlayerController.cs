@@ -22,7 +22,6 @@ public class PlayerController : MonoBehaviour
     //State
 	public player_state state;
 	public bool allowMovement;
-	private bool godMode = false;
 
 	//Player Components
 	private SpriteRenderer spriteRenderer;			//Reference to the sprite renderer
@@ -38,17 +37,10 @@ public class PlayerController : MonoBehaviour
 
 	private bool playerActivedJump = false;		// The jump state is cause of a player jump? (If not, it could be a fall)
 
-	private float zPosition;					// Position on the z axis. Unvariable
+	private float zPosition = 0.0f;				// Position on the z axis. Unvariable
 	public float speed = 12.5f;					// Horizontal speed
-	public float gravity = -50.0f;				// Gravity
-	public float maxJumpTime = 0.15f;			// Max time a jump can be extended
-	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
-
-    [SerializeField]
-    private float shortJumpSpeed = 20.0f;				// Base jump speed
-    [HideInInspector]
-    public float vSpeed = 0.0f;					// The vertical speed
-
+	public float maxJumpTime = 0.25f;			// Max time a jump can be extended
+    public float jumpForce = 700.0f;				// Base jump speed
     private float timePreparingJump = 0.0f;
 
 	// Powers declarations
@@ -61,9 +53,6 @@ public class PlayerController : MonoBehaviour
     private BoxCollider boxCollider;
 
     private int layerMask = ~((1 << 1) | (1 << 2) | (1 << 4) | (1 << 5) | (1 << 8) | (1 << 9) | (1 << 10) | (1 << 11) | (1 << 13));
-
-
-	float maxPos = 0.0f;
 
     #endregion
 
@@ -95,8 +84,8 @@ public class PlayerController : MonoBehaviour
         {
             case player_state.PREPARING_JUMP:
 
-                timePreparingJump += Time.fixedDeltaTime;
-                vSpeed = shortJumpSpeed;
+                timePreparingJump += Time.deltaTime;
+                rigidBody.AddForce(new Vector3(0.0f, jumpForce, 0.0f));
                 //If it's ready to jump, start jump and give fall recovery time
                 state = player_state.JUMPING;
                 plAnimation.SetBool("Jump", true);
@@ -110,7 +99,6 @@ public class PlayerController : MonoBehaviour
 
 
 				state = player_state.IN_GROUND;
-				vSpeed = 0;
 
 				plAnimation.SetBool ("Run", false);
 				plAnimation.SetBool ("Jump", false);
@@ -142,7 +130,7 @@ public class PlayerController : MonoBehaviour
                         timePreparingJump = 0.0f;
                         playerActivedJump = true;
                         state = player_state.PREPARING_JUMP;
-                        vSpeed = 0;
+                        rigidBody.useGravity = false;
                     }
                     else if (!IsGrounded())
                     {
@@ -150,10 +138,7 @@ public class PlayerController : MonoBehaviour
                         plAnimation.SetBool("Falling", true);
                         plAnimation.SetBool("Run", false);
                     }
-                    else
-                    {
-                        vSpeed = 0;
-                    }
+
 
                     // To control movement of player
                     Movement();
@@ -163,7 +148,7 @@ public class PlayerController : MonoBehaviour
 
             case player_state.JUMPING:
 
-                if (vSpeed < 0 && plAnimation.GetBool("Falling") == false)
+                if (rigidBody.velocity.y < 0 && plAnimation.GetBool("Falling") == false)
                 {
                     plAnimation.SetBool("Jump", false);
                     plAnimation.SetBool("Falling", true);
@@ -188,9 +173,9 @@ public class PlayerController : MonoBehaviour
 
                         timePreparingJump += Time.fixedDeltaTime;
 
-                        if(playerActivedJump && timePreparingJump <= maxJumpTime && InputManager.ActiveDevice.Action1.IsPressed)
+                        if(!playerActivedJump || (timePreparingJump > maxJumpTime))
                         {
-                            vSpeed = shortJumpSpeed;
+                            rigidBody.useGravity = true;
                         }
 
                         //If it's in the air
@@ -235,7 +220,8 @@ public class PlayerController : MonoBehaviour
                     state = player_state.JUMPING;
                     plAnimation.speed = 1;
                     rigidBody.detectCollisions = true;
-                    boxCollider.enabled = true;
+                    rigidBody.useGravity = true;
+                    rigidBody.velocity = new Vector3(rigidBody.velocity.x, 0.0f, 0.0f);                    
                 }
 
                 break;
@@ -251,24 +237,6 @@ public class PlayerController : MonoBehaviour
     private void Movement()
     {
         Vector3 moveDirection = Vector3.zero;
-
-        float verticalMove = 0.0f;
-        // Gravity
-        if(playerActivedJump && timePreparingJump > maxJumpTime && (timePreparingJump - Time.fixedDeltaTime < maxJumpTime) && InputManager.ActiveDevice.Action1.IsPressed)
-        {
-            verticalMove = vSpeed * (maxJumpTime - (timePreparingJump - Time.fixedDeltaTime));
-            verticalMove += vSpeed * (timePreparingJump - maxJumpTime) + 0.5f * gravity * Mathf.Pow((timePreparingJump - maxJumpTime), 2f);
-			vSpeed += gravity * (timePreparingJump - maxJumpTime);
-        }
-		else if(playerActivedJump && timePreparingJump <= maxJumpTime)
-		{
-			verticalMove = vSpeed * Time.fixedDeltaTime;
-		}
-        else
-        {
-            verticalMove = vSpeed * Time.fixedDeltaTime + 0.5f * gravity * Mathf.Pow(Time.fixedDeltaTime, 2f);
-	        vSpeed += gravity * Time.fixedDeltaTime;
-        }
 
         //If the player is allowed to move
         if (allowMovement)
@@ -312,7 +280,6 @@ public class PlayerController : MonoBehaviour
         }
 
         moveDirection.x *= speed * Time.fixedDeltaTime;
-        moveDirection.y = verticalMove;
 
         Vector3 position = transform.position + moveDirection;
 
@@ -357,11 +324,10 @@ public class PlayerController : MonoBehaviour
         if(InputManager.ActiveDevice.Action3.WasPressed && allowMovement && !teleport.teleportUsed && teleport.CheckTeleport(boxCollider))
         {
             state = player_state.TELEPORTING;
-            vSpeed = 0.0f;
+            rigidBody.useGravity = false;
             plAnimation.SetTrigger("Teleport");
             plAnimation.speed = 1.0f / teleport.getDuration();
             rigidBody.detectCollisions = false;
-            boxCollider.enabled = false;
             DoGlitchParticles();
             return true;
         }
@@ -394,7 +360,7 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        vSpeed = 0.0f;
+        rigidBody.velocity = new Vector3(rigidBody.velocity.x, 0.0f, 0.0f);
     }
 
     #endregion

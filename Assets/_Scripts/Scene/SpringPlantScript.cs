@@ -24,7 +24,7 @@ public class SpringPlantScript : MonoBehaviour {
 	{
 		if (other.CompareTag("Player"))
 		{
-			playerController.vSpeed = forceToPlayerWhenEnter;
+            playerController.rigidBody.AddForce(new Vector3(0.0f, forceToPlayerWhenEnter, 0.0f));
 			_animator.SetBool ("PlayerInside", true);
 		}
 	}
@@ -34,7 +34,7 @@ public class SpringPlantScript : MonoBehaviour {
 		if (other.CompareTag("Player"))
 		{
 			if(InputManager.ActiveDevice.Action1.IsPressed)
-				playerController.vSpeed = forceToPlayerWhenEnterAndJump;
+                playerController.rigidBody.AddForce(new Vector3(0.0f, forceToPlayerWhenEnterAndJump, 0.0f));
 			playerController.teleport.teleportUsed = false;
 		}
 	}
