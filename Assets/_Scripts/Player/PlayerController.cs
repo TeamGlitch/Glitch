@@ -213,13 +213,14 @@ public class PlayerController : MonoBehaviour
 
                 Vector3 position;
                 bool ended = teleport.movePosition(out position);
-                transform.position = position;
+                rigidBody.MovePosition(position);
 
                 if (ended)
                 {
                     state = player_state.JUMPING;
                     plAnimation.speed = 1;
                     rigidBody.detectCollisions = true;
+
                     rigidBody.useGravity = true;
                     rigidBody.velocity = new Vector3(rigidBody.velocity.x, 0.0f, 0.0f);                    
                 }
@@ -328,6 +329,7 @@ public class PlayerController : MonoBehaviour
             plAnimation.SetTrigger("Teleport");
             plAnimation.speed = 1.0f / teleport.getDuration();
             rigidBody.detectCollisions = false;
+            boxCollider.enabled = false;
             DoGlitchParticles();
             return true;
         }
@@ -336,13 +338,8 @@ public class PlayerController : MonoBehaviour
 
     private bool IsGrounded()
     {
-        RaycastHit hit;
-        if(Physics.Raycast(transform.position, -Vector3.up, out hit, distToGround + 0.15f, layerMask))
-        {
-           // Debug.Log(hit.collider.gameObject.name);
-            return true;
-        }
-        return false;
+        return Physics.Raycast(new Vector3(transform.position.x + boxCollider.bounds.extents.x, transform.position.y, transform.position.z), -Vector3.up, distToGround + 0.1f, layerMask) ||
+            Physics.Raycast(new Vector3(transform.position.x - boxCollider.bounds.extents.x, transform.position.y, transform.position.z), -Vector3.up, distToGround + 0.1f, layerMask);
     }
 
     #endregion

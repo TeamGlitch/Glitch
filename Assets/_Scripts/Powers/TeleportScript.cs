@@ -3,9 +3,8 @@ using InControl;
 
 public class TeleportScript : MonoBehaviour
 {
-
-    //Teleport movement scale
-    public float teleportDistance = 2.0f;
+	//Teleport movement scale
+	public float teleportDistance = 2.0f;
     public AudioClip TeleportSound;
     public bool teleportUsed = false;
 
@@ -85,23 +84,7 @@ public class TeleportScript : MonoBehaviour
             }
         }
 
-        /*
-        Debug.DrawLine(new Vector3(endPos.x - collider.bounds.extents.x, endPos.y + collider.bounds.extents.y, endPos.z),
-            new Vector3(endPos.x + collider.bounds.extents.x, endPos.y + collider.bounds.extents.y, endPos.z),
-            Color.red, 100.0f, false);
-        Debug.DrawLine(new Vector3(endPos.x + collider.bounds.extents.x, endPos.y + collider.bounds.extents.y, endPos.z),
-            new Vector3(endPos.x + collider.bounds.extents.x, endPos.y - collider.bounds.extents.y, endPos.z),
-            Color.red, 100.0f, false);
-        Debug.DrawLine(new Vector3(endPos.x - collider.bounds.extents.x, endPos.y - collider.bounds.extents.y, endPos.z),
-            new Vector3(endPos.x + collider.bounds.extents.x, endPos.y - collider.bounds.extents.y, endPos.z),
-            Color.red, 100.0f, false);
-        Debug.DrawLine(new Vector3(endPos.x - collider.bounds.extents.x, endPos.y + collider.bounds.extents.y, endPos.z),
-            new Vector3(endPos.x - collider.bounds.extents.x, endPos.y - collider.bounds.extents.y, endPos.z),
-            Color.red, 100.0f, false);
-        */
-
-        LayerMask mask = -1;
-        if (!Physics.CheckBox(endPos, collider.bounds.extents, collider.transform.rotation, mask, QueryTriggerInteraction.Ignore))
+        if (!Physics.CheckBox(endPos, collider.bounds.extents, collider.transform.rotation, layerMask, QueryTriggerInteraction.Ignore))
         {
             SoundManager.instance.PlaySingle(TeleportSound);
             initialPos = transform.position;
@@ -121,7 +104,6 @@ public class TeleportScript : MonoBehaviour
             }
             return true;
         }
-        Debug.Log("FALSE");
         return false;
     }
 
