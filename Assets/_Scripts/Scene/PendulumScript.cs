@@ -59,7 +59,7 @@ public class PendulumScript : MonoBehaviour {
 	{
 		if (collision.gameObject.CompareTag("Player"))
 		{
-			collision.gameObject.transform.parent.parent = transform;
+			collision.gameObject.transform.parent = transform;
 		}
 	}
 

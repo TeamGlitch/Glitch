@@ -43,6 +43,10 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 700.0f;				// Base jump speed
     private float timePreparingJump = 0.0f;
 
+    public float maxSpeed = 10.0f;
+    public float increaseSpeed = 2.0f;
+    public float decreaseSpeedWhenIdle = 1.0f;
+
 	// Powers declarations
     [HideInInspector]
 	public TeleportScript teleport;
@@ -95,7 +99,7 @@ public class PlayerController : MonoBehaviour
                 Movement();
                 break;
 
-		case player_state.FALL_RECOVERING:
+		    case player_state.FALL_RECOVERING:
 
 
 				state = player_state.IN_GROUND;
@@ -225,6 +229,10 @@ public class PlayerController : MonoBehaviour
                 }
 
                 break;
+
+            case player_state.DEATH:
+                rigidBody.velocity = Vector3.zero;
+                break;
         }
 
         //If a player-induced jump is checked but the jump key is not longer
@@ -237,15 +245,38 @@ public class PlayerController : MonoBehaviour
     private void Movement()
     {
         Vector3 moveDirection = Vector3.zero;
+        Vector3 currentVelocity = rigidBody.velocity;
 
         //If the player is allowed to move
         if (allowMovement)
         {
+
             // Control of movemente in X axis
             moveDirection.x = InputManager.ActiveDevice.LeftStickX.Value;
 
+            if (moveDirection.x >= 0.5f)
+            {
+                currentVelocity.x = Mathf.Min(maxSpeed, currentVelocity.x + increaseSpeed);
+            }
+            else if (moveDirection.x <= -0.5f)
+            {
+                currentVelocity.x = Mathf.Max(-maxSpeed, currentVelocity.x - increaseSpeed);
+            }
+            else
+            {
+                if (currentVelocity.x > 0.0f)
+                {
+                    currentVelocity.x = Mathf.Max(0.0f, currentVelocity.x - decreaseSpeedWhenIdle);
+                }
+                else if (currentVelocity.x < 0.0f)
+                {
+                    currentVelocity.x = Mathf.Min(0.0f, currentVelocity.x + decreaseSpeedWhenIdle);
+                }
+            }
+
+
             // Flips the sprite renderer if is changing direction
-            if ((moveDirection.x > 0) && (spriteRenderer.flipX == true))
+            if ((currentVelocity.x > 0.0f) && (spriteRenderer.flipX == true))
             {
 
                 spriteRenderer.flipX = false;
@@ -259,7 +290,7 @@ public class PlayerController : MonoBehaviour
                 dustParticles.gameObject.transform.localRotation = dustRotation;
 
             }
-            else if ((moveDirection.x < 0) && (spriteRenderer.flipX == false))
+            else if ((currentVelocity.x < 0.0f) && (spriteRenderer.flipX == false))
             {
 
                 spriteRenderer.flipX = true;
@@ -274,21 +305,17 @@ public class PlayerController : MonoBehaviour
 
             }
         }
-        else
-        {
-            moveDirection.x = 0;
-        }
 
-        moveDirection.x *= speed * Time.fixedDeltaTime;
-
-        Vector3 position = transform.position + moveDirection;
+        Vector3 position = transform.position;
 
         if (position.z != zPosition)
             position.z = zPosition;
 
-        rigidBody.MovePosition(position);
+        transform.position = position;
 
-        if (state == player_state.IN_GROUND && moveDirection.x != 0)
+        rigidBody.velocity = currentVelocity;
+
+        if (state == player_state.IN_GROUND && currentVelocity.x != 0)
         {
             if (plAnimation.GetBool("Run") == false)
             {
@@ -301,7 +328,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //Plays the dust particle effect
-        if (state == player_state.IN_GROUND && moveDirection.x != 0)
+        if (state == player_state.IN_GROUND && currentVelocity.x != 0)
         {
             if (dustParticles.isStopped)
             {
@@ -321,7 +348,7 @@ public class PlayerController : MonoBehaviour
 
     public bool ActivatingTeleport()
     {
-        if(InputManager.ActiveDevice.Action3.WasPressed && allowMovement && !teleport.teleportUsed && teleport.CheckTeleport(boxCollider))
+        if(InputManager.ActiveDevice.Action3.IsPressed && allowMovement && !teleport.teleportUsed && teleport.CheckTeleport(boxCollider))
         {
             state = player_state.TELEPORTING;
             rigidBody.useGravity = false;

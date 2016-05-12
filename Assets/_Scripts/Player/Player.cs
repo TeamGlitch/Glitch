@@ -232,5 +232,6 @@ public class Player : MonoBehaviour {
         // To impulse player from enemy
         playerController.rigidBody.velocity = new Vector3(playerController.rigidBody.velocity.x, 0.0f, 0.0f);
         playerController.rigidBody.AddForce(new Vector3(0.0f, playerController.jumpForce * 2.0f, 0.0f));
+        playerController.teleport.teleportUsed = false;
     }
 }
