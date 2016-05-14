@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Rotator : MonoBehaviour {
 
+	public World world;
 	public float speed;
 	private float angle = 0;
 	private float distance = 0;
@@ -14,11 +15,16 @@ public class Rotator : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		
-		angle += speed;
-		transform.localPosition = new Vector3 (Mathf.Cos (angle) * distance, Mathf.Sin (angle) * distance, transform.localPosition.z);
 
-		if (angle > 2 * Mathf.PI)
-			angle -= 2 * Mathf.PI;
+		if (world.doUpdate) {
+			
+			angle += speed * world.lag;
+			transform.localPosition = new Vector3 (Mathf.Cos (angle) * distance, Mathf.Sin (angle) * distance, transform.localPosition.z);
+
+			if (angle > 2 * Mathf.PI)
+				angle -= 2 * Mathf.PI;
+		}
+
+
 	}
 }

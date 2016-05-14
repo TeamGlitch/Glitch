@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
         JUMPING,
 		FALL_RECOVERING,
         TELEPORTING,
+		STICKED,
 		DEATH
     };
 
@@ -278,6 +279,24 @@ public class PlayerController : MonoBehaviour
 				}
 
 				break;
+
+		case player_state.STICKED:
+
+				if (InputManager.ActiveDevice.Action1.IsPressed && (InputManager.ActiveDevice.LeftStickX.Value == 1 || InputManager.ActiveDevice.LeftStickX.Value == -1)) {
+
+					if(InputManager.ActiveDevice.LeftStickX.Value == 1 && !Physics.Raycast(transform.position, Vector3.right, 1)){
+						state = player_state.PREPARING_JUMP;
+					} else if (InputManager.ActiveDevice.LeftStickX.Value == -1 && !Physics.Raycast(transform.position, Vector3.left, 1)){
+						state = player_state.PREPARING_JUMP;
+					}
+
+				} else {
+					//vSpeed += gravity * Time.deltaTime;
+				}
+
+				//Movement(moveDirection);
+
+			break;
         }
 
 		//If a player-induced jump is checked but the jump key is not longer
