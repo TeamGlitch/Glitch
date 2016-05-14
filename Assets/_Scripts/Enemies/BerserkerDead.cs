@@ -28,7 +28,9 @@ public class BerserkerDead : MonoBehaviour {
             else
             {
                 if ((!coll.gameObject.CompareTag("PatrolPoint")) && (!coll.gameObject.CompareTag("LimitPoint")))
-                berserker.states = BerserkerAI.enemy_states.IMPACT;
+                {
+                    berserker.states = BerserkerAI.enemy_states.IMPACT;
+                }
             }
         }
     }
