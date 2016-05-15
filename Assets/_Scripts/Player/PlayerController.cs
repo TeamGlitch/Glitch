@@ -38,13 +38,11 @@ public class PlayerController : MonoBehaviour
 	private bool playerActivedJump = false;		// The jump state is cause of a player jump? (If not, it could be a fall)
 
 	private float zPosition = 0.0f;				// Position on the z axis. Unvariable
-	public float speed = 12.5f;					// Horizontal speed
 	public float maxJumpTime = 0.25f;			// Max time a jump can be extended
     public float jumpForce = 700.0f;				// Base jump speed
     private float timePreparingJump = 0.0f;
 
-    public float maxSpeed = 10.0f;
-    public float increaseSpeed = 2.0f;
+    public float maxSpeedInAir = 20.0f;
     public float decreaseSpeedWhenIdle = 1.0f;
 
 	// Powers declarations
@@ -55,6 +53,31 @@ public class PlayerController : MonoBehaviour
 
     private float distToGround;
     private BoxCollider boxCollider;
+
+
+    public enum moving_type
+    {
+        IDLE,
+        GOING_RIGHT,
+        GOING_LEFT,
+        CHANGING_DIRECTION,
+        STOPING
+    };
+
+    public float maxSpeed = 15.0f;
+
+    private float velocityWhenChangedState = 0.0f;
+    [SerializeField]
+    private float timeToMaxVelocity = 1.0f;
+    [SerializeField]
+    private float timeToStop = 0.1f;
+    private float timeToChangeDependingVelocity = 0.0f;
+    private float timeSinceChangeMoving;
+    private bool moveToRight = true;
+    private bool playerIsMoving = false;
+
+    [SerializeField]
+    private moving_type playerMovingType = moving_type.IDLE;
 
     private int layerMask = ~((1 << 1) | (1 << 2) | (1 << 4) | (1 << 5) | (1 << 8) | (1 << 9) | (1 << 10) | (1 << 11) | (1 << 13));
 
@@ -246,34 +269,92 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 moveDirection = Vector3.zero;
         Vector3 currentVelocity = rigidBody.velocity;
+        bool isInGround = IsGrounded();
 
-        //If the player is allowed to move
-        if (allowMovement)
+        if(allowMovement)
         {
-
             // Control of movemente in X axis
             moveDirection.x = InputManager.ActiveDevice.LeftStickX.Value;
 
-            if (moveDirection.x >= 0.5f)
+            if (rigidBody.velocity.x == 0.0f && moveDirection.x < 0.5f && moveDirection.x > -0.5f)
             {
-                currentVelocity.x = Mathf.Min(maxSpeed, currentVelocity.x + increaseSpeed);
+                playerMovingType = moving_type.IDLE;
             }
-            else if (moveDirection.x <= -0.5f)
+            else if (rigidBody.velocity.x != 0.0f && moveDirection.x < 0.5f && moveDirection.x > -0.5f)
             {
-                currentVelocity.x = Mathf.Max(-maxSpeed, currentVelocity.x - increaseSpeed);
+                if (playerMovingType != moving_type.STOPING)
+                {
+                    velocityWhenChangedState = rigidBody.velocity.x;
+                    timeToChangeDependingVelocity = timeToStop * Mathf.Abs(velocityWhenChangedState) / maxSpeed;
+                    timeSinceChangeMoving = 0.0f;
+                    playerMovingType = moving_type.STOPING;
+                }
+                else
+                {
+                    timeSinceChangeMoving += Time.fixedDeltaTime;
+                }
+            }
+            else if ((rigidBody.velocity.x > 0.0f && moveDirection.x <= -0.5f) ||
+                        (rigidBody.velocity.x < 0.0f && moveDirection.x >= 0.5f))
+            {
+                if (playerMovingType != moving_type.CHANGING_DIRECTION)
+                {
+                    velocityWhenChangedState = rigidBody.velocity.x;
+                    timeToChangeDependingVelocity = timeToStop * Mathf.Abs(velocityWhenChangedState) / maxSpeed;
+                    timeSinceChangeMoving = 0.0f;
+                    playerMovingType = moving_type.CHANGING_DIRECTION;
+                }
+                else
+                {
+                    timeSinceChangeMoving += Time.fixedDeltaTime;
+                }
+            }
+            else if (rigidBody.velocity.x >= 0.0f && moveDirection.x >= 0.5f)
+            {
+                if (playerMovingType != moving_type.GOING_RIGHT)
+                {
+                    velocityWhenChangedState = rigidBody.velocity.x;
+                    timeToChangeDependingVelocity = timeToMaxVelocity * (maxSpeed - velocityWhenChangedState) / maxSpeed;
+                    timeSinceChangeMoving = 0.0f;
+                    playerMovingType = moving_type.GOING_RIGHT;
+                }
+                else
+                {
+                    timeSinceChangeMoving += Time.fixedDeltaTime;
+                }
+            }
+            else if (rigidBody.velocity.x <= 0.0f && moveDirection.x <= -0.5f)
+            {
+                if (playerMovingType != moving_type.GOING_LEFT)
+                {
+                    velocityWhenChangedState = rigidBody.velocity.x;
+                    timeToChangeDependingVelocity = timeToMaxVelocity * (maxSpeed - Mathf.Abs(velocityWhenChangedState)) / maxSpeed;
+                    timeSinceChangeMoving = 0.0f;
+                    playerMovingType = moving_type.GOING_LEFT;
+                }
+                else
+                {
+                    timeSinceChangeMoving += Time.fixedDeltaTime;
+                }
             }
             else
             {
-                if (currentVelocity.x > 0.0f)
-                {
-                    currentVelocity.x = Mathf.Max(0.0f, currentVelocity.x - decreaseSpeedWhenIdle);
-                }
-                else if (currentVelocity.x < 0.0f)
-                {
-                    currentVelocity.x = Mathf.Min(0.0f, currentVelocity.x + decreaseSpeedWhenIdle);
-                }
+                Debug.Log("AIXO CREC QUE NO POT ARRIBAR MAI A PASAR OMG OMG OMG");
             }
 
+            switch (playerMovingType)
+            {
+                case moving_type.STOPING:
+                case moving_type.CHANGING_DIRECTION:
+                    currentVelocity.x = Mathf.Lerp(velocityWhenChangedState, 0.0f, timeSinceChangeMoving / timeToChangeDependingVelocity);
+                    break;
+                case moving_type.GOING_RIGHT:
+                    currentVelocity.x = Mathf.Lerp(velocityWhenChangedState, maxSpeed, timeSinceChangeMoving / timeToChangeDependingVelocity);
+                    break;
+                case moving_type.GOING_LEFT:
+                    currentVelocity.x = Mathf.Lerp(velocityWhenChangedState, -maxSpeed, timeSinceChangeMoving / timeToChangeDependingVelocity);
+                    break;
+            }
 
             // Flips the sprite renderer if is changing direction
             if ((currentVelocity.x > 0.0f) && (spriteRenderer.flipX == true))
@@ -306,15 +387,14 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        // Correct Z position
         Vector3 position = transform.position;
-
         if (position.z != zPosition)
             position.z = zPosition;
-
         transform.position = position;
 
         rigidBody.velocity = currentVelocity;
-
+        
         if (state == player_state.IN_GROUND && currentVelocity.x != 0)
         {
             if (plAnimation.GetBool("Run") == false)
@@ -326,6 +406,7 @@ public class PlayerController : MonoBehaviour
         {
             plAnimation.SetBool("Run", false);
         }
+
 
         //Plays the dust particle effect
         if (state == player_state.IN_GROUND && currentVelocity.x != 0)
