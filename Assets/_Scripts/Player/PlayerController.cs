@@ -71,6 +71,8 @@ public class PlayerController : MonoBehaviour
     private float timeToMaxVelocity = 1.0f;
     [SerializeField]
     private float timeToStop = 0.1f;
+    [SerializeField]
+    private float minSpeed = 2.0f;
     private float timeToChangeDependingVelocity = 0.0f;
     private float timeSinceChangeMoving;
     private bool moveToRight = true;
@@ -299,9 +301,6 @@ public class PlayerController : MonoBehaviour
             {
                 if (playerMovingType != moving_type.CHANGING_DIRECTION)
                 {
-                    velocityWhenChangedState = rigidBody.velocity.x;
-                    timeToChangeDependingVelocity = timeToStop * Mathf.Abs(velocityWhenChangedState) / maxSpeed;
-                    timeSinceChangeMoving = 0.0f;
                     playerMovingType = moving_type.CHANGING_DIRECTION;
                 }
                 else
@@ -313,8 +312,8 @@ public class PlayerController : MonoBehaviour
             {
                 if (playerMovingType != moving_type.GOING_RIGHT)
                 {
-                    velocityWhenChangedState = rigidBody.velocity.x;
-                    timeToChangeDependingVelocity = timeToMaxVelocity * (maxSpeed - velocityWhenChangedState) / maxSpeed;
+                    velocityWhenChangedState = Mathf.Max(rigidBody.velocity.x, minSpeed);
+                    timeToChangeDependingVelocity = timeToMaxVelocity * (maxSpeed - velocityWhenChangedState) / (maxSpeed - minSpeed);
                     timeSinceChangeMoving = 0.0f;
                     playerMovingType = moving_type.GOING_RIGHT;
                 }
@@ -327,8 +326,8 @@ public class PlayerController : MonoBehaviour
             {
                 if (playerMovingType != moving_type.GOING_LEFT)
                 {
-                    velocityWhenChangedState = rigidBody.velocity.x;
-                    timeToChangeDependingVelocity = timeToMaxVelocity * (maxSpeed - Mathf.Abs(velocityWhenChangedState)) / maxSpeed;
+                    velocityWhenChangedState = Mathf.Min(rigidBody.velocity.x, -minSpeed);
+                    timeToChangeDependingVelocity = timeToMaxVelocity * (maxSpeed - Mathf.Abs(velocityWhenChangedState)) / (maxSpeed-minSpeed);
                     timeSinceChangeMoving = 0.0f;
                     playerMovingType = moving_type.GOING_LEFT;
                 }
@@ -345,8 +344,17 @@ public class PlayerController : MonoBehaviour
             switch (playerMovingType)
             {
                 case moving_type.STOPING:
-                case moving_type.CHANGING_DIRECTION:
                     currentVelocity.x = Mathf.Lerp(velocityWhenChangedState, 0.0f, timeSinceChangeMoving / timeToChangeDependingVelocity);
+                    break;
+                case moving_type.CHANGING_DIRECTION:
+                    if (moveDirection.x > 0.0f)
+                    {
+                        currentVelocity.x = minSpeed;
+                    }
+                    else if (moveDirection.x < 0.0f)
+                    {
+                        currentVelocity.x = -minSpeed;
+                    }
                     break;
                 case moving_type.GOING_RIGHT:
                     currentVelocity.x = Mathf.Lerp(velocityWhenChangedState, maxSpeed, timeSinceChangeMoving / timeToChangeDependingVelocity);

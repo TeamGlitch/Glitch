@@ -10,6 +10,7 @@ public class ErrorBoxScript : MonoBehaviour
     public int framesBeforeChangeStateWhenFlickering = 6;
     public Player playerScript;
 	public float timeToBecomeBig = 0.5f;
+    public AudioClip ErrorBoxSound;
 
     private int framesInCurrentStateWhenFlickering = 0;
     private float timeActivated = 0.0f;
@@ -53,6 +54,7 @@ public class ErrorBoxScript : MonoBehaviour
             activated = true;
             framesInCurrentStateWhenFlickering = 0;
 			transform.localScale = new Vector3 (0f, 0f, 0f);
+            SoundManager.instance.PlaySingle(ErrorBoxSound);
 
         }
         else if (activated && timeActivated < timeActive && timeActivated >= (timeActive - timeFlickering))
