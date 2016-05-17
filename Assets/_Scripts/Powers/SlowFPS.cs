@@ -6,6 +6,7 @@ public class SlowFPS : MonoBehaviour {
 	public World world;
 	public FakeFPS fakeFPS;
 	public ParticleSystem glitchParticle;
+    public GlitchOffsetCamera glitchOffsetCamera;
 
 	public float recoveryRate = 3.0f;			// Time it takes to make a recovery bump
 	public float timeBetweenUpdates = 1;		// Seconds between slow updates
@@ -16,7 +17,7 @@ public class SlowFPS : MonoBehaviour {
     private float timeInFPS = 0.0f;
 
 	private float recoveryTime;					// Time to the next recovery bump
-	private bool powerActive = false;
+	public bool powerActive = false;
 	private float timeLastUpdate = 0;			// When the last slow update was done
 
 	public delegate void SlowFPSDelegate();
@@ -46,6 +47,10 @@ public class SlowFPS : MonoBehaviour {
 				if (SlowFPSActivated != null)
 					SlowFPSActivated ();
                 timeInFPS = 0.0f;
+                glitchOffsetCamera.divisions = 20;
+                glitchOffsetCamera.inestability = 0.3f;
+                glitchOffsetCamera.frequency = 0.5f;
+                glitchOffsetCamera.enabled = true;
 			}
 			else
 			{

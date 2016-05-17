@@ -7,6 +7,7 @@ using InControl;
 public class PlayerController : MonoBehaviour 
 {
     public AudioClip jumpSound;
+    public GlitchOffsetCamera glitchOffsetCamera;
 
     public enum player_state
     {
@@ -253,7 +254,17 @@ public class PlayerController : MonoBehaviour
                     plAnimation.speed = 1;
                     rigidBody.detectCollisions = true;
                     rigidBody.useGravity = true;
-                    rigidBody.velocity = new Vector3(rigidBody.velocity.x, 0.0f, 0.0f);                    
+                    rigidBody.velocity = new Vector3(rigidBody.velocity.x, 0.0f, 0.0f);
+                    if (!slowFPS.powerActive)
+                    {
+                        glitchOffsetCamera.enabled = false;
+                    }
+                    else
+                    {
+                        glitchOffsetCamera.divisions = 20;
+                        glitchOffsetCamera.inestability = 0.3f;
+                        glitchOffsetCamera.frequency = 0.5f;
+                    }
                 }
 
                 break;
@@ -448,6 +459,10 @@ public class PlayerController : MonoBehaviour
             plAnimation.speed = 1.0f / teleport.getDuration();
             rigidBody.detectCollisions = false;
             DoGlitchParticles();
+            glitchOffsetCamera.divisions = 50;
+            glitchOffsetCamera.inestability = 1.0f;
+            glitchOffsetCamera.frequency = 1.0f;
+            glitchOffsetCamera.enabled = true;
             return true;
         }
         return false;
