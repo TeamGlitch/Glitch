@@ -49,8 +49,6 @@ public class BerserkerAI : MonoBehaviour
     private Ray ray;
     private RaycastHit hit;
     private float rotationTime = 0.0f;
-    private float searchRotationTime = 1.0f;
-    private bool returning = false;
     private int lives = 3;
     private Animator animator;
     private float timePerAttack = 0.0f;
@@ -68,6 +66,7 @@ public class BerserkerAI : MonoBehaviour
         axeCollider1.enabled = false;
         axeCollider2.enabled = false;
         initialPosition = transform.position;
+        animator.SetInteger("DeadRandom", -1);
     }
 
     void OnCollisionEnter(Collision coll)
@@ -106,6 +105,11 @@ public class BerserkerAI : MonoBehaviour
 
     void OnTriggerStay(Collider coll)
     {
+        if (coll.gameObject.CompareTag("LimitPoint") && (states == enemy_states.HITTED))
+        {
+            isInLimit = true;
+        }
+
         // if the enemy hasn't seen Glitch he patrols and if he detects him with the raycast
         // then changes his state to Chase and changes his speed too.
         if ((sight == false) && coll.gameObject.CompareTag("Player") && ((states == enemy_states.WAIT) || (states == enemy_states.RETURNING) || (states == enemy_states.CHASE)))
@@ -258,7 +262,14 @@ public class BerserkerAI : MonoBehaviour
 
     public void DeadRandomTrigger()
     {
-        animator.SetInteger("DeadRandom", Random.Range(0, 3));
+        if (animator.GetInteger("DeadRandom") == -1 || animator.GetInteger("DeadRandom") == 3)
+        {
+            animator.SetInteger("DeadRandom", Random.Range(0, 3));
+        }
+        else
+        {
+            animator.SetInteger("DeadRandom", 3);
+        }
     }
 
     public void RecoverTrigger()

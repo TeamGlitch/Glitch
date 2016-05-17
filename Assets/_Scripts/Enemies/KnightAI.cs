@@ -63,6 +63,7 @@ public class KnightAI : MonoBehaviour {
         animator = GetComponent<Animator>();
         swordCollider.enabled = false;
         attacked = false;
+        animator.SetInteger("DeadRandom", -1);
     }
 
     void OnCollisionEnter(Collision coll)
@@ -300,7 +301,14 @@ public class KnightAI : MonoBehaviour {
 
     public void DeadRandomTrigger()
     {
-        animator.SetInteger("DeadRandom", Random.Range(0, 3));
+        if (animator.GetInteger("DeadRandom") == -1 || animator.GetInteger("DeadRandom") == 3)
+        {
+            animator.SetInteger("DeadRandom", Random.Range(0, 3));
+        }
+        else
+        {
+            animator.SetInteger("DeadRandom", 3);
+        }
     }
 
     public void HittedTrigger()
