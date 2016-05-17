@@ -10,10 +10,11 @@ public class BerserkerAI : MonoBehaviour
         CHASE,
         ATTACK,
         DEATH,
-        FALL,
+        SLIP,
         IMPACT,
         HITTED,
-        RETURNING
+        RETURNING,
+        FALL
     }
 
     // Constants
@@ -21,8 +22,8 @@ public class BerserkerAI : MonoBehaviour
     private const float maxSightAttack = 2.5f;
     private const float waitSpeed = 2.0f;
     private const float chaseSpeed = 10.0f;
-    private const float attackSpeed = 6.0f;
-    private const float fallSpeed = 3.0f;
+    private const float attackSpeed = 3.0f;
+    private const float fallSpeed = 5.0f;
     private const float walkSpeed = 2.5f;
     private const float waitTime = 3.0f;
     private const float attackTime = 1.0f;
@@ -41,6 +42,7 @@ public class BerserkerAI : MonoBehaviour
     public Rigidbody rigid;
     public enemy_states states = enemy_states.WAIT;
     public World world;
+    public bool attacked = false;
 
     private Transform playerPos;
     private Vector3 initialPosition;
@@ -54,6 +56,9 @@ public class BerserkerAI : MonoBehaviour
     private float timePerAttack = 0.0f;
     private Vector3 origin;
     private float time = waitTime;
+    private bool isInAttack = false;
+    private bool attackSucces = false;
+    private bool isInLimit = false;
     private int layerMask = (~((1 << 13) | (1 << 2) | (1 << 11))) | (1 << 9) | (1 << 0);
 
     void Start()
@@ -61,33 +66,41 @@ public class BerserkerAI : MonoBehaviour
         playerPos = player.GetComponent<Transform>();
         animator = GetComponent<Animator>();
         axeCollider1.enabled = false;
+        axeCollider2.enabled = false;
         initialPosition = transform.position;
     }
 
     void OnCollisionEnter(Collision coll)
     {
-        if ((coll.contacts[0].thisCollider.CompareTag("Berserker")) && (coll.contacts[0].otherCollider.CompareTag("Player")) && (player.transform.position.y > (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2)))
+        if ((coll.contacts[0].thisCollider.CompareTag("Berserker")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
         {
-            Attacked();
-        }
-        else if ((sight == true) && (coll.contacts[0].thisCollider.CompareTag("Berserker")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
-        {
-            Attack();
+            if ((player.transform.position.y >= (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2)) && (attacked == false))
+            {
+                Attacked();
+            }
+            else if ((player.transform.position.y < (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2)) && sight == true)
+            {
+                Attack();
+            }
+            else if (sight == false)
+            {
+                if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
+                {
+                    transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
+                }
+                else
+                {
+                    transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
+                }
+            }
         }
     }
 
-    // Trigger that detect collisions with patrol points and limit points
     void OnTriggerEnter(Collider coll)
     {
-        // If is in a limit he stops and search glitch
-        if (coll.gameObject.CompareTag("LimitPoint"))
+        if (coll.gameObject.CompareTag("LimitPoint") && (states == enemy_states.HITTED))
         {
-            if (coll.GetComponent<LimitPoint>().fall)
-            {
-                states = enemy_states.FALL;
-                sight = false;
-                speed = fallSpeed;
-            }
+            isInLimit = true;
         }
     }
 
@@ -95,13 +108,13 @@ public class BerserkerAI : MonoBehaviour
     {
         // if the enemy hasn't seen Glitch he patrols and if he detects him with the raycast
         // then changes his state to Chase and changes his speed too.
-        if ((sight == false) && coll.gameObject.CompareTag("Player") && (states != enemy_states.HITTED) && (states != enemy_states.IMPACT))
+        if ((sight == false) && coll.gameObject.CompareTag("Player") && ((states == enemy_states.WAIT) || (states == enemy_states.RETURNING) || (states == enemy_states.CHASE)))
         {
             origin = transform.position;
-            origin.y += transform.localScale.y * 0.75f;
+            origin.y = collider.bounds.extents.y;
             ray = new Ray(origin, player.transform.position - origin);
 
-            if ((Physics.Raycast(ray, out hit, float.PositiveInfinity, layerMask)) && hit.collider.gameObject.CompareTag("Player"))
+            if ((Physics.Raycast(ray, out hit, maxSightChase, layerMask)) && hit.collider.gameObject.CompareTag("Player"))
             {
                 sight = true;
                 speed = chaseSpeed;
@@ -116,6 +129,23 @@ public class BerserkerAI : MonoBehaviour
         {
             sight = false;
         }
+        else if (coll.gameObject.CompareTag("LimitPoint"))
+        {
+            if (isInLimit)
+            {
+                isInLimit = false;
+            }
+            else if (coll.GetComponent<LimitPoint>().fall)
+            {
+                states = enemy_states.SLIP;
+                sight = false;
+                speed = fallSpeed;
+            }
+        }
+        else if (coll.gameObject.CompareTag("Death"))
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     void Update()
@@ -125,6 +155,7 @@ public class BerserkerAI : MonoBehaviour
         {
             animator.SetFloat("Speed", speed * speedConstant);
             animator.SetInteger("State", (int)states);
+            animator.SetBool("Attack", isInAttack);
             switch (states)
             {
                 case enemy_states.WAIT:
@@ -140,6 +171,7 @@ public class BerserkerAI : MonoBehaviour
                     if ((sight == true) && (Vector3.Distance(playerPos.position, transform.position) <= maxSightAttack))
                     {
                         speed = attackSpeed;
+                        isInAttack = true;
                         states = enemy_states.ATTACK;
                     }
 
@@ -149,35 +181,11 @@ public class BerserkerAI : MonoBehaviour
                 case enemy_states.ATTACK:
 
                     // Attacking logic
-                    // ATTACK ANIMATION AND LOGIC HERE
-                    axeCollider1.enabled = true;
-                    axeCollider2.enabled = true;
-                    timePerAttack -= world.lag;
-                    if (timePerAttack <= 0.0f)
-                    {
-                        animator.SetBool("Attack", true);
-                    }
 
                     // If distance to Glitch is plus than chase field of view then changes to Search state
                     // else if Glitch isn't in attack scope then enemy chases him
-                    if (Vector3.Distance(playerPos.position, transform.position) > maxSightAttack)
+                    if ((Vector3.Distance(playerPos.position, transform.position) > maxSightAttack) && !isInAttack)
                     {
-                        if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
-                        {
-                            if (playerPos.position.x > transform.position.x)
-                            {
-                                transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
-                            }
-                        }
-                        else
-                        {
-                            if (playerPos.position.x < transform.position.x)
-                            {
-                                transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
-                            }
-                        }
-
-                        animator.SetBool("Attack", false);
                         speed = chaseSpeed;
                         states = enemy_states.CHASE;
                     }
@@ -188,15 +196,37 @@ public class BerserkerAI : MonoBehaviour
                     break;
 
                 case enemy_states.RETURNING:
-                    if ((transform.position.x < initialPosition.x + 1) && (transform.position.x > initialPosition.x - 1))
+                    if (!isInAttack)
                     {
-                        transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
-                        speed = waitSpeed;
-                        states = enemy_states.WAIT;
-                    }
-                    else
-                    {
-                        transform.Translate(Vector3.forward * speed * world.lag);
+                        if ((transform.position.x < initialPosition.x + 1) && (transform.position.x > initialPosition.x - 1))
+                        {
+                            transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
+                            speed = waitSpeed;
+                            states = enemy_states.WAIT;
+                        }
+                        else
+                        {
+                            transform.Translate(Vector3.forward * speed * world.lag);
+                        }
+
+                        if (attackSucces)
+                        {
+                            if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
+                            {
+                                if (initialPosition.x > transform.position.x)
+                                {
+                                    transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
+                                }
+                            }
+                            else
+                            {
+                                if (initialPosition.x < transform.position.x)
+                                {
+                                    transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
+                                }
+                            }
+                            attackSucces = false;
+                        }
                     }
                     break;
 
@@ -209,6 +239,14 @@ public class BerserkerAI : MonoBehaviour
                         speed = walkSpeed;
                         states = enemy_states.RETURNING;
                     }
+                    break;
+
+                case enemy_states.SLIP:
+                    transform.Translate(Vector3.forward * speed * world.lag);
+                    break;
+
+                case enemy_states.FALL:
+                    transform.Translate(Vector3.down * speed * world.lag);
                     break;
             }
         }
@@ -238,12 +276,11 @@ public class BerserkerAI : MonoBehaviour
 
     public void HittedTrigger()
     {
+        attacked = false;
         if (states != enemy_states.DEATH)
         {
             rigid.isKinematic = false;
             collider.enabled = true;
-            axeCollider1.enabled = true;
-            axeCollider2.enabled = true;
             fieldOfView.enabled = true;
             headCollider.enabled = true;
             speed = chaseSpeed;
@@ -255,12 +292,30 @@ public class BerserkerAI : MonoBehaviour
     {
         axeCollider1.enabled = false;
         axeCollider2.enabled = false;
-        animator.SetBool("Attack", false);
+        isInAttack = false;
+
+        if (attackSucces)
+        {
+            speed = walkSpeed;
+            states = enemy_states.RETURNING;
+        }
+    }
+
+    public void BeginAttackTrigger()
+    {
+        axeCollider1.enabled = true;
+        axeCollider2.enabled = true;
+    }
+
+    public void SlipTrigger()
+    {
+        speed = fallSpeed;
+        states = enemy_states.FALL;
     }
 
     public void Attacked()
     {
-        animator.SetBool("Attack", true);
+        attacked = true;
         speed = attackSpeed;
         states = enemy_states.HITTED;
         rigid.isKinematic = true;
@@ -274,7 +329,24 @@ public class BerserkerAI : MonoBehaviour
         if (lives <= 0)
         {
             states = enemy_states.DEATH;
-            animator.SetBool("Attack", false);
+            isInAttack = false;
+        }
+        else
+        {
+            if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
+            {
+                if (playerPos.position.x > transform.position.x)
+                {
+                    transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
+                }
+            }
+            else
+            {
+                if (playerPos.position.x < transform.position.x)
+                {
+                    transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
+                }
+            }
         }
 
         // To impulse player from enemy
@@ -284,9 +356,9 @@ public class BerserkerAI : MonoBehaviour
     public void Attack()
     {
         player.DecrementLives(damageAttack);
-        animator.SetBool("Attack", false);
+        isInAttack = false;
         sight = false;
-        speed = waitSpeed;
-        states = enemy_states.WAIT;
+        speed = walkSpeed;
+        attackSucces = true;
     }
 }

@@ -13,13 +13,6 @@ public class ArcherDead : MonoBehaviour {
             {
                 archer.Defeated();
             }
-            else
-            {
-                if (archer.sight == true)
-                {
-                    archer.Kick();
-                }
-            }
         }
     }
 }

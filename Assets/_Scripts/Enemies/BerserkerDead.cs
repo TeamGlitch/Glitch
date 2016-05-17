@@ -13,16 +13,9 @@ public class BerserkerDead : MonoBehaviour {
         {
             if (coll.gameObject.CompareTag("Player"))
             {
-                if (berserker.player.transform.position.y >= (transform.position.y + headCollider.bounds.extents.y))
+                if ((berserker.player.transform.position.y >= (transform.position.y + headCollider.bounds.extents.y)) && (berserker.attacked == false))
                 {
                     berserker.Attacked();
-                }
-                else
-                {
-                    if (berserker.sight == true)
-                    {
-                        berserker.Attack();
-                    }
                 }
             }
             else
