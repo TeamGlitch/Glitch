@@ -291,6 +291,7 @@ public class PlayerController : MonoBehaviour
 					}
 
 				} else {
+					controller.Move (new Vector3 (0, vSpeed, 0) * Time.deltaTime);
 					//vSpeed += gravity * Time.deltaTime;
 				}
 

@@ -4,6 +4,10 @@ using System.Collections;
 public class Log_fall : MonoBehaviour {
 
 	public World world;
+
+	public float startLag = 0f;
+
+	private float beginTime;
 	private Transform log;
 	private Collider deathCollider;
 	private float endY;
@@ -16,25 +20,31 @@ public class Log_fall : MonoBehaviour {
 		deathCollider = log.GetChild(0).gameObject.GetComponent<Collider> ();
 		endY = transform.GetChild(1).localPosition.y;
 		Object.Destroy(transform.GetChild(1).gameObject);
+		beginTime = Time.time + startLag;
 	}
 
 	// Update is called once per frame
 	void Update () {
 
-		if (world.slowFPSActived && deathCollider.enabled) {
-			deathCollider.enabled = false;
-		} else if (!world.slowFPSActived && !deathCollider.enabled) {
-			deathCollider.enabled = true;
-		}
-
-		if (world.doUpdate) {
-			if (log.localPosition.y <= endY) {
-				log.localPosition = new Vector3(0,0);
-				log.rotation = Quaternion.Euler(new Vector3(0, 0,  Random.Range (90 - 20, 90 + 20)));
+		if (beginTime == 0) {
+			if (world.slowFPSActived && deathCollider.enabled) {
+				deathCollider.enabled = false;
+			} else if (!world.slowFPSActived && !deathCollider.enabled) {
+				deathCollider.enabled = true;
 			}
 
-			log.Translate (new Vector3 (0f, -speed * world.lag), Space.World);
+			if (world.doUpdate) {
+				if (log.localPosition.y <= endY) {
+					log.localPosition = new Vector3 (0, 0);
+					log.rotation = Quaternion.Euler (new Vector3 (0, 0, Random.Range (90 - 20, 90 + 20)));
+				}
+
+				log.Translate (new Vector3 (0f, -speed * world.lag), Space.World);
+			}
+		} else if (Time.time > beginTime) {
+			beginTime = 0;
 		}
+
 	}
 
 	void OnTriggerEnter (Collider collision)
