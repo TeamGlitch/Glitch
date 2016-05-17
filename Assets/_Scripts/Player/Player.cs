@@ -11,7 +11,6 @@ public class Player : MonoBehaviour {
 	public CheckPoint lastCheckPoint;			//Reference to the last checkpoint
 
 	//Internal references
-	private CharacterController characterController;
     private BoxCollider trigger;
 
 	// Player element
@@ -49,8 +48,6 @@ public class Player : MonoBehaviour {
     private SlowFPS slowFPSScript;
 
 	void Awake () {
-
-		characterController = GetComponent<CharacterController>();
         trigger = GetComponentInChildren<BoxCollider>();
 		sprite = transform.GetComponentInChildren<SpriteRenderer>();
 
@@ -72,13 +69,7 @@ public class Player : MonoBehaviour {
 		boxUIActivated.SetActive (false);
 		guiRectTrans = gui.GetComponent<RectTransform>();
         slowFPSScript = transform.FindChild("Powers").GetComponentInChildren<SlowFPS>();
-
 	}
-
-    void Start()
-    {
-        characterController.detectCollisions = false;
-    }
 
 	void OnTriggerEnter(Collider coll){
 		//If there's a collision with some lethal thing in scene
@@ -135,14 +126,14 @@ public class Player : MonoBehaviour {
 //		characterController.detectCollisions = true;
 		playerController.state = PlayerController.player_state.JUMPING;
 		transform.position = lastCheckPoint.gameObject.transform.position;
-        playerController.slowFPS.RestartCooldowns();
+        slowFPSScript.RestartCooldowns();
 	}
 
 	public void healCompletely()
     {
 		lives = 3;
 		guiLife.UpdateLives();
-        playerController.slowFPS.RestartCooldowns();
+        slowFPSScript.RestartCooldowns();
 	}
 
 	public void IncreaseActivableBox()
@@ -211,7 +202,7 @@ public class Player : MonoBehaviour {
     {
         //Set the character to dead and disable vSpeed
         playerController.state = PlayerController.player_state.DEATH;
-        playerController.vSpeed = 0;
+//        playerController.vSpeed = 0;
 
         //Deactivate the sprite renderer
         sprite.enabled = false;
@@ -239,6 +230,8 @@ public class Player : MonoBehaviour {
     public void ReactToAttack(float enemyX)
     {
         // To impulse player from enemy
-        playerController.vSpeed = 20;
+        playerController.rigidBody.velocity = new Vector3(playerController.rigidBody.velocity.x, 0.0f, 0.0f);
+        playerController.rigidBody.AddForce(new Vector3(0.0f, playerController.jumpForce * 2.0f, 0.0f));
+        playerController.teleport.teleportUsed = false;
     }
 }
