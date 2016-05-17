@@ -4,6 +4,8 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
+    public AudioClip explosionSound;
+
 	// External references
 	public HUDLives guiLife;					//Reference to the Life GUI
 	public HUDCollects guiItem;					//Reference to the items GUI
@@ -123,7 +125,7 @@ public class Player : MonoBehaviour {
 		playerController.allowMovement = true;
 		sprite.enabled = true;
         trigger.enabled = true;
-//		characterController.detectCollisions = true;
+        playerController.rigidBody.isKinematic = false;
 		playerController.state = PlayerController.player_state.JUMPING;
 		transform.position = lastCheckPoint.gameObject.transform.position;
         slowFPSScript.RestartCooldowns();
@@ -200,9 +202,12 @@ public class Player : MonoBehaviour {
 
     public void Death()
     {
+
+        SoundManager.instance.PlaySingle(explosionSound);
+
         //Set the character to dead and disable vSpeed
         playerController.state = PlayerController.player_state.DEATH;
-//        playerController.vSpeed = 0;
+        playerController.rigidBody.isKinematic = true;
 
         //Deactivate the sprite renderer
         sprite.enabled = false;

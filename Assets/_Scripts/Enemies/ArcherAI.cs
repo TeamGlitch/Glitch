@@ -3,6 +3,8 @@ using System.Collections;
 
 public class ArcherAI : MonoBehaviour {
 
+    public AudioClip hitSound;
+
 	public enum enemy_states
     {
         WAIT,
@@ -301,5 +303,7 @@ public class ArcherAI : MonoBehaviour {
         kickCollider.enabled = false;
         fieldOfView.enabled = false;
         killCollider.enabled = false;
+        SoundManager.instance.PlaySingle(hitSound);
+
     }
 }

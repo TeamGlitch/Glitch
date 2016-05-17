@@ -6,6 +6,7 @@ using InControl;
 
 public class PlayerController : MonoBehaviour 
 {
+    public AudioClip jumpSound;
 
     public enum player_state
     {
@@ -112,6 +113,8 @@ public class PlayerController : MonoBehaviour
         switch (state)
         {
             case player_state.PREPARING_JUMP:
+
+                SoundManager.instance.PlaySingle(jumpSound);
 
                 timePreparingJump += Time.deltaTime;
                 rigidBody.AddForce(new Vector3(0.0f, jumpForce, 0.0f));

@@ -3,6 +3,8 @@ using System.Collections;
 
 public class KnightAI : MonoBehaviour {
 
+    public AudioClip hitSound;
+
     public enum enemy_states
     {
         WAIT,
@@ -308,6 +310,8 @@ public class KnightAI : MonoBehaviour {
             fieldOfView.enabled = false;
             animator.SetBool("Near", false);
         }
+
+        SoundManager.instance.PlaySingle(hitSound);
 
         // To impulse player from enemy
         player.ReactToAttack(transform.position.x);
