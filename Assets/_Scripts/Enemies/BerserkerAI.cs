@@ -43,6 +43,7 @@ public class BerserkerAI : MonoBehaviour
     public enemy_states states = enemy_states.WAIT;
     public World world;
     public bool attacked = false;
+    public AudioClip hitSound;
 
     private Transform playerPos;
     private Vector3 initialPosition;
@@ -336,6 +337,7 @@ public class BerserkerAI : MonoBehaviour
         fieldOfView.enabled = false;
         headCollider.enabled = false;
         --lives;
+        SoundManager.instance.PlaySingle(hitSound);
 
         if (lives <= 0)
         {

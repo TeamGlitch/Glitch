@@ -3,8 +3,6 @@ using System.Collections;
 
 public class KnightAI : MonoBehaviour {
 
-    public AudioClip hitSound;
-
     public enum enemy_states
     {
         WAIT,
@@ -44,6 +42,7 @@ public class KnightAI : MonoBehaviour {
     public enemy_states states = enemy_states.PATROL;
     public World world;
     public bool attacked;
+    public AudioClip hitSound;
 
     private Transform playerPos;
     private Vector3 lastPosition;
@@ -340,6 +339,7 @@ public class KnightAI : MonoBehaviour {
         speed = attackSpeed;
         states = enemy_states.HITTED;
         --lives;
+        SoundManager.instance.PlaySingle(hitSound);
 
         if (lives <= 0)
         {
@@ -351,8 +351,6 @@ public class KnightAI : MonoBehaviour {
             headCollider.enabled = false;
             isInAttack = false;
         }
-
-        SoundManager.instance.PlaySingle(hitSound);
 
         // To impulse player from enemy
         player.ReactToAttack(transform.position.x);
