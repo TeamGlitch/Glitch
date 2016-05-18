@@ -6,6 +6,7 @@ public class SlowFPS : MonoBehaviour {
 	public World world;
 	public FakeFPS fakeFPS;
 	public ParticleSystem glitchParticle;
+    public GlitchOffsetCamera glitchOffsetCamera;
 
 	public float recoveryRate = 3.0f;			// Time it takes to make a recovery bump
 	public float timeBetweenUpdates = 1;		// Seconds between slow updates
@@ -13,8 +14,10 @@ public class SlowFPS : MonoBehaviour {
 	public float timeRemaining;					// Remaining time the power can be active
 	public float slowDown = 0.5f;				//How much the world slows down on slowFPS
 
+    private float timeInFPS = 0.0f;
+
 	private float recoveryTime;					// Time to the next recovery bump
-	private bool powerActive = false;
+	public bool powerActive = false;
 	private float timeLastUpdate = 0;			// When the last slow update was done
 
 	public delegate void SlowFPSDelegate();
@@ -43,6 +46,11 @@ public class SlowFPS : MonoBehaviour {
 				glitchParticle.Play();
 				if (SlowFPSActivated != null)
 					SlowFPSActivated ();
+                timeInFPS = 0.0f;
+                glitchOffsetCamera.divisions = 20;
+                glitchOffsetCamera.inestability = 0.3f;
+                glitchOffsetCamera.frequency = 0.5f;
+                glitchOffsetCamera.enabled = true;
 			}
 			else
 			{
@@ -53,6 +61,7 @@ public class SlowFPS : MonoBehaviour {
 		// If power is enabled we check the time left and if is minus than 0, we disable the power
 		if (powerActive)
 		{
+            timeInFPS += Time.deltaTime;
 			timeRemaining -= Time.deltaTime;
 
 			if (timeRemaining <= 0.0f)
@@ -60,12 +69,25 @@ public class SlowFPS : MonoBehaviour {
 				timeRemaining = 0;
                 DeactivatePower();
 
-			} else if (world.doUpdate == true) {
-				
-					timeLastUpdate = Time.time;
+			}
+            else if (world.doUpdate == true)
+            {
+                if(timeInFPS <= 5.0f)
+                {
+                    float auxTime = Mathf.Min(0.5f, timeInFPS / 10.0f);
+                    SoundManager.instance.ChangeMusicSpeed(1.0f - auxTime);				
+                }
+				timeLastUpdate = Time.time;
 
-			} else if (Time.time >= timeLastUpdate + timeBetweenUpdates) {
-					world.requestUpdate((Time.time - timeLastUpdate) * slowDown);
+			}
+            else if (Time.time >= timeLastUpdate + timeBetweenUpdates)
+            {
+                if (timeInFPS <= 5.0f)
+                {
+                    float auxTime = Mathf.Min(0.5f, timeInFPS / 10.0f);
+                    SoundManager.instance.ChangeMusicSpeed(1.0f - auxTime);
+                }
+                world.requestUpdate((Time.time - timeLastUpdate) * slowDown);
 			}
 		}
 		else
@@ -96,6 +118,7 @@ public class SlowFPS : MonoBehaviour {
 		fakeFPS.SlowInactive();
 		if (SlowFPSDeactivated != null)
 			SlowFPSDeactivated ();
+        SoundManager.instance.ChangeMusicSpeed(1.0f);
 		
 	}
 

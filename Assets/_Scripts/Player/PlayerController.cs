@@ -6,6 +6,8 @@ using InControl;
 
 public class PlayerController : MonoBehaviour 
 {
+    public AudioClip jumpSound;
+    public GlitchOffsetCamera glitchOffsetCamera;
 
     public enum player_state
     {
@@ -17,17 +19,15 @@ public class PlayerController : MonoBehaviour
 		DEATH
     };
 
-	///////////// Variables /////////////
+    #region Variable Declaration
 
-	//State
+    //State
 	public player_state state;
 	public bool allowMovement;
-	private bool godMode = false;
 
 	//Player Components
 	private SpriteRenderer spriteRenderer;			//Reference to the sprite renderer
 	private Animator plAnimation;
-	public CharacterController controller;
 	public Rigidbody rigidBody;
 
 	//Particles
@@ -35,408 +35,463 @@ public class PlayerController : MonoBehaviour
 	private ParticleSystem dustParticles;
 	private ParticleSystem jumpParticles;
 
-	//External references
-	public Camera mainCamera;
-	public Camera godCamera;
-    public Camera staticCamera1;
-    public Camera staticCamera2;
-    public Camera staticCamera3;
-    public Camera staticCamera4;
-
 	//Movement Variables
 
 	private bool playerActivedJump = false;		// The jump state is cause of a player jump? (If not, it could be a fall)
 
-	private float zPosition;					// Position on the z axis. Unvariable
-	public float speed = 7.2f;					// Horizontal speed
-	public float jumpSpeed = 8.0f;				// Base jump speed
-	public float gravity = 22.0f;				// Gravity
-	public float maxJumpTime = 0.33f;			// Max time a jump can be extended
-	public float jumpRest = 0.025f;				// Time of jump preparing and fall recovery
-    public float vSpeed = 0.0f;					// The vertical speed
+	private float zPosition = 0.0f;				// Position on the z axis. Unvariable
+	public float maxJumpTime = 0.25f;			// Max time a jump can be extended
+    public float jumpForce = 700.0f;				// Base jump speed
+    private float timePreparingJump = 0.0f;
 
-	private float startJumpPress = -1;				//When the extended jump started
-	private float preparingJump = 0;				//Jump preparing time left
-	private float fallRecovery = 0;					//Fall recovery time left
-	private int nonGroundedFrames = 0;				// How many frames the player has being on air.
+    public float maxSpeedInAir = 20.0f;
+    public float decreaseSpeedWhenIdle = 1.0f;
 
-	///// Powers
-	//Teleport
+	// Powers declarations
+    [HideInInspector]
 	public TeleportScript teleport;
+    [HideInInspector]
+    public SlowFPS slowFPS;
 
-	//Slow FPS
-	public SlowFPS slowFPS;
-	
-	///// Other
-	//Broken effect
-	public Material brokenTexture;
+    private float distToGround;
+    private BoxCollider boxCollider;
 
 
-	///////////// Functions /////////////
-
-	void Start ()
-	{
-		spriteRenderer = transform.GetComponentInChildren<SpriteRenderer>();
-		plAnimation = transform.GetComponentInChildren<Animator>();
-
-		glitchParticles = transform.FindChild("GlitchParticles").gameObject.GetComponent<ParticleSystem>();
-		jumpParticles = transform.FindChild("JumpParticles").gameObject.GetComponent<ParticleSystem>();
-		dustParticles = transform.FindChild("DustParticles").gameObject.GetComponent<ParticleSystem>();
-		dustParticles.Stop();
-
-		zPosition = transform.position.z;
-		state = player_state.IN_GROUND;
-		allowMovement = true;
-	}
-
-   void OnControllerColliderHit(ControllerColliderHit coll)
+    public enum moving_type
     {
-		/*
-		//   /\     /~~  /\  |\  /||~~\~|~  /\  |~~\|||
-		//  /__\   |    /__\ | \/ ||--< |  /__\ |__/|||
-		// /    \   \__/    \|    ||__/_|_/    \|  \...
-		if (coll.gameObject.GetComponent<MeshRenderer>() != null)
-        {
-            if (coll.gameObject.CompareTag("Floor"))
-            {
-                TextureEffects.TextureFlicker(coll.gameObject, brokenTexture);
-            }
-            else
-            {
-                TextureEffects.TextureFlickerRepeat(coll.gameObject, brokenTexture);
-            }
-        }
-		*/
-		if ((controller.collisionFlags & CollisionFlags.Above) != 0) {
-			vSpeed = -0;
-			startJumpPress = -1;
-		}
+        IDLE,
+        GOING_RIGHT,
+        GOING_LEFT,
+        CHANGING_DIRECTION,
+        STOPING
+    };
+
+    public float maxSpeed = 15.0f;
+
+    private float velocityWhenChangedState = 0.0f;
+    [SerializeField]
+    private float timeToMaxVelocity = 1.0f;
+    [SerializeField]
+    private float timeToStop = 0.1f;
+    [SerializeField]
+    private float minSpeed = 2.0f;
+    private float timeToChangeDependingVelocity = 0.0f;
+    private float timeSinceChangeMoving;
+    private bool moveToRight = true;
+    private bool playerIsMoving = false;
+
+    [SerializeField]
+    private moving_type playerMovingType = moving_type.IDLE;
+
+    private int layerMask = ~((1 << 1) | (1 << 2) | (1 << 4) | (1 << 5) | (1 << 8) | (1 << 9) | (1 << 10) | (1 << 11) | (1 << 13));
+
+    #endregion
+
+    #region Init and update
+
+    void Start()
+    {
+        spriteRenderer = transform.GetComponentInChildren<SpriteRenderer>();
+        plAnimation = transform.GetComponentInChildren<Animator>();
+
+        glitchParticles = transform.FindChild("GlitchParticles").GetComponent<ParticleSystem>();
+        jumpParticles = transform.FindChild("JumpParticles").GetComponent<ParticleSystem>();
+        dustParticles = transform.FindChild("DustParticles").GetComponent<ParticleSystem>();
+
+        teleport = transform.FindChild("Powers/Teleport").GetComponent<TeleportScript>();
+        slowFPS = transform.FindChild("Powers/SlowFPS").GetComponent<SlowFPS>();
+
+        boxCollider = transform.GetComponent<BoxCollider>();
+        distToGround = boxCollider.bounds.extents.y;
+
+        state = player_state.IN_GROUND;
+        allowMovement = true;
     }
 
-	void Update () 
-	{
-
-		Vector3 moveDirection = new Vector3 (0, 0, 0);
-
+    void FixedUpdate()
+    {
         // State-changing calculations
         switch (state)
         {
-			case player_state.PREPARING_JUMP:
-			
-				preparingJump -= Time.deltaTime;
+            case player_state.PREPARING_JUMP:
 
-				//If it's ready to jump, start jump and give fall recovery time
-				if (preparingJump <= 0)
-				{
-					vSpeed = jumpSpeed;
-					startJumpPress = Time.time;
-					fallRecovery = jumpRest;
-					state = player_state.JUMPING;
-					plAnimation.SetBool ("Jump", true);	
-					plAnimation.SetBool ("Run", false);
-					jumpParticles.Play();
-				}
+                SoundManager.instance.PlaySingle(jumpSound);
 
-                // To control movement of player
-                Movement(moveDirection);
-				break;
+                timePreparingJump += Time.deltaTime;
+                rigidBody.AddForce(new Vector3(0.0f, jumpForce, 0.0f));
+                //If it's ready to jump, start jump and give fall recovery time
+                state = player_state.JUMPING;
+                plAnimation.SetBool("Jump", true);
+                plAnimation.SetBool("Run", false);
+                jumpParticles.Play();
+    
+                Movement();
+                break;
 
-			case player_state.FALL_RECOVERING:
-			
-				fallRecovery -= Time.deltaTime;
+		    case player_state.FALL_RECOVERING:
 
-				if (fallRecovery <= 0){
-					state = player_state.IN_GROUND;
-				}
+
+				state = player_state.IN_GROUND;
+
+				plAnimation.SetBool ("Run", false);
+				plAnimation.SetBool ("Jump", false);
+				plAnimation.SetBool ("Falling", false);
+	
 
                 // To control movement of player
-                Movement(moveDirection);
-				break;
+                Movement();
 
-			case player_state.IN_GROUND: 
-				
-				// If it's not teleporting
-				if (!ActivatingTeleport())
-				{
-					teleport.teleportUsed = false;
-
-					if(transform.parent != null)
-					{	
-						transform.rotation = transform.parent.rotation;
-					} 
-			
-					//If the jump key is being pressed but it has been released since the
-					//last jump
-					if (InputManager.ActiveDevice.Action1.IsPressed && allowMovement && !playerActivedJump) 
-					{
-						//Start jump and set the player-activated jump to true so it
-						//can't jump without releasing the button
-						//We also assign 3 to nonGroundedFrames so the walking animation doesn't show
-						preparingJump = jumpRest;
-						playerActivedJump = true;
-						nonGroundedFrames = 3;
-						state = player_state.PREPARING_JUMP;
-					} 
-					else if (!controller.isGrounded) 
-					{
-						state = player_state.JUMPING;
-						plAnimation.SetBool ("Falling", true);
-						plAnimation.SetBool ("Run", false);
-					}
-					else 
-					{
-						vSpeed = 0;
-					}
-
-					// To control movement of player
-					Movement(moveDirection);
-
-				}
+                break;
 
 
-				break;
+            case player_state.IN_GROUND:
 
-			case player_state.JUMPING:
+                // If it's not teleporting
+                if (!ActivatingTeleport())
+                {
+                    teleport.teleportUsed = false;
 
-				if (vSpeed < 0 && plAnimation.GetBool ("Falling") == false) {
-					plAnimation.SetBool ("Jump", false);
-					plAnimation.SetBool ("Falling", true);
-				}
-
-				// If it's not teleporting
-				if (!ActivatingTeleport())
-				{
-					//If it's grounded
-					if (controller.isGrounded) 
+                    if (transform.parent != null)
                     {
-						//Start fall recovering and set the bools
-						state = player_state.FALL_RECOVERING;
-						plAnimation.SetBool ("Falling", false);
-						if (plAnimation.GetBool ("Jump") == true) 
-						{
- 							plAnimation.SetBool ("Jump", false);
- 						}
- 						nonGroundedFrames = 0;
-					} 
-					else 
-					{
-						//If it's in the air
-						nonGroundedFrames++;
-						Vector3 eulerAngles = gameObject.transform.rotation.eulerAngles;
-						float rotationZ = 0.0f;
+                        transform.rotation = transform.parent.rotation;
+                    }
 
-						if (eulerAngles.z < 0.0f) {
-							eulerAngles.z += 360.0f;
-						}
+                    //If the jump key is being pressed but it has been released since the
+                    //last jump
+                    if (InputManager.ActiveDevice.Action1.IsPressed && allowMovement && !playerActivedJump)
+                    {
+                        timePreparingJump = 0.0f;
+                        playerActivedJump = true;
+                        state = player_state.PREPARING_JUMP;
+                        rigidBody.useGravity = false;
+                    }
+                    else if (!IsGrounded())
+                    {
+                        state = player_state.JUMPING;
+                        plAnimation.SetBool("Falling", true);
+                        plAnimation.SetBool("Run", false);
+                    }
 
-						if (eulerAngles.z != 0.0f) {
-							if (eulerAngles.z <= 3.0f || eulerAngles.z >= 357.0f) 
+
+                    // To control movement of player
+                    Movement();
+
+                }
+                break;
+
+            case player_state.JUMPING:
+
+                if (rigidBody.velocity.y < 0 && plAnimation.GetBool("Falling") == false)
+                {
+                    plAnimation.SetBool("Jump", false);
+                    plAnimation.SetBool("Falling", true);
+                }
+
+                // If it's not teleporting
+                if (!ActivatingTeleport())
+                {
+                    //If it's grounded
+                    if (IsGrounded())
+                    {
+                        //Start fall recovering and set the bools
+                        state = player_state.FALL_RECOVERING;
+                        plAnimation.SetBool("Falling", false);
+                        if (plAnimation.GetBool("Jump") == true)
+                        {
+                            plAnimation.SetBool("Jump", false);
+                        }
+                    }
+                    else
+                    {
+
+                        timePreparingJump += Time.fixedDeltaTime;
+
+                        if(!playerActivedJump || (timePreparingJump > maxJumpTime))
+                        {
+                            rigidBody.useGravity = true;
+                        }
+
+                        //If it's in the air
+                        Vector3 eulerAngles = gameObject.transform.rotation.eulerAngles;
+                        float rotationZ = 0.0f;
+
+                        if (eulerAngles.z < 0.0f)
+                        {
+                            eulerAngles.z += 360.0f;
+                        }
+
+                        if (eulerAngles.z != 0.0f)
+                        {
+                            if (eulerAngles.z <= 3.0f || eulerAngles.z >= 357.0f)
                             {
-								rotationZ = 0.0f;
-							}
-							else if (eulerAngles.z <= 180.0f) {
-								rotationZ = eulerAngles.z - 3.0f;
-							} else if (eulerAngles.z > 180.0f) {
-								rotationZ = eulerAngles.z + 3.0f;
-							}
-							gameObject.transform.rotation = Quaternion.Euler(eulerAngles.x, eulerAngles.y, rotationZ);
-						}
+                                rotationZ = 0.0f;
+                            }
+                            else if (eulerAngles.z <= 180.0f)
+                            {
+                                rotationZ = eulerAngles.z - 3.0f;
+                            }
+                            else if (eulerAngles.z > 180.0f)
+                            {
+                                rotationZ = eulerAngles.z + 3.0f;
+                            }
+                            gameObject.transform.rotation = Quaternion.Euler(eulerAngles.x, eulerAngles.y, rotationZ);
+                        }
+                    }
+                    // To control movement of player
+                    Movement();
+                }
+                break;
 
-						//If the player keeps pushing the jump button give a little
-						//vSpeed momentum - that gets gradually smaller - to get a
-						//higher jump. Do until the press time gets to his max.
-						//If the player releases the button, stop giving extra momentum to the jump.
-						if ((startJumpPress != -1) && (InputManager.ActiveDevice.Action1.IsPressed) & allowMovement
-							&& ((Time.time - startJumpPress) <= maxJumpTime)) 
-                        {
-							vSpeed = jumpSpeed;
-						} 
-                        else 
-                        {
-							startJumpPress = -1;
-						}
-					}
+            case player_state.TELEPORTING:
 
-					// To control movement of player
-					Movement(moveDirection);
+                Vector3 position;
+                bool ended = teleport.movePosition(out position);
+                rigidBody.MovePosition(position);
 
-				}
+                if (ended)
+                {
+                    state = player_state.JUMPING;
+                    plAnimation.speed = 1;
+                    rigidBody.detectCollisions = true;
+                    rigidBody.useGravity = true;
+                    rigidBody.velocity = new Vector3(rigidBody.velocity.x, 0.0f, 0.0f);
+                    if (!slowFPS.powerActive)
+                    {
+                        glitchOffsetCamera.enabled = false;
+                    }
+                    else
+                    {
+                        glitchOffsetCamera.divisions = 20;
+                        glitchOffsetCamera.inestability = 0.3f;
+                        glitchOffsetCamera.frequency = 0.5f;
+                    }
+                }
 
+                break;
 
-				break;
-
-			case player_state.TELEPORTING:
-
-				Vector3 position;
-				bool ended = teleport.movePosition(out position);
-				transform.position = position;
-
-				if (ended) {
-					state = player_state.JUMPING;
-					plAnimation.speed = 1;
-					rigidBody.detectCollisions = true;
-				}
-
-				break;
+            case player_state.DEATH:
+                rigidBody.velocity = Vector3.zero;
+                break;
         }
 
-		//If a player-induced jump is checked but the jump key is not longer
-		//being held, set it to false so it can jump again
-		if (playerActivedJump && !InputManager.ActiveDevice.Action1.IsPressed && allowMovement)
-			playerActivedJump = false;
+        //If a player-induced jump is checked but the jump key is not longer
+        //being held, set it to false so it can jump again
+        if (playerActivedJump && !InputManager.ActiveDevice.Action1.IsPressed && allowMovement)
+            playerActivedJump = false;
 
-        // To active God mode camera
-        if (Input.GetKeyDown(KeyCode.G))
+    }
+
+    private void Movement()
+    {
+        Vector3 moveDirection = Vector3.zero;
+        Vector3 currentVelocity = rigidBody.velocity;
+        bool isInGround = IsGrounded();
+
+        if(allowMovement)
         {
-            if (godMode == true)
+            // Control of movemente in X axis
+            moveDirection.x = InputManager.ActiveDevice.LeftStickX.Value;
+
+            if (rigidBody.velocity.x == 0.0f && moveDirection.x < 0.5f && moveDirection.x > -0.5f)
             {
-                mainCamera.gameObject.SetActive(true);
-                godCamera.gameObject.SetActive(false);
-                godMode = false;
+                playerMovingType = moving_type.IDLE;
+            }
+            else if (rigidBody.velocity.x != 0.0f && moveDirection.x < 0.5f && moveDirection.x > -0.5f)
+            {
+                if (playerMovingType != moving_type.STOPING)
+                {
+                    velocityWhenChangedState = rigidBody.velocity.x;
+                    timeToChangeDependingVelocity = timeToStop * Mathf.Abs(velocityWhenChangedState) / maxSpeed;
+                    timeSinceChangeMoving = 0.0f;
+                    playerMovingType = moving_type.STOPING;
+                }
+                else
+                {
+                    timeSinceChangeMoving += Time.fixedDeltaTime;
+                }
+            }
+            else if ((rigidBody.velocity.x > 0.0f && moveDirection.x <= -0.5f) ||
+                        (rigidBody.velocity.x < 0.0f && moveDirection.x >= 0.5f))
+            {
+                if (playerMovingType != moving_type.CHANGING_DIRECTION)
+                {
+                    playerMovingType = moving_type.CHANGING_DIRECTION;
+                }
+                else
+                {
+                    timeSinceChangeMoving += Time.fixedDeltaTime;
+                }
+            }
+            else if (rigidBody.velocity.x >= 0.0f && moveDirection.x >= 0.5f)
+            {
+                if (playerMovingType != moving_type.GOING_RIGHT)
+                {
+                    velocityWhenChangedState = Mathf.Max(rigidBody.velocity.x, minSpeed);
+                    timeToChangeDependingVelocity = timeToMaxVelocity * (maxSpeed - velocityWhenChangedState) / (maxSpeed - minSpeed);
+                    timeSinceChangeMoving = 0.0f;
+                    playerMovingType = moving_type.GOING_RIGHT;
+                }
+                else
+                {
+                    timeSinceChangeMoving += Time.fixedDeltaTime;
+                }
+            }
+            else if (rigidBody.velocity.x <= 0.0f && moveDirection.x <= -0.5f)
+            {
+                if (playerMovingType != moving_type.GOING_LEFT)
+                {
+                    velocityWhenChangedState = Mathf.Min(rigidBody.velocity.x, -minSpeed);
+                    timeToChangeDependingVelocity = timeToMaxVelocity * (maxSpeed - Mathf.Abs(velocityWhenChangedState)) / (maxSpeed-minSpeed);
+                    timeSinceChangeMoving = 0.0f;
+                    playerMovingType = moving_type.GOING_LEFT;
+                }
+                else
+                {
+                    timeSinceChangeMoving += Time.fixedDeltaTime;
+                }
             }
             else
             {
-                godCamera.gameObject.SetActive(true);
-                mainCamera.gameObject.SetActive(false);
-                godMode = true;
+                Debug.Log("AIXO CREC QUE NO POT ARRIBAR MAI A PASAR OMG OMG OMG");
+            }
+
+            switch (playerMovingType)
+            {
+                case moving_type.STOPING:
+                    currentVelocity.x = Mathf.Lerp(velocityWhenChangedState, 0.0f, timeSinceChangeMoving / timeToChangeDependingVelocity);
+                    break;
+                case moving_type.CHANGING_DIRECTION:
+                    if (moveDirection.x > 0.0f)
+                    {
+                        currentVelocity.x = minSpeed;
+                    }
+                    else if (moveDirection.x < 0.0f)
+                    {
+                        currentVelocity.x = -minSpeed;
+                    }
+                    break;
+                case moving_type.GOING_RIGHT:
+                    currentVelocity.x = Mathf.Lerp(velocityWhenChangedState, maxSpeed, timeSinceChangeMoving / timeToChangeDependingVelocity);
+                    break;
+                case moving_type.GOING_LEFT:
+                    currentVelocity.x = Mathf.Lerp(velocityWhenChangedState, -maxSpeed, timeSinceChangeMoving / timeToChangeDependingVelocity);
+                    break;
+            }
+
+            // Flips the sprite renderer if is changing direction
+            if ((currentVelocity.x > 0.0f) && (spriteRenderer.flipX == true))
+            {
+
+                spriteRenderer.flipX = false;
+
+                Vector3 dustPosition = dustParticles.gameObject.transform.localPosition;
+                dustPosition.x *= -1;
+                dustParticles.gameObject.transform.localPosition = dustPosition;
+
+                Quaternion dustRotation = dustParticles.gameObject.transform.localRotation;
+                dustRotation.y *= -1;
+                dustParticles.gameObject.transform.localRotation = dustRotation;
+
+            }
+            else if ((currentVelocity.x < 0.0f) && (spriteRenderer.flipX == false))
+            {
+
+                spriteRenderer.flipX = true;
+
+                Vector3 dustPosition = dustParticles.gameObject.transform.localPosition;
+                dustPosition.x *= -1;
+                dustParticles.gameObject.transform.localPosition = dustPosition;
+
+                Quaternion dustRotation = dustParticles.gameObject.transform.localRotation;
+                dustRotation.y *= -1;
+                dustParticles.gameObject.transform.localRotation = dustRotation;
+
             }
         }
 
-        // To active a static camera
-        if (mainCamera.isActiveAndEnabled)
+        // Correct Z position
+        Vector3 position = transform.position;
+        if (position.z != zPosition)
+            position.z = zPosition;
+        transform.position = position;
+
+        rigidBody.velocity = currentVelocity;
+        
+        if (state == player_state.IN_GROUND && currentVelocity.x != 0)
         {
-            if (Input.GetKeyDown(KeyCode.Keypad1))
+            if (plAnimation.GetBool("Run") == false)
             {
-                staticCamera1.gameObject.SetActive(true);
-                mainCamera.gameObject.SetActive(false);
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad2))
-            {
-                staticCamera2.gameObject.SetActive(true);
-                mainCamera.gameObject.SetActive(false);
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad3))
-            {
-                staticCamera3.gameObject.SetActive(true);
-                mainCamera.gameObject.SetActive(false);
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad4))
-            {
-                staticCamera4.gameObject.SetActive(true);
-                mainCamera.gameObject.SetActive(false);
+                plAnimation.SetBool("Run", true);
             }
         }
-        else
+        else if (plAnimation.GetBool("Run") == true)
         {
-            if (Input.GetKeyDown(KeyCode.Keypad0))
+            plAnimation.SetBool("Run", false);
+        }
+
+
+        //Plays the dust particle effect
+        if (state == player_state.IN_GROUND && currentVelocity.x != 0)
+        {
+            if (dustParticles.isStopped)
             {
-                mainCamera.gameObject.SetActive(true);
-                staticCamera1.gameObject.SetActive(false);
-                staticCamera2.gameObject.SetActive(false);
-                staticCamera3.gameObject.SetActive(false);
-                staticCamera4.gameObject.SetActive(false);
+                dustParticles.Play();
             }
         }
-
-	}
-
-    private void Movement(Vector3 moveDirection)
-    {
-        // Gravity
-        vSpeed -= gravity * Time.deltaTime;
-
-		//If the player is allowed to move
-		if (allowMovement) {
-			
-			// Control of movemente in X axis
-			moveDirection.x = InputManager.ActiveDevice.LeftStickX.Value;
-			moveDirection = transform.TransformDirection (moveDirection);
-			moveDirection *= speed;
-
-			// Flips the sprite renderer if is changing direction
-			if ((moveDirection.x > 0) && (spriteRenderer.flipX == true)) {
-				
-				spriteRenderer.flipX = false;
-
-				Vector3 dustPosition = dustParticles.gameObject.transform.localPosition;
-				dustPosition.x *= -1;
-				dustParticles.gameObject.transform.localPosition = dustPosition;
-
-				Quaternion dustRotation = dustParticles.gameObject.transform.localRotation;
-				dustRotation.y *= -1;
-				dustParticles.gameObject.transform.localRotation = dustRotation;
-
-			} else if ((moveDirection.x < 0) && (spriteRenderer.flipX == false)) {
-				
-				spriteRenderer.flipX = true;
-
-				Vector3 dustPosition = dustParticles.gameObject.transform.localPosition;
-				dustPosition.x *= -1;
-				dustParticles.gameObject.transform.localPosition = dustPosition;
-
-				Quaternion dustRotation = dustParticles.gameObject.transform.localRotation;
-				dustRotation.y *= -1;
-				dustParticles.gameObject.transform.localRotation = dustRotation;
-
-			}
-
-		} else {
-			moveDirection.x = 0;
-		}
-
-        moveDirection.y = vSpeed;
-
-        controller.Move(moveDirection * Time.deltaTime);
-        if (transform.position.z != zPosition)
+        else if (dustParticles.isPlaying)
         {
-            Vector3 pos = transform.position;
-            pos.z = zPosition;
-            transform.position = pos;
+            dustParticles.Stop();
         }
-
-		//Play or stop the run animation if it's on ground or the character
- 		//is in a minor fall. The nonGroundedFrames point out how many frames the
- 		//character has been non-grounded, so the idle/falling animation doesn't
- 		//play on minor falls and slopes.
- 		//TODO: Maybe change to time?
-		if ((state == player_state.IN_GROUND || nonGroundedFrames < 3) && moveDirection.x != 0){
-			if (plAnimation.GetBool("Run") == false) {
-				plAnimation.SetBool("Run", true);
-			}
-		} else if(plAnimation.GetBool("Run") == true){
-			plAnimation.SetBool("Run",false);
-		}
-
-		//Plays the dust particle effect
-		if (state == player_state.IN_GROUND && moveDirection.x != 0) {
-			if (dustParticles.isStopped) {
-				dustParticles.Play();
-			}
-		} else if (dustParticles.isPlaying) {
-			dustParticles.Stop();
-		}
     }
 
-	private bool ActivatingTeleport(){
 
-		if (InputManager.ActiveDevice.Action3.WasPressed && allowMovement
-			&& (!teleport.teleportUsed) && teleport.CheckTeleport(controller))
-		{
-                // We set the state to teleporting and determine when it will end
-				state = player_state.TELEPORTING;
-				vSpeed = 0;
-				plAnimation.Play("Glitch_Teleport");
-				plAnimation.speed = 1 / teleport.getDuration();
-				rigidBody.detectCollisions = false;
-				doGlitchParticles();
+    #endregion
 
-                return true;
-		}
-		return false;
-	}
+    #region Functions
 
-	public void doGlitchParticles(){
-		glitchParticles.Play();
-	}
+    public bool ActivatingTeleport()
+    {
+        if(InputManager.ActiveDevice.Action3.IsPressed && allowMovement && !teleport.teleportUsed && teleport.CheckTeleport(boxCollider))
+        {
+            state = player_state.TELEPORTING;
+            rigidBody.useGravity = false;
+            plAnimation.SetTrigger("Teleport");
+            plAnimation.speed = 1.0f / teleport.getDuration();
+            rigidBody.detectCollisions = false;
+            DoGlitchParticles();
+            glitchOffsetCamera.divisions = 50;
+            glitchOffsetCamera.inestability = 1.0f;
+            glitchOffsetCamera.frequency = 1.0f;
+            glitchOffsetCamera.enabled = true;
+            return true;
+        }
+        return false;
+    }
+
+    private bool IsGrounded()
+    {
+        return Physics.Raycast(new Vector3(transform.position.x + boxCollider.bounds.extents.x, transform.position.y, transform.position.z), -Vector3.up, distToGround + 0.1f, layerMask) ||
+            Physics.Raycast(new Vector3(transform.position.x - boxCollider.bounds.extents.x, transform.position.y, transform.position.z), -Vector3.up, distToGround + 0.1f, layerMask);
+    }
+
+    #endregion
+
+    #region Particles
+
+    public void DoGlitchParticles()
+    {
+        glitchParticles.Play();
+    }
+
+    #endregion
+
+    #region Colliders
+
+    void OnCollisionEnter(Collision collision)
+    {
+        rigidBody.velocity = new Vector3(rigidBody.velocity.x, 0.0f, 0.0f);
+    }
+
+    #endregion
 
 }

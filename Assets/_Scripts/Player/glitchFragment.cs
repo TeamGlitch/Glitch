@@ -42,7 +42,7 @@ public class glitchFragment : MonoBehaviour {
 		float scale = Random.Range (1.0f, 3.0f);
 		transform.localScale= new Vector3 (scale, scale, 1.0f);
 
-		Vector3 explosionForce = new Vector3 (Random.Range (-5.0f, 5.0f), Random.Range (4.0f, 15.0f), Random.Range (-5.0f, 5.0f));
+		Vector3 explosionForce = new Vector3 (Random.Range (-1.5f, 1.5f), Random.Range (4.0f, 15.0f), Random.Range (-1.5f, 1.5f));
 		GetComponent<Rigidbody>().AddForce(explosionForce);
 	}
 

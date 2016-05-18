@@ -3,6 +3,7 @@
 public class CheckPoint : MonoBehaviour {
 
 	public bool active = false;
+    public AudioClip checkpointSound;
 	private ParticleSystem particles;
 
 	//Animation
@@ -37,6 +38,7 @@ public class CheckPoint : MonoBehaviour {
 			growStart = Time.time;
 			growEnd = growStart + 1.7f;
 			cylinderRenderer.gameObject.SetActive(true);
+            SoundManager.instance.PlaySingle(checkpointSound);
 		}
 
 	}

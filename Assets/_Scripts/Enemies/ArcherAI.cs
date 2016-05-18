@@ -38,6 +38,7 @@ public class ArcherAI : MonoBehaviour {
     public BoxCollider fieldOfView;
     public BoxCollider kickCollider;
     public BoxCollider headCollider;
+	public AudioClip hitSound;
 
     private ObjectPool arrowPool;			//Arrows pool
     private ArrowScript arrowLogic;
@@ -317,5 +318,6 @@ public class ArcherAI : MonoBehaviour {
         kickCollider.enabled = false;
         fieldOfView.enabled = false;
         headCollider.enabled = false;
+        SoundManager.instance.PlaySingle(hitSound);
     }
 }
