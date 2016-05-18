@@ -1,0 +1,41 @@
+Guia frames animaciones:
+-Berserker:
+	-reposo:105-132
+	-andar:25-54
+	-correr:1-24
+	-salto:55-74
+	-atacar:75-103
+	-recibir golpe:133-149
+	-muerte:150-220
+	-pose en T:0
+	-pose glitch:221
+	-animacion glitch correr:222-245
+	-animacion glitch random:246-256
+	-chocar al correr:257-274
+	-caer al vacio:275-286
+	-cayendo:287-310
+-Arquera:
+	-reposo:50-73
+	-andar:25-49
+	-correr:1-24
+	-salto:74-111
+	-atacar:112-155
+	-recibir golpe:156-172
+	-muerte:173-190
+	-darse la vuelta:191-215
+	-pose en T:0
+	-pose glitch:240
+	-animacion glitch correr:216-239
+	-animacion glitch random:241-256
+	-patada:257-287
+-Caballero:
+	-reposo:51-80
+	-andar:1-24
+	-correr:25-50
+	-atacar:81-116
+	-pose en T:0
+	-pose glitch:117
+	-animacion glitch correr:118-143
+	-animacion glitch random:144-160
+	-girarse:161-197
+	-buscar:198-247
