@@ -103,7 +103,6 @@ public class ArcherAI : MonoBehaviour {
     {
         arrowPool = new ObjectPool(arrow);
         animator = GetComponent<Animator>();
-        animator.SetInteger("DeadRandom", -1);
     }
 
     void Update()
@@ -271,14 +270,7 @@ public class ArcherAI : MonoBehaviour {
 
     public void DeadRandomTrigger()
     {
-        if (animator.GetInteger("DeadRandom") == -1 || animator.GetInteger("DeadRandom") == 3)
-        {
-            animator.SetInteger("DeadRandom", Random.Range(0, 3));
-        }
-        else
-        {
-            animator.SetInteger("DeadRandom", 3);
-        }
+        animator.SetInteger("DeadRandom", Random.Range(0, 3));
     }
 
     public void FinishKickTrigger()
