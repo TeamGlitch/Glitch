@@ -33,9 +33,4 @@ public class SoundManager : MonoBehaviour {
         //Play the clip.
         efxSource.Play ();
     }
-
-    public void ChangeMusicSpeed(float speed)
-    {
-        musicSource.pitch = speed;
-    }
 }

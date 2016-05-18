@@ -7,6 +7,7 @@ public class DeadMenuScript : MonoBehaviour {
 
 	private Canvas deadMenu;
 	private Button restartButton;
+	private Button menuButton;
 
 	public GameObject playerPowers;
 	public GlitchOffsetCamera glitchedCameraScript;
@@ -18,8 +19,10 @@ public class DeadMenuScript : MonoBehaviour {
 
 		deadMenu = GetComponent<Canvas>();
 		restartButton = transform.FindChild("Restart Game").GetComponent<Button> ();
+		menuButton = transform.FindChild("Main Menu").GetComponent<Button>();
 		gameObject.SetActive(false);
 		playerPowers.SetActive (false);
+//		restartButton.Select ();
 	}
 
 	// Update is called once per frame
@@ -54,7 +57,6 @@ public class DeadMenuScript : MonoBehaviour {
 		glitchedCameraScript.enabled = true;
 		deadMenu.enabled = false;
 		timeDead = 0.0f;
-        restartButton.Select ();
 	}
 
 }

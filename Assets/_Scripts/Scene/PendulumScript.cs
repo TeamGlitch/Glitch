@@ -15,6 +15,8 @@ public class PendulumScript : MonoBehaviour {
 	private Vector3 _rotatePosition;
 	private float _previousAngle = 0f;
 	private bool movingRight = true;
+	private float timeInFPS;
+	private bool isFPSActive = false;
 
 	private Transform previousParent;
 
@@ -23,6 +25,9 @@ public class PendulumScript : MonoBehaviour {
 		_rotatePosition = transform.position + _rotateOffset;
 		transform.RotateAround (_rotatePosition, rotateVector, startAngle);
 
+		slowFpsScript.SlowFPSActivated += ActivateFPS;
+		slowFpsScript.SlowFPSDeactivated += DeactivateFPS;
+		timeInFPS = 0.0f;
 	}
 	
 	// Update is called once per frame
@@ -59,7 +64,7 @@ public class PendulumScript : MonoBehaviour {
 	{
 		if (collision.gameObject.CompareTag("Player"))
 		{
-			collision.gameObject.transform.parent = transform;
+			collision.gameObject.transform.parent.parent = transform;
 		}
 	}
 
@@ -67,8 +72,18 @@ public class PendulumScript : MonoBehaviour {
 	{
 		if (collision.gameObject.CompareTag("Player"))
 		{
-			collision.gameObject.transform.parent = null;
+			collision.gameObject.transform.parent.parent = null;
 		}
 	}
 
+	void ActivateFPS()
+	{
+		isFPSActive = true;
+		timeInFPS = 0.0f;
+	}
+
+	void DeactivateFPS()
+	{
+		isFPSActive = false;
+	}
 }
