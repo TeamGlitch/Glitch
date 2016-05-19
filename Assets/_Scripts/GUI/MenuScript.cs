@@ -24,6 +24,7 @@ public class MenuScript : MonoBehaviour {
 	public Button firstHelpButton;
 	public Button firstExitButton;
 	public Button firstCreditsButton;
+    public Text loadingText;
 
 
 	void Start () 
@@ -38,20 +39,20 @@ public class MenuScript : MonoBehaviour {
 
 	public void ContinuePress()
 	{
-		SceneManager.LoadScene ("testDesign");
-	}
+        levelSelectionMenu.enabled = false;
+        startText.gameObject.SetActive(false);
+        levelSelectText.gameObject.SetActive(false);
+        HelpText.gameObject.SetActive(false);
+        exitText.gameObject.SetActive(false);
+        creditsText.gameObject.SetActive(false);
+        loadingText.gameObject.SetActive(true);
+        SceneManager.LoadScene("testDesign");
+    }
 
 	public void LevelSelectPress()
 	{
 		levelSelectionMenu.enabled = true;
-
-		startText.enabled = false;
-		levelSelectText.enabled = false;
-		HelpText.enabled = false;
-		exitText.enabled = false;
-		creditsText.enabled = false;
-
-		firstLevelSelectButton.Select ();
+        firstLevelSelectButton.Select();
 	}
 
 	public void HelpPress()
