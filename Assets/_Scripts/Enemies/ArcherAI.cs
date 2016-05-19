@@ -220,7 +220,7 @@ public class ArcherAI : MonoBehaviour {
     public void ShootedTrigger()
     {
         origin = transform.position;
-        origin.y += transform.localScale.y * 0.75f;
+        origin.y += collider.bounds.extents.y * 2 * 0.75f;
 
         arrow = arrowPool.getObject();
         arrowLogic = arrow.GetComponent<ArrowScript>();
@@ -230,16 +230,33 @@ public class ArcherAI : MonoBehaviour {
         float x = origin.x - hit.point.x;
         float y = origin.y - hit.point.y;
         float alfa = Mathf.Atan(y / x);
-        alfa = (180.0f * alfa) / 3.14f;
-
+        alfa = (180.0f * alfa) / Mathf.PI;
+  
+        print(alfa);
         if (player.transform.position.x > origin.x)
         {
+            if (alfa > 45.0f)
+            {
+                alfa = 45.0f;
+            }
+            else if (alfa < -45.0f)
+            {
+                alfa = -45.0f;
+            }
             arrowLogic.transform.eulerAngles = new Vector3(0.0f, 0.0f, 90.0f);
             arrowLogic.transform.Rotate(0.0f, 0.0f, alfa);
             arrowLogic.isInLeft = false;
         }
         else
         {
+            if (-alfa > 45.0f)
+            {
+                alfa = -45.0f;
+            }
+            else if (-alfa < -45.0f)
+            {
+                alfa = 45.0f;
+            }
             arrowLogic.transform.eulerAngles = new Vector3(0.0f, 180.0f, 90.0f);
             arrowLogic.transform.Rotate(0.0f, 0.0f, -alfa);
             arrowLogic.isInLeft = true;

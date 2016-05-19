@@ -7,8 +7,9 @@ public class ArrowScript : MonoBehaviour {
     public Player player;
     public bool isInLeft = false;
     public World world;
+    public BoxCollider arrowCollider;
 
-    private float timeAlive = 5.0f;
+    private float timeAlive = 3.0f;
     private float damage = 1.0f;
 
     void OnCollisionEnter(Collision coll)
@@ -26,11 +27,11 @@ public class ArrowScript : MonoBehaviour {
         if (world.doUpdate)
         {
             transform.Translate(Vector2.down * world.lag * speed);
-
+            arrowCollider.enabled = true;
             timeAlive -= world.lag;
             if (timeAlive <= 0)
             {
-                timeAlive = 5.0f;
+                timeAlive = 3.0f;
                 ResetArrow();
             }
         }
