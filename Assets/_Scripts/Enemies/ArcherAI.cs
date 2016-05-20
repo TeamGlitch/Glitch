@@ -51,6 +51,7 @@ public class ArcherAI : MonoBehaviour {
     private Vector3 origin;
     private Animator animator;
     private float timePerKick = 0.0f;
+    private bool shooted = false;
     private int layerMask = (~((1 << 13) | (1 << 2) | (1 << 11))) | (1 << 9) | (1 << 0);
 
     // Trigger that detect player and change the state to Shoot
@@ -121,6 +122,50 @@ public class ArcherAI : MonoBehaviour {
                     if ((player.playerController.state != PlayerController.player_state.DEATH) && ((arrow == null) || (!arrow.activeInHierarchy)))
                     {
                         animator.SetBool("Shoot", true);
+                        shooted = false;
+                    }
+
+                    if (shooted == false)
+                    {
+                        origin = transform.position;
+                        origin.y += collider.bounds.extents.y * 2 * 0.75f;
+
+                        float x = origin.x - hit.point.x;
+                        float y = origin.y - hit.point.y;
+                        float alfa = Mathf.Atan(y / x);
+                        alfa = (180.0f * alfa) / Mathf.PI;
+                        print(alfa);
+                        // ShootLevel 1->Up, 2->Down, 0->Middle 
+                        if (player.transform.position.x > origin.x)
+                        {
+                            if (alfa > 15.0f)
+                            {
+                                animator.SetInteger("ShootLevel", 1);
+                            }
+                            else if (alfa < -15.0f)
+                            {
+                                animator.SetInteger("ShootLevel", 2);
+                            }
+                            else
+                            {
+                                animator.SetInteger("ShootLevel", 0);
+                            }
+                        }
+                        else
+                        {
+                            if (-alfa > 15.0f)
+                            {
+                                animator.SetInteger("ShootLevel", 1);
+                            }
+                            else if (-alfa < -15.0f)
+                            {
+                                animator.SetInteger("ShootLevel", 2);
+                            }
+                            else
+                            {
+                                animator.SetInteger("ShootLevel", 0);
+                            }
+                        }
                     }
 
                     // If distance to Glitch is minus than chase field of view then changes to Chase state.
@@ -219,50 +264,53 @@ public class ArcherAI : MonoBehaviour {
 
     public void ShootedTrigger()
     {
-        origin = transform.position;
-        origin.y += collider.bounds.extents.y * 2 * 0.75f;
+        if (shooted == false)
+        {
+            origin = transform.position;
+            origin.y += collider.bounds.extents.y * 2 * 0.75f;
 
-        arrow = arrowPool.getObject();
-        arrowLogic = arrow.GetComponent<ArrowScript>();
-        arrow.transform.position = origin;
-        arrowLogic.player = player;
-        arrowLogic.world = world;
-        float x = origin.x - hit.point.x;
-        float y = origin.y - hit.point.y;
-        float alfa = Mathf.Atan(y / x);
-        alfa = (180.0f * alfa) / Mathf.PI;
-  
-        print(alfa);
-        if (player.transform.position.x > origin.x)
-        {
-            if (alfa > 45.0f)
+            arrow = arrowPool.getObject();
+            arrowLogic = arrow.GetComponent<ArrowScript>();
+            arrow.transform.position = origin;
+            arrowLogic.player = player;
+            arrowLogic.world = world;
+            float x = origin.x - hit.point.x;
+            float y = origin.y - hit.point.y;
+            float alfa = Mathf.Atan(y / x);
+            alfa = (180.0f * alfa) / Mathf.PI;
+
+            if (player.transform.position.x > origin.x)
             {
-                alfa = 45.0f;
+                if (alfa > 45.0f)
+                {
+                    alfa = 45.0f;
+                }
+                else if (alfa < -45.0f)
+                {
+                    alfa = -45.0f;
+                }
+                arrowLogic.transform.eulerAngles = new Vector3(0.0f, 0.0f, 90.0f);
+                arrowLogic.transform.Rotate(0.0f, 0.0f, alfa);
+                arrowLogic.isInLeft = false;
             }
-            else if (alfa < -45.0f)
+            else
             {
-                alfa = -45.0f;
+                if (-alfa > 45.0f)
+                {
+                    alfa = -45.0f;
+                }
+                else if (-alfa < -45.0f)
+                {
+                    alfa = 45.0f;
+                }
+                arrowLogic.transform.eulerAngles = new Vector3(0.0f, 180.0f, 90.0f);
+                arrowLogic.transform.Rotate(0.0f, 0.0f, -alfa);
+                arrowLogic.isInLeft = true;
             }
-            arrowLogic.transform.eulerAngles = new Vector3(0.0f, 0.0f, 90.0f);
-            arrowLogic.transform.Rotate(0.0f, 0.0f, alfa);
-            arrowLogic.isInLeft = false;
+            arrow.SetActive(true);
+            animator.SetBool("Shoot", false);
+            shooted = true;
         }
-        else
-        {
-            if (-alfa > 45.0f)
-            {
-                alfa = -45.0f;
-            }
-            else if (-alfa < -45.0f)
-            {
-                alfa = 45.0f;
-            }
-            arrowLogic.transform.eulerAngles = new Vector3(0.0f, 180.0f, 90.0f);
-            arrowLogic.transform.Rotate(0.0f, 0.0f, -alfa);
-            arrowLogic.isInLeft = true;
-        }
-        arrow.SetActive(true);
-        animator.SetBool("Shoot", false);
     }
 
     public void TurnTrigger()
