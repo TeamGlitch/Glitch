@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
 		FALL_RECOVERING,
         TELEPORTING,
 		STICKED,
+		ROPE,
 		DEATH
     };
 
@@ -60,6 +61,8 @@ public class PlayerController : MonoBehaviour
 	private float preparingJump = 0;				//Jump preparing time left
 	private float fallRecovery = 0;					//Fall recovery time left
 	private int nonGroundedFrames = 0;				// How many frames the player has being on air.
+
+	public Rigidbody ropeAttached = null;
 
 	///// Powers
 	//Teleport
@@ -296,6 +299,25 @@ public class PlayerController : MonoBehaviour
 				}
 
 				//Movement(moveDirection);
+
+			break;
+
+		case player_state.ROPE:
+		
+
+			if (InputManager.ActiveDevice.Action1.IsPressed) {
+				state = player_state.PREPARING_JUMP;
+				transform.parent = null;
+				ropeAttached = null;
+			} else {
+				moveDirection.x = InputManager.ActiveDevice.LeftStickX.Value;
+
+				if (moveDirection.x != 0) {
+					ropeAttached.AddForce (new Vector3 (500.0f * Time.deltaTime * moveDirection.x, 0, 0));
+				}
+			}
+
+
 
 			break;
         }

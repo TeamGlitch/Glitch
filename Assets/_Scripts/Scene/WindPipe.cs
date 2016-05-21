@@ -22,7 +22,10 @@ public class WindPipe : MonoBehaviour {
 	void OnTriggerStay(Collider other) {
 		
 		if (other.gameObject.tag == "Player") {
-			other.gameObject.transform.parent.Translate (windDirection * windSpeed);
+			if (other.gameObject.transform.parent.GetComponent<PlayerController> ().state != PlayerController.player_state.ROPE) {
+				other.gameObject.transform.parent.Translate (windDirection * windSpeed);
+			}
+
 			//other.gameObject.transform.parent.GetComponent<Rigidbody>().AddForce(windDirection * windSpeed);
 			//print (other.gameObject.transform.parent.GetComponent<Rigidbody> ().velocity);
 		}
