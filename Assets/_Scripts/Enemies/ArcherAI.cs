@@ -64,7 +64,13 @@ public class ArcherAI : MonoBehaviour {
             origin.y += transform.localScale.y*0.75f;
             ray = new Ray(origin, player.transform.position - origin);
 
-            if (Physics.Raycast(ray, out hit, maxSightShoot, layerMask) && (sight == false) && (states != enemy_states.HITTED) && (hit.collider.gameObject.CompareTag("Player")))
+            if (Vector3.Distance(player.transform.position, transform.position) <= maxSightMeleeAttack)
+            {
+                speed = meleeAttackSpeed;
+                timePerKick = 0.0f;
+                states = enemy_states.MELEE_ATTACK;
+            }
+            else if (Physics.Raycast(ray, out hit, maxSightShoot, layerMask) && (sight == false) && (states != enemy_states.HITTED) && (hit.collider.gameObject.CompareTag("Player")))
             {
                 sight = true;
                 speed = shootSpeed;
@@ -97,6 +103,10 @@ public class ArcherAI : MonoBehaviour {
         {
             Kick();
         }
+        else if ((sight == false) && (coll.contacts[0].thisCollider.CompareTag("Archer")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
+        {
+            states = enemy_states.TURN;
+        }
     }
 
     void Start()
@@ -119,7 +129,12 @@ public class ArcherAI : MonoBehaviour {
                 case enemy_states.SHOOT:
 
                     // Shooting logic
-                    if ((player.playerController.state != PlayerController.player_state.DEATH) && ((arrow == null) || (!arrow.activeInHierarchy)))
+                    if (player.playerController.state == PlayerController.player_state.DEATH)
+                    {
+                        states = enemy_states.WAIT;
+                        sight = false;
+                    }
+                    else if ((player.playerController.state != PlayerController.player_state.DEATH) && ((arrow == null) || (!arrow.activeInHierarchy)))
                     {
                         animator.SetBool("Shoot", true);
                         shooted = false;

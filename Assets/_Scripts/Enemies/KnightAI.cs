@@ -56,6 +56,7 @@ public class KnightAI : MonoBehaviour {
     private float timePerAttack = 0.0f;
     private Vector3 origin;
     private bool isInAttack = false;
+    private bool isInLimitPoint = false;
     private int layerMask = (~((1 << 13) | (1 << 2) | (1 << 11) | (1 << 8))) | (1 << 9) | (1 << 0);
 
     void Start()
@@ -69,6 +70,9 @@ public class KnightAI : MonoBehaviour {
 
     void OnCollisionEnter(Collision coll)
     {
+        BerserkerAI berserker;
+        KnightAI knight;
+
         if ((coll.contacts[0].thisCollider.CompareTag("Knight")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
         {
             if ((player.transform.position.y >= (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2)) && (attacked == false))
@@ -91,6 +95,32 @@ public class KnightAI : MonoBehaviour {
                 }
             }
         }
+        else if (isInLimitPoint)
+        {
+            if (coll.contacts[0].otherCollider.CompareTag("Knight"))
+            {
+                knight = coll.contacts[0].otherCollider.GetComponent<KnightAI>();
+                knight.states = enemy_states.SEARCH;
+            }
+            else if (coll.contacts[0].otherCollider.CompareTag("Berserker"))
+            {
+                berserker = coll.contacts[0].otherCollider.GetComponent<BerserkerAI>();
+                berserker.states = BerserkerAI.enemy_states.RETURNING;
+            }
+        }
+        else if (states == enemy_states.CHASE)
+        {
+            if (coll.contacts[0].otherCollider.CompareTag("Knight"))
+            {
+                knight = coll.contacts[0].otherCollider.GetComponent<KnightAI>();
+                knight.states = enemy_states.CHASE;
+            }
+            else if (coll.contacts[0].otherCollider.CompareTag("Berserker"))
+            {
+                berserker = coll.contacts[0].otherCollider.GetComponent<BerserkerAI>();
+                berserker.states = BerserkerAI.enemy_states.CHASE;
+            }
+        }
     }
 
     // Trigger that detect collisions with patrol points and limit points
@@ -110,6 +140,7 @@ public class KnightAI : MonoBehaviour {
             states = enemy_states.SEARCH;
             time = searchingTime;
             sight = false;
+            isInLimitPoint = true;
         }
     }
 
@@ -174,7 +205,7 @@ public class KnightAI : MonoBehaviour {
 
                 // Enemy chases Glitch until reach him, reach a limit point or lose sight of Glitch
                 case enemy_states.CHASE:
-
+                    speed = chaseSpeed;
                     // Chasing logic
                     if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
                     {
@@ -266,6 +297,7 @@ public class KnightAI : MonoBehaviour {
                         speed = patrolSpeed;
                         states = enemy_states.RETURNING;
                         searchRotationTime = 1.0f;
+                        isInLimitPoint = false;
                     }
 
                     origin = transform.position;
@@ -276,10 +308,12 @@ public class KnightAI : MonoBehaviour {
                     {
                         speed = chaseSpeed;
                         states = enemy_states.CHASE;
+                        isInLimitPoint = false;
                     }
                     break;
 
                 case enemy_states.RETURNING:
+                    speed = patrolSpeed;
                     transform.Translate(Vector3.forward * speed * world.lag);
                     if ((transform.position.x < lastPosition.x + 1) && (transform.position.x > lastPosition.x - 1))
                     {

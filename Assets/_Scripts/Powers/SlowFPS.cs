@@ -44,8 +44,10 @@ public class SlowFPS : MonoBehaviour {
 				world.toggleSlowFPS();
 				fakeFPS.SlowActive(slowDown);
 				glitchParticle.Play();
-				if (SlowFPSActivated != null)
-					SlowFPSActivated ();
+                if (SlowFPSActivated != null)
+                {
+                    SlowFPSActivated();
+                }
                 timeInFPS = 0.0f;
                 glitchOffsetCamera.divisions = 20;
                 glitchOffsetCamera.inestability = 0.3f;
@@ -126,7 +128,6 @@ public class SlowFPS : MonoBehaviour {
 	{
 		timeRemaining = MAXTime;
         DeactivatePower();
-        world.toggleSlowFPS();
 	}
 
 }

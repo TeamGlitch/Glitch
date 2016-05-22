@@ -35,7 +35,7 @@ public class CheckPoint : MonoBehaviour
         if ((coll.gameObject.CompareTag("Player")) && !active)
         {
             //Sets this point as the checkpoint
-            setThisAsCheckPoint(coll.transform.gameObject);
+            setThisAsCheckPoint(coll.transform.gameObject, false);
 
             //Activates the grow animation
             growStart = Time.time;
@@ -47,11 +47,14 @@ public class CheckPoint : MonoBehaviour
     }
 
     //Sets this as a checkpoint
-    protected void setThisAsCheckPoint(GameObject playerRef)
+    protected void setThisAsCheckPoint(GameObject playerRef, bool start)
     {
         Player player = playerRef.GetComponent<Player>();
         player.lastCheckPoint = this;
-        player.healCompletely();
+        if (!start)
+        {
+            player.healCompletely();
+        }
 
         // Changes color of checkpoint
         Renderer renderer = GetComponent<Renderer>();

@@ -72,6 +72,9 @@ public class BerserkerAI : MonoBehaviour
 
     void OnCollisionEnter(Collision coll)
     {
+        BerserkerAI berserker;
+        KnightAI knight;
+
         if ((coll.contacts[0].thisCollider.CompareTag("Berserker")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
         {
             if ((player.transform.position.y >= (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2)) && (attacked == false))
@@ -92,6 +95,32 @@ public class BerserkerAI : MonoBehaviour
                 {
                     transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
                 }
+            }
+        }
+        else if (isInLimit)
+        {
+            if (coll.contacts[0].otherCollider.CompareTag("Knight"))
+            {
+                knight = coll.contacts[0].otherCollider.GetComponent<KnightAI>();
+                knight.states = KnightAI.enemy_states.SEARCH;
+            }
+            else if (coll.contacts[0].otherCollider.CompareTag("Berserker"))
+            {
+                berserker = coll.contacts[0].otherCollider.GetComponent<BerserkerAI>();
+                berserker.states = enemy_states.RETURNING;
+            }
+        }
+        else if (states == enemy_states.CHASE)
+        {
+            if (coll.contacts[0].otherCollider.CompareTag("Knight"))
+            {
+                knight = coll.contacts[0].otherCollider.GetComponent<KnightAI>();
+                knight.states = KnightAI.enemy_states.CHASE;
+            }
+            else if (coll.contacts[0].otherCollider.CompareTag("Berserker"))
+            {
+                berserker = coll.contacts[0].otherCollider.GetComponent<BerserkerAI>();
+                berserker.states = enemy_states.CHASE;
             }
         }
     }
@@ -169,7 +198,7 @@ public class BerserkerAI : MonoBehaviour
 
                 // Enemy chases Glitch until reach him, reach a limit point or lose sight of Glitch
                 case enemy_states.CHASE:
-
+                    speed = chaseSpeed;
                     // Chasing logic
                     transform.Translate(Vector3.forward * speed * world.lag);
 
@@ -201,6 +230,7 @@ public class BerserkerAI : MonoBehaviour
                     break;
 
                 case enemy_states.RETURNING:
+                    speed = walkSpeed;
                     if (!isInAttack)
                     {
                         if ((transform.position.x < initialPosition.x + 1) && (transform.position.x > initialPosition.x - 1))
