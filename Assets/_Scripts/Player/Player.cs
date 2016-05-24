@@ -49,7 +49,10 @@ public class Player : MonoBehaviour {
 
     private SlowFPS slowFPSScript;
 
+    private float _timeLastEnemyHitted;
+
 	void Awake () {
+        _timeLastEnemyHitted = Time.time;
         trigger = GetComponentInChildren<BoxCollider>();
 		sprite = transform.GetComponentInChildren<SpriteRenderer>();
 
@@ -234,9 +237,13 @@ public class Player : MonoBehaviour {
 
     public void ReactToAttack(float enemyX)
     {
-        // To impulse player from enemy
-        playerController.rigidBody.velocity = new Vector3(playerController.rigidBody.velocity.x, 0.0f, 0.0f);
-        playerController.rigidBody.AddForce(new Vector3(0.0f, playerController.jumpForce * 2.0f, 0.0f));
-        playerController.teleport.teleportUsed = false;
+        if(Time.time - _timeLastEnemyHitted > 0.2f)
+        {
+            // To impulse player from enemy
+            playerController.rigidBody.velocity = new Vector3(playerController.rigidBody.velocity.x, 0.0f, 0.0f);
+            playerController.rigidBody.AddForce(new Vector3(0.0f, playerController.jumpForce * 2.0f, 0.0f));
+            playerController.teleport.teleportUsed = false;
+            _timeLastEnemyHitted = Time.time;
+        }
     }
 }

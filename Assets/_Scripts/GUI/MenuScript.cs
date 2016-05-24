@@ -26,6 +26,9 @@ public class MenuScript : MonoBehaviour {
 	public Button firstCreditsButton;
     public Text loadingText;
 
+    public AudioClip backSound;
+    public AudioClip selectSound;
+    public AudioClip confirmSound;
 
 	void Start () 
     {
@@ -39,6 +42,7 @@ public class MenuScript : MonoBehaviour {
 
 	public void ContinuePress()
 	{
+        SoundManager.instance.PlaySingle(confirmSound);
         levelSelectionMenu.enabled = false;
         startText.gameObject.SetActive(false);
         levelSelectText.gameObject.SetActive(false);
@@ -51,13 +55,15 @@ public class MenuScript : MonoBehaviour {
 
 	public void LevelSelectPress()
 	{
-		levelSelectionMenu.enabled = true;
+        SoundManager.instance.PlaySingle(confirmSound);
+        levelSelectionMenu.enabled = true;
         firstLevelSelectButton.Select();
 	}
 
 	public void HelpPress()
 	{
-		helpMenu.enabled = true;
+        SoundManager.instance.PlaySingle(confirmSound);
+        helpMenu.enabled = true;
 
 		startText.enabled = false;
 		levelSelectText.enabled = false;
@@ -82,7 +88,8 @@ public class MenuScript : MonoBehaviour {
 
 	public void QuitPress()
 	{
-		quitMenu.enabled = true;
+        SoundManager.instance.PlaySingle(confirmSound);
+        quitMenu.enabled = true;
 
 		startText.enabled = false;
 		levelSelectText.enabled = false;
@@ -95,7 +102,8 @@ public class MenuScript : MonoBehaviour {
 
 	public void KeyboardPress()
 	{
-		keyboardButton.enabled = false;
+        SoundManager.instance.PlaySingle(confirmSound);
+        keyboardButton.enabled = false;
 		gamepadButton.enabled = true;
 		keyboardImage.enabled = true;
 		gamepadImage.enabled = false;
@@ -110,7 +118,8 @@ public class MenuScript : MonoBehaviour {
 
 	public void GamepadPress()
 	{
-		keyboardButton.enabled = true;
+        SoundManager.instance.PlaySingle(confirmSound);
+        keyboardButton.enabled = true;
 		gamepadButton.enabled = false;
 		keyboardImage.enabled = false;
 		gamepadImage.enabled = true;
@@ -125,7 +134,8 @@ public class MenuScript : MonoBehaviour {
 
 	public void NoPress()
 	{
-		quitMenu.enabled = false;
+        SoundManager.instance.PlaySingle(backSound);
+        quitMenu.enabled = false;
 		levelSelectionMenu.enabled = false;
 		helpMenu.enabled = false;
 		creditsMenu.enabled = false;
@@ -141,7 +151,8 @@ public class MenuScript : MonoBehaviour {
 
 	public void CreditsMenu()
 	{
-		creditsMenu.enabled = true;
+        SoundManager.instance.PlaySingle(confirmSound);
+        creditsMenu.enabled = true;
 
 		startText.enabled = false;
 		levelSelectText.enabled = false;
@@ -154,7 +165,14 @@ public class MenuScript : MonoBehaviour {
 
 	public void ExitGame()
 	{
-		Application.Quit ();
+        SoundManager.instance.PlaySingle(confirmSound);
+        Application.Quit();
 	}
+
+    public void MakeSelectSound()
+    {
+        SoundManager.instance.PlaySingle(selectSound);
+    }
+
 
 }
