@@ -120,6 +120,7 @@ public class SlowFPS : MonoBehaviour {
 		fakeFPS.SlowInactive();
 		if (SlowFPSDeactivated != null)
 			SlowFPSDeactivated ();
+        glitchOffsetCamera.enabled = false;
         SoundManager.instance.ChangeMusicSpeed(1.0f);
 		
 	}
