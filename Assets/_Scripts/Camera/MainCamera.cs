@@ -78,6 +78,15 @@ public class MainCamera : MonoBehaviour {
 				target.z -= Zposition;
 				target.x = player.transform.position.x + offsetX;
 
+				Vector3 offsetPosition = player.transform.position;
+				offsetPosition.x -= offsetX;
+				print (Camera.main.WorldToViewportPoint(offsetPosition).x);
+				if (Camera.main.WorldToViewportPoint (offsetPosition).x < -0.04) {
+					smooth = 0f;
+				} else {
+					smooth = 0.33f;
+				}
+
 				transform.position = Vector3.SmoothDamp(transform.position, target, ref vSpeed, smooth);
 
 				break;
