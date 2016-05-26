@@ -42,7 +42,6 @@ public class BerserkerAI : MonoBehaviour
     public Rigidbody rigid;
     public enemy_states states = enemy_states.WAIT;
     public World world;
-    public bool attacked = false;
     public AudioClip hitSound;
 
     private Transform playerPos;
@@ -77,7 +76,7 @@ public class BerserkerAI : MonoBehaviour
 
         if ((coll.contacts[0].thisCollider.CompareTag("Berserker")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
         {
-            if ((player.transform.position.y >= (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2)) && (attacked == false))
+            if (player.transform.position.y >= (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2))
             {
                 Attacked();
             }
@@ -319,7 +318,6 @@ public class BerserkerAI : MonoBehaviour
 
     public void HittedTrigger()
     {
-        attacked = false;
         if (states != enemy_states.DEATH)
         {
             rigid.isKinematic = false;
@@ -358,7 +356,6 @@ public class BerserkerAI : MonoBehaviour
 
     public void Attacked()
     {
-        attacked = true;
         speed = attackSpeed;
         states = enemy_states.HITTED;
         rigid.isKinematic = true;

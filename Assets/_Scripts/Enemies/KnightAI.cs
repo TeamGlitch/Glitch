@@ -41,7 +41,6 @@ public class KnightAI : MonoBehaviour {
     public Rigidbody rigid;
     public enemy_states states = enemy_states.PATROL;
     public World world;
-    public bool attacked;
     public AudioClip hitSound;
 
     private Transform playerPos;
@@ -64,7 +63,6 @@ public class KnightAI : MonoBehaviour {
         playerPos = player.GetComponent<Transform>();
         animator = GetComponent<Animator>();
         swordCollider.enabled = false;
-        attacked = false;
         animator.SetInteger("DeadRandom", -1);
     }
 
@@ -75,7 +73,7 @@ public class KnightAI : MonoBehaviour {
 
         if ((coll.contacts[0].thisCollider.CompareTag("Knight")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
         {
-            if ((player.transform.position.y >= (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2)) && (attacked == false))
+            if (player.transform.position.y >= (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2))
             {
                 Attacked();
             }
@@ -348,7 +346,6 @@ public class KnightAI : MonoBehaviour {
 
     public void HittedTrigger()
     {
-        attacked = false;
         if (states != enemy_states.DEATH)
         {
             speed = chaseSpeed;
@@ -369,7 +366,6 @@ public class KnightAI : MonoBehaviour {
 
     public void Attacked()
     {
-        attacked = true;
         speed = attackSpeed;
         states = enemy_states.HITTED;
         --lives;
