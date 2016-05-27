@@ -9,7 +9,7 @@ public class MainCamera : MonoBehaviour {
 
 	//Common variables
 	private Vector3 vSpeed;
-	private float smooth = 0.33f;
+	public float smooth = 0.15f;
 
 	//Following mode
 	public float maxUp = 0.5f;
@@ -34,6 +34,8 @@ public class MainCamera : MonoBehaviour {
 
 		if (Camera.current == Camera.main) 
 		{
+
+			smooth = (-0.0334f * Camera.current.transform.position.z) - 0.1941f;
 
 			switch (behaviour.mode) {
 
@@ -77,15 +79,6 @@ public class MainCamera : MonoBehaviour {
 				target.y += Yposition;
 				target.z -= Zposition;
 				target.x = player.transform.position.x + offsetX;
-
-				Vector3 offsetPosition = player.transform.position;
-				offsetPosition.x -= offsetX;
-				print (Camera.main.WorldToViewportPoint(offsetPosition).x);
-				if (Camera.main.WorldToViewportPoint (offsetPosition).x < -0.04) {
-					smooth = 0f;
-				} else {
-					smooth = 0.33f;
-				}
 
 				transform.position = Vector3.SmoothDamp(transform.position, target, ref vSpeed, smooth);
 
