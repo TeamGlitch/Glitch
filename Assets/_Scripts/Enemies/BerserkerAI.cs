@@ -126,7 +126,7 @@ public class BerserkerAI : MonoBehaviour
 
     void OnTriggerEnter(Collider coll)
     {
-        if (coll.gameObject.CompareTag("LimitPoint") && (states != enemy_states.HITTED))
+        if (coll.gameObject.CompareTag("LimitPoint") && (states == enemy_states.HITTED) && (!coll.GetComponent<LimitPoint>().fall))
         {
             isInLimit = true;
         }
@@ -134,7 +134,7 @@ public class BerserkerAI : MonoBehaviour
 
     void OnTriggerStay(Collider coll)
     {
-        if (coll.gameObject.CompareTag("LimitPoint") && (states != enemy_states.HITTED))
+        if (coll.gameObject.CompareTag("LimitPoint") && (states == enemy_states.HITTED) && (!coll.GetComponent<LimitPoint>().fall))
         {
             isInLimit = true;
         }
@@ -266,14 +266,6 @@ public class BerserkerAI : MonoBehaviour
 
                 case enemy_states.IMPACT:
                     speed = fallSpeed;
-                    time -= world.lag;
-                    if (time <= 0.0f)
-                    {
-                        sight = false;
-                        time = waitTime;
-                        speed = walkSpeed;
-                        states = enemy_states.RETURNING;
-                    }
                     break;
 
                 case enemy_states.SLIP:
@@ -314,6 +306,10 @@ public class BerserkerAI : MonoBehaviour
         {
             transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
         }
+
+        sight = false;
+        speed = walkSpeed;
+        states = enemy_states.RETURNING;
     }
 
     public void HittedTrigger()
