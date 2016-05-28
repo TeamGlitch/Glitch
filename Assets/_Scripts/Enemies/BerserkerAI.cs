@@ -320,6 +320,22 @@ public class BerserkerAI : MonoBehaviour
             collider.enabled = true;
             fieldOfView.enabled = true;
             headCollider.enabled = true;
+
+            if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
+            {
+                if (playerPos.position.x > transform.position.x)
+                {
+                    transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
+                }
+            }
+            else
+            {
+                if (playerPos.position.x < transform.position.x)
+                {
+                    transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
+                }
+            }
+
             speed = chaseSpeed;
             states = enemy_states.CHASE;
         }
@@ -367,23 +383,6 @@ public class BerserkerAI : MonoBehaviour
         {
             states = enemy_states.DEATH;
             isInAttack = false;
-        }
-        else
-        {
-            if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
-            {
-                if (playerPos.position.x > transform.position.x)
-                {
-                    transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
-                }
-            }
-            else
-            {
-                if (playerPos.position.x < transform.position.x)
-                {
-                    transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
-                }
-            }
         }
 
         // To impulse player from enemy
