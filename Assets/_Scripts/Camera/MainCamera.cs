@@ -9,12 +9,12 @@ public class MainCamera : MonoBehaviour {
 
 	//Common variables
 	private Vector3 vSpeed;
-	public float smooth = 0.15f;
+	private float smooth = 0.15f;
 
 	//Following mode
 	public float maxUp = 0.5f;
 	public float maxDown = 0.33f;
-	private int offsetX = 7;
+	private float playerPositionX = 0.27f; //In percent
 
 	//On_rails mode
 	public Transform upRail;
@@ -35,16 +35,23 @@ public class MainCamera : MonoBehaviour {
 		if (Camera.current == Camera.main) 
 		{
 
-			smooth = (-0.0334f * Camera.current.transform.position.z) - 0.1941f;
+			//Calculates the smooth depending on the ratio and the zoom
+			float ratio = Camera.current.aspect;
+			float distance = Camera.current.transform.position.z;
+			smooth = (ratio * (0.0423f - (0.0068f * distance))) + (0.0011f * distance) - 0.0546f; 
+
+			//Sets the camera movement so the player has the given x position (In viewport coordinates)
+			Vector3 positionOnViewport = Camera.main.WorldToViewportPoint(player.transform.position);
+			Vector3 expectedXPos = Camera.main.ViewportToWorldPoint(new Vector3(playerPositionX, 0, positionOnViewport.z));
+			expectedXPos = expectedXPos - player.transform.position;
+			float correct = transform.position.x - expectedXPos.x;
 
 			switch (behaviour.mode) {
 
 			case camera_mode.FOLLOWING:
 
 				Vector3 objective = transform.position;
-				objective.x = player.transform.position.x + offsetX;
-
-				Vector3 positionOnViewport = Camera.main.WorldToViewportPoint(player.transform.position);
+				objective.x = correct;
 
 				// Camera only moves if it's over the 50% of the screen or over the 33% of the screen
 				if (positionOnViewport.y > maxUp) 
@@ -78,7 +85,7 @@ public class MainCamera : MonoBehaviour {
 				Vector3 target = downRail.position;
 				target.y += Yposition;
 				target.z -= Zposition;
-				target.x = player.transform.position.x + offsetX;
+				target.x = correct;
 
 				transform.position = Vector3.SmoothDamp(transform.position, target, ref vSpeed, smooth);
 
