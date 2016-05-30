@@ -4,7 +4,6 @@ using InControl;
 public class SlowFPS : MonoBehaviour {
 
 	public World world;
-	public FakeFPS fakeFPS;
 	public ParticleSystem glitchParticle;
     public GlitchOffsetCamera glitchOffsetCamera;
 
@@ -42,7 +41,6 @@ public class SlowFPS : MonoBehaviour {
 				world.doUpdate = false;
 				timeLastUpdate = Time.time;
 				world.toggleSlowFPS();
-				fakeFPS.SlowActive(slowDown);
 				glitchParticle.Play();
 				if (SlowFPSActivated != null)
 					SlowFPSActivated ();
@@ -115,7 +113,6 @@ public class SlowFPS : MonoBehaviour {
 	public void DeactivatePower(){
 		powerActive = false;
 		world.toggleSlowFPS();
-		fakeFPS.SlowInactive();
 		if (SlowFPSDeactivated != null)
 			SlowFPSDeactivated ();
         SoundManager.instance.ChangeMusicSpeed(1.0f);
