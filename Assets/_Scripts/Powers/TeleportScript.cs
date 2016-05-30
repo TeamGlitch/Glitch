@@ -95,7 +95,7 @@ public class TeleportScript : MonoBehaviour
             {
                 // Wait for 0.3 seconds
                 endTime = initialTime + 0.3f;
-                endPos.y = collider.transform.position.y;
+                endPos.y = collider.transform.position.y + 0.1f;
             }
             else
             {

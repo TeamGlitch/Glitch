@@ -291,7 +291,7 @@ public class PlayerController : MonoBehaviour
         Vector3 currentVelocity = rigidBody.velocity;
         bool isInGround = IsGrounded();
 
-        if(allowMovement)
+        if (allowMovement)
         {
             // Control of movemente in X axis
             moveDirection.x = InputManager.ActiveDevice.LeftStickX.Value;
@@ -345,7 +345,7 @@ public class PlayerController : MonoBehaviour
                 if (playerMovingType != moving_type.GOING_LEFT)
                 {
                     velocityWhenChangedState = Mathf.Min(rigidBody.velocity.x, -minSpeed);
-                    timeToChangeDependingVelocity = timeToMaxVelocity * (maxSpeed - Mathf.Abs(velocityWhenChangedState)) / (maxSpeed-minSpeed);
+                    timeToChangeDependingVelocity = timeToMaxVelocity * (maxSpeed - Mathf.Abs(velocityWhenChangedState)) / (maxSpeed - minSpeed);
                     timeSinceChangeMoving = 0.0f;
                     playerMovingType = moving_type.GOING_LEFT;
                 }
@@ -412,6 +412,10 @@ public class PlayerController : MonoBehaviour
 
             }
         }
+        else
+        {
+            currentVelocity.x = 0.0f;
+        }
 
         // Correct Z position
         Vector3 position = transform.position;
@@ -455,7 +459,7 @@ public class PlayerController : MonoBehaviour
 
     public bool ActivatingTeleport()
     {
-        if(InputManager.ActiveDevice.Action3.IsPressed && allowMovement && !teleport.teleportUsed && teleport.CheckTeleport(boxCollider))
+        if (InputManager.ActiveDevice.Action3.WasPressed && allowMovement && !teleport.teleportUsed && teleport.CheckTeleport(boxCollider))
         {
             state = player_state.TELEPORTING;
             rigidBody.useGravity = false;
