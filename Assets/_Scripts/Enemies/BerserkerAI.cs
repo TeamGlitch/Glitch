@@ -124,6 +124,39 @@ public class BerserkerAI : MonoBehaviour
         }
     }
 
+    void OnCollisionStay(Collision coll)
+    {
+        BerserkerAI berserker;
+        KnightAI knight;
+
+        if (isInLimit)
+        {
+            if (coll.contacts[0].otherCollider.CompareTag("Knight"))
+            {
+                knight = coll.contacts[0].otherCollider.GetComponent<KnightAI>();
+                knight.states = KnightAI.enemy_states.SEARCH;
+            }
+            else if (coll.contacts[0].otherCollider.CompareTag("Berserker"))
+            {
+                berserker = coll.contacts[0].otherCollider.GetComponent<BerserkerAI>();
+                berserker.states = enemy_states.RETURNING;
+            }
+        }
+        else if (states == enemy_states.CHASE)
+        {
+            if (coll.contacts[0].otherCollider.CompareTag("Knight"))
+            {
+                knight = coll.contacts[0].otherCollider.GetComponent<KnightAI>();
+                knight.states = KnightAI.enemy_states.CHASE;
+            }
+            else if (coll.contacts[0].otherCollider.CompareTag("Berserker"))
+            {
+                berserker = coll.contacts[0].otherCollider.GetComponent<BerserkerAI>();
+                berserker.states = enemy_states.CHASE;
+            }
+        }
+    }
+
     void OnTriggerEnter(Collider coll)
     {
         if (coll.gameObject.CompareTag("LimitPoint") && (states == enemy_states.HITTED) && (!coll.GetComponent<LimitPoint>().fall))

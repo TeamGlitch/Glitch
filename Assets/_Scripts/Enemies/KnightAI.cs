@@ -121,6 +121,39 @@ public class KnightAI : MonoBehaviour {
         }
     }
 
+    void OnCollisionStay(Collision coll)
+    {
+        BerserkerAI berserker;
+        KnightAI knight;
+
+        if (isInLimitPoint)
+        {
+            if (coll.contacts[0].otherCollider.CompareTag("Knight"))
+            {
+                knight = coll.contacts[0].otherCollider.GetComponent<KnightAI>();
+                knight.states = enemy_states.SEARCH;
+            }
+            else if (coll.contacts[0].otherCollider.CompareTag("Berserker"))
+            {
+                berserker = coll.contacts[0].otherCollider.GetComponent<BerserkerAI>();
+                berserker.states = BerserkerAI.enemy_states.RETURNING;
+            }
+        }
+        else if (states == enemy_states.CHASE)
+        {
+            if (coll.contacts[0].otherCollider.CompareTag("Knight"))
+            {
+                knight = coll.contacts[0].otherCollider.GetComponent<KnightAI>();
+                knight.states = enemy_states.CHASE;
+            }
+            else if (coll.contacts[0].otherCollider.CompareTag("Berserker"))
+            {
+                berserker = coll.contacts[0].otherCollider.GetComponent<BerserkerAI>();
+                berserker.states = BerserkerAI.enemy_states.CHASE;
+            }
+        }
+    }
+
     // Trigger that detect collisions with patrol points and limit points
     void OnTriggerEnter(Collider coll)
     {
