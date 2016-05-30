@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class TopLeftFrame : MonoBehaviour {
+public class FrameScript : MonoBehaviour {
 
     public GameObject[] go;
 

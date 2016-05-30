@@ -160,7 +160,6 @@ public class Player : MonoBehaviour {
 		++items;
 		guiItem.GUIItemRepresent ();
         bigColl.gameObject.SetActive(true); 
-        bigColl.FadeIn();
 	}
 
 	public void DecreaseItem()

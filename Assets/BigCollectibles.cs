@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class BigCollectibles : MonoBehaviour {
 
-    private const float timeIn = 0.3f;
+    private const float timeIn = 1.0f;
     private const float timeOut = 0.8f;
 
     public Image icon1;
@@ -12,17 +12,9 @@ public class BigCollectibles : MonoBehaviour {
     public Image icon3;
     public Image frame;
 
-    private float timeFadeIn = 1.0f;
+    private float timeFadeIn = timeIn;
     private float timeFadeOut;
     private bool fadeOut = false;
-
-    public void FadeIn()
-    {
-        timeFadeIn = 1.0f;
-        icon1.CrossFadeAlpha(100.0f, timeIn, false);
-        icon2.CrossFadeAlpha(100.0f, timeIn, false);
-        icon3.CrossFadeAlpha(100.0f, timeIn, false);
-    }
 
     public void FadeOut()
     {
@@ -47,6 +39,7 @@ public class BigCollectibles : MonoBehaviour {
             if (timeFadeOut <= 0.0f)
             {
                 fadeOut = false;
+                timeFadeIn = timeIn;
                 this.gameObject.SetActive(false);
             }
         }
