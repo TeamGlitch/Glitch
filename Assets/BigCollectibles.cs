@@ -22,7 +22,6 @@ public class BigCollectibles : MonoBehaviour {
         icon1.CrossFadeAlpha(100.0f, timeIn, false);
         icon2.CrossFadeAlpha(100.0f, timeIn, false);
         icon3.CrossFadeAlpha(100.0f, timeIn, false);
-        frame.CrossFadeAlpha(100.0f, timeIn, false);
     }
 
     public void FadeOut()
