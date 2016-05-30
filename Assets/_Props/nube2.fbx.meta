@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 0f37df335fa46be45bedea4820cfe7bf
-timeCreated: 1460307795
+guid: e5af750fc55a5564d8cc0d786fef37d4
+timeCreated: 1464629452
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Group2
+    4300000: nueb1
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -51,8 +51,8 @@ ModelImporter:
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
-    normalSmoothAngle: 180
-    normalImportMode: 1
+    normalSmoothAngle: 60
+    normalImportMode: 0
     tangentImportMode: 3
   importAnimation: 1
   copyAvatar: 0
