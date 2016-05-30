@@ -244,6 +244,8 @@ public class DialogueScript : MonoBehaviour {
 						state = dialogueBoxState.PREPARE_TEXT;
 					} else {
 						dialogueBox.SetActive(false);
+                        player.allowMovement = true;
+
 					}
 
 				} else {
@@ -407,6 +409,7 @@ public class DialogueScript : MonoBehaviour {
 
 		//We prepare the text
 		dialogueBox.SetActive(true);
+        player.allowMovement = false;
 		state = dialogueBoxState.PREPARE_TEXT;
 	}
 }

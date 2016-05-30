@@ -348,6 +348,7 @@ public class KnightAI : MonoBehaviour {
 
     public void HittedTrigger()
     {
+        Debug.Log("HITED");
         attacked = false;
         if (states != enemy_states.DEATH)
         {

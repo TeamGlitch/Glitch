@@ -89,6 +89,12 @@ public class PlayerController : MonoBehaviour
 
     #region Init and update
 
+    void Awake()
+    {
+        boxCollider = transform.GetComponent<BoxCollider>();
+        distToGround = boxCollider.bounds.extents.y;
+    }
+
     void Start()
     {
         spriteRenderer = transform.GetComponentInChildren<SpriteRenderer>();
@@ -100,9 +106,6 @@ public class PlayerController : MonoBehaviour
 
         teleport = transform.FindChild("Powers/Teleport").GetComponent<TeleportScript>();
         slowFPS = transform.FindChild("Powers/SlowFPS").GetComponent<SlowFPS>();
-
-        boxCollider = transform.GetComponent<BoxCollider>();
-        distToGround = boxCollider.bounds.extents.y;
 
         state = player_state.IN_GROUND;
         allowMovement = true;
@@ -209,6 +212,7 @@ public class PlayerController : MonoBehaviour
                         if(!playerActivedJump || (timePreparingJump > maxJumpTime))
                         {
                             rigidBody.useGravity = true;
+                            playerActivedJump = false;
                         }
 
                         //If it's in the air
@@ -470,8 +474,16 @@ public class PlayerController : MonoBehaviour
 
     private bool IsGrounded()
     {
-        return Physics.Raycast(new Vector3(transform.position.x + boxCollider.bounds.extents.x, transform.position.y, transform.position.z), -Vector3.up, distToGround + 0.1f, layerMask) ||
+        return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f, layerMask) ||
+            Physics.Raycast(new Vector3(transform.position.x + boxCollider.bounds.extents.x, transform.position.y, transform.position.z), -Vector3.up, distToGround + 0.1f, layerMask) ||
             Physics.Raycast(new Vector3(transform.position.x - boxCollider.bounds.extents.x, transform.position.y, transform.position.z), -Vector3.up, distToGround + 0.1f, layerMask);
+    }
+
+    private bool IsTopColision()
+    {
+        return Physics.Raycast(transform.position, Vector3.up, distToGround + 0.1f, layerMask) ||
+            Physics.Raycast(new Vector3(transform.position.x + boxCollider.bounds.extents.x, transform.position.y, transform.position.z), Vector3.up, distToGround + 0.1f, layerMask) ||
+            Physics.Raycast(new Vector3(transform.position.x - boxCollider.bounds.extents.x, transform.position.y, transform.position.z), Vector3.up, distToGround + 0.1f, layerMask);
     }
 
     #endregion
@@ -489,7 +501,9 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        rigidBody.velocity = new Vector3(rigidBody.velocity.x, 0.0f, 0.0f);
+        if(IsTopColision())
+            rigidBody.velocity = new Vector3(rigidBody.velocity.x, 0.0f, 0.0f);
+
     }
 
     #endregion
