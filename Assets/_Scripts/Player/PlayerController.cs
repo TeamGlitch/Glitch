@@ -405,7 +405,6 @@ public class PlayerController : MonoBehaviour
             {
 
                 spriteRenderer.flipX = true;
-
                 Vector3 dustPosition = dustParticles.gameObject.transform.localPosition;
                 dustPosition.x *= -1;
                 dustParticles.gameObject.transform.localPosition = dustPosition;
@@ -427,32 +426,42 @@ public class PlayerController : MonoBehaviour
             position.z = zPosition;
         transform.position = position;
 
-		/*
-		RaycastHit ray;
-		if (currentVelocity > 0 && Physics.Raycast (transform.position, Vector3.right, out ray, boxCollider.bounds.extents.x + 0.1f, layerMask, QueryTriggerInteraction.Ignore)) {
-			Debug.Log (ray.transform.name);
-			currentVelocity = 0;
-		} else if (currentVelocity < 0 && Physics.Raycast (transform.position, Vector3.left, out ray, boxCollider.bounds.extents.x + 0.1f, layerMask, QueryTriggerInteraction.Ignore)){
-			Debug.Log (ray.transform.name);
-			currentVelocity = 0;
-		}*/
-
 		if (currentVelocity != 0) {
 			
-			Vector3 pos = boxCollider.transform.position;
+			RaycastHit ray;
 
-			if (currentVelocity > 0) {
-				pos.x += boxCollider.size.x + 0.1f;
+			Vector3 pos1 = transform.position;
+			pos1.y -= boxCollider.bounds.extents.y;
+
+			Vector3 pos2 = transform.position;
+
+			Vector3 pos3 = transform.position;
+			pos3.y += boxCollider.bounds.extents.y;
+
+			if (currentVelocity > 0){
+
+				if ((Physics.Raycast (pos1, Vector3.right, out ray, boxCollider.bounds.extents.y * 2f, layerMask, QueryTriggerInteraction.Ignore)
+					|| Physics.Raycast (pos2, Vector3.right, out ray, boxCollider.bounds.extents.y * 2f, layerMask, QueryTriggerInteraction.Ignore)
+					|| Physics.Raycast (pos3, Vector3.right, out ray, boxCollider.bounds.extents.y * 2f, layerMask, QueryTriggerInteraction.Ignore)) 
+					&& !isInGround) {
+					Debug.Log (ray.transform.name);
+					currentVelocity = 0;
+				}
+
 			} else {
-				pos.x -= boxCollider.size.x + 0.1f;
+				
+				if ((Physics.Raycast (pos1, Vector3.left, out ray, boxCollider.bounds.extents.y * 2f, layerMask, QueryTriggerInteraction.Ignore)
+					|| Physics.Raycast (pos2, Vector3.left, out ray, boxCollider.bounds.extents.y * 2f, layerMask, QueryTriggerInteraction.Ignore)
+					|| Physics.Raycast (pos3, Vector3.left, out ray, boxCollider.bounds.extents.y * 2f, layerMask, QueryTriggerInteraction.Ignore))
+					&& !isInGround) {
+					Debug.Log (ray.transform.name);
+					currentVelocity = 0;
+				}
 			}
-
-			if (!Physics.CheckBox (pos, boxCollider.size * 0.2f, boxCollider.transform.rotation, layerMask, QueryTriggerInteraction.Ignore)) {
-				currentVelocity = 0;
-			}
+				
 		}
 
-		var velocity = rigidBody.velocity;
+		Vector3 velocity = rigidBody.velocity;
 		velocity.x = currentVelocity;
 		rigidBody.velocity = velocity;
 
