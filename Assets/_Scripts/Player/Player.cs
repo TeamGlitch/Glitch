@@ -11,6 +11,7 @@ public class Player : MonoBehaviour {
 	public HUDCollects guiItem;					//Reference to the items GUI
 	public DeadMenuScript deadMenuScript;		//Reference to the death menu script
 	public CheckPoint lastCheckPoint;			//Reference to the last checkpoint
+    public BigCollectibles bigColl;
 
 	//Internal references
     private BoxCollider trigger;
@@ -161,6 +162,7 @@ public class Player : MonoBehaviour {
 	{
 		++items;
 		guiItem.GUIItemRepresent ();
+        bigColl.gameObject.SetActive(true); 
 	}
 
 	public void DecreaseItem()
