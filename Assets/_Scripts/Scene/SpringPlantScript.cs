@@ -8,6 +8,7 @@ public class SpringPlantScript : MonoBehaviour
     public PlayerController playerController;
     public float forceToPlayerWhenEnter = 700.0f;
     public float forceToPlayerWhenEnterAndJump = 1200.0f;
+    public AudioClip bouncyClip;
 
     private Animator _animator;
 
@@ -42,6 +43,7 @@ public class SpringPlantScript : MonoBehaviour
             }
             playerController.teleport.teleportUsed = false;
         }
+        SoundManager.instance.PlaySingle(bouncyClip);
     }
 
 }
