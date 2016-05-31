@@ -3751,7 +3751,14 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.78043926
+        functionName: InGroundTrigger
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1
@@ -4029,7 +4036,7 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
+      additiveReferencePoseFrame: 257
     - serializedVersion: 16
       name: Stand Up
       takeName: levantarse
@@ -4969,6 +4976,13 @@ ModelImporter:
       events:
       - time: 1
         functionName: RecoverTrigger
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: BeginImpactRecover
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

@@ -87,13 +87,16 @@ public class BerserkerAI : MonoBehaviour
             else if (sight == false)
             {
                 rigid.isKinematic = true;
-                if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
+                if ((states != enemy_states.IMPACT) && (states != enemy_states.SLIP))
                 {
-                    transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
-                }
-                else
-                {
-                    transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
+                    if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
+                    {
+                        transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
+                    }
+                    else
+                    {
+                        transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
+                    }
                 }
             }
         }
@@ -400,6 +403,18 @@ public class BerserkerAI : MonoBehaviour
     {
         axeCollider1.enabled = true;
         axeCollider2.enabled = true;
+    }
+
+    public void BeginImpactRecover()
+    {
+        collider.center = new Vector3(0.0f, 0.095f, 0.0f);
+        collider.size = new Vector3(0.1f, 0.18f, 0.05f);
+    }
+
+    public void InGroundTrigger()
+    {
+        collider.center = new Vector3(0.0f, 0.066f, -0.11f);
+        collider.size = new Vector3(0.1f, 0.12f, 0.05f);
     }
 
     public void SlipTrigger()

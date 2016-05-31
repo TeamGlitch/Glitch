@@ -4,6 +4,7 @@ using System.Collections;
 public class BerserkerDead : MonoBehaviour {
 
     public BerserkerAI berserker;
+    public BoxCollider collider;
     public BoxCollider headCollider;
 
     void OnTriggerEnter(Collider coll)
