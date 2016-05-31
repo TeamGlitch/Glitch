@@ -41,7 +41,6 @@ public class KnightAI : MonoBehaviour {
     public Rigidbody rigid;
     public enemy_states states = enemy_states.PATROL;
     public World world;
-    public bool attacked;
     public AudioClip hitSound;
 
     private Transform playerPos;
@@ -64,7 +63,6 @@ public class KnightAI : MonoBehaviour {
         playerPos = player.GetComponent<Transform>();
         animator = GetComponent<Animator>();
         swordCollider.enabled = false;
-        attacked = false;
         animator.SetInteger("DeadRandom", -1);
     }
 
@@ -75,16 +73,17 @@ public class KnightAI : MonoBehaviour {
 
         if ((coll.contacts[0].thisCollider.CompareTag("Knight")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
         {
-            if ((player.transform.position.y >= (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2)) && (attacked == false))
+            if (player.transform.position.y >= (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2))
             {
                 Attacked();
             }
             else if ((player.transform.position.y < (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2)) && sight == true)
             {
-                Attack();
+                rigid.isKinematic = true;
             }
             else if (sight == false)
             {
+                rigid.isKinematic = true;
                 if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
                 {
                     transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
@@ -120,6 +119,47 @@ public class KnightAI : MonoBehaviour {
                 berserker = coll.contacts[0].otherCollider.GetComponent<BerserkerAI>();
                 berserker.states = BerserkerAI.enemy_states.CHASE;
             }
+        }
+    }
+
+    void OnCollisionStay(Collision coll)
+    {
+        BerserkerAI berserker;
+        KnightAI knight;
+
+        if (isInLimitPoint)
+        {
+            if (coll.contacts[0].otherCollider.CompareTag("Knight"))
+            {
+                knight = coll.contacts[0].otherCollider.GetComponent<KnightAI>();
+                knight.states = enemy_states.SEARCH;
+            }
+            else if (coll.contacts[0].otherCollider.CompareTag("Berserker"))
+            {
+                berserker = coll.contacts[0].otherCollider.GetComponent<BerserkerAI>();
+                berserker.states = BerserkerAI.enemy_states.RETURNING;
+            }
+        }
+        else if (states == enemy_states.CHASE)
+        {
+            if (coll.contacts[0].otherCollider.CompareTag("Knight"))
+            {
+                knight = coll.contacts[0].otherCollider.GetComponent<KnightAI>();
+                knight.states = enemy_states.CHASE;
+            }
+            else if (coll.contacts[0].otherCollider.CompareTag("Berserker"))
+            {
+                berserker = coll.contacts[0].otherCollider.GetComponent<BerserkerAI>();
+                berserker.states = BerserkerAI.enemy_states.CHASE;
+            }
+        }
+    }
+
+    void OnCollisionExit(Collision coll)
+    {
+        if (coll.collider.gameObject.CompareTag("Player"))
+        {
+            rigid.isKinematic = false;
         }
     }
 
@@ -348,7 +388,6 @@ public class KnightAI : MonoBehaviour {
 
     public void HittedTrigger()
     {
-        attacked = false;
         if (states != enemy_states.DEATH)
         {
             speed = chaseSpeed;
@@ -369,7 +408,6 @@ public class KnightAI : MonoBehaviour {
 
     public void Attacked()
     {
-        attacked = true;
         speed = attackSpeed;
         states = enemy_states.HITTED;
         --lives;

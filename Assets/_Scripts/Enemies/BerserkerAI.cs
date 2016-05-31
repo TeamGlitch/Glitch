@@ -42,7 +42,6 @@ public class BerserkerAI : MonoBehaviour
     public Rigidbody rigid;
     public enemy_states states = enemy_states.WAIT;
     public World world;
-    public bool attacked = false;
     public AudioClip hitSound;
 
     private Transform playerPos;
@@ -77,23 +76,27 @@ public class BerserkerAI : MonoBehaviour
 
         if ((coll.contacts[0].thisCollider.CompareTag("Berserker")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
         {
-            if ((player.transform.position.y >= (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2)) && (attacked == false))
+            if (player.transform.position.y >= (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2))
             {
                 Attacked();
             }
             else if ((player.transform.position.y < (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2)) && sight == true)
             {
-                Attack();
+                rigid.isKinematic = true;
             }
             else if (sight == false)
             {
-                if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
+                rigid.isKinematic = true;
+                if ((states != enemy_states.IMPACT) && (states != enemy_states.SLIP))
                 {
-                    transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
-                }
-                else
-                {
-                    transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
+                    if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
+                    {
+                        transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
+                    }
+                    else
+                    {
+                        transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
+                    }
                 }
             }
         }
@@ -125,9 +128,50 @@ public class BerserkerAI : MonoBehaviour
         }
     }
 
+    void OnCollisionStay(Collision coll)
+    {
+        BerserkerAI berserker;
+        KnightAI knight;
+
+        if (isInLimit)
+        {
+            if (coll.contacts[0].otherCollider.CompareTag("Knight"))
+            {
+                knight = coll.contacts[0].otherCollider.GetComponent<KnightAI>();
+                knight.states = KnightAI.enemy_states.SEARCH;
+            }
+            else if (coll.contacts[0].otherCollider.CompareTag("Berserker"))
+            {
+                berserker = coll.contacts[0].otherCollider.GetComponent<BerserkerAI>();
+                berserker.states = enemy_states.RETURNING;
+            }
+        }
+        else if (states == enemy_states.CHASE)
+        {
+            if (coll.contacts[0].otherCollider.CompareTag("Knight"))
+            {
+                knight = coll.contacts[0].otherCollider.GetComponent<KnightAI>();
+                knight.states = KnightAI.enemy_states.CHASE;
+            }
+            else if (coll.contacts[0].otherCollider.CompareTag("Berserker"))
+            {
+                berserker = coll.contacts[0].otherCollider.GetComponent<BerserkerAI>();
+                berserker.states = enemy_states.CHASE;
+            }
+        }
+    }
+
+    void OnCollisionExit(Collision coll)
+    {
+        if (coll.collider.gameObject.CompareTag("Player"))
+        {
+            rigid.isKinematic = false;
+        }
+    }
+
     void OnTriggerEnter(Collider coll)
     {
-        if (coll.gameObject.CompareTag("LimitPoint") && (states != enemy_states.HITTED))
+        if (coll.gameObject.CompareTag("LimitPoint") && (states == enemy_states.HITTED) && (!coll.GetComponent<LimitPoint>().fall))
         {
             isInLimit = true;
         }
@@ -135,7 +179,7 @@ public class BerserkerAI : MonoBehaviour
 
     void OnTriggerStay(Collider coll)
     {
-        if (coll.gameObject.CompareTag("LimitPoint") && (states != enemy_states.HITTED))
+        if (coll.gameObject.CompareTag("LimitPoint") && (states == enemy_states.HITTED) && (!coll.GetComponent<LimitPoint>().fall))
         {
             isInLimit = true;
         }
@@ -267,14 +311,6 @@ public class BerserkerAI : MonoBehaviour
 
                 case enemy_states.IMPACT:
                     speed = fallSpeed;
-                    time -= world.lag;
-                    if (time <= 0.0f)
-                    {
-                        sight = false;
-                        time = waitTime;
-                        speed = walkSpeed;
-                        states = enemy_states.RETURNING;
-                    }
                     break;
 
                 case enemy_states.SLIP:
@@ -315,17 +351,36 @@ public class BerserkerAI : MonoBehaviour
         {
             transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
         }
+
+        sight = false;
+        speed = walkSpeed;
+        states = enemy_states.RETURNING;
     }
 
     public void HittedTrigger()
     {
-        attacked = false;
         if (states != enemy_states.DEATH)
         {
             rigid.isKinematic = false;
             collider.enabled = true;
             fieldOfView.enabled = true;
             headCollider.enabled = true;
+
+            if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
+            {
+                if (playerPos.position.x > transform.position.x)
+                {
+                    transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
+                }
+            }
+            else
+            {
+                if (playerPos.position.x < transform.position.x)
+                {
+                    transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
+                }
+            }
+
             speed = chaseSpeed;
             states = enemy_states.CHASE;
         }
@@ -350,6 +405,18 @@ public class BerserkerAI : MonoBehaviour
         axeCollider2.enabled = true;
     }
 
+    public void BeginImpactRecover()
+    {
+        collider.center = new Vector3(0.0f, 0.095f, 0.0f);
+        collider.size = new Vector3(0.1f, 0.18f, 0.05f);
+    }
+
+    public void InGroundTrigger()
+    {
+        collider.center = new Vector3(0.0f, 0.066f, -0.11f);
+        collider.size = new Vector3(0.1f, 0.12f, 0.05f);
+    }
+
     public void SlipTrigger()
     {
         speed = fallSpeed;
@@ -358,7 +425,6 @@ public class BerserkerAI : MonoBehaviour
 
     public void Attacked()
     {
-        attacked = true;
         speed = attackSpeed;
         states = enemy_states.HITTED;
         rigid.isKinematic = true;
@@ -374,23 +440,6 @@ public class BerserkerAI : MonoBehaviour
         {
             states = enemy_states.DEATH;
             isInAttack = false;
-        }
-        else
-        {
-            if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
-            {
-                if (playerPos.position.x > transform.position.x)
-                {
-                    transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
-                }
-            }
-            else
-            {
-                if (playerPos.position.x < transform.position.x)
-                {
-                    transform.Rotate(0.0f, 270 - transform.eulerAngles.y, 0.0f);
-                }
-            }
         }
 
         // To impulse player from enemy

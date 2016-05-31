@@ -4,6 +4,7 @@ using System.Collections;
 public class BerserkerDead : MonoBehaviour {
 
     public BerserkerAI berserker;
+    public BoxCollider collider;
     public BoxCollider headCollider;
 
     void OnTriggerEnter(Collider coll)
@@ -13,14 +14,14 @@ public class BerserkerDead : MonoBehaviour {
         {
             if (coll.gameObject.CompareTag("Player"))
             {
-                if ((berserker.player.transform.position.y >= (transform.position.y + headCollider.bounds.extents.y)) && (berserker.attacked == false))
+                if (berserker.player.transform.position.y >= (transform.position.y + headCollider.bounds.extents.y))
                 {
                     berserker.Attacked();
                 }
             }
             else
             {
-                if ((!coll.gameObject.CompareTag("PatrolPoint")) && (!coll.gameObject.CompareTag("LimitPoint")))
+                if ((!coll.gameObject.CompareTag("PatrolPoint")) && (!coll.gameObject.CompareTag("LimitPoint")) && (berserker.states == BerserkerAI.enemy_states.CHASE))
                 {
                     berserker.states = BerserkerAI.enemy_states.IMPACT;
                 }

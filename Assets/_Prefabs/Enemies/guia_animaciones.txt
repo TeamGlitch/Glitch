@@ -9,22 +9,29 @@ Guia frames animaciones:
 	-muerte:150-220
 	-pose en T:0
 	-pose glitch:221
-	-animacion glitch correr:222-224
+	-animacion glitch correr:222-245
 	-animacion glitch random:246-256
+	-chocar al correr:257-274
+	-Levantarse:275-312
+	-tropezón:313-332
+	-cayendo:333-348
+	-Mareado:349-403 	
 -Arquera:
 	-reposo:50-73
 	-andar:25-49
 	-correr:1-24
 	-salto:74-111
-	-atacar:112-155
-	-recibir golpe:156-172
-	-muerte:173-190
-	-darse la vuelta:191-215
+	-atacar-medio:112-155
+	-atacar-alto:156-199
+	-atacar_bajo:200-242
+	-recibir golpe:243-259
+	-muerte:260-277
+	-darse la vuelta:278-302
 	-pose en T:0
-	-pose glitch:240
-	-animacion glitch correr:216-239
-	-animacion glitch random:241-256
-	-patada:257-287
+	-pose glitch:327
+	-animacion glitch correr:303-326
+	-animacion glitch random:328-343
+	-patada:344-374
 -Caballero:
 	-reposo:51-80
 	-andar:1-24
@@ -36,4 +43,3 @@ Guia frames animaciones:
 	-animacion glitch random:144-160
 	-girarse:161-197
 	-buscar:198-247
-	-recibir golpe: 248-287

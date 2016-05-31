@@ -101,11 +101,20 @@ public class ArcherAI : MonoBehaviour {
     {
         if ((states != enemy_states.DEATH) && (sight == true) && (coll.contacts[0].thisCollider.CompareTag("Archer")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
         {
-            Kick();
+            rigid.isKinematic = true;
         }
         else if ((sight == false) && (coll.contacts[0].thisCollider.CompareTag("Archer")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
         {
+            rigid.isKinematic = true;
             states = enemy_states.TURN;
+        }
+    }
+
+    void OnCollisionExit(Collision coll)
+    {
+        if (coll.collider.gameObject.CompareTag("Player"))
+        {
+            rigid.isKinematic = false;
         }
     }
 

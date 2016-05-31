@@ -19,6 +19,7 @@ public class ArrowScript : MonoBehaviour {
             player.DecrementLives(damage);
             player.ReactToAttack(transform.position.x);
         }
+        timeAlive = 3.0f;
         ResetArrow();
     }
 	
