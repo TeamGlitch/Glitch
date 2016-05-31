@@ -459,7 +459,7 @@ public class PlayerController : MonoBehaviour
 
     public bool ActivatingTeleport()
     {
-        if (InputManager.ActiveDevice.Action3.WasPressed && allowMovement && !teleport.teleportUsed && teleport.CheckTeleport(boxCollider))
+        if (InputManager.ActiveDevice.Action3.IsPressed && InputManager.ActiveDevice.Action3.HasChanged && allowMovement && !teleport.teleportUsed && teleport.CheckTeleport(boxCollider))
         {
             state = player_state.TELEPORTING;
             rigidBody.useGravity = false;
