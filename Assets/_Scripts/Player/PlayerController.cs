@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
 
 	//Movement Variables
 
-	private bool playerActivedJump = false;		// The jump state is cause of a player jump? (If not, it could be a fall)
+	public bool playerActivedJump = false;		// The jump state is cause of a player jump? (If not, it could be a fall)
 
 	private float zPosition = 0.0f;				// Position on the z axis. Unvariable
 	public float maxJumpTime = 0.25f;			// Max time a jump can be extended
@@ -161,7 +161,7 @@ public class PlayerController : MonoBehaviour
 
                     //If the jump key is being pressed but it has been released since the
                     //last jump
-                    if (InputManager.ActiveDevice.Action1.IsPressed && allowMovement && !playerActivedJump)
+					if (InputManager.ActiveDevice.Action1.IsPressed && allowMovement && !playerActivedJump)
                     {
                         timePreparingJump = 0.0f;
                         playerActivedJump = true;
@@ -213,7 +213,6 @@ public class PlayerController : MonoBehaviour
                         if(!playerActivedJump || (timePreparingJump > maxJumpTime))
                         {
                             rigidBody.useGravity = true;
-                            playerActivedJump = false;
                         }
 
                         //Angle correction
@@ -282,8 +281,9 @@ public class PlayerController : MonoBehaviour
 
         //If a player-induced jump is checked but the jump key is not longer
         //being held, set it to false so it can jump again
-        if (playerActivedJump && !InputManager.ActiveDevice.Action1.IsPressed && allowMovement)
+		if (playerActivedJump && !InputManager.ActiveDevice.Action1.IsPressed && allowMovement){
             playerActivedJump = false;
+		}
 
     }
 
@@ -426,10 +426,10 @@ public class PlayerController : MonoBehaviour
             position.z = zPosition;
         transform.position = position;
 
-		if (currentVelocity != 0) {
-			
-			RaycastHit ray;
+		//If there's horizontal movement
+		if (!isInGround && currentVelocity != 0) {
 
+			//Three raycast are made
 			Vector3 pos1 = transform.position;
 			pos1.y -= boxCollider.bounds.extents.y;
 
@@ -438,23 +438,25 @@ public class PlayerController : MonoBehaviour
 			Vector3 pos3 = transform.position;
 			pos3.y += boxCollider.bounds.extents.y;
 
+
+			//If it's to the right
 			if (currentVelocity > 0){
 
-				if ((Physics.Raycast (pos1, Vector3.right, out ray, boxCollider.bounds.extents.y * 2f, layerMask, QueryTriggerInteraction.Ignore)
-					|| Physics.Raycast (pos2, Vector3.right, out ray, boxCollider.bounds.extents.y * 2f, layerMask, QueryTriggerInteraction.Ignore)
-					|| Physics.Raycast (pos3, Vector3.right, out ray, boxCollider.bounds.extents.y * 2f, layerMask, QueryTriggerInteraction.Ignore)) 
-					&& !isInGround) {
-					Debug.Log (ray.transform.name);
+				//Checks the raycast
+				//OPTIMIZATION NOTE: this if CAN'T be included in the last one)
+				if (Physics.Raycast (pos1, Vector3.right, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)
+					|| Physics.Raycast (pos2, Vector3.right, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)
+					|| Physics.Raycast (pos3, Vector3.right, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)) {
 					currentVelocity = 0;
 				}
 
 			} else {
-				
-				if ((Physics.Raycast (pos1, Vector3.left, out ray, boxCollider.bounds.extents.y * 2f, layerMask, QueryTriggerInteraction.Ignore)
-					|| Physics.Raycast (pos2, Vector3.left, out ray, boxCollider.bounds.extents.y * 2f, layerMask, QueryTriggerInteraction.Ignore)
-					|| Physics.Raycast (pos3, Vector3.left, out ray, boxCollider.bounds.extents.y * 2f, layerMask, QueryTriggerInteraction.Ignore))
-					&& !isInGround) {
-					Debug.Log (ray.transform.name);
+
+				//Checks the raycast
+				//OPTIMIZATION NOTE: this if CAN'T be included in the last one)
+				if (!isInGround && (Physics.Raycast (pos1, Vector3.left, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)
+					|| Physics.Raycast (pos2, Vector3.left, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)
+					|| Physics.Raycast (pos3, Vector3.left, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore))) {
 					currentVelocity = 0;
 				}
 			}
