@@ -82,10 +82,11 @@ public class BerserkerAI : MonoBehaviour
             }
             else if ((player.transform.position.y < (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2)) && sight == true)
             {
-                Attack();
+                rigid.isKinematic = true;
             }
             else if (sight == false)
             {
+                rigid.isKinematic = true;
                 if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
                 {
                     transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
@@ -154,6 +155,14 @@ public class BerserkerAI : MonoBehaviour
                 berserker = coll.contacts[0].otherCollider.GetComponent<BerserkerAI>();
                 berserker.states = enemy_states.CHASE;
             }
+        }
+    }
+
+    void OnCollisionExit(Collision coll)
+    {
+        if (coll.collider.gameObject.CompareTag("Player"))
+        {
+            rigid.isKinematic = false;
         }
     }
 
