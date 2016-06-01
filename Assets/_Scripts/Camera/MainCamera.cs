@@ -20,13 +20,9 @@ public class MainCamera : MonoBehaviour {
 	public Transform upRail;
 	public Transform downRail;
 
-	void Awake(){
-		CameraZones.SetActive(false);
-		gameObject.SetActive (false);
-	}
-
 	void OnEnable() {
 		CameraZones.SetActive(true);
+
 	}
 
 	void Update()
