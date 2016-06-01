@@ -12,7 +12,7 @@ public class HUDLives : MonoBehaviour {
     private int maxLives = 3;
 
 
-    // Function to update lives in HUD-
+    // Function to update lives in HUD
     // If player lives is minus than i then is a lost life
     public void UpdateLives()
     {

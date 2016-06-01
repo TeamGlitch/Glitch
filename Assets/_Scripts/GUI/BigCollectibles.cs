@@ -7,9 +7,9 @@ public class BigCollectibles : MonoBehaviour {
     private const float timeIn = 1.0f;
     private const float timeOut = 0.8f;
 
-    public Image icon1;
-    public Image icon2;
-    public Image icon3;
+    public Image[] collects;
+    public Sprite collect;
+    public Sprite noCollect;
     public Image frame;
 
     private float timeFadeIn = timeIn;
@@ -20,9 +20,10 @@ public class BigCollectibles : MonoBehaviour {
     {
         timeFadeOut = timeOut;
         fadeOut = true;
-        icon1.CrossFadeAlpha(0.0f, timeOut, false);
-        icon2.CrossFadeAlpha(0.0f, timeOut, false);
-        icon3.CrossFadeAlpha(0.0f, timeOut, false);
+        for (int i = 0; i < collects.Length; i++)
+        {
+            collects[i].CrossFadeAlpha(0.0f, timeOut, false);
+        }
         frame.CrossFadeAlpha(0.0f, timeOut, false);
     }
 
@@ -43,5 +44,9 @@ public class BigCollectibles : MonoBehaviour {
                 this.gameObject.SetActive(false);
             }
         }
+    }
+
+    public void AddItem(int number){
+        collects[number].sprite = collect;
     }
 }

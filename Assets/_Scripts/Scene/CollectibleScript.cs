@@ -5,14 +5,12 @@ public class CollectibleScript : MonoBehaviour {
 
 	public Player player;
     public AudioClip itemSound;
+    public int orderNum;
 
 	void OnTriggerEnter(Collider collider)
 	{
-        if (collider.gameObject.CompareTag("Player"))
-        {
-            player.IncreaseItem();
-            gameObject.SetActive(false);
-            SoundManager.instance.PlaySingle(itemSound);
-        }
+        player.IncreaseItem(this);
+        gameObject.SetActive(false);
+        SoundManager.instance.PlaySingle(itemSound);
 	}
 }

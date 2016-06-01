@@ -402,7 +402,7 @@ public class DialogueScript : MonoBehaviour {
 	public void callScene(int sceneNum){
 
 		//We read the scene text of the given id
-		XmlNode scene = xmlDoc.SelectSingleNode("/Dialogue[@lang = \"English\"]/Scene[@id = \"" + sceneNum + "\"]");
+    	XmlNode scene = xmlDoc.SelectSingleNode("/Dialogue[@lang = \"English\"]/Scene[@id = \"" + sceneNum + "\"]");
 
 		//We add the lines to the message list 
 		for (int i = 0; i < scene.ChildNodes.Count; i++) {

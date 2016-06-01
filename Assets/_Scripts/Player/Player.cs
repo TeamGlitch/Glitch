@@ -11,7 +11,7 @@ public class Player : MonoBehaviour {
 	public HUDCollects guiItem;					//Reference to the items GUI
 	public DeadMenuScript deadMenuScript;		//Reference to the death menu script
 	public CheckPoint lastCheckPoint;			//Reference to the last checkpoint
-    public BigCollectibles bigColl;
+    public BigCollectibles bigCollUI;
 
 	//Internal references
     private BoxCollider trigger;
@@ -158,11 +158,15 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	public void IncreaseItem()
+	public void IncreaseItem(CollectibleScript collect)
 	{
 		++items;
 		guiItem.GUIItemRepresent ();
-        bigColl.gameObject.SetActive(true); 
+        if (collect.CompareTag("BigItem"))
+        {
+            bigCollUI.gameObject.SetActive(true);
+            bigCollUI.AddItem(collect.orderNum);
+        }
 	}
 
 	public void DecreaseItem()
