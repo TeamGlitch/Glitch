@@ -36,6 +36,7 @@ public class ErrorBoxScript : MonoBehaviour
         spriteRenderer.color = boxColor;
 
         cameraGlitchedToBoxes = cam.GetComponent<CameraGlitchedToBoxes>();
+        playerScript.PlayerDeadEvent += PlayerDead;
 
     }
 
@@ -155,6 +156,20 @@ public class ErrorBoxScript : MonoBehaviour
                 boxColor.a = 0.0f;
                 spriteRenderer.color = boxColor;
             }
+            visible = false;
+        }
+    }
+
+    public void PlayerDead()
+    {
+        if(visible && !activated)
+        {
+            playerScript.DecreaseActivableBox();
+            cameraGlitchedToBoxes.RemoveBox(transform.position);
+            boxCollider.enabled = false;
+            Color boxColor = spriteRenderer.color;
+            boxColor.a = 0.0f;
+            spriteRenderer.color = boxColor;
             visible = false;
         }
     }
