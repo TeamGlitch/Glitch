@@ -17,7 +17,6 @@ public class ArrowScript : MonoBehaviour {
         if (coll.collider.gameObject.CompareTag("Player"))
         {
             player.DecrementLives(damage);
-            player.ReactToAttack(transform.position.x);
         }
         timeAlive = 3.0f;
         ResetArrow();

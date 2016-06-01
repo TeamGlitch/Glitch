@@ -13,7 +13,7 @@ public class World : MonoBehaviour {
 	};
 
 	public PlayerController player;
-    public Camera mainCamera;
+    public GameObject mainCamera;
     public GameObject powers;
     public GameObject gui;
 	public GameObject dialogues;
@@ -33,11 +33,9 @@ public class World : MonoBehaviour {
 	void Start()
     {
 		// We begin the game activating camera and movements of player
-        mainCamera.gameObject.SetActive(true);
+        mainCamera.SetActive(true);
         gui.SetActive(true);
-        powers.SetActive(true);
 		dialogues.SetActive(true);
-        player.enabled = true;
         pauseMenu.SetActive(false);
         pauseScript = pauseMenu.GetComponent<PauseScript>();
         if (Application.platform != RuntimePlatform.WindowsEditor)

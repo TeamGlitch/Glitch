@@ -5,12 +5,18 @@ using UnityEngine.UI;
 public class FrameScript : MonoBehaviour {
 
     public GameObject[] go;
+    public GameObject powers;
+    public PlayerController player;
 
     void FrameTrigger()
     {
-        for (int i = 0; i < go.Length; i++)
+        int max = go.Length;
+        for (int i = 0; i < max; i++)
         {
-            go[i].gameObject.SetActive(true);
+            go[i].SetActive(true);
         }
+
+        powers.SetActive(true);
+        player.enabled = true;
     } 
 }
