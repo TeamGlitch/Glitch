@@ -166,7 +166,6 @@ public class MenuScript : MonoBehaviour {
 
 	public void ExitGame()
 	{
-        SoundManager.instance.PlaySingle(confirmSound);
         Application.Quit();
 	}
 
