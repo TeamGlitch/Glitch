@@ -50,7 +50,8 @@ public class MenuScript : MonoBehaviour {
         exitText.gameObject.SetActive(false);
         creditsText.gameObject.SetActive(false);
         loadingText.gameObject.SetActive(true);
-        SceneManager.LoadScene("testDesign");
+        SoundManager.instance.ChangeMusicSpeed(0f);
+        SceneManager.LoadScene("Level1");
     }
 
 	public void LevelSelectPress()

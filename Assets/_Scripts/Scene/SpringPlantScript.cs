@@ -8,6 +8,7 @@ public class SpringPlantScript : MonoBehaviour
     public PlayerController playerController;
     public float forceToPlayerWhenEnter = 700.0f;
     public float forceToPlayerWhenEnterAndJump = 1200.0f;
+    public AudioClip bouncyClip;
 
     private Animator _animator;
 
@@ -30,15 +31,7 @@ public class SpringPlantScript : MonoBehaviour
             _animator.SetBool("PlayerInside", true);
         }
     }
-    /*
-    void OnTriggerStay(Collider other)
-    {
-        Debug.Log("HI");
-        if (other.CompareTag("Player"))
-        {
-            playerController.rigidBody.AddForce(new Vector3(0.0f, forceToPlayerWhenEnter, 0.0f));
-        }
-    }*/
+
 
     void OnTriggerExit(Collider other)
     {
@@ -46,11 +39,11 @@ public class SpringPlantScript : MonoBehaviour
         {
             if (InputManager.ActiveDevice.Action1.IsPressed)
             {
-                Debug.Log("HI: " + forceToPlayerWhenEnterAndJump);
                 playerController.rigidBody.AddForce(new Vector3(0.0f, forceToPlayerWhenEnterAndJump, 0.0f));
             }
             playerController.teleport.teleportUsed = false;
         }
+        SoundManager.instance.PlaySingle(bouncyClip);
     }
 
 }

@@ -9,7 +9,8 @@ public class SpikeTrapScript : MonoBehaviour
 	public float lerpTime = 1.0f;
 	public Vector3 moveDistance = new Vector3 (0f, 1.5f, 0f);
 
-	public GameObject leaves;
+    public AudioClip trapSound;
+    public GameObject leaves;
 	public ParticleSystem leavesParticle;
 	bool leavesJumped = false;
 
@@ -61,6 +62,10 @@ public class SpikeTrapScript : MonoBehaviour
 					leaves.SetActive(false);
 					leavesJumped = true;
 				}
+                if(timeWhenActivated > timeTrapWaitsInActivation)
+                {
+                    SoundManager.instance.PlaySingle(trapSound);
+                }
 			}
 			else if (deactivated && (timeWhenDeactivated > timeTrapWaitsInDeactivation))
 			{

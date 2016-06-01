@@ -8,8 +8,11 @@ public class CollectibleScript : MonoBehaviour {
 
 	void OnTriggerEnter(Collider collider)
 	{
-		player.IncreaseItem ();
-		gameObject.SetActive (false);
-        SoundManager.instance.PlaySingle(itemSound);
+        if (collider.gameObject.CompareTag("Player"))
+        {
+            player.IncreaseItem();
+            gameObject.SetActive(false);
+            SoundManager.instance.PlaySingle(itemSound);
+        }
 	}
 }
