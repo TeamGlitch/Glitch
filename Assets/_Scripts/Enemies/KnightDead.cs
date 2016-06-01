@@ -11,7 +11,7 @@ public class KnightDead : MonoBehaviour {
 
         if ((knight.states != KnightAI.enemy_states.DEATH) && (coll.gameObject.CompareTag("Player")))
         {
-            if ((knight.player.transform.position.y - coll.bounds.extents.y) >= (transform.position.y + headCollider.bounds.extents.y))
+            if (knight.player.transform.position.y >= (transform.position.y + headCollider.bounds.extents.y))
             {
                 knight.Attacked();
             }

@@ -76,17 +76,13 @@ public class BerserkerAI : MonoBehaviour
 
         if ((coll.contacts[0].thisCollider.CompareTag("Berserker")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
         {
+            rigid.isKinematic = true;
             if (player.transform.position.y >= (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2))
             {
                 Attacked();
             }
-            else if ((player.transform.position.y < (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2)) && sight == true)
-            {
-                rigid.isKinematic = true;
-            }
             else if (sight == false)
             {
-                rigid.isKinematic = true;
                 if ((states != enemy_states.IMPACT) && (states != enemy_states.SLIP))
                 {
                     if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
@@ -359,7 +355,6 @@ public class BerserkerAI : MonoBehaviour
 
     public void HittedTrigger()
     {
-        rigid.isKinematic = true;
         if (states != enemy_states.DEATH)
         {
             rigid.isKinematic = false;

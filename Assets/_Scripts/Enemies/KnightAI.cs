@@ -73,18 +73,13 @@ public class KnightAI : MonoBehaviour {
 
         if ((coll.contacts[0].thisCollider.CompareTag("Knight")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
         {
+            rigid.isKinematic = true;
             if (player.transform.position.y >= (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2))
             {
                 Attacked();
-                rigid.isKinematic = true;
-            }
-            else if ((player.transform.position.y < (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2)) && sight == true)
-            {
-                rigid.isKinematic = true;
             }
             else if (sight == false)
             {
-                rigid.isKinematic = true;
                 if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
                 {
                     transform.Rotate(0.0f, -(transform.eulerAngles.y - 90), 0.0f);
@@ -158,7 +153,7 @@ public class KnightAI : MonoBehaviour {
 
     void OnCollisionExit(Collision coll)
     {
-        if (coll.collider.gameObject.CompareTag("Player"))
+        if (coll.collider.gameObject.CompareTag("Player") && states != enemy_states.DEATH)
         {
             rigid.isKinematic = false;
         }
@@ -389,9 +384,9 @@ public class KnightAI : MonoBehaviour {
 
     public void HittedTrigger()
     {
-        rigid.isKinematic = true;
         if (states != enemy_states.DEATH)
         {
+            rigid.isKinematic = false;
             speed = chaseSpeed;
             states = enemy_states.CHASE;
         }
