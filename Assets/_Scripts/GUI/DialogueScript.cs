@@ -244,8 +244,10 @@ public class DialogueScript : MonoBehaviour {
 						state = dialogueBoxState.PREPARE_TEXT;
 					} else {
 						dialogueBox.SetActive(false);
-                        player.allowMovement = true;
-
+						if (player.allowMovement == false) {
+							player.allowMovement = true;
+							player.playerActivedJump = true;
+						}
 					}
 
 				} else {

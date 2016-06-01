@@ -76,6 +76,7 @@ public class KnightAI : MonoBehaviour {
             if (player.transform.position.y >= (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2))
             {
                 Attacked();
+                rigid.isKinematic = true;
             }
             else if ((player.transform.position.y < (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2)) && sight == true)
             {
@@ -388,6 +389,7 @@ public class KnightAI : MonoBehaviour {
 
     public void HittedTrigger()
     {
+        rigid.isKinematic = true;
         if (states != enemy_states.DEATH)
         {
             speed = chaseSpeed;

@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
 
 	//Movement Variables
 
-	private bool playerActivedJump = false;		// The jump state is cause of a player jump? (If not, it could be a fall)
+	public bool playerActivedJump = false;		// The jump state is cause of a player jump? (If not, it could be a fall)
 
 	private float zPosition = 0.0f;				// Position on the z axis. Unvariable
 	public float maxJumpTime = 0.25f;			// Max time a jump can be extended
@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private moving_type playerMovingType = moving_type.IDLE;
 
-    private int layerMask = ~((1 << 1) | (1 << 2) | (1 << 4) | (1 << 5) | (1 << 8) | (1 << 9) | (1 << 10) | (1 << 11) | (1 << 13));
+	private int layerMask = ~((1 << 1) | (1 << 2) | (1 << 4) | (1 << 5) | (1 << 8) | (1 << 9) | (1 << 10) | (1 << 11) | (1 << 13));
 
     #endregion
 
@@ -161,7 +161,7 @@ public class PlayerController : MonoBehaviour
 
                     //If the jump key is being pressed but it has been released since the
                     //last jump
-                    if (InputManager.ActiveDevice.Action1.IsPressed && allowMovement && !playerActivedJump)
+					if (InputManager.ActiveDevice.Action1.IsPressed && allowMovement && !playerActivedJump)
                     {
                         timePreparingJump = 0.0f;
                         playerActivedJump = true;
@@ -184,6 +184,7 @@ public class PlayerController : MonoBehaviour
 
             case player_state.JUMPING:
 
+				//Change animation to falling
                 if (rigidBody.velocity.y < 0 && plAnimation.GetBool("Falling") == false)
                 {
                     plAnimation.SetBool("Jump", false);
@@ -212,10 +213,9 @@ public class PlayerController : MonoBehaviour
                         if(!playerActivedJump || (timePreparingJump > maxJumpTime))
                         {
                             rigidBody.useGravity = true;
-                            playerActivedJump = false;
                         }
 
-                        //If it's in the air
+                        //Angle correction
                         Vector3 eulerAngles = gameObject.transform.rotation.eulerAngles;
                         float rotationZ = 0.0f;
 
@@ -240,6 +240,7 @@ public class PlayerController : MonoBehaviour
                             }
                             gameObject.transform.rotation = Quaternion.Euler(eulerAngles.x, eulerAngles.y, rotationZ);
                         }
+						//END Angle correction
                     }
                     // To control movement of player
                     Movement();
@@ -280,15 +281,16 @@ public class PlayerController : MonoBehaviour
 
         //If a player-induced jump is checked but the jump key is not longer
         //being held, set it to false so it can jump again
-        if (playerActivedJump && !InputManager.ActiveDevice.Action1.IsPressed && allowMovement)
+		if (playerActivedJump && !InputManager.ActiveDevice.Action1.IsPressed && allowMovement){
             playerActivedJump = false;
+		}
 
     }
 
     private void Movement()
     {
         Vector3 moveDirection = Vector3.zero;
-        Vector3 currentVelocity = rigidBody.velocity;
+		float currentVelocity = rigidBody.velocity.x;
         bool isInGround = IsGrounded();
 
         if (allowMovement)
@@ -296,10 +298,12 @@ public class PlayerController : MonoBehaviour
             // Control of movemente in X axis
             moveDirection.x = InputManager.ActiveDevice.LeftStickX.Value;
 
+			//If there's not enough input and speed
             if (rigidBody.velocity.x == 0.0f && moveDirection.x < 0.5f && moveDirection.x > -0.5f)
             {
                 playerMovingType = moving_type.IDLE;
             }
+			//If there's not enough input but there's speed
             else if (rigidBody.velocity.x != 0.0f && moveDirection.x < 0.5f && moveDirection.x > -0.5f)
             {
                 if (playerMovingType != moving_type.STOPING)
@@ -356,34 +360,34 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                Debug.Log("AIXO CREC QUE NO POT ARRIBAR MAI A PASAR OMG OMG OMG");
+                Debug.Log("AIXO CREC QUE NO POT ARRIBAR MAI A PASAR OMG OMG OMG. Hola mama! Estoy en la tele!");
             }
 
             switch (playerMovingType)
             {
                 case moving_type.STOPING:
-                    currentVelocity.x = Mathf.Lerp(velocityWhenChangedState, 0.0f, timeSinceChangeMoving / timeToChangeDependingVelocity);
+                    currentVelocity = Mathf.Lerp(velocityWhenChangedState, 0.0f, timeSinceChangeMoving / timeToChangeDependingVelocity);
                     break;
                 case moving_type.CHANGING_DIRECTION:
                     if (moveDirection.x > 0.0f)
                     {
-                        currentVelocity.x = minSpeed;
+                        currentVelocity = minSpeed;
                     }
                     else if (moveDirection.x < 0.0f)
                     {
-                        currentVelocity.x = -minSpeed;
+                        currentVelocity = -minSpeed;
                     }
                     break;
                 case moving_type.GOING_RIGHT:
-                    currentVelocity.x = Mathf.Lerp(velocityWhenChangedState, maxSpeed, timeSinceChangeMoving / timeToChangeDependingVelocity);
+                    currentVelocity = Mathf.Lerp(velocityWhenChangedState, maxSpeed, timeSinceChangeMoving / timeToChangeDependingVelocity);
                     break;
                 case moving_type.GOING_LEFT:
-                    currentVelocity.x = Mathf.Lerp(velocityWhenChangedState, -maxSpeed, timeSinceChangeMoving / timeToChangeDependingVelocity);
+                    currentVelocity = Mathf.Lerp(velocityWhenChangedState, -maxSpeed, timeSinceChangeMoving / timeToChangeDependingVelocity);
                     break;
             }
 
             // Flips the sprite renderer if is changing direction
-            if ((currentVelocity.x > 0.0f) && (spriteRenderer.flipX == true))
+            if ((currentVelocity > 0.0f) && (spriteRenderer.flipX == true))
             {
 
                 spriteRenderer.flipX = false;
@@ -397,11 +401,10 @@ public class PlayerController : MonoBehaviour
                 dustParticles.gameObject.transform.localRotation = dustRotation;
 
             }
-            else if ((currentVelocity.x < 0.0f) && (spriteRenderer.flipX == false))
+            else if ((currentVelocity < 0.0f) && (spriteRenderer.flipX == false))
             {
 
                 spriteRenderer.flipX = true;
-
                 Vector3 dustPosition = dustParticles.gameObject.transform.localPosition;
                 dustPosition.x *= -1;
                 dustParticles.gameObject.transform.localPosition = dustPosition;
@@ -414,7 +417,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            currentVelocity.x = 0.0f;
+            currentVelocity = 0.0f;
         }
 
         // Correct Z position
@@ -423,9 +426,48 @@ public class PlayerController : MonoBehaviour
             position.z = zPosition;
         transform.position = position;
 
-        rigidBody.velocity = currentVelocity;
-        
-        if (state == player_state.IN_GROUND && currentVelocity.x != 0)
+		//If there's horizontal movement
+		if (!isInGround && currentVelocity != 0) {
+
+			//Three raycast are made
+			Vector3 pos1 = transform.position;
+			pos1.y -= boxCollider.bounds.extents.y;
+
+			Vector3 pos2 = transform.position;
+
+			Vector3 pos3 = transform.position;
+			pos3.y += boxCollider.bounds.extents.y;
+
+
+			//If it's to the right
+			if (currentVelocity > 0){
+
+				//Checks the raycast
+				//OPTIMIZATION NOTE: this if CAN'T be included in the last one)
+				if (Physics.Raycast (pos1, Vector3.right, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)
+					|| Physics.Raycast (pos2, Vector3.right, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)
+					|| Physics.Raycast (pos3, Vector3.right, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)) {
+					currentVelocity = 0;
+				}
+
+			} else {
+
+				//Checks the raycast
+				//OPTIMIZATION NOTE: this if CAN'T be included in the last one)
+				if (!isInGround && (Physics.Raycast (pos1, Vector3.left, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)
+					|| Physics.Raycast (pos2, Vector3.left, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)
+					|| Physics.Raycast (pos3, Vector3.left, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore))) {
+					currentVelocity = 0;
+				}
+			}
+				
+		}
+
+		Vector3 velocity = rigidBody.velocity;
+		velocity.x = currentVelocity;
+		rigidBody.velocity = velocity;
+
+        if (state == player_state.IN_GROUND && currentVelocity != 0)
         {
             if (plAnimation.GetBool("Run") == false)
             {
@@ -439,7 +481,7 @@ public class PlayerController : MonoBehaviour
 
 
         //Plays the dust particle effect
-        if (state == player_state.IN_GROUND && currentVelocity.x != 0)
+        if (state == player_state.IN_GROUND && currentVelocity != 0)
         {
             if (dustParticles.isStopped)
             {
@@ -478,18 +520,18 @@ public class PlayerController : MonoBehaviour
 
     private bool IsGrounded()
     {
-        return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f, layerMask) ||
-            Physics.Raycast(new Vector3(transform.position.x + boxCollider.bounds.extents.x / 2.0f, transform.position.y, transform.position.z), -Vector3.up, distToGround + 0.1f, layerMask) ||
-            Physics.Raycast(new Vector3(transform.position.x - boxCollider.bounds.extents.x / 2.0f, transform.position.y, transform.position.z), -Vector3.up, distToGround + 0.1f, layerMask) ||
-            Physics.Raycast(new Vector3(transform.position.x + boxCollider.bounds.extents.x, transform.position.y, transform.position.z), -Vector3.up, distToGround + 0.1f, layerMask) ||
-            Physics.Raycast(new Vector3(transform.position.x - boxCollider.bounds.extents.x, transform.position.y, transform.position.z), -Vector3.up, distToGround + 0.1f, layerMask);
+		return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f, layerMask, QueryTriggerInteraction.Ignore) ||
+			Physics.Raycast(new Vector3(transform.position.x + boxCollider.bounds.extents.x / 2.0f, transform.position.y, transform.position.z), -Vector3.up, distToGround + 0.1f, layerMask, QueryTriggerInteraction.Ignore) ||
+			Physics.Raycast(new Vector3(transform.position.x - boxCollider.bounds.extents.x / 2.0f, transform.position.y, transform.position.z), -Vector3.up, distToGround + 0.1f, layerMask, QueryTriggerInteraction.Ignore) ||
+			Physics.Raycast(new Vector3(transform.position.x + boxCollider.bounds.extents.x, transform.position.y, transform.position.z), -Vector3.up, distToGround + 0.1f, layerMask, QueryTriggerInteraction.Ignore) ||
+			Physics.Raycast(new Vector3(transform.position.x - boxCollider.bounds.extents.x, transform.position.y, transform.position.z), -Vector3.up, distToGround + 0.1f, layerMask, QueryTriggerInteraction.Ignore);
     }
 
     private bool IsTopColision()
     {
-        return Physics.Raycast(transform.position, Vector3.up, distToGround + 0.1f, layerMask) ||
-            Physics.Raycast(new Vector3(transform.position.x + boxCollider.bounds.extents.x, transform.position.y, transform.position.z), Vector3.up, distToGround + 0.1f, layerMask) ||
-            Physics.Raycast(new Vector3(transform.position.x - boxCollider.bounds.extents.x, transform.position.y, transform.position.z), Vector3.up, distToGround + 0.1f, layerMask);
+		return Physics.Raycast(transform.position, Vector3.up, distToGround + 0.1f, layerMask, QueryTriggerInteraction.Ignore) ||
+			Physics.Raycast(new Vector3(transform.position.x + boxCollider.bounds.extents.x, transform.position.y, transform.position.z), Vector3.up, distToGround + 0.1f, layerMask, QueryTriggerInteraction.Ignore) ||
+			Physics.Raycast(new Vector3(transform.position.x - boxCollider.bounds.extents.x, transform.position.y, transform.position.z), Vector3.up, distToGround + 0.1f, layerMask, QueryTriggerInteraction.Ignore);
     }
 
     #endregion
@@ -507,9 +549,9 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if(IsTopColision())
-            rigidBody.velocity = new Vector3(rigidBody.velocity.x, 0.0f, 0.0f);
-
+		if (IsTopColision ()) {
+			rigidBody.velocity = new Vector3 (rigidBody.velocity.x, 0.0f, 0.0f);
+		}
     }
 
     #endregion

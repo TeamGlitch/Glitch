@@ -359,6 +359,7 @@ public class BerserkerAI : MonoBehaviour
 
     public void HittedTrigger()
     {
+        rigid.isKinematic = true;
         if (states != enemy_states.DEATH)
         {
             rigid.isKinematic = false;
