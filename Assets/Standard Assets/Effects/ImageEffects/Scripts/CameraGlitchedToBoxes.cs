@@ -14,6 +14,8 @@ public class CameraGlitchedToBoxes : ImageEffectBase {
 	public float frequency = 0.15f;		//Probability of a glitch cycle having a glitch effect
 	public float inestability = 0.3f;	//Probability of a given division to have movement
 
+    public bool isFPSActivated = false;
+
 	public Canvas gui;
 	private RectTransform guiRectTrans;
 
@@ -52,23 +54,58 @@ public class CameraGlitchedToBoxes : ImageEffectBase {
 				//texel size and arbitrary asigns 0 and 2 to glitchy 
 				//divisions and 1 to non-glitchy divisions
 				texture = new Texture2D(100,100);
-				for (int z = 0; z < 100; z += 1) {
-					for (int w = 0; w < 100; ++w) {
-						if (InsideBox(z,w, horizontalPercentage, verticalPercentage)) {
-							if (Random.value < inestability) {
-								if (Random.value > 0.5) {
-									texture.SetPixel (z, w, new Color32 (0, 0, 0, 0));
-								} else {
-									texture.SetPixel (z, w, new Color32 (2, 0, 0, 0));
-								}
-							} else {
-								texture.SetPixel (z, w, new Color32 (1, 0, 0, 0));
-							}
-						} else {
-							texture.SetPixel (z, w, new Color32 (1, 0, 0, 0));
-						}
-					}
-				}
+                if (isFPSActivated)
+                {
+                    for (int z = 0; z < 100; z += 1)
+                    {
+                        for (int w = 0; w < 100; ++w)
+                        {
+                            if (InsideBox(z, 99-w, horizontalPercentage, verticalPercentage))
+                            {
+                                if (Random.value < inestability)
+                                {
+                                    if (Random.value > 0.5)
+                                    {
+                                        texture.SetPixel(z, w, new Color32(0, 0, 0, 0));
+                                    }
+                                    else
+                                    {
+                                        texture.SetPixel(z, w, new Color32(2, 0, 0, 0));
+                                    }
+                                }
+                                else
+                                {
+                                    texture.SetPixel(z, w, new Color32(1, 0, 0, 0));
+                                }
+                            }
+                            else
+                            {
+                                texture.SetPixel(z, w, new Color32(1, 0, 0, 0));
+                            }
+                        }
+                    }
+                }
+                else
+                {
+				    for (int z = 0; z < 100; z += 1) {
+					    for (int w = 0; w < 100; ++w) {
+						    if (InsideBox(z,w, horizontalPercentage, verticalPercentage)) {
+							    if (Random.value < inestability) {
+								    if (Random.value > 0.5) {
+									    texture.SetPixel (z, w, new Color32 (0, 0, 0, 0));
+								    } else {
+									    texture.SetPixel (z, w, new Color32 (2, 0, 0, 0));
+								    }
+							    } else {
+								    texture.SetPixel (z, w, new Color32 (1, 0, 0, 0));
+							    }
+						    } else {
+							    texture.SetPixel (z, w, new Color32 (1, 0, 0, 0));
+						    }
+					    }
+				    }
+                }
+
 				texture.filterMode = FilterMode.Point;
 				texture.Apply();
 
