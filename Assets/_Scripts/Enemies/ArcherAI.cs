@@ -158,7 +158,6 @@ public class ArcherAI : MonoBehaviour {
                         float y = origin.y - hit.point.y;
                         float alfa = Mathf.Atan(y / x);
                         alfa = (180.0f * alfa) / Mathf.PI;
-                        print(alfa);
                         // ShootLevel 1->Up, 2->Down, 0->Middle 
                         if (player.transform.position.x > origin.x)
                         {
