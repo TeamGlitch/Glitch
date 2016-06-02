@@ -25,7 +25,6 @@ public class CameraGlitchedToBoxes : ImageEffectBase {
 	private float correctionDueToAspect = 1.777605f;
 
 	public List<Vector3> boxesPositions;
-	public List<Vector2> boxPositionInPercentage;
 
 	void Start(){
 		//Creates a 1x1 texel texture with relative value 1 for correction
@@ -35,17 +34,13 @@ public class CameraGlitchedToBoxes : ImageEffectBase {
 		correction.Apply ();
 
 		guiRectTrans = gui.GetComponent<RectTransform>();
-		boxPositionInPercentage = new List<Vector2> ();
 		boxesPositions = new List<Vector3> ();
 	}
 
 	// Called by camera to apply image effect
 	void OnRenderImage (RenderTexture source, RenderTexture destination) {
-		CalculatebBoxPositionsInPercentage ();
+		
 		//If the glitch cycle has ended
-		float horizontalPercentage = (correctionDueToAspect/Camera.main.aspect)*(correctionMarkerWidth / Camera.main.transform.position.z) / 2.0f;
-		float verticalPercentage = (correctionMarkerHeight / Camera.main.transform.position.z) / 2.0f;
-	
 		if (Time.time >= cycleEnd) {
 			//Checks if the new glitch cycle has glitch effect
 			if (Random.value < frequency) {
@@ -54,57 +49,55 @@ public class CameraGlitchedToBoxes : ImageEffectBase {
 				//texel size and arbitrary asigns 0 and 2 to glitchy 
 				//divisions and 1 to non-glitchy divisions
 				texture = new Texture2D(100,100);
-                if (isFPSActivated)
-                {
-                    for (int z = 0; z < 100; z += 1)
-                    {
-                        for (int w = 0; w < 100; ++w)
-                        {
-                            if (InsideBox(z, 99-w, horizontalPercentage, verticalPercentage))
-                            {
-                                if (Random.value < inestability)
-                                {
-                                    if (Random.value > 0.5)
-                                    {
-                                        texture.SetPixel(z, w, new Color32(0, 0, 0, 0));
-                                    }
-                                    else
-                                    {
-                                        texture.SetPixel(z, w, new Color32(2, 0, 0, 0));
-                                    }
-                                }
-                                else
-                                {
-                                    texture.SetPixel(z, w, new Color32(1, 0, 0, 0));
-                                }
-                            }
-                            else
-                            {
-                                texture.SetPixel(z, w, new Color32(1, 0, 0, 0));
-                            }
-                        }
-                    }
-                }
-                else
-                {
-				    for (int z = 0; z < 100; z += 1) {
-					    for (int w = 0; w < 100; ++w) {
-						    if (InsideBox(z,w, horizontalPercentage, verticalPercentage)) {
-							    if (Random.value < inestability) {
-								    if (Random.value > 0.5) {
-									    texture.SetPixel (z, w, new Color32 (0, 0, 0, 0));
-								    } else {
-									    texture.SetPixel (z, w, new Color32 (2, 0, 0, 0));
-								    }
-							    } else {
-								    texture.SetPixel (z, w, new Color32 (1, 0, 0, 0));
-							    }
-						    } else {
-							    texture.SetPixel (z, w, new Color32 (1, 0, 0, 0));
-						    }
-					    }
-				    }
-                }
+
+				//TODO: Clone a base so it doesn't need to do this?
+				for (int x = 0; x < 100; x++) {
+					for (int y = 0; y < 100; y++) {
+						texture.SetPixel (x, y, new Color32 (1, 0, 0, 0));
+					}
+				}
+
+				//For every box
+				for (int i = 0; i < boxesPositions.Count; i++) {
+
+					//If is on screen
+					Vector3 position = Camera.main.WorldToViewportPoint(boxesPositions[i]);
+					if (position.x > 0 && position.x < 1 && position.y > 0 && position.y < 1) {
+
+						//Calculates the top-left border
+						Vector3 supiz = boxesPositions[i];
+						supiz.x -= 1.5f;
+						supiz.y += 1f;
+						supiz = Camera.main.WorldToViewportPoint(supiz);
+
+						//Calculates the bottom-right border 
+						Vector3 infder = boxesPositions [i];
+						infder.x += 1.5f;
+						infder.y -= 1f;
+						infder = Camera.main.WorldToViewportPoint(infder);
+
+						//Goes to int and makes them percent
+						int sup = (int) (supiz.y * 100);
+						int iz = (int) (supiz.x * 100);
+						int inf = (int) (infder.y * 100);
+						int der = (int) (infder.x * 100);
+
+						//From corner to corner, assign random values
+						for(int x = iz; x < der; x++){
+							for (int y = inf; y < sup; y++) {
+								if (Random.value > 0.5)
+								{
+									texture.SetPixel(x, y, new Color32(0, 0, 0, 0));
+								}
+								else
+								{
+									texture.SetPixel(x, y, new Color32(2, 0, 0, 0));
+								}
+							}
+						}
+
+					}
+				}
 
 				texture.filterMode = FilterMode.Point;
 				texture.Apply();
@@ -131,33 +124,11 @@ public class CameraGlitchedToBoxes : ImageEffectBase {
 	public void AddBox(Vector3 position)
 	{
 		boxesPositions.Add (position);
-		boxPositionInPercentage.Add (new Vector2 (0.0f, 0.0f));
 	}
 
 	public void RemoveBox(Vector3 position)
 	{
 		int index = boxesPositions.FindIndex(a => a == position);
 		boxesPositions.RemoveAt (index);
-		boxPositionInPercentage.RemoveAt (index);
-	}
-
-	private void CalculatebBoxPositionsInPercentage()
-	{
-		for (int i = 0; i < boxesPositions.Count; ++i) {
-			Vector3 camPosition = Camera.main.WorldToScreenPoint(boxesPositions[i]);
-			camPosition.x *= guiRectTrans.rect.width / Camera.main.pixelWidth; 
-			camPosition.y *= guiRectTrans.rect.height / Camera.main.pixelHeight; 
-			boxPositionInPercentage [i] = new Vector2 ((camPosition.x / guiRectTrans.rect.width) * 100.0f, 100.0f - (camPosition.y / guiRectTrans.rect.height) * 100.0f);
-		}
-	}
-
-	private bool InsideBox(int x, int y, float horizontalPercentage, float verticalPercentage)
-	{
-		for (int w = 0; w < boxesPositions.Count; ++w)
-		{
-			if (x > boxPositionInPercentage [w].x - horizontalPercentage && x < boxPositionInPercentage [w].x + horizontalPercentage && y > boxPositionInPercentage [w].y - verticalPercentage && y < boxPositionInPercentage [w].y + verticalPercentage)
-				return true;
-		}
-		return false;
 	}
 }

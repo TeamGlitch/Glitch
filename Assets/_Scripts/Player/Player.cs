@@ -93,7 +93,7 @@ public class Player : MonoBehaviour {
             transform.position += speedToCheckpoint * Time.deltaTime;
         }
 
-		if (numberOfBoxesActivable > 0) {
+		if (numberOfBoxesActivable > 0 && Camera.main != null) {
 
 			float correction = Camera.main.transform.position.z / correctionFactorForExclamation;
 
