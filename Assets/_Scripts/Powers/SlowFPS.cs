@@ -7,6 +7,7 @@ public class SlowFPS : MonoBehaviour
     public World world;
     public ParticleSystem glitchParticle;
     public GlitchOffsetCamera glitchOffsetCamera;
+    public CameraGlitchedToBoxes cameraGlitchedToBoxes;
 
     public float recoveryRate = 3.0f;			// Time it takes to make a recovery bump
     public float timeBetweenUpdates = 1;		// Seconds between slow updates
@@ -39,6 +40,7 @@ public class SlowFPS : MonoBehaviour
             if (powerActive == false)
             {
                 powerActive = true;
+                cameraGlitchedToBoxes.isFPSActivated = true;
                 world.doUpdate = false;
                 timeLastUpdate = Time.time;
                 world.toggleSlowFPS();
@@ -125,6 +127,7 @@ public class SlowFPS : MonoBehaviour
         {
             powerActive = false;
             world.toggleSlowFPS();
+            cameraGlitchedToBoxes.isFPSActivated = false;
             if (SlowFPSDeactivated != null)
                 SlowFPSDeactivated();
             glitchOffsetCamera.enabled = false;
