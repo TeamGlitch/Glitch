@@ -30,6 +30,10 @@ public class MenuScript : MonoBehaviour {
     public AudioClip selectSound;
     public AudioClip confirmSound;
 
+	public AudioSource music;
+	private float lastTimeActive = 0;
+	private bool onMainScreen = true;
+
 	void Start () 
     {
 		quitMenu.enabled = false;
@@ -38,6 +42,25 @@ public class MenuScript : MonoBehaviour {
 		creditsMenu.enabled = false;
 		startText.Select ();
         Cursor.visible = false;
+
+		//Play the menu music and check this time as the last active
+		lastTimeActive = Time.time;
+		music.Play();
+	}
+
+	void Update(){
+
+		//If it's in the main screen
+		if (onMainScreen) {
+			//If the player pushes any button, update the last time active
+			if (InputManager.ActiveDevice.AnyButton.IsPressed) {
+				lastTimeActive = Time.time;
+				//If a given time has passed without input, play the intro
+			} else if (Time.time > lastTimeActive + 60f) {
+				music.Stop();
+				SceneManager.LoadScene ("Intro");
+			}
+		}
 	}
 
 	public void ContinuePress()
@@ -50,7 +73,8 @@ public class MenuScript : MonoBehaviour {
         exitText.gameObject.SetActive(false);
         creditsText.gameObject.SetActive(false);
         loadingText.gameObject.SetActive(true);
-        SoundManager.instance.ChangeMusicSpeed(0f);
+		music.Stop();
+		onMainScreen = false;
         SceneManager.LoadScene("Level1");
     }
 
@@ -59,6 +83,8 @@ public class MenuScript : MonoBehaviour {
         SoundManager.instance.PlaySingle(confirmSound);
         levelSelectionMenu.enabled = true;
         firstLevelSelectButton.Select();
+
+		onMainScreen = false;
 	}
 
 	public void HelpPress()
@@ -83,6 +109,8 @@ public class MenuScript : MonoBehaviour {
 		customNav.selectOnUp = gamepadButton;
 		backButtonInHelp.navigation = customNav;
 
+		onMainScreen = false;
+
 		firstHelpButton.Select ();
 	}
 
@@ -97,6 +125,8 @@ public class MenuScript : MonoBehaviour {
 		HelpText.enabled = false;
 		exitText.enabled = false;
 		creditsText.enabled = false;
+
+		onMainScreen = false;
 
 		firstExitButton.Select ();
 	}
@@ -147,6 +177,9 @@ public class MenuScript : MonoBehaviour {
 		exitText.enabled = true;
 		creditsText.enabled = true;
 
+		onMainScreen = true;
+		lastTimeActive = Time.time;
+
 		startText.Select ();
 	}
 
@@ -160,6 +193,8 @@ public class MenuScript : MonoBehaviour {
 		HelpText.enabled = false;
 		exitText.enabled = false;
 		creditsText.enabled = false;
+
+		onMainScreen = false;
 
 		firstCreditsButton.Select ();
 	}

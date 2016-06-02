@@ -60,37 +60,42 @@ public class SlowFPS : MonoBehaviour {
 			}
 		}
 
-		// If power is enabled we check the time left and if is minus than 0, we disable the power
+		// If power is enable
 		if (powerActive)
 		{
+			//We increase the time the FPS have been active and decrease the time remaining
             timeInFPS += Time.deltaTime;
 			timeRemaining -= Time.deltaTime;
 
+			//If there's no time remaining, deactivate the power
 			if (timeRemaining <= 0.0f)
 			{
 				timeRemaining = 0;
                 DeactivatePower();
 
 			}
-            else if (world.doUpdate == true)
-            {
-                if(timeInFPS <= 5.0f)
-                {
-                    float auxTime = Mathf.Min(0.5f, timeInFPS / 10.0f);
-                    SoundManager.instance.ChangeMusicSpeed(1.0f - auxTime);				
-                }
-				timeLastUpdate = Time.time;
+			//If there's time and there's a world update
+			else {
 
-			}
-            else if (Time.time >= timeLastUpdate + timeBetweenUpdates)
-            {
-                if (timeInFPS <= 5.0f)
-                {
-                    float auxTime = Mathf.Min(0.5f, timeInFPS / 10.0f);
-                    SoundManager.instance.ChangeMusicSpeed(1.0f - auxTime);
-                }
-                world.requestUpdate((Time.time - timeLastUpdate) * slowDown);
-			}
+				//We slow down the music (always up to a 50%)
+				if(timeInFPS <= 5.0f)
+				{
+					float auxTime = Mathf.Min(0.5f, timeInFPS / 10.0f);
+					SoundManager.instance.ChangeMusicSpeed(1.0f - auxTime);				
+				}
+
+				//If there's an update, we register when it was to see how much time has passed
+				if (world.doUpdate == true)
+				{
+					timeLastUpdate = Time.time;
+				}
+				//If enough time has passed, we create a request
+				else if (Time.time >= timeLastUpdate + timeBetweenUpdates)
+				{
+					world.requestUpdate((Time.time - timeLastUpdate) * slowDown);
+				}
+
+			} 
 		}
 		else
 		{
@@ -128,7 +133,6 @@ public class SlowFPS : MonoBehaviour {
 	public void RestartCooldowns()
 	{
 		timeRemaining = MAXTime;
-        DeactivatePower();
 	}
 
 }
