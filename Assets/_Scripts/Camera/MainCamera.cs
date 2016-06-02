@@ -4,8 +4,10 @@ using System.Collections;
 public class MainCamera : MonoBehaviour {
 
 	public CameraBehaviour behaviour;
-	public PlayerController player;
 	public GameObject CameraZones;
+    public Transform maxCamera;
+    public Transform minCamera;
+    public Transform playerPosition;
 
 	//Common variables
 	private Vector3 vSpeed;
@@ -28,7 +30,7 @@ public class MainCamera : MonoBehaviour {
 	void Update()
 	{
 
-		if (Camera.current == Camera.main) 
+        if ((Camera.current == Camera.main) && (playerPosition.position.x <= maxCamera.position.x) && (playerPosition.position.x >= minCamera.position.x)) 
 		{
 
 			//Calculates the smooth depending on the ratio and the zoom
@@ -37,9 +39,9 @@ public class MainCamera : MonoBehaviour {
 			smooth = (ratio * (0.0423f - (0.0068f * distance))) + (0.0011f * distance) - 0.0546f; 
 
 			//Sets the camera movement so the player has the given x position (In viewport coordinates)
-			Vector3 positionOnViewport = Camera.main.WorldToViewportPoint(player.transform.position);
+			Vector3 positionOnViewport = Camera.main.WorldToViewportPoint(playerPosition.position);
 			Vector3 expectedXPos = Camera.main.ViewportToWorldPoint(new Vector3(playerPositionX, 0, positionOnViewport.z));
-			expectedXPos = expectedXPos - player.transform.position;
+			expectedXPos = expectedXPos - playerPosition.position;
 			float correct = transform.position.x - expectedXPos.x;
 
 			switch (behaviour.mode) {
@@ -55,13 +57,13 @@ public class MainCamera : MonoBehaviour {
 					//Checks where the expected player position would be (top 50% of the screen) and where it really is, and
 					//moves the camera to that position calculating the distance
 					Vector3 expectedPosition = Camera.main.ViewportToWorldPoint ( new Vector3(0, maxUp, positionOnViewport.z) );
-					expectedPosition = expectedPosition - player.transform.position;
+					expectedPosition = expectedPosition - playerPosition.position;
 					objective.y -= expectedPosition.y;
 
 				} else if (positionOnViewport.y < maxDown) {
 
 					Vector3 expectedPosition = Camera.main.ViewportToWorldPoint ( new Vector3(0, maxDown, positionOnViewport.z) );
-					expectedPosition = expectedPosition - player.transform.position;
+					expectedPosition = expectedPosition - playerPosition.position;
 					objective.y -= expectedPosition.y;
 				}
 

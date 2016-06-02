@@ -40,7 +40,6 @@ public class MenuScript : MonoBehaviour {
 		helpMenu.enabled = false;
 		creditsMenu.enabled = false;
 		startText.Select ();
-        Cursor.visible = false;
 
 		//Play the menu music and check this time as the last active
 		lastTimeActive = Time.time;
@@ -85,6 +84,21 @@ public class MenuScript : MonoBehaviour {
 
 		onMainScreen = false;
 	}
+
+    public void Level1Press()
+    {
+        SoundManager.instance.PlaySingle(confirmSound);
+        levelSelectionMenu.enabled = false;
+        startText.gameObject.SetActive(false);
+        levelSelectText.gameObject.SetActive(false);
+        HelpText.gameObject.SetActive(false);
+        exitText.gameObject.SetActive(false);
+        creditsText.gameObject.SetActive(false);
+        loadingText.gameObject.SetActive(true);
+        SoundManager.instance.musicSource.Stop();
+        onMainScreen = false;
+        SceneManager.LoadScene("Level1");
+    }
 
 	public void HelpPress()
 	{

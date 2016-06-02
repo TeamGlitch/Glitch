@@ -77,6 +77,8 @@ public class KnightAI : MonoBehaviour {
             if (player.transform.position.y >= (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2))
             {
                 Attacked();
+                headCollider.enabled = false;
+                collider.enabled = false;
             }
             else if (sight == false)
             {
@@ -420,9 +422,20 @@ public class KnightAI : MonoBehaviour {
             headCollider.enabled = false;
             isInAttack = false;
         }
+        else
+        {
+            StartCoroutine(ActivateColliders(0.2f));
+        }
 
         // To impulse player from enemy
         player.ReactToAttack(transform.position.x);
+    }
+
+    IEnumerator ActivateColliders(float wait)
+    {
+        yield return new WaitForSeconds(wait);
+        headCollider.enabled = true;
+        collider.enabled = true;
     }
 
     public void Attack()

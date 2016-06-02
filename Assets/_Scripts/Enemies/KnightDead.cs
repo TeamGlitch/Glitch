@@ -14,6 +14,9 @@ public class KnightDead : MonoBehaviour {
             if (knight.player.transform.position.y >= (transform.position.y + headCollider.bounds.extents.y))
             {
                 knight.Attacked();
+                knight.rigid.isKinematic = true;
+                knight.collider.enabled = false;
+                headCollider.enabled = false;
             }
         }
     }
