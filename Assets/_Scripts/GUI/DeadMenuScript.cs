@@ -44,7 +44,7 @@ public class DeadMenuScript : MonoBehaviour {
 
 	public void RestartPress()
 	{
-		SceneManager.LoadScene ("testDesign");
+		SceneManager.LoadScene ("Level1");
 	}
 
 	public void MenuPress()

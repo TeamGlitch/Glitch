@@ -30,7 +30,6 @@ public class MenuScript : MonoBehaviour {
     public AudioClip selectSound;
     public AudioClip confirmSound;
 
-	public AudioSource music;
 	private float lastTimeActive = 0;
 	private bool onMainScreen = true;
 
@@ -45,7 +44,7 @@ public class MenuScript : MonoBehaviour {
 
 		//Play the menu music and check this time as the last active
 		lastTimeActive = Time.time;
-		music.Play();
+		SoundManager.instance.musicSource.Play();
 	}
 
 	void Update(){
@@ -57,7 +56,7 @@ public class MenuScript : MonoBehaviour {
 				lastTimeActive = Time.time;
 				//If a given time has passed without input, play the intro
 			} else if (Time.time > lastTimeActive + 60f) {
-				music.Stop();
+				SoundManager.instance.musicSource.Stop();
 				SceneManager.LoadScene ("Intro");
 			}
 		}
@@ -73,7 +72,7 @@ public class MenuScript : MonoBehaviour {
         exitText.gameObject.SetActive(false);
         creditsText.gameObject.SetActive(false);
         loadingText.gameObject.SetActive(true);
-		music.Stop();
+		SoundManager.instance.musicSource.Stop();
 		onMainScreen = false;
         SceneManager.LoadScene("Level1");
     }
