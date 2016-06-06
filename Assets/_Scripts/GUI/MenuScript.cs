@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using System.Collections;
 using InControl;
 
@@ -56,7 +55,7 @@ public class MenuScript : MonoBehaviour {
 				//If a given time has passed without input, play the intro
 			} else if (Time.time > lastTimeActive + 60f) {
 				SoundManager.instance.musicSource.Stop();
-				SceneManager.LoadScene ("Intro");
+                Loader.LoadScene("Intro");
 			}
 		}
 	}
@@ -73,7 +72,7 @@ public class MenuScript : MonoBehaviour {
         loadingText.gameObject.SetActive(true);
 		SoundManager.instance.musicSource.Stop();
 		onMainScreen = false;
-        SceneManager.LoadScene("Level1");
+        Loader.LoadScene("Level1");
     }
 
 	public void LevelSelectPress()
@@ -97,7 +96,7 @@ public class MenuScript : MonoBehaviour {
         loadingText.gameObject.SetActive(true);
         SoundManager.instance.musicSource.Stop();
         onMainScreen = false;
-        SceneManager.LoadScene("Level1");
+        Loader.LoadScene("Level1");
     }
 
 	public void HelpPress()

@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using InControl;
 
 public class PauseScript : MonoBehaviour {
@@ -25,13 +24,13 @@ public class PauseScript : MonoBehaviour {
 	public void restartPress()
 	{
 		Time.timeScale = 1.0f;
-		SceneManager.LoadScene ("Level1");
+        Loader.LoadScene("Level1");
 	}
 
 	public void menuPress()
 	{
 		Time.timeScale = 1.0f;
-		SceneManager.LoadScene ("menu");
+        Loader.LoadScene("menu");
 	}
 
 

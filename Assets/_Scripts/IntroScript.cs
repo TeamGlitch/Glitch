@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.SceneManagement;
 using InControl;
 
 [RequireComponent (typeof (AudioSource))]
@@ -26,7 +25,7 @@ public class IntroScript : MonoBehaviour {
 	void Update () {
 
 		if (Time.time > timeToEnd || InputManager.ActiveDevice.AnyButton.WasPressed) {
-			SceneManager.LoadScene ("menu");
+            Loader.LoadScene("menu");
 		} else if (Camera.current == Camera.main) {
 			float height = Camera.current.orthographicSize * 2;
 			float width = Camera.current.aspect * height;
