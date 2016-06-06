@@ -51,7 +51,7 @@ public class ArcherAI : MonoBehaviour {
     private Vector3 origin;
     private Animator animator;
     private float timePerKick = 0.0f;
-    private bool shooted = false;
+    private bool shooted = false;           // Boolean to initialize new arrow
     private int layerMask = (~((1 << 13) | (1 << 2) | (1 << 11))) | (1 << 9) | (1 << 0);
 
     // Trigger that detect player and change the state to Shoot
@@ -60,18 +60,21 @@ public class ArcherAI : MonoBehaviour {
         // If is the player and between player and archer isn't anything then shoot him
         if (coll.CompareTag("Player"))
         {
+            //Ray from origin to player
             origin = transform.position;
             origin.y += transform.localScale.y*0.75f;
             ray = new Ray(origin, player.transform.position - origin);
 
             if (Vector3.Distance(player.transform.position, transform.position) <= maxSightMeleeAttack)
             {
+                // If distance is low changes to melee attack
                 speed = meleeAttackSpeed;
                 timePerKick = 0.0f;
                 states = enemy_states.MELEE_ATTACK;
             }
             else if (Physics.Raycast(ray, out hit, maxSightShoot, layerMask) && (sight == false) && (states != enemy_states.HITTED) && (hit.collider.gameObject.CompareTag("Player")))
             {
+                // Else changes to Shoot
                 sight = true;
                 speed = shootSpeed;
                 states = enemy_states.SHOOT;
@@ -87,10 +90,12 @@ public class ArcherAI : MonoBehaviour {
             sight = false;
             if (Vector3.Distance(player.transform.position, transform.position) < maxSightShoot)
             {
+                // If the distance is lower than maxSightShoot turns
                 states = enemy_states.TURN;
             }
             else
             {
+                // Else Glitch escape and she wait
                 speed = waitSpeed;
                 states = enemy_states.WAIT;
             }
@@ -99,11 +104,12 @@ public class ArcherAI : MonoBehaviour {
 
     void OnCollisionEnter(Collision coll)
     {
-        if ((states != enemy_states.DEATH) && (sight == true) && (coll.contacts[0].thisCollider.CompareTag("Archer")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
+        // If collides with glitch, enemy turns kinematic to avoid push
+        if ((states != enemy_states.DEATH) && (sight == true) && (coll.contacts[0].otherCollider.CompareTag("Player")))
         {
             rigid.isKinematic = true;
         }
-        else if ((sight == false) && (coll.contacts[0].thisCollider.CompareTag("Archer")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
+        else if ((sight == false) && (coll.contacts[0].otherCollider.CompareTag("Player")))
         {
             rigid.isKinematic = true;
             states = enemy_states.TURN;
@@ -112,6 +118,7 @@ public class ArcherAI : MonoBehaviour {
 
     void OnCollisionExit(Collision coll)
     {
+        // If exit collides with glitch, enemy return to non kinematic
         if (coll.collider.gameObject.CompareTag("Player"))
         {
             rigid.isKinematic = false;
@@ -120,6 +127,7 @@ public class ArcherAI : MonoBehaviour {
 
     void Start()
     {
+        // Initialize animator and pool of arrows
         arrowPool = new ObjectPool(arrow);
         animator = GetComponent<Animator>();
         animator.SetInteger("DeadRandom", -1);
@@ -127,8 +135,10 @@ public class ArcherAI : MonoBehaviour {
 
     void Update()
     {
+        // To control fps
         if (world.doUpdate)
         {
+            // Update state and speed in animator
             animator.SetInteger("State", (int)states);
             animator.SetFloat("Speed", speed * speedConstant);
            
@@ -138,6 +148,8 @@ public class ArcherAI : MonoBehaviour {
                 case enemy_states.SHOOT:
 
                     // Shooting logic
+
+                    // If player deaths archer waits, else if is possible shoots
                     if (player.playerController.state == PlayerController.player_state.DEATH)
                     {
                         states = enemy_states.WAIT;
@@ -149,15 +161,20 @@ public class ArcherAI : MonoBehaviour {
                         shooted = false;
                     }
 
+                    // If arrow is not initialized or reset
                     if (shooted == false)
                     {
                         origin = transform.position;
                         origin.y += collider.bounds.extents.y * 2 * 0.75f;
 
+                        // We calculate the angle
                         float x = origin.x - hit.point.x;
                         float y = origin.y - hit.point.y;
                         float alfa = Mathf.Atan(y / x);
+
+                        // We pass it from radians to degrees
                         alfa = (180.0f * alfa) / Mathf.PI;
+
                         // ShootLevel 1->Up, 2->Down, 0->Middle 
                         if (player.transform.position.x > origin.x)
                         {
@@ -191,9 +208,8 @@ public class ArcherAI : MonoBehaviour {
                         }
                     }
 
-                    // If distance to Glitch is minus than chase field of view then changes to Chase state.
-                    // If Glitch is in melee attack scope then enemy attacks to him with daggers, changing her state to Melee attack
-                    // If distance to Glitch is plus than Shoot field of view the enemy changes her state to Wait
+                    // If distance to Glitch is lower than chase field of view then changes to Chase state.
+                    // If Glitch is in melee attack scope then enemy attacks to him with a kick, changing her state to Melee attack
                     // If archer is motionless then she can't move
                     if ((motionless == false) && (Vector3.Distance(player.transform.position, transform.position) < maxSightChase))
                     {
@@ -234,7 +250,8 @@ public class ArcherAI : MonoBehaviour {
                     break;
 
                 case enemy_states.TURN:
-                    //animator.SetBool("Turn", true);
+
+                    // Turn logic
                     if ((player.transform.position.x > transform.position.x) && (transform.eulerAngles.y > 269.0f))
                     {
                         transform.eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
@@ -249,9 +266,12 @@ public class ArcherAI : MonoBehaviour {
                     states = enemy_states.WAIT;
                     break;
 
-                // Enemy attacks to Glitch with her daggers
+                // Enemy attacks to Glitch with a kick
                 case enemy_states.MELEE_ATTACK:
+
                     // Melee attack logic
+
+                    // A kick for timePerKick time
                     timePerKick -= world.lag;
                     if (timePerKick <= 0.0f)
                     {
@@ -281,10 +301,13 @@ public class ArcherAI : MonoBehaviour {
         }
         else
         {
+            // If slowfps is active then speed in animations is 0
             animator.SetFloat("Speed", 0.0f);
         }
     }
 
+
+    // Trigger of shoot animation that calculates all again to change direction if i need it
     public void ShootedTrigger()
     {
         if (shooted == false)
@@ -336,10 +359,10 @@ public class ArcherAI : MonoBehaviour {
         }
     }
 
+    // Trigger of turn animation
     public void TurnTrigger()
     {
 
-        //animator.SetBool("Turn", false);
         if ((player.transform.position.x > transform.position.x) && (transform.eulerAngles.y == 270.0f))
         {
             transform.eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
@@ -354,30 +377,35 @@ public class ArcherAI : MonoBehaviour {
         states = enemy_states.WAIT;
     }
 
+
+    // Trigger of death animation
     public void DeadRandomTrigger()
     {
-        if (animator.GetInteger("DeadRandom") == -1 || animator.GetInteger("DeadRandom") == 3)
+        int random = animator.GetInteger("DeadRandom");
+        while (random == animator.GetInteger("DeadRandom"))
         {
             animator.SetInteger("DeadRandom", Random.Range(0, 3));
         }
-        else
-        {
-            animator.SetInteger("DeadRandom", 3);
-        }
     }
 
+
+    // Trigger of kick animation finish, reset timeperkick and animator
     public void FinishKickTrigger()
     {
         animator.SetBool("Attack", false);
         timePerKick = 1.0f;
     }
 
+
+    // Trigger of hit animation
     public void HittedTrigger()
     {
         speed = waitSpeed;
         states = enemy_states.DEATH;
     }
 
+
+    // Logic in kick
     public void Kick()
     {
         player.DecrementLives(meleeDamage);
@@ -386,6 +414,7 @@ public class ArcherAI : MonoBehaviour {
         states = enemy_states.WAIT;
     }
 
+    // Logic in death of the enemy. Deactivates all the colliders.
     public void Defeated()
     {
         sight = false;
