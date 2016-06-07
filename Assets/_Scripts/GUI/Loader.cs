@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using InControl;
 
 public class Loader : MonoBehaviour {
 
@@ -8,6 +9,7 @@ public class Loader : MonoBehaviour {
 
     private static AsyncOperation async;
     private static bool loading = false;
+	private bool waitingForPlayerContinue = false;
 
     public Text text;
     public Text percent;
@@ -43,10 +45,19 @@ public class Loader : MonoBehaviour {
     void Update(){
 
         if (loading){
-            if (async.isDone){
-                loading = false;
-                child.SetActive(false);
+			//Waiting for player input
+			if (waitingForPlayerContinue) {
+				if (InputManager.ActiveDevice.AnyButton.WasPressed) {
+					async.allowSceneActivation = true;
+					loading = false;
+					child.SetActive(false);
+				}
+			//Loading ended
+			} else if (async.progress >= 0.9f){
+				waitingForPlayerContinue = true;
+				percent.text = "Press any button to continue";
             }
+			//Loading
             else {
                 int percnt = (int) ((100 * async.progress) + (10 * (async.progress / 0.9f)));
                 percent.text = "Now Loading: " + percnt + "%";
@@ -66,6 +77,7 @@ public class Loader : MonoBehaviour {
         if (!loading){
             loading = true;
             async = Application.LoadLevelAsync(levelName);
+			async.allowSceneActivation = false;
             instance.prepareLoading();
         }
     }
@@ -74,5 +86,6 @@ public class Loader : MonoBehaviour {
     {
         child.SetActive(true);
         percent.text = "Now Loading: 0%";
+		waitingForPlayerContinue = false;
     }
 }
