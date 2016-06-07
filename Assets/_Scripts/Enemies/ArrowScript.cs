@@ -24,11 +24,14 @@ public class ArrowScript : MonoBehaviour {
 	
 	void Update () 
     {
+        // Control fps
         if (world.doUpdate)
         {
             transform.Translate(Vector2.down * world.lag * speed);
             arrowCollider.enabled = true;
             timeAlive -= world.lag;
+
+            // Arrow time of live
             if (timeAlive <= 0)
             {
                 timeAlive = 3.0f;
@@ -37,7 +40,8 @@ public class ArrowScript : MonoBehaviour {
         }
 	}
 
-   private void ResetArrow()
+    // Resets arrow position
+    private void ResetArrow()
     {
         if (isInLeft)
         {

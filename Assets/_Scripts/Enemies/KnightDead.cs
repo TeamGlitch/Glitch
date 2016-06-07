@@ -8,16 +8,13 @@ public class KnightDead : MonoBehaviour {
 
     void OnTriggerEnter(Collider coll)
     {
-
-        if ((knight.states != KnightAI.enemy_states.DEATH) && (coll.gameObject.CompareTag("Player")))
+        // If Glitch contacts knight upper, archer dies
+        if ((knight.player.transform.position.y >= (transform.position.y + headCollider.bounds.extents.y)) && (coll.gameObject.CompareTag("Player")))
         {
-            if (knight.player.transform.position.y >= (transform.position.y + headCollider.bounds.extents.y))
-            {
-                knight.Attacked();
-                knight.rigid.isKinematic = true;
-                knight.collider.enabled = false;
-                headCollider.enabled = false;
-            }
+            knight.Attacked();
+            knight.rigid.isKinematic = true;
+            knight.collider.enabled = false;
+            headCollider.enabled = false;
         }
     }
 }

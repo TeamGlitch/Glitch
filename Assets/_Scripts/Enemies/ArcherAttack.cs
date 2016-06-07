@@ -7,13 +7,11 @@ public class ArcherAttack : MonoBehaviour {
 
     void OnTriggerEnter(Collider coll)
     {
-        if ((archer.states != ArcherAI.enemy_states.DEATH) && (coll.gameObject.CompareTag("Player")))
+
+        // If is attacking hurts player
+        if ((archer.states == ArcherAI.enemy_states.MELEE_ATTACK) && (coll.gameObject.CompareTag("Player")))
         {
-            // If is attacking hurts player
-            if (archer.states == ArcherAI.enemy_states.MELEE_ATTACK)
-            {
-                archer.Kick();
-            }
+            archer.Kick();
         }
     }
 }

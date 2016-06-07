@@ -155,6 +155,7 @@ public class KnightAI : MonoBehaviour {
 
     void OnCollisionExit(Collision coll)
     {
+        // If exit collides with glitch, enemy return to non kinematic
         if (coll.collider.gameObject.CompareTag("Player") && states != enemy_states.DEATH)
         {
             rigid.isKinematic = false;
@@ -208,9 +209,10 @@ public class KnightAI : MonoBehaviour {
 
     void Update()
     {
-
+        // To control fps
         if (world.doUpdate)
         {
+            // Update state and speed in animator
             animator.SetFloat("Speed", speed*speedConstant);
             animator.SetInteger("State", (int)states);
             animator.SetBool("Attack", isInAttack);
@@ -238,13 +240,15 @@ public class KnightAI : MonoBehaviour {
 
                 case enemy_states.PATROL:
                     // Patrolling logic
+
                     transform.Translate(Vector3.forward * speed * world.lag);
                     break;
 
                 // Enemy chases Glitch until reach him, reach a limit point or lose sight of Glitch
                 case enemy_states.CHASE:
-                    speed = chaseSpeed;
                     // Chasing logic
+
+                    speed = chaseSpeed;
                     if ((transform.rotation.eulerAngles.y < 270.0f + 1) && (transform.rotation.eulerAngles.y > 270.0f - 1))
                     {
                         if (playerPos.position.x > transform.position.x)
@@ -293,7 +297,7 @@ public class KnightAI : MonoBehaviour {
 
                     // Attacking logic
 
-                    // If distance to Glitch is plus than chase field of view then changes to Search state
+                    // If distance to Glitch is more than chase field of view then changes to Search state
                     // else if Glitch isn't in attack scope then enemy chases him
                     if ((Vector3.Distance(playerPos.position, transform.position) > maxSightChase) && !isInAttack)
                     {
@@ -314,7 +318,6 @@ public class KnightAI : MonoBehaviour {
                 case enemy_states.SEARCH:
 
                     // Searching logic
-                    // SEARCH ANIMATION HERE
                     time -= world.lag;
                     if (time <= 0.0f)
                     {
@@ -372,18 +375,17 @@ public class KnightAI : MonoBehaviour {
         }
     }
 
+    // Trigger of death animation
     public void DeadRandomTrigger()
     {
-        if (animator.GetInteger("DeadRandom") == -1 || animator.GetInteger("DeadRandom") == 3)
+        int random = animator.GetInteger("DeadRandom");
+        while (random == animator.GetInteger("DeadRandom"))
         {
             animator.SetInteger("DeadRandom", Random.Range(0, 3));
         }
-        else
-        {
-            animator.SetInteger("DeadRandom", 3);
-        }
     }
 
+    // Trigger of hit animation
     public void HittedTrigger()
     {
         if (states != enemy_states.DEATH)
@@ -394,17 +396,20 @@ public class KnightAI : MonoBehaviour {
         }
     }
 
+    // Trigger of end attack, disables colliders of axes
     public void AttackTrigger()
     {
         swordCollider.enabled = false;
         isInAttack = false;
     }
 
+    // Trigger of begin attack, enables colliders of axes
     public void BeginAttackTrigger()
     {
         swordCollider.enabled = true;
     }
 
+    // Logic of attacked received. Deactivates temporary all the colliders.
     public void Attacked()
     {
         speed = attackSpeed;
@@ -431,6 +436,7 @@ public class KnightAI : MonoBehaviour {
         player.ReactToAttack(transform.position.x);
     }
 
+    // Coroutine to activate colliders in x time
     IEnumerator ActivateColliders(float wait)
     {
         yield return new WaitForSeconds(wait);
@@ -438,6 +444,7 @@ public class KnightAI : MonoBehaviour {
         collider.enabled = true;
     }
 
+    // Logic of attack
     public void Attack()
     {
         isInAttack = false;

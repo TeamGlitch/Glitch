@@ -7,13 +7,10 @@ public class BerserkerAttack : MonoBehaviour {
 
     void OnTriggerEnter(Collider coll)
     {
-        if ((berserker.states != BerserkerAI.enemy_states.DEATH) && (coll.gameObject.CompareTag("Player")))
+        // If is attacking hurts player
+        if ((berserker.states == BerserkerAI.enemy_states.ATTACK) && (coll.gameObject.CompareTag("Player")))
         {
-            // If is attacking hurts player
-            if (berserker.states == BerserkerAI.enemy_states.ATTACK)
-            {
-                berserker.Attack();
-            }
+            berserker.Attack();
         }
     }
 }

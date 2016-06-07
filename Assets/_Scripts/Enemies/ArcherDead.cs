@@ -4,15 +4,14 @@ using System.Collections;
 public class ArcherDead : MonoBehaviour {
 
     public ArcherAI archer;
+    public BoxCollider headCollider;
 
     void OnTriggerEnter(Collider coll)
     {
-        if ((archer.states != ArcherAI.enemy_states.DEATH) && (coll.gameObject.CompareTag("Player")))
+        // If Glitch contacts archer upper, archer dies
+        if (archer.player.transform.position.y >= (transform.position.y + headCollider.bounds.extents.y) && (coll.gameObject.CompareTag("Player")))
         {
-            if (archer.player.transform.position.y > (transform.position.y + transform.lossyScale.y/2))
-            {
-                archer.Defeated();
-            }
+            archer.Defeated();
         }
     }
 }
