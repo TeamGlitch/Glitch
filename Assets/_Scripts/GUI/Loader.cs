@@ -5,17 +5,18 @@ using InControl;
 
 public class Loader : MonoBehaviour {
 
-    public static Loader instance = null;
+    public static Loader instance = null;   //Singleton instance
 
-    private static AsyncOperation async;
-    private static bool loading = false;
-	private bool waitingForPlayerContinue = false;
+    private static AsyncOperation async;    //Async operation
+    private static string actualLevel;      //Currently loadingLevel
+    private static bool loading = false;    //Is it loading?
 
-    public Text text;
-    public Text percent;
+    public Text text;                       //Screen text
+    public Text percent;                    //Screen percent text
 
-    private float nextLine = 0;
-    private GameObject child;
+    private float nextLine = 0;                         //When the next line will be written
+    private GameObject child;                           //Direct reference to the loading UI
+    private bool waitingForPlayerContinue = false;      //Waiting for player input when "Press any key to continue"
 
     private string[] phrases = { "Loading enemies hostility", "Ensuring ragequit situations", "Rendering stereotypical hacker binary patterns",
                                "Sharpening enemies weapons", "Coordinating IA stupidity", "Leaking memory", "Compiling innecesary break commands",
@@ -74,8 +75,9 @@ public class Loader : MonoBehaviour {
 
     public static void LoadScene(string levelName)
     {
-        if (!loading){
+        if (!loading && actualLevel != levelName){
             loading = true;
+            actualLevel = levelName;
             async = Application.LoadLevelAsync(levelName);
 			async.allowSceneActivation = false;
             instance.prepareLoading();
