@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
         JUMPING,
 		FALL_RECOVERING,
         TELEPORTING,
+		STICKED,
 		DEATH
     };
 
@@ -46,6 +47,8 @@ public class PlayerController : MonoBehaviour
 
     public float maxSpeedInAir = 20.0f;
     public float decreaseSpeedWhenIdle = 1.0f;
+
+	private Vector3 directionStickObject;
 
 	// Powers declarations
     [HideInInspector]
@@ -80,6 +83,8 @@ public class PlayerController : MonoBehaviour
     private bool moveToRight = true;
     private bool playerIsMoving = false;
 
+	private bool previouslySticked = false;
+
     [SerializeField]
     private moving_type playerMovingType = moving_type.IDLE;
 
@@ -113,6 +118,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+		previouslySticked = false;
         // State-changing calculations
         switch (state)
         {
@@ -147,7 +153,7 @@ public class PlayerController : MonoBehaviour
                 break;
 
 
-            case player_state.IN_GROUND:
+			case player_state.IN_GROUND:
 
                 // If it's not teleporting
                 if (!ActivatingTeleport())
@@ -277,6 +283,23 @@ public class PlayerController : MonoBehaviour
             case player_state.DEATH:
                 rigidBody.velocity = Vector3.zero;
                 break;
+
+			case player_state.STICKED:
+				previouslySticked = true;
+				if (InputManager.ActiveDevice.Action1.WasPressed) {
+
+					rigidBody.useGravity = true;
+					rigidBody.AddForce(new Vector3(0.0f, jumpForce, 0.0f));
+					rigidBody.velocity = new Vector3 (4f, -directionStickObject.x * rigidBody.velocity.y, 0.0f);
+					
+					velocityWhenChangedState = -directionStickObject.x * 20f;
+					timeToChangeDependingVelocity = 1f;
+					timeSinceChangeMoving = 0.0f;
+					playerMovingType = moving_type.STOPING;
+
+					state = player_state.JUMPING;
+				}
+				break;
         }
 
         //If a player-induced jump is checked but the jump key is not longer
@@ -293,7 +316,7 @@ public class PlayerController : MonoBehaviour
 		float currentVelocity = rigidBody.velocity.x;
         bool isInGround = IsGrounded();
 
-        if (allowMovement)
+		if (allowMovement)
         {
             // Control of movemente in X axis
             moveDirection.x = InputManager.ActiveDevice.LeftStickX.Value;
@@ -309,7 +332,7 @@ public class PlayerController : MonoBehaviour
                 if (playerMovingType != moving_type.STOPING)
                 {
                     velocityWhenChangedState = rigidBody.velocity.x;
-                    timeToChangeDependingVelocity = timeToStop * Mathf.Abs(velocityWhenChangedState) / maxSpeed;
+					timeToChangeDependingVelocity = timeToStop * Mathf.Abs(velocityWhenChangedState) / maxSpeed;
                     timeSinceChangeMoving = 0.0f;
                     playerMovingType = moving_type.STOPING;
                 }
@@ -417,7 +440,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            currentVelocity = 0.0f;
+			currentVelocity = 0.0f;
         }
 
         // Correct Z position
@@ -517,6 +540,13 @@ public class PlayerController : MonoBehaviour
         }
         return false;
     }
+
+	public void getSticked(Vector3 directionStick){
+		state = player_state.STICKED;
+		rigidBody.useGravity = false;
+		rigidBody.velocity = new Vector3(0, 0, 0);
+		directionStickObject = directionStick;
+	}
 
     private bool IsGrounded()
     {
