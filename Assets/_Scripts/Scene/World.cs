@@ -38,7 +38,7 @@ public class World : MonoBehaviour {
 		dialogues.SetActive(true);
         pauseMenu.SetActive(false);
         pauseScript = pauseMenu.GetComponent<PauseScript>();
-        Cursor.visible = false;
+        //Cursor.visible = false;
     }
 
 	void Update(){
