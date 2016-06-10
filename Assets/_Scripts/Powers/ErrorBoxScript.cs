@@ -25,7 +25,7 @@ public class ErrorBoxScript : MonoBehaviour
     public float timeToBecomeBig = 0.5f;
     public float timeActive = 5.0f;
     public float timeFlickering = 1.0f;
-    public int framesBeforeChangeStateWhenFlickering = 6;
+    public float flickTime = 0.1f;
     public float timeCooldownBox = 2.0f;
 
     private Transform box;
@@ -34,7 +34,7 @@ public class ErrorBoxScript : MonoBehaviour
     private PlayerController playerController;
 
     private float timeStateChange;
-    private int framesInCurrentStateWhenFlickering = 0;
+    private float lastFlicker = 0;
     private bool activable = false;
 
     void Start()
@@ -85,7 +85,6 @@ public class ErrorBoxScript : MonoBehaviour
                     boxCollider.enabled = true;
                     timeStateChange = Time.time;
 
-                    framesInCurrentStateWhenFlickering = 0;
                     box.localScale = new Vector3(0f, 0f, 0f);
 
                     SoundManager.instance.PlaySingle(ErrorBoxSound);
@@ -111,7 +110,6 @@ public class ErrorBoxScript : MonoBehaviour
                 if (Time.time - timeStateChange >= timeActive - timeFlickering)
                 {
                     state = error_box_state.FLICKERING;
-                    framesInCurrentStateWhenFlickering = 0;
                 }
                 break;
 
@@ -127,9 +125,7 @@ public class ErrorBoxScript : MonoBehaviour
                 }
                 else{
 
-                    ++framesInCurrentStateWhenFlickering;
-
-                    if (framesInCurrentStateWhenFlickering >= framesBeforeChangeStateWhenFlickering)
+                    if (Time.time - lastFlicker >= flickTime)
                     {
                         Color boxColor = spriteRenderer.color;
                         if (boxColor.a == 1.0f)
@@ -141,6 +137,8 @@ public class ErrorBoxScript : MonoBehaviour
                             boxColor.a = 1.0f;
                         }
                         spriteRenderer.color = boxColor;
+
+                        lastFlicker = Time.time;
                     }
                 } 
                 
