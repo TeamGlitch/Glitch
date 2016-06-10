@@ -11,6 +11,8 @@ public class ErrorBoxScript : MonoBehaviour
     public Player playerScript;
     public float timeToBecomeBig = 0.5f;
     public AudioClip ErrorBoxSound;
+    public Camera cam;
+    public float timeCooldownBox = 2.0f;
 
     private int framesInCurrentStateWhenFlickering = 0;
     private float timeActivated = 0.0f;
@@ -18,13 +20,10 @@ public class ErrorBoxScript : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private bool activated = false;
     private bool visible = false;
-
-    public Camera cam;
-    CameraGlitchedToBoxes cameraGlitchedToBoxes;
-
-    public float timeCooldownBox = 2.0f;
+    private CameraGlitchedToBoxes cameraGlitchedToBoxes;
     private float timeBoxDeactivated = 0.0f;
     private bool onCooldown = false;
+    private float scale;
 
     void Start()
     {
@@ -34,7 +33,7 @@ public class ErrorBoxScript : MonoBehaviour
         Color boxColor = spriteRenderer.color;
         boxColor.a = 0.0f;
         spriteRenderer.color = boxColor;
-
+        scale = transform.localScale.x;
         cameraGlitchedToBoxes = cam.GetComponent<CameraGlitchedToBoxes>();
         playerScript.PlayerDeadEvent += PlayerDead;
 
@@ -79,7 +78,7 @@ public class ErrorBoxScript : MonoBehaviour
             float tempTime = timeActive - timeActivated;
             if (tempTime > timeToBecomeBig)
                 tempTime = timeToBecomeBig;
-            float size = Mathf.Lerp(0.0f, 0.75f, tempTime / timeToBecomeBig);
+            float size = Mathf.Lerp(0.0f, scale, tempTime / timeToBecomeBig);
             transform.localScale = new Vector3(size, size, size);
 
         }
@@ -89,7 +88,7 @@ public class ErrorBoxScript : MonoBehaviour
             float tempTime = timeActivated;
             if (tempTime > timeToBecomeBig)
                 tempTime = timeToBecomeBig;
-            float size = Mathf.Lerp(0.0f, 0.75f, tempTime / timeToBecomeBig);
+            float size = Mathf.Lerp(0.0f, scale, tempTime / timeToBecomeBig);
             transform.localScale = new Vector3(size, size, size);
         }
         else if (activated && timeActivated < timeActive)
@@ -124,7 +123,7 @@ public class ErrorBoxScript : MonoBehaviour
             activated = false;
             onCooldown = true;
             timeBoxDeactivated = Time.time;
-            transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
+            transform.localScale = new Vector3(scale, scale, scale);
         }
     }
 
