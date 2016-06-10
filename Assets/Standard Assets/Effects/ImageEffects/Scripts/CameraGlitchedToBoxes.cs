@@ -24,11 +24,6 @@ public class CameraGlitchedToBoxes : ImageEffectBase {
     private float phaseChange = 0;
     private float nextDistortion = 0;
 
-	// Needs to be divided by the zoom
-	private float correctionMarkerWidth = (-13.59751f*11.02f);
-	private float correctionMarkerHeight = (-13.59751f*14.9f);
-	private float correctionDueToAspect = 1.777605f;
-
 	public List<Vector3> boxesPositions;
 
 	void Start(){
@@ -57,13 +52,16 @@ public class CameraGlitchedToBoxes : ImageEffectBase {
 	void OnRenderImage (RenderTexture source, RenderTexture destination) {
 
         //If we're working with at least one box
-        if (boxesPositions.Count > 0){
+        if (boxesPositions.Count > 0)
+        {
 
             //If there's a phase change
-            if (Time.time >= phaseChange){
+            if (Time.time >= phaseChange)
+            {
 
                 //If it was distorting
-                if (distorting){
+                if (distorting)
+                {
 
                     //If the new glitch cycle hasn't glitch effect,
                     //the movement texture is the correction one,
@@ -72,18 +70,21 @@ public class CameraGlitchedToBoxes : ImageEffectBase {
                     phaseChange = Time.time + distorsionRate + Random.Range(-distorsionRateOffset, distorsionRateOffset);
                     distorting = false;
 
-                } else {
+                }
+                else
+                {
 
                     //If it wasn't distorting, create a distortion
                     distort();
                     distorting = true;
 
                     phaseChange = Time.time + distorsionTime;
-                    
+
                 }
             }
             //If there's not a phase change, it is distorting and it's time for the next distortion
-            else if (distorting && Time.time > nextDistortion){
+            else if (distorting && Time.time > nextDistortion)
+            {
                 distort();
             }
         }
@@ -156,5 +157,10 @@ public class CameraGlitchedToBoxes : ImageEffectBase {
 	{
 		int index = boxesPositions.FindIndex(a => a == position);
 		boxesPositions.RemoveAt (index);
+
+        if (boxesPositions.Count == 0)
+        {
+            texture = correction;
+        }
 	}
 }
