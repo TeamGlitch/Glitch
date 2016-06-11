@@ -17,10 +17,9 @@ public class World : MonoBehaviour {
     public GameObject powers;
     public GameObject gui;
 	public GameObject dialogues;
-
     public GameObject pauseMenu;
-    private PauseScript pauseScript;
 
+    private PauseScript pauseScript;
 	private update_status state = update_status.REGULAR_UPDATE;
 
 	// Moving objects look at this to know if they should move or not.
