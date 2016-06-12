@@ -43,27 +43,15 @@
 			{
 				float2 newUV;
 				half4 final;
-				if(i.uv.x < 0.1)
-				{
-					newUV.x = i.uv.x + (0.02 - (i.uv.x % 0.02));
-					newUV.y = i.uv.y + (0.05 - (i.uv.y % 0.05));
-				    final = tex2D(_MainTex,  newUV);
-				}
-				else if(i.uv.x >= 0.1 && i.uv.x < 0.15)
-				{
-					newUV.x = i.uv.x + (0.01 - (i.uv.x % 0.01));
-					newUV.y = i.uv.y + (0.025 - (i.uv.y % 0.025));
-				    final = tex2D(_MainTex,  newUV);
-				}
+				if(i.uv.x > 0.2 && i.uv.x < 0.4 && i.uv.y < 0.3 && i.uv.y > 0.1)
+					final = tex2D(_MainTex, i.uv.xy);
 				else
 				{
-					final = tex2D(_MainTex,  i.uv.xy);
+					newUV.x = i.uv.x + (0.005 - (i.uv.x % 0.005));
+					newUV.y = i.uv.y + (0.005 - (i.uv.y % 0.005));
+					final = tex2D(_MainTex,  newUV);
 				}
 
-				if(i.uv.x < 0.1f)
-					final -= half4(0.15,0.15,0.15,0.0);
-				else if(i.uv.x >= 0.1f && i.uv.x < 0.15f)
-					final -= half4(0.075,0.075,0.075,0.0);
 				return final;
 			}
 
