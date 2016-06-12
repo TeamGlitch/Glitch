@@ -10,16 +10,16 @@ public class SpringPlantScript : MonoBehaviour
     public float forceToPlayerWhenEnterAndJump = 1200.0f;
     public AudioClip bouncyClip;
 
-    private Animator _animator;
+    private Animator animator;
 
     void Start()
     {
-        _animator = transform.GetComponent<Animator>();
+        animator = transform.GetComponent<Animator>();
     }
 
     public void EndAnimation()
     {
-        _animator.SetBool("PlayerInside", false);
+        animator.SetBool("PlayerInside", false);
     }
 
     void OnTriggerEnter(Collider other)
@@ -28,7 +28,7 @@ public class SpringPlantScript : MonoBehaviour
         {
             playerController.rigidBody.velocity = new Vector3(playerController.rigidBody.velocity.x, 0.0f, 0.0f);
             playerController.rigidBody.AddForce(new Vector3(0.0f, forceToPlayerWhenEnter, 0.0f));
-            _animator.SetBool("PlayerInside", true);
+            animator.SetBool("PlayerInside", true);
         }
     }
 
