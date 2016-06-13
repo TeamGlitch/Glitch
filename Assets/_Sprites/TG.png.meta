@@ -1,0 +1,530 @@
+fileFormatVersion: 2
+guid: 281aa3bb5313dfc46bc44eaaea59d5b6
+timeCreated: 1465771261
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: TG_0
+    21300002: TG_1
+    21300004: TG_2
+    21300006: TG_3
+    21300008: TG_4
+    21300010: TG_5
+    21300012: TG_6
+    21300014: TG_7
+    21300016: TG_8
+    21300018: TG_9
+    21300020: TG_10
+    21300022: TG_11
+    21300024: TG_12
+    21300026: TG_13
+    21300028: TG_14
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: 1
+    aniso: -1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: TG_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 462
+        width: 484
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -200, y: -0.5}
+        - {x: -200, y: -16.5}
+        - {x: -174, y: -16.5}
+        - {x: -174, y: -0.5}
+        - {x: -176, y: 1.5}
+        - {x: -198, y: 1.5}
+    - name: TG_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 429
+        width: 484
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 63, y: -0.5}
+        - {x: 63, y: -16.5}
+        - {x: 89, y: -16.5}
+        - {x: 89, y: -0.5}
+        - {x: 87, y: 1.5}
+        - {x: 65, y: 1.5}
+      - - {x: 169, y: -2.5}
+        - {x: 169, y: -16.5}
+        - {x: 195, y: -16.5}
+        - {x: 195, y: -2.5}
+        - {x: 193, y: -0.5}
+        - {x: 171, y: -0.5}
+      - - {x: -27, y: 16.5}
+        - {x: -27, y: -5.5}
+        - {x: -25, y: -7.5}
+        - {x: -3, y: -7.5}
+        - {x: -1, y: -5.5}
+        - {x: -1, y: 16.5}
+      - - {x: -88, y: 9.5}
+        - {x: -90, y: 7.5}
+        - {x: -90, y: -3.5}
+        - {x: -88, y: -5.5}
+        - {x: -77, y: -5.5}
+        - {x: -75, y: -3.5}
+        - {x: -75, y: 7.5}
+        - {x: -77, y: 9.5}
+      - - {x: -200, y: 16.5}
+        - {x: -200, y: 11.5}
+        - {x: -198, y: 9.5}
+        - {x: -176, y: 9.5}
+        - {x: -174, y: 11.5}
+        - {x: -174, y: 16.5}
+    - name: TG_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 396
+        width: 484
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -161, y: 8.5}
+        - {x: -163, y: 6.5}
+        - {x: -163, y: -4.5}
+        - {x: -161, y: -6.5}
+        - {x: -150, y: -6.5}
+        - {x: -148, y: -4.5}
+        - {x: -148, y: 6.5}
+        - {x: -150, y: 8.5}
+      - - {x: 169, y: 16.5}
+        - {x: 169, y: 8.5}
+        - {x: 171, y: 6.5}
+        - {x: 193, y: 6.5}
+        - {x: 195, y: 8.5}
+        - {x: 195, y: 16.5}
+      - - {x: 63, y: 16.5}
+        - {x: 63, y: 10.5}
+        - {x: 65, y: 8.5}
+        - {x: 87, y: 8.5}
+        - {x: 89, y: 10.5}
+        - {x: 89, y: 16.5}
+    - name: TG_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 363
+        width: 484
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -80, y: 5.5}
+        - {x: -80, y: -16.5}
+        - {x: 73, y: -16.5}
+        - {x: 73, y: 0.5}
+        - {x: 60, y: 5.5}
+      - - {x: 134, y: 16.5}
+        - {x: 134, y: -5.5}
+        - {x: 136, y: -7.5}
+        - {x: 158, y: -7.5}
+        - {x: 160, y: -5.5}
+        - {x: 160, y: 16.5}
+    - name: TG_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 330
+        width: 484
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -116, y: -7.5}
+        - {x: -116, y: -16.5}
+        - {x: 89, y: -16.5}
+        - {x: 89, y: 3.5}
+        - {x: 79, y: 16.5}
+        - {x: -73, y: 16.5}
+        - {x: -114, y: -5.5}
+      - - {x: -235, y: 10.5}
+        - {x: -237, y: 8.5}
+        - {x: -237, y: -4.5}
+        - {x: -222, y: -4.5}
+        - {x: -222, y: 8.5}
+        - {x: -224, y: 10.5}
+    - name: TG_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 297
+        width: 484
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -68, y: -16.5}
+        - {x: -68, y: 16.5}
+        - {x: -116, y: 16.5}
+        - {x: -116, y: -16.5}
+      - - {x: -24, y: -10.5}
+        - {x: -24, y: -16.5}
+        - {x: -11, y: -16.5}
+        - {x: -11, y: -10.5}
+        - {x: -13, y: -8.5}
+        - {x: -22, y: -8.5}
+      - - {x: 59, y: 16.5}
+        - {x: 59, y: -16.5}
+        - {x: 107, y: -16.5}
+        - {x: 107, y: 11.5}
+        - {x: 106, y: 15.5}
+        - {x: 97, y: 16.5}
+      - - {x: 24, y: 8.5}
+        - {x: 22, y: 6.5}
+        - {x: 22, y: -3.5}
+        - {x: 24, y: -5.5}
+        - {x: 33, y: -5.5}
+        - {x: 35, y: -3.5}
+        - {x: 35, y: 6.5}
+        - {x: 33, y: 8.5}
+    - name: TG_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 264
+        width: 484
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -68, y: -16.5}
+        - {x: -68, y: 16.5}
+        - {x: -116, y: 16.5}
+        - {x: -116, y: -16.5}
+      - - {x: -219, y: -10.5}
+        - {x: -193, y: -10.5}
+        - {x: -193, y: 15.5}
+        - {x: -219, y: 15.5}
+      - - {x: 159, y: 13.5}
+        - {x: 159, y: -1.5}
+        - {x: 174, y: -1.5}
+        - {x: 174, y: 13.5}
+      - - {x: -24, y: 16.5}
+        - {x: -24, y: 13.5}
+        - {x: -22, y: 11.5}
+        - {x: -13, y: 11.5}
+        - {x: -11, y: 13.5}
+        - {x: -11, y: 16.5}
+      - - {x: 59, y: 16.5}
+        - {x: 60, y: 13.5}
+        - {x: 105, y: 13.5}
+        - {x: 107, y: 15.5}
+        - {x: 107, y: 16.5}
+    - name: TG_7
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 231
+        width: 484
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -116, y: 16.5}
+        - {x: -127, y: 4.5}
+        - {x: -127, y: -16.5}
+        - {x: -80, y: -16.5}
+        - {x: -68, y: 4.5}
+        - {x: -68, y: 16.5}
+      - - {x: 1, y: 4.5}
+        - {x: 1, y: -16.5}
+        - {x: 92, y: -16.5}
+        - {x: 92, y: 4.5}
+        - {x: 90, y: 6.5}
+        - {x: 3, y: 6.5}
+      - - {x: -48, y: -1.5}
+        - {x: -50, y: -3.5}
+        - {x: -50, y: -13.5}
+        - {x: -48, y: -15.5}
+        - {x: -39, y: -15.5}
+        - {x: -37, y: -13.5}
+        - {x: -37, y: -3.5}
+        - {x: -39, y: -1.5}
+    - name: TG_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 198
+        width: 484
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -127, y: 16.5}
+        - {x: -127, y: -9.5}
+        - {x: -119, y: -16.5}
+        - {x: -68, y: -16.5}
+        - {x: -68, y: -2.5}
+        - {x: -80, y: 16.5}
+      - - {x: 1, y: 16.5}
+        - {x: 1, y: -8.5}
+        - {x: 39, y: -16.5}
+        - {x: 107, y: -16.5}
+        - {x: 107, y: -6.5}
+        - {x: 105, y: -4.5}
+        - {x: 92, y: 16.5}
+      - - {x: 199, y: -9.5}
+        - {x: 199, y: -16.5}
+        - {x: 225, y: -16.5}
+        - {x: 225, y: -9.5}
+        - {x: 223, y: -7.5}
+        - {x: 201, y: -7.5}
+    - name: TG_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 165
+        width: 484
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -192, y: -5.5}
+        - {x: -192, y: -16.5}
+        - {x: -166, y: -16.5}
+        - {x: -166, y: -5.5}
+        - {x: -168, y: -3.5}
+        - {x: -190, y: -3.5}
+      - - {x: -68, y: -16.5}
+        - {x: -68, y: 16.5}
+        - {x: -116, y: 16.5}
+        - {x: -116, y: -16.5}
+      - - {x: 107, y: 16.5}
+        - {x: 59, y: 16.5}
+        - {x: 59, y: -16.5}
+        - {x: 111, y: -16.5}
+        - {x: 112, y: -14.5}
+        - {x: 112, y: -2.5}
+      - - {x: 199, y: 16.5}
+        - {x: 199, y: 2.5}
+        - {x: 201, y: 0.5}
+        - {x: 223, y: 0.5}
+        - {x: 225, y: 2.5}
+        - {x: 225, y: 16.5}
+      - - {x: 4, y: 16.5}
+        - {x: 3, y: 15.5}
+        - {x: 3, y: 12.5}
+        - {x: 5, y: 10.5}
+        - {x: 8, y: 10.5}
+        - {x: 10, y: 12.5}
+        - {x: 10, y: 15.5}
+        - {x: 9, y: 16.5}
+    - name: TG_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 132
+        width: 484
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -72, y: 16.5}
+        - {x: -72, y: -16.5}
+        - {x: 68, y: -16.5}
+        - {x: 68, y: 11.5}
+        - {x: 65, y: 16.5}
+      - - {x: 142, y: -10.5}
+        - {x: 142, y: -16.5}
+        - {x: 168, y: -16.5}
+        - {x: 168, y: -10.5}
+        - {x: 166, y: -8.5}
+        - {x: 144, y: -8.5}
+      - - {x: -192, y: 16.5}
+        - {x: -192, y: 5.5}
+        - {x: -190, y: 3.5}
+        - {x: -168, y: 3.5}
+        - {x: -166, y: 5.5}
+        - {x: -166, y: 16.5}
+    - name: TG_11
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 99
+        width: 484
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -161, y: -2.5}
+        - {x: -161, y: -16.5}
+        - {x: -135, y: -16.5}
+        - {x: -135, y: -2.5}
+        - {x: -137, y: -0.5}
+        - {x: -159, y: -0.5}
+      - - {x: -74, y: -6.5}
+        - {x: -74, y: -16.5}
+        - {x: -59, y: -16.5}
+        - {x: -59, y: -6.5}
+        - {x: -61, y: -4.5}
+        - {x: -72, y: -4.5}
+      - - {x: 74, y: 1.5}
+        - {x: 72, y: -0.5}
+        - {x: 72, y: -8.5}
+        - {x: 74, y: -10.5}
+        - {x: 83, y: -10.5}
+        - {x: 85, y: -8.5}
+        - {x: 85, y: -0.5}
+        - {x: 83, y: 1.5}
+      - - {x: 142, y: 16.5}
+        - {x: 142, y: 0.5}
+        - {x: 144, y: -1.5}
+        - {x: 166, y: -1.5}
+        - {x: 168, y: 0.5}
+        - {x: 168, y: 16.5}
+      - - {x: -72, y: 16.5}
+        - {x: -72, y: 3.5}
+        - {x: 67, y: 3.5}
+        - {x: 68, y: 7.5}
+        - {x: 68, y: 16.5}
+    - name: TG_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 66
+        width: 484
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 82, y: -13.5}
+        - {x: 82, y: -16.5}
+        - {x: 108, y: -16.5}
+        - {x: 108, y: -13.5}
+        - {x: 106, y: -11.5}
+        - {x: 84, y: -11.5}
+      - - {x: -161, y: 16.5}
+        - {x: -161, y: 8.5}
+        - {x: -159, y: 6.5}
+        - {x: -137, y: 6.5}
+        - {x: -135, y: 8.5}
+        - {x: -135, y: 16.5}
+      - - {x: -74, y: 16.5}
+        - {x: -73, y: 13.5}
+        - {x: -61, y: 13.5}
+        - {x: -59, y: 15.5}
+        - {x: -59, y: 16.5}
+    - name: TG_13
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 33
+        width: 484
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -200, y: -2.5}
+        - {x: -200, y: -16.5}
+        - {x: -174, y: -16.5}
+        - {x: -174, y: -2.5}
+        - {x: -176, y: -0.5}
+        - {x: -198, y: -0.5}
+      - - {x: -105, y: -5.5}
+        - {x: -105, y: -16.5}
+        - {x: -79, y: -16.5}
+        - {x: -79, y: -5.5}
+        - {x: -81, y: -3.5}
+        - {x: -103, y: -3.5}
+      - - {x: 82, y: 16.5}
+        - {x: 82, y: -2.5}
+        - {x: 84, y: -4.5}
+        - {x: 106, y: -4.5}
+        - {x: 108, y: -2.5}
+        - {x: 108, y: 16.5}
+    - name: TG_14
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 484
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -105, y: 16.5}
+        - {x: -105, y: 5.5}
+        - {x: -103, y: 3.5}
+        - {x: -81, y: 3.5}
+        - {x: -79, y: 5.5}
+        - {x: -79, y: 16.5}
+      - - {x: -200, y: 16.5}
+        - {x: -200, y: 8.5}
+        - {x: -198, y: 6.5}
+        - {x: -176, y: 6.5}
+        - {x: -174, y: 8.5}
+        - {x: -174, y: 16.5}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
