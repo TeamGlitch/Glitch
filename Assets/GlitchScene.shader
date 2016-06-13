@@ -4,7 +4,9 @@
 	{
 		_MainTex ("Texture", 2D) = "white" {}
 		_PercentagePixel ("PercentagePixel", float) = 0.2
-
+		_PlayerPercentagePixelX ("PlayerPercentagePixelX", float) = 0.2
+		_PlayerPercentagePixelY ("PlayerPercentagePixelY", float) = 0.2
+		_PixelSize ("PixelSize", float) = 0.005
 	}
 	SubShader
 	{
@@ -20,6 +22,9 @@
 			#include "UnityCG.cginc"
 
 			uniform float _PercentagePixel;
+			uniform float _PlayerPercentagePixelX;
+			uniform float _PlayerPercentagePixelY;
+			uniform float _PixelSize;
 
 			struct appdata
 			{
@@ -47,7 +52,8 @@
 			{
 				float2 newUV;
 				half4 final;
-				if((i.uv.x < _PercentagePixel + 0.3 && (i.uv.y < 0.05 || i.uv.y > 0.95)) ||
+				if((((_PlayerPercentagePixelX - i.uv.x) * (_PlayerPercentagePixelX - i.uv.x) / 0.01 + (_PlayerPercentagePixelY - i.uv.y) * (_PlayerPercentagePixelY - i.uv.y) / 0.03) > 1) && 
+					((i.uv.x < _PercentagePixel + 0.3 && (i.uv.y < 0.05 || i.uv.y > 0.95)) ||
 					(i.uv.x < _PercentagePixel + 0.45 && (i.uv.y < 0.025 || i.uv.y > 0.975)) ||
 					(i.uv.x < _PercentagePixel + 0.225 && (i.uv.y < 0.075 || i.uv.y > 0.925)) ||
 					(i.uv.x < _PercentagePixel + 0.150 && (i.uv.y < 0.1 || i.uv.y > 0.9)) ||
@@ -56,30 +62,11 @@
 					(i.uv.x < _PercentagePixel + 0.05 && (i.uv.y < 0.175 || i.uv.y > 0.825)) ||
 					(i.uv.x < _PercentagePixel + 0.025 && (i.uv.y < 0.2 || i.uv.y > 0.8)) ||
 					(i.uv.x < _PercentagePixel + 0.012 && (i.uv.y < 0.225 || i.uv.y > 0.775)) ||
-					(i.uv.x < _PercentagePixel))
+					(i.uv.x < _PercentagePixel)))
 				{
-					newUV.x = i.uv.x + (0.005 - (i.uv.x % 0.005));
-					newUV.y = i.uv.y + (0.005 - (i.uv.y % 0.005));
+					newUV.x = i.uv.x + (_PixelSize - (i.uv.x % _PixelSize));
+					newUV.y = i.uv.y + (_PixelSize - (i.uv.y % _PixelSize));
 				    final = tex2D(_MainTex,  newUV);
-
-/*					if((_Time[3] % 5 > 0.5 &&  _Time[3] % 5 < 0.75) || _Time[3] % 5 > 1)
-					{
-						final -= (half4(0.1,0.1,0.1,0.0));
-					}
-					else
-					{
-						final -= (half4(0.15,0.15,0.15,0.0));
-					}*/
-
-/*					if((_Time[3] % 5 > 0.5 &&  _Time[3] % 5 < 0.75) || _Time[3] % 5 > 1)
-					{
-						final += (half4(0.488,0.125,0.57,0.0));
-					}
-					else
-					{
-						final += (half4(0.244,0.0625,0.285,0.0));
-					}
-					*/
 				}
 				else
 				{

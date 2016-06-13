@@ -58,12 +58,17 @@ public class KnightAI : MonoBehaviour {
     private bool isInLimitPoint = false;
     private int layerMask = (~((1 << 13) | (1 << 2) | (1 << 11) | (1 << 8))) | (1 << 9) | (1 << 0);
 
+	private Transform _knightModel;
+	private SoldierExplosion _soldierExplosion;
+
     void Start()
     {
         playerPos = player.GetComponent<Transform>();
         animator = GetComponent<Animator>();
         swordCollider.enabled = false;
         animator.SetInteger("DeadRandom", -1);
+		_soldierExplosion = transform.FindChild("SoldierSkeleton").GetComponent<SoldierExplosion>();
+		_knightModel = transform.FindChild("Soldier");
     }
 
     void OnCollisionEnter(Collision coll)
@@ -367,6 +372,11 @@ public class KnightAI : MonoBehaviour {
                 case enemy_states.HITTED:
                     // State to put particles or something
                     break;
+
+				case enemy_states.DEATH:
+					animator.speed = animator.speed + 0.01f;
+					break;
+
             }
         }
         else
@@ -426,6 +436,7 @@ public class KnightAI : MonoBehaviour {
             fieldOfView.enabled = false;
             headCollider.enabled = false;
             isInAttack = false;
+			Invoke("KnightExplosion", 3.0f);
         }
         else
         {
@@ -463,4 +474,18 @@ public class KnightAI : MonoBehaviour {
             states = enemy_states.WAIT;
         }
     }
+
+	public void KnightExplosion ()
+	{
+		_knightModel.gameObject.SetActive(false);
+		_soldierExplosion.gameObject.SetActive(true);
+		_soldierExplosion.Explosion();
+		Invoke("DeactivateKnight", 3.0f); 
+	}
+
+	public void DeactivateKnight ()
+	{
+		gameObject.SetActive(false);
+	}
+
 }
