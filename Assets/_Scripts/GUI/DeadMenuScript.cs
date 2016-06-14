@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class DeadMenuScript : MonoBehaviour {
@@ -44,12 +43,12 @@ public class DeadMenuScript : MonoBehaviour {
 
 	public void RestartPress()
 	{
-		SceneManager.LoadScene ("Level1");
+        Loader.LoadScene("Level1");
 	}
 
 	public void MenuPress()
 	{
-		SceneManager.LoadScene ("menu");
+        Loader.LoadScene("menu");
 	}
 
 	public void PlayerDead()

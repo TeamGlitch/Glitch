@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 //Everything is temporal!
 public class EndPointScript : MonoBehaviour {
@@ -26,7 +25,7 @@ public class EndPointScript : MonoBehaviour {
 
 	void Update(){
 		if (endGame != -1 && Time.time >= endGame) {
-			SceneManager.LoadScene("menu");
+            Loader.LoadScene("menu");
 		}
 	}
 }
