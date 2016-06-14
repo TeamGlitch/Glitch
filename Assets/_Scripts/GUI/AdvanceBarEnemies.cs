@@ -20,8 +20,6 @@ public class AdvanceBarEnemies : MonoBehaviour {
     void Update()
     {
         slider.value += Time.deltaTime;
-
-        print(slider.value);
         if (slider.value >= maxTime)
         {
             SceneManager.LoadScene("menu");

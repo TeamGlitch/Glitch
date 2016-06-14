@@ -2,174 +2,187 @@
 using System.Collections;
 using InControl;
 
+public enum error_box_state
+{
+    NON_REACHED,
+    SLEEPING,
+    GROWING,
+    ACTIVATED,
+    FLICKERING,
+    DISSAPEARING,
+    COOLDOWN
+};
+
 public class ErrorBoxScript : MonoBehaviour
 {
 
+    public Player playerScript;
+    public AudioClip ErrorBoxSound;
+    public CameraGlitchedToBoxes cameraGlitchedToBoxes;
+
+    private error_box_state state = error_box_state.NON_REACHED;
+
+    public float timeToBecomeBig = 0.5f;
     public float timeActive = 5.0f;
     public float timeFlickering = 1.0f;
-    public int framesBeforeChangeStateWhenFlickering = 6;
-    public Player playerScript;
-    public float timeToBecomeBig = 0.5f;
-    public AudioClip ErrorBoxSound;
-    public Camera cam;
+    public float flickTime = 0.1f;
     public float timeCooldownBox = 2.0f;
 
-    private int framesInCurrentStateWhenFlickering = 0;
-    private float timeActivated = 0.0f;
+    private Transform box;
     private BoxCollider boxCollider;
     private SpriteRenderer spriteRenderer;
-    private bool activated = false;
-    private bool visible = false;
-    private CameraGlitchedToBoxes cameraGlitchedToBoxes;
-    private float timeBoxDeactivated = 0.0f;
-    private bool onCooldown = false;
-    private float scale;
+    private PlayerController playerController;
+    private float timeStateChange;
+    private float lastFlicker = 0;
+    private bool activable = false;
 
     void Start()
     {
-        spriteRenderer = transform.GetComponent<SpriteRenderer>();
-        boxCollider = transform.GetComponent<BoxCollider>();
+        box = transform.GetChild(0);
+        spriteRenderer = box.GetComponent<SpriteRenderer>();
+        boxCollider = box.GetComponent<BoxCollider>();
         boxCollider.enabled = false;
         Color boxColor = spriteRenderer.color;
         boxColor.a = 0.0f;
         spriteRenderer.color = boxColor;
-        scale = transform.localScale.x;
-        cameraGlitchedToBoxes = cam.GetComponent<CameraGlitchedToBoxes>();
-        playerScript.PlayerDeadEvent += PlayerDead;
-
+        playerController = playerScript.gameObject.GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (visible && !activated && InputManager.ActiveDevice.Action4.WasPressed && !onCooldown)
-        {
-            playerScript.DecreaseActivableBox();
-            cameraGlitchedToBoxes.RemoveBox(transform.position);
-            Color boxColor = spriteRenderer.color;
-            boxColor.a = 1.0f;
-            spriteRenderer.color = boxColor;
-            boxCollider.enabled = true;
-            timeActivated = 0.0f;
-            activated = true;
-            framesInCurrentStateWhenFlickering = 0;
-            transform.localScale = new Vector3(0f, 0f, 0f);
-            SoundManager.instance.PlaySingle(ErrorBoxSound);
 
-        }
-        else if (activated && timeActivated < timeActive && timeActivated >= (timeActive - timeFlickering))
+        switch (state)
         {
-            timeActivated += Time.deltaTime;
+            case (error_box_state.NON_REACHED):
+                if (activable){
+                    playerScript.IncreaseActivableBox();
+                    cameraGlitchedToBoxes.AddBox(transform.position);
+                    state = error_box_state.SLEEPING;
+                }
+                break;
 
-            Color boxColor = spriteRenderer.color;
-            if (framesInCurrentStateWhenFlickering >= framesBeforeChangeStateWhenFlickering && boxColor.a == 1.0f)
-            {
-                framesInCurrentStateWhenFlickering = 0;
-                boxColor.a = 0.6f;
-            }
-            else if (framesInCurrentStateWhenFlickering >= framesBeforeChangeStateWhenFlickering / 2 && boxColor.a != 1.0f)
-            {
-                framesInCurrentStateWhenFlickering = 0;
-                boxColor.a = 1.0f;
-            }
-            spriteRenderer.color = boxColor;
-            ++framesInCurrentStateWhenFlickering;
+            case (error_box_state.SLEEPING):
 
-            float tempTime = timeActive - timeActivated;
-            if (tempTime > timeToBecomeBig)
-                tempTime = timeToBecomeBig;
-            float size = Mathf.Lerp(0.0f, scale, tempTime / timeToBecomeBig);
-            transform.localScale = new Vector3(size, size, size);
+                if ((!activable && playerController.state != PlayerController.player_state.TELEPORTING) ||
+                    activable && playerController.state == PlayerController.player_state.DEATH){
+                    activable = false;
+                    playerScript.DecreaseActivableBox();
+                    cameraGlitchedToBoxes.RemoveBox(transform.position);
+                    state = error_box_state.NON_REACHED;
+                }
+                else if (InputManager.ActiveDevice.Action4.WasPressed)
+                {
+                    playerScript.DecreaseActivableBox();
+                    cameraGlitchedToBoxes.RemoveBox(transform.position);
 
-        }
-        else if (activated && timeActivated < timeToBecomeBig)
-        {
-            timeActivated += Time.deltaTime;
-            float tempTime = timeActivated;
-            if (tempTime > timeToBecomeBig)
-                tempTime = timeToBecomeBig;
-            float size = Mathf.Lerp(0.0f, scale, tempTime / timeToBecomeBig);
-            transform.localScale = new Vector3(size, size, size);
-        }
-        else if (activated && timeActivated < timeActive)
-        {
-            timeActivated += Time.deltaTime;
-        }
-        else if (activated && visible)
-        {
-            Color boxColor = spriteRenderer.color;
-            boxCollider.enabled = false;
-            boxColor.a = 0.0f;
-            spriteRenderer.color = boxColor;
-            activated = false;
-            onCooldown = true;
-            timeBoxDeactivated = Time.time;
-        }
-        else if (onCooldown && (Time.time - timeBoxDeactivated > 2.0f))
-        {
-            if (visible)
-            {
-                playerScript.IncreaseActivableBox();
-                cameraGlitchedToBoxes.AddBox(transform.position);
-            }
-            onCooldown = false;
-        }
-        else if (activated)
-        {
-            Color boxColor = spriteRenderer.color;
-            boxCollider.enabled = false;
-            boxColor.a = 0.0f;
-            spriteRenderer.color = boxColor;
-            activated = false;
-            onCooldown = true;
-            timeBoxDeactivated = Time.time;
-            transform.localScale = new Vector3(scale, scale, scale);
+                    Color boxColor = spriteRenderer.color;
+                    boxColor.a = 1.0f;
+                    spriteRenderer.color = boxColor;
+
+                    boxCollider.enabled = true;
+                    timeStateChange = Time.time;
+
+                    box.localScale = new Vector3(0f, 0f, 0f);
+
+                    SoundManager.instance.PlaySingle(ErrorBoxSound);
+                    state = error_box_state.GROWING;
+                }
+                break;
+
+            case (error_box_state.GROWING):
+
+                float tempTime = Time.time - timeStateChange;
+                if (tempTime > timeToBecomeBig)
+                {
+                    tempTime = timeToBecomeBig;
+                    timeStateChange = Time.time;
+                    state = error_box_state.ACTIVATED;
+                }
+                float size = Mathf.Lerp(0.0f, 1f, tempTime / timeToBecomeBig);
+                box.localScale = new Vector3(size, size, size);
+                break;
+
+            case (error_box_state.ACTIVATED):
+
+                if (Time.time - timeStateChange >= timeActive - timeFlickering)
+                {
+                    state = error_box_state.FLICKERING;
+                }
+                break;
+
+            case (error_box_state.FLICKERING):
+                if (Time.time - timeStateChange > timeActive)
+                {
+                    boxCollider.enabled = false;
+                    Color boxColor = spriteRenderer.color;
+                    boxColor.a = 1.0f;
+                    spriteRenderer.color = boxColor;
+                    timeStateChange = Time.time;
+                    state = error_box_state.DISSAPEARING;
+                }
+                else{
+
+                    if (Time.time - lastFlicker >= flickTime)
+                    {
+                        Color boxColor = spriteRenderer.color;
+                        if (boxColor.a == 1.0f)
+                        {
+                            boxColor.a = 0.6f;
+                        }
+                        else
+                        {
+                            boxColor.a = 1.0f;
+                        }
+                        spriteRenderer.color = boxColor;
+
+                        lastFlicker = Time.time;
+                    }
+                } 
+                
+                break;
+
+            case (error_box_state.DISSAPEARING):
+
+                float tempTimeP = Time.time - timeStateChange;
+                if (tempTimeP > timeToBecomeBig)
+                {
+                    tempTimeP = timeToBecomeBig;
+                    timeStateChange = Time.time;
+                    Color boxColor = spriteRenderer.color;
+                    boxColor.a = 0.0f;
+                    spriteRenderer.color = boxColor;
+                    state = error_box_state.COOLDOWN;
+                }
+                float sizeP = Mathf.Lerp(0.1f, 0.0f, tempTimeP / timeToBecomeBig);
+                box.localScale = new Vector3(sizeP, sizeP, sizeP);
+                break;
+
+            case (error_box_state.COOLDOWN):
+
+                if (Time.time - timeStateChange > timeCooldownBox)
+                {
+                    state = error_box_state.SLEEPING;
+                    playerScript.IncreaseActivableBox();
+                    cameraGlitchedToBoxes.AddBox(transform.position);
+                }
+                break;
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.CompareTag("Player"))
         {
-            if (!activated && !onCooldown)
-            {
-                Color boxColor = spriteRenderer.color;
-                spriteRenderer.color = boxColor;
-                playerScript.IncreaseActivableBox();
-                cameraGlitchedToBoxes.AddBox(transform.position);
-            }
-            visible = true;
+            activable = true;
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.CompareTag("Player"))
         {
-            if (!activated && !onCooldown)
-            {
-                playerScript.DecreaseActivableBox();
-                cameraGlitchedToBoxes.RemoveBox(transform.position);
-                boxCollider.enabled = false;
-                Color boxColor = spriteRenderer.color;
-                boxColor.a = 0.0f;
-                spriteRenderer.color = boxColor;
-            }
-            visible = false;
-        }
-    }
-
-    public void PlayerDead()
-    {
-        if(visible && !activated)
-        {
-            playerScript.DecreaseActivableBox();
-            cameraGlitchedToBoxes.RemoveBox(transform.position);
-            boxCollider.enabled = false;
-            Color boxColor = spriteRenderer.color;
-            boxColor.a = 0.0f;
-            spriteRenderer.color = boxColor;
-            visible = false;
+            activable = false;
         }
     }
 }
