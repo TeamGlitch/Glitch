@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class AdvanceBarEnemies : MonoBehaviour {
 
-    private const float maxTime = 180.0f;
+    private const float maxTime = 300.0f;
 
     public Slider slider;
 
