@@ -45,13 +45,17 @@ public class IntroScript : MonoBehaviour {
 	void Update () {
 
         if (phase == introPhases.PRE_LOGOSCREEN || phase == introPhases.LOGOSCREEN){
+			
             if (Random.value > 0.2)
             {
-                logoMenu.position = new Vector3((-Random.Range(-2, 2)), 0, -1);
+				float offset = Random.Range (-Screen.width * 0.002f, Screen.width * 0.002f);
+				logoMenu.offsetMax = new Vector2(offset, 0);
+				logoMenu.offsetMin = new Vector2(offset, 0);
             }
             else if (logoMenu.position.x != 0)
             {
-                logoMenu.position = new Vector3(0, 0, -1);
+				logoMenu.offsetMax = new Vector2(0, 0);
+				logoMenu.offsetMin = new Vector2(0, 0);
             }
         }
 
@@ -76,15 +80,18 @@ public class IntroScript : MonoBehaviour {
                 }
 
                 break;
-
-            case introPhases.POSITIONING_LOGO_SCREEN:
+		
+			case introPhases.POSITIONING_LOGO_SCREEN:
 
                 if (Time.time < phaseStart + 0.7f)
                 {
-                    logoMenu.position = new Vector3((1066 - Random.Range(-20, 20)), 0, -1);
+					float offset = Random.Range (-Screen.width * 0.02f, Screen.width * 0.02f);
+					logoMenu.offsetMax = new Vector2((Screen.width * 0.75f) + offset, 0);
+					logoMenu.offsetMin = new Vector2((Screen.width * 0.75f) + offset, 0);
                 }
                 else {
-                    logoMenu.position = new Vector3(0, 0, -1);
+					logoMenu.offsetMax = new Vector2(0, 0);
+					logoMenu.offsetMin = new Vector2(0, 0);
                     phase = introPhases.PRE_LOGOSCREEN;
                 }
                 break;
@@ -93,8 +100,8 @@ public class IntroScript : MonoBehaviour {
 
                 if (Time.time > phaseStart + 0.3f)
                 {
-                    logoMenu.GetChild(1).gameObject.SetActive(true);
-                    logoMenu.GetChild(1).GetComponent<Animation>().Play();
+					logoMenu.GetChild(0).GetChild(1).gameObject.SetActive(true);
+					logoMenu.GetChild(0).GetChild(1).GetComponent<Animation>().Play();
                     phase = introPhases.LOGOSCREEN;
                     phaseStart = Time.time;
                 }
@@ -116,18 +123,19 @@ public class IntroScript : MonoBehaviour {
                 {
                     float percent = (Time.time - phaseStart) / (timeToEnd - phaseStart);
                     
-                    Vector3 newPosition = new Vector3(1066 * 0.25f * percent, 450 * 0.25f * percent, -1);
+					float directionX = 1, directionY = 1;
 
-                    if (Random.value >= 0.25)
-                        newPosition.x *= -1;
+					if (Random.value >= 0.25)
+						directionX = -1;
 
-                    if (Random.value >= 0.9)
-                        newPosition.y *= -1;
+					if (Random.value >= 0.85)
+						directionY = -1;
 
-                    logoMenu.position = newPosition;
-
+					logoMenu.offsetMax = new Vector2(Screen.width * percent * directionX * 0.25f, Screen.height * percent * directionY * 0.25f);
+					logoMenu.offsetMin = new Vector2(Screen.width * percent * directionX * 0.25f, Screen.height * percent * directionY * 0.25f);
                 }
-                else {
+                else
+				{
                     logoMenu.gameObject.SetActive(false);
                     phaseStart = Time.time;
                     phase = introPhases.BLACK_PRE_INTRO;
