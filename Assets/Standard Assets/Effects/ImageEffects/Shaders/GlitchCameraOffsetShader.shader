@@ -32,7 +32,6 @@ SubShader {
 			v2f o;
 			o.pos = mul (UNITY_MATRIX_MVP, v.vertex);
 			o.uv = v.texcoord.xy;
-			
 			return o;
 		}
 		
@@ -41,10 +40,10 @@ SubShader {
 			//Applies movement and correction textures to
 			//the x of the uv and returns the result
 			half4 normal = tex2D (_DispTex, i.uv.xy);
+			half4 final;
 			half4 correction = tex2D (_Corr, i.uv.xy);
 			i.uv.x += (normal.x - correction.x) * _Intensity;
-			half4 final = tex2D(_MainTex,  i.uv.xy);
-
+			final = tex2D(_MainTex,  i.uv.xy);
 			return final;
 		}
 		ENDCG
