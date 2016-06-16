@@ -54,6 +54,8 @@ public class ArcherAI : MonoBehaviour {
     private bool shooted = false;           // Boolean to initialize new arrow
     private int layerMask = (~((1 << 13) | (1 << 2) | (1 << 11))) | (1 << 9) | (1 << 0);
 
+	private SpriteRenderer _spriteRenderer;
+
     // Trigger that detect player and change the state to Shoot
     void OnTriggerStay(Collider coll)
     {
@@ -131,6 +133,7 @@ public class ArcherAI : MonoBehaviour {
         arrowPool = new ObjectPool(arrow);
         animator = GetComponent<Animator>();
         animator.SetInteger("DeadRandom", -1);
+		_spriteRenderer = transform.GetComponent<SpriteRenderer>();
     }
 
     void Update()
