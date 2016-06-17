@@ -7,8 +7,6 @@ using System.Xml;
 
 public class DialogueScript : MonoBehaviour {
 
-	////////////////////////Dialogue Box////////////////////////
-
 	public enum dialogueBoxState
 	{
 		OFF,
