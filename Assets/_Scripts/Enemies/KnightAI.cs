@@ -71,7 +71,7 @@ public class KnightAI : MonoBehaviour {
         BerserkerAI berserker;
         KnightAI knight;
 
-        if ((coll.contacts[0].thisCollider.CompareTag("Knight")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
+        if (coll.contacts[0].otherCollider.CompareTag("Player"))
         {
             rigid.isKinematic = true;
             if (player.transform.position.y >= (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2))
@@ -150,15 +150,6 @@ public class KnightAI : MonoBehaviour {
                 berserker = coll.contacts[0].otherCollider.GetComponent<BerserkerAI>();
                 berserker.states = BerserkerAI.enemy_states.CHASE;
             }
-        }
-    }
-
-    void OnCollisionExit(Collision coll)
-    {
-        // If exit collides with glitch, enemy return to non kinematic
-        if (coll.collider.gameObject.CompareTag("Player") && states != enemy_states.DEATH)
-        {
-            rigid.isKinematic = false;
         }
     }
 
@@ -415,12 +406,12 @@ public class KnightAI : MonoBehaviour {
         speed = attackSpeed;
         states = enemy_states.HITTED;
         --lives;
+        print(lives);
         SoundManager.instance.PlaySingle(hitSound);
 
         if (lives <= 0)
         {
             states = enemy_states.DEATH;
-            rigid.isKinematic = true;
             collider.enabled = false;
             swordCollider.enabled = false;
             fieldOfView.enabled = false;
@@ -442,6 +433,10 @@ public class KnightAI : MonoBehaviour {
         yield return new WaitForSeconds(wait);
         headCollider.enabled = true;
         collider.enabled = true;
+        if (states != enemy_states.DEATH)
+        {
+            rigid.isKinematic = false;
+        }
     }
 
     // Logic of attack

@@ -65,19 +65,24 @@ public class ArcherAI : MonoBehaviour {
             origin.y += transform.localScale.y*0.75f;
             ray = new Ray(origin, player.transform.position - origin);
 
-            if (Vector3.Distance(player.transform.position, transform.position) <= maxSightMeleeAttack)
+            if ((Vector3.Distance(player.transform.position, transform.position) <= maxSightMeleeAttack) && (states != enemy_states.MELEE_ATTACK))
             {
                 // If distance is low changes to melee attack
                 speed = meleeAttackSpeed;
                 timePerKick = 0.0f;
                 states = enemy_states.MELEE_ATTACK;
             }
-            else if (Physics.Raycast(ray, out hit, maxSightShoot, layerMask) && (sight == false) && (states != enemy_states.HITTED) && (hit.collider.gameObject.CompareTag("Player")))
+            else if (Physics.Raycast(ray, out hit, maxSightShoot, layerMask) && (states != enemy_states.HITTED) && (hit.collider.gameObject.CompareTag("Player")))
             {
                 // Else changes to Shoot
                 sight = true;
                 speed = shootSpeed;
                 states = enemy_states.SHOOT;
+            }
+            else if (sight == true) 
+            {
+                sight = false;
+                animator.SetBool("Shoot", false);
             }
         }
     }
@@ -116,15 +121,6 @@ public class ArcherAI : MonoBehaviour {
         }
     }
 
-    void OnCollisionExit(Collision coll)
-    {
-        // If exit collides with glitch, enemy return to non kinematic
-        if (coll.collider.gameObject.CompareTag("Player"))
-        {
-            rigid.isKinematic = false;
-        }
-    }
-
     void Start()
     {
         // Initialize animator and pool of arrows
@@ -152,10 +148,11 @@ public class ArcherAI : MonoBehaviour {
                     // If player deaths archer waits, else if is possible shoots
                     if (player.playerController.state == PlayerController.player_state.DEATH)
                     {
+                        animator.SetBool("Shoot", false);
                         states = enemy_states.WAIT;
                         sight = false;
                     }
-                    else if ((player.playerController.state != PlayerController.player_state.DEATH) && ((arrow == null) || (!arrow.activeInHierarchy)))
+                    else if ((sight) && ((arrow == null) || (!arrow.activeInHierarchy)))
                     {
                         animator.SetBool("Shoot", true);
                         shooted = false;
@@ -275,6 +272,7 @@ public class ArcherAI : MonoBehaviour {
                     timePerKick -= world.lag;
                     if (timePerKick <= 0.0f)
                     {
+                        kickCollider.enabled = true;
                         animator.SetBool("Attack", true);
                     }
 
@@ -393,15 +391,8 @@ public class ArcherAI : MonoBehaviour {
     public void FinishKickTrigger()
     {
         animator.SetBool("Attack", false);
+        kickCollider.enabled = false;
         timePerKick = 1.0f;
-    }
-
-
-    // Trigger of hit animation
-    public void HittedTrigger()
-    {
-        speed = waitSpeed;
-        states = enemy_states.DEATH;
     }
 
 
@@ -418,8 +409,8 @@ public class ArcherAI : MonoBehaviour {
     public void Defeated()
     {
         sight = false;
-        speed = meleeAttackSpeed;
-        states = enemy_states.HITTED;
+        speed = waitSpeed;
+        states = enemy_states.DEATH;
         animator.SetBool("Attack", false);
         animator.SetBool("Shoot", false);
         rigid.isKinematic = true;
