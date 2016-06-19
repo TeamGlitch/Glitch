@@ -490,21 +490,33 @@ public class KnightAI : MonoBehaviour {
 		++_tiltCounter;
 		if (_tiltCounter >= 10) {
 			CancelInvoke("TiltModel");
-			KnightTo2D();
+            KnightToSprite();
 		}
 	}
 
-	public void KnightTo2D ()
+	public void KnightToSprite ()
 	{
 		_knightModel.gameObject.SetActive(false);
-		transform.localScale = new Vector3(0.5f,0.5f,0.5f);
 		Vector3 pos = transform.position;
 		pos.y += 1f;
 		pos.z = 1f;
 		transform.position = pos;
 		transform.rotation = new Quaternion(0f,0f,0f,0f);
 		_spriteRenderer.enabled = true;
-		_particleSystem.Play();
+        _particleSystem.Play();
+        Invoke("SpriteToDead", 3.0f);
 	}
+
+    public void SpriteToDead()
+    {
+        _spriteRenderer.enabled = false;
+//        _particleSystem.Play();
+//        Invoke("DisableGO", 2.0f);
+    }
+
+    public void DisableGO()
+    {
+        gameObject.SetActive(false);
+    }
 
 }
