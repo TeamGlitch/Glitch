@@ -3,6 +3,8 @@ using System.Collections;
 
 public class BossArcherIA : MonoBehaviour {
 
+    #region Variable Declaration
+
     public enum bossArcherIA
     {
         IDLE,
@@ -53,7 +55,6 @@ public class BossArcherIA : MonoBehaviour {
     private bossArcherPos _bossPos;
     private Rigidbody _rigidbody;
     private BoxCollider _boxCollider;
-    private Renderer rend;
 
     public Transform arrowPool;
     private Transform[] _arrows;
@@ -69,17 +70,22 @@ public class BossArcherIA : MonoBehaviour {
 
     public Transform objectiveTransform;
 
-	// Use this for initialization
-	void Start () {
-        rend = GetComponent<Renderer>();
-        rend.material.shader = Shader.Find("Diffuse");
+    private Animator _animator;
+
+    private int _layerMask = (~((1 << 13) | (1 << 2) | (1 << 11) | (1 << 8))) | (1 << 9) | (1 << 0);
+
+    #endregion
+
+    #region Init & Update
+
+    // Use this for initialization
+    void Start () {
 
         _rigidbody = transform.GetComponent<Rigidbody> ();
         _boxCollider = transform.GetComponent<BoxCollider> ();
         _timeSinceStateChanged = 0.0f;
         _bossPos = bossArcherPos.MEDIUMRIGHT;
         _bossState = bossArcherIA.PRESHOOT;
-        rend.material.SetColor("_Color", Color.yellow);
         _jumpForce = jumpForceM2M;
 
         _arrows = new Transform[arrowPool.childCount];
@@ -92,12 +98,12 @@ public class BossArcherIA : MonoBehaviour {
         {
             _arrowsRigidBody[i] = _arrows[i].GetComponent<Rigidbody>();
         }
+        _animator = transform.GetComponent<Animator>();
+        _animator.SetTrigger("Attack");
+    }
 
-
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update () {
 	    switch(_bossState)
         {
             case bossArcherIA.MOVING:
@@ -113,7 +119,10 @@ public class BossArcherIA : MonoBehaviour {
 
             case bossArcherIA.JUMPING:
                 if (IsGrounded() && _rigidbody.velocity.y < 0)
+                {
                     _bossState = bossArcherIA.MOVING;
+                    _animator.SetBool("Jump", false);
+                }
                 break;
 
             case bossArcherIA.PRESHOOT:
@@ -122,7 +131,6 @@ public class BossArcherIA : MonoBehaviour {
                 {
                     _timeSinceStateChanged = 0.0f;
                     _bossState = bossArcherIA.SHOOTING;
-                    rend.material.SetColor("_Color", Color.red);
                 }
                 break;
 
@@ -132,7 +140,6 @@ public class BossArcherIA : MonoBehaviour {
                 {
                     _timeSinceStateChanged = 0.0f;
                     _bossState = bossArcherIA.POSTSHOOT;
-                    rend.material.SetColor("_Color", Color.blue);
                 }
                 else if (_timeSinceStateChanged >= timeInShoot/2.0f)
                 {
@@ -226,12 +233,24 @@ public class BossArcherIA : MonoBehaviour {
                             _jumpForce = jumpForceE2M;
                             break;
                     }
+                    if (_movingRight)
+                    {
+                        transform.localEulerAngles = new Vector3(0f, 90f, 0f);
+                    }
+                    else
+                    {
+                        transform.localEulerAngles = new Vector3(0f, 270f, 0f);
+                    }
                     _bossState = bossArcherIA.MOVING;
-                    rend.material.SetColor("_Color", Color.green);
+                    _animator.SetBool("Run", true);
                 }
                 break;
         }
 	}
+
+    #endregion
+
+    #region Colliders
 
     public void OnTriggerEnter(Collider coll)
     {
@@ -258,22 +277,42 @@ public class BossArcherIA : MonoBehaviour {
                 _rigidbody.AddForce(new Vector3(0f, _jumpForce, 0f));                
             }
             _bossState = bossArcherIA.JUMPING;
+            _animator.SetBool("Jump", true);
         }
-        if(coll.transform.name == "StopPoint")
+        if (coll.transform.name == "StopPoint")
         {
             if (_bossPos == bossArcherPos.MEDIUMLEFT || _bossPos == bossArcherPos.MEDIUMRIGHT)
-                transform.position = new Vector3(transform.position.x, transform.position.y, 17.0f);
+                transform.position = new Vector3(transform.position.x, transform.position.y, 17.5f-5.34f);
             _bossState = bossArcherIA.PRESHOOT;
-            rend.material.SetColor("_Color", Color.yellow);
             _rigidbody.velocity = new Vector3(0.0f, _rigidbody.velocity.y, 0.0f);
             _timeSinceStateChanged = 0.0f;
+            _animator.SetTrigger("Attack");
+            _animator.SetBool("Jump", false);
+            _animator.SetBool("Run", false);
+            transform.localEulerAngles = new Vector3(0f, 180f, 0f);
+
         }
     }
 
+    #endregion
+
+    #region Utils
+
     private bool IsGrounded()
     {
-        return Physics.Raycast(transform.position, -Vector3.up, _boxCollider.bounds.extents.y + 0.1f,  1, QueryTriggerInteraction.Ignore);
+        bool result;
+//        RaycastHit ray;
+//        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + _boxCollider.center.y, transform.position.z), new Vector3(0f,-(_boxCollider.size.y + 0.1f),0f), Color.red, 100f, false);
+        result = Physics.Raycast(new Vector3(transform.position.x, transform.position.y + _boxCollider.center.y, transform.position.z), -Vector3.up, _boxCollider.size.y + 0.1f, 1, QueryTriggerInteraction.Ignore);
+//        result = Physics.Raycast(new Vector3(transform.position.x, transform.position.y + _boxCollider.center.y, transform.position.z), -Vector3.up, out ray, _boxCollider.size.y + 0.1f, 1, QueryTriggerInteraction.Ignore);
+//        if(result)
+//            Debug.Log(ray.collider.name);
+        return result;
     }
+
+    #endregion
+
+    #region Shoot
 
     private void PrepareArrows(shootTypes shootType)
     {
@@ -482,8 +521,7 @@ public class BossArcherIA : MonoBehaviour {
                 yield return null;
             }
         }
-
-
-
     }
+
+    #endregion
 }
