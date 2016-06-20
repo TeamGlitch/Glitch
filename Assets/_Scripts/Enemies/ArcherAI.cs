@@ -33,6 +33,7 @@ public class ArcherAI : MonoBehaviour {
     public bool motionless = false;
     public World world;
     public GameObject arrow;				//Reference to an arrow prefab
+    public GameObject item;
     public Rigidbody rigid;
     public BoxCollider collider;
     public BoxCollider fieldOfView;
@@ -40,7 +41,12 @@ public class ArcherAI : MonoBehaviour {
     public BoxCollider headCollider;
 	public AudioClip hitSound;
 
+    private static GameObject item1;
+    private static GameObject item2;
+    private static GameObject item3;
+    private static GameObject item4;
     private ObjectPool arrowPool;			//Arrows pool
+    private ObjectPool itemPool;
     private ArrowScript arrowLogic;
     private Ray ray;
     private RaycastHit hit;
@@ -129,6 +135,7 @@ public class ArcherAI : MonoBehaviour {
     {
         // Initialize animator and pool of arrows
         arrowPool = new ObjectPool(arrow);
+        itemPool = new ObjectPool(item);
         animator = GetComponent<Animator>();
         animator.SetInteger("DeadRandom", -1);
     }
@@ -422,6 +429,7 @@ public class ArcherAI : MonoBehaviour {
         states = enemy_states.HITTED;
         animator.SetBool("Attack", false);
         animator.SetBool("Shoot", false);
+        dropItems();
         rigid.isKinematic = true;
         collider.enabled = false;
         kickCollider.enabled = false;
@@ -431,5 +439,60 @@ public class ArcherAI : MonoBehaviour {
 
         // To impulse player from enemy
         player.ReactToAttack(transform.position.x);
+    }
+
+    public void dropItems()
+    {
+        if (item1 == null || item1.activeInHierarchy)
+        {
+            item1 = itemPool.getObject();
+        }
+        else
+        {
+            item1.SetActive(true);
+        }
+        CollectibleScript itemScript = item1.GetComponent<CollectibleScript>();
+        itemScript.player = player;
+        float rand = Random.Range(-5.0f, 5.0f);
+        item1.transform.position = new Vector3(transform.position.x + rand, transform.position.y + collider.bounds.extents.y, 0.0f);
+
+        if (item2 == null || item2.activeInHierarchy)
+        {
+            item2 = itemPool.getObject();
+        }
+        else
+        {
+            item2.SetActive(true);
+        }
+        itemScript = item2.GetComponent<CollectibleScript>();
+        itemScript.player = player;
+        rand = Random.Range(-5.0f, 5.0f);
+        item2.transform.position = new Vector3(transform.position.x + rand, transform.position.y + collider.bounds.extents.y, 0.0f);
+
+        if (item3 == null || item3.activeInHierarchy)
+        {
+            item3 = itemPool.getObject();
+        }
+        else
+        {
+            item3.SetActive(true);
+        }
+        itemScript = item3.GetComponent<CollectibleScript>();
+        itemScript.player = player;
+        rand = Random.Range(-5.0f, 5.0f);
+        item3.transform.position = new Vector3(transform.position.x + rand, transform.position.y + collider.bounds.extents.y, 0.0f);
+
+        if (item4 == null || item4.activeInHierarchy)
+        {
+            item4 = itemPool.getObject();
+        }
+        else
+        {
+            item4.SetActive(true);
+        }
+        itemScript = item4.GetComponent<CollectibleScript>();
+        itemScript.player = player;
+        rand = Random.Range(-5.0f, 5.0f);
+        item4.transform.position = new Vector3(transform.position.x + rand, transform.position.y + collider.bounds.extents.y, 0.0f);
     }
 }
