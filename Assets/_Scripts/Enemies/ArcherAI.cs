@@ -453,8 +453,13 @@ public class ArcherAI : MonoBehaviour {
         }
         CollectibleScript itemScript = item1.GetComponent<CollectibleScript>();
         itemScript.player = player;
+        itemScript.isFalling = true;
         float rand = Random.Range(-5.0f, 5.0f);
-        item1.transform.position = new Vector3(transform.position.x + rand, transform.position.y + collider.bounds.extents.y, 0.0f);
+        item1.transform.position = new Vector3(transform.position.x, transform.position.y + collider.bounds.extents.y, 0.0f);
+        Rigidbody rigid = item1.GetComponent<Rigidbody>();
+        rigid.isKinematic = false;
+        rigid.AddForce(rand, 15.0f, 0.0f, ForceMode.Impulse);
+        itemScript.Parable();
 
         if (item2 == null || item2.activeInHierarchy)
         {
@@ -466,8 +471,13 @@ public class ArcherAI : MonoBehaviour {
         }
         itemScript = item2.GetComponent<CollectibleScript>();
         itemScript.player = player;
+        itemScript.isFalling = true;
         rand = Random.Range(-5.0f, 5.0f);
-        item2.transform.position = new Vector3(transform.position.x + rand, transform.position.y + collider.bounds.extents.y, 0.0f);
+        item2.transform.position = new Vector3(transform.position.x, transform.position.y + collider.bounds.extents.y, 0.0f);
+        rigid = item2.GetComponent<Rigidbody>();
+        rigid.isKinematic = false;
+        rigid.AddForce(rand, 15.0f, 0.0f, ForceMode.Impulse);
+        itemScript.Parable();
 
         if (item3 == null || item3.activeInHierarchy)
         {
@@ -479,8 +489,14 @@ public class ArcherAI : MonoBehaviour {
         }
         itemScript = item3.GetComponent<CollectibleScript>();
         itemScript.player = player;
+        itemScript.isFalling = true;
         rand = Random.Range(-5.0f, 5.0f);
-        item3.transform.position = new Vector3(transform.position.x + rand, transform.position.y + collider.bounds.extents.y, 0.0f);
+        item3.transform.position = new Vector3(transform.position.x, transform.position.y + collider.bounds.extents.y, 0.0f);
+        item3.GetComponent<Rigidbody>().AddForce(rand, 1.0f, 0.0f, ForceMode.Impulse);
+        rigid = item3.GetComponent<Rigidbody>();
+        rigid.isKinematic = false;
+        rigid.AddForce(rand, 15.0f, 0.0f, ForceMode.Impulse);
+        itemScript.Parable();
 
         if (item4 == null || item4.activeInHierarchy)
         {
@@ -492,7 +508,12 @@ public class ArcherAI : MonoBehaviour {
         }
         itemScript = item4.GetComponent<CollectibleScript>();
         itemScript.player = player;
+        itemScript.isFalling = true;
         rand = Random.Range(-5.0f, 5.0f);
-        item4.transform.position = new Vector3(transform.position.x + rand, transform.position.y + collider.bounds.extents.y, 0.0f);
+        item4.transform.position = new Vector3(transform.position.x, transform.position.y + collider.bounds.extents.y, 0.0f);
+        rigid = item4.GetComponent<Rigidbody>();
+        rigid.isKinematic = false;
+        rigid.AddForce(rand, 15.0f, 0.0f, ForceMode.Impulse);
+        itemScript.Parable();
     }
 }

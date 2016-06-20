@@ -6,6 +6,7 @@ public class CollectibleScript : MonoBehaviour {
 	public Player player;
     public AudioClip itemSound;
     public int orderNum;
+    public bool isFalling = false;
 
 	void OnTriggerEnter(Collider collider)
 	{
@@ -13,4 +14,16 @@ public class CollectibleScript : MonoBehaviour {
         gameObject.SetActive(false);
         SoundManager.instance.PlaySingle(itemSound);
 	}
+
+    public void Parable()
+    {
+        StartCoroutine(StopItems(0.55f));
+    }
+
+    // Coroutine to activate colliders in x time
+    IEnumerator StopItems(float wait)
+    {
+        yield return new WaitForSeconds(wait);
+        GetComponent<Rigidbody>().isKinematic = true;
+    }
 }

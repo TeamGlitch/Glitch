@@ -43,7 +43,12 @@ public class BerserkerAI : MonoBehaviour
     public enemy_states states = enemy_states.WAIT;
     public World world;
     public AudioClip hitSound;
+    public GameObject item;
 
+    private static GameObject item1;
+    private static GameObject item2;
+    private static GameObject item3;
+    private ObjectPool itemPool;
     private Transform playerPos;
     private Vector3 initialPosition;
     private Ray ray;
@@ -63,6 +68,7 @@ public class BerserkerAI : MonoBehaviour
     {
         playerPos = player.GetComponent<Transform>();
         animator = GetComponent<Animator>();
+        itemPool = new ObjectPool(item);
         initialPosition = transform.position;
         animator.SetInteger("DeadRandom", -1);
     }
@@ -444,6 +450,7 @@ public class BerserkerAI : MonoBehaviour
 
         if (lives <= 0)
         {
+            dropItems();
             states = enemy_states.DEATH;
             isInAttack = false;
         }
@@ -460,5 +467,63 @@ public class BerserkerAI : MonoBehaviour
         sight = false;
         speed = walkSpeed;
         attackSucces = true;
+    }
+
+    public void dropItems()
+    {
+        if (item1 == null || item1.activeInHierarchy)
+        {
+            item1 = itemPool.getObject();
+        }
+        else
+        {
+            item1.SetActive(true);
+        }
+        CollectibleScript itemScript = item1.GetComponent<CollectibleScript>();
+        itemScript.player = player;
+        itemScript.isFalling = true;
+        float rand = Random.Range(-5.0f, 5.0f);
+        item1.transform.position = new Vector3(transform.position.x, transform.position.y + collider.bounds.extents.y, 0.0f);
+        Rigidbody rigid = item1.GetComponent<Rigidbody>();
+        rigid.isKinematic = false;
+        rigid.AddForce(rand, 15.0f, 0.0f, ForceMode.Impulse);
+        itemScript.Parable();
+
+        if (item2 == null || item2.activeInHierarchy)
+        {
+            item2 = itemPool.getObject();
+        }
+        else
+        {
+            item2.SetActive(true);
+        }
+        itemScript = item2.GetComponent<CollectibleScript>();
+        itemScript.player = player;
+        itemScript.isFalling = true;
+        rand = Random.Range(-5.0f, 5.0f);
+        item2.transform.position = new Vector3(transform.position.x, transform.position.y + collider.bounds.extents.y, 0.0f);
+        rigid = item2.GetComponent<Rigidbody>();
+        rigid.isKinematic = false;
+        rigid.AddForce(rand, 15.0f, 0.0f, ForceMode.Impulse);
+        itemScript.Parable();
+
+        if (item3 == null || item3.activeInHierarchy)
+        {
+            item3 = itemPool.getObject();
+        }
+        else
+        {
+            item3.SetActive(true);
+        }
+        itemScript = item3.GetComponent<CollectibleScript>();
+        itemScript.player = player;
+        itemScript.isFalling = true;
+        rand = Random.Range(-5.0f, 5.0f);
+        item3.transform.position = new Vector3(transform.position.x, transform.position.y + collider.bounds.extents.y, 0.0f);
+        item3.GetComponent<Rigidbody>().AddForce(rand, 1.0f, 0.0f, ForceMode.Impulse);
+        rigid = item3.GetComponent<Rigidbody>();
+        rigid.isKinematic = false;
+        rigid.AddForce(rand, 15.0f, 0.0f, ForceMode.Impulse);
+        itemScript.Parable();
     }
 }
