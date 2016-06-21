@@ -7,6 +7,8 @@ public class CameraGlitchesController : MonoBehaviour {
     private BlackAndWhiteShaderScript2 _blackAndWhiteTwo;
     private InvertColorsSceneShader _invertColorsScene;
     private PixelateSceneShader _pixelateScene;
+	private InvertX _invertSceneX;
+	private InvertY _invertSceneY;
 
     private GlitchLineShader _glitchLine;
 
@@ -23,6 +25,8 @@ public class CameraGlitchesController : MonoBehaviour {
         _invertColorsScene = transform.GetComponent<InvertColorsSceneShader>();
         _pixelateScene = transform.GetComponent<PixelateSceneShader>();
         _glitchLine = transform.GetComponent<GlitchLineShader>();
+		_invertSceneX = transform.GetComponent<InvertX>();
+		_invertSceneY = transform.GetComponent<InvertY>();
         Invoke("StartGlitchScreen", timeBetweenGlitches);
     }
 
@@ -34,7 +38,7 @@ public class CameraGlitchesController : MonoBehaviour {
 
     public void ContinueGlitchScreen()
     {
-        _random = Random.Range(1, 5);
+        _random = Random.Range(1, 7);
         _glitchLine.enabled = false;
         switch(_random)
         {
@@ -49,6 +53,12 @@ public class CameraGlitchesController : MonoBehaviour {
                 break;
             case 4:
                 _pixelateScene.enabled = true;
+                break;
+            case 5:
+                _invertSceneX.enabled = true;
+                break;
+            case 6:
+                _invertSceneY.enabled = true;
                 break;
         }
         Invoke("StartStopGlitchScreen", timeWithGlitchedScreen);
@@ -76,6 +86,12 @@ public class CameraGlitchesController : MonoBehaviour {
                 break;
             case 4:
                 _pixelateScene.enabled = false;
+                break;
+            case 5:
+                _invertSceneX.enabled = false;
+                break;
+            case 6:
+                _invertSceneY.enabled = false;
                 break;
         }
         Invoke("StartGlitchScreen", timeBetweenGlitches);

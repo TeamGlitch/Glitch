@@ -46,8 +46,7 @@ SubShader {
 			final = tex2D(_MainTex,  i.uv.xy);
 			if(normal.x - correction.x != 0)
 			{
-				final = half4(1,1,1,0) - final;
-				final.w = 0;
+				final += half4(0.5,0.5,0.5,0);
 			}
 			return final;
 		}
