@@ -25,6 +25,8 @@ public class MenuScript : MonoBehaviour {
 	public Button firstCreditsButton;
     public Text loadingText;
 
+    public Image pointer;
+
     public AudioClip backSound;
     public AudioClip selectSound;
     public AudioClip confirmSound;
@@ -216,9 +218,20 @@ public class MenuScript : MonoBehaviour {
         Application.Quit();
 	}
 
-    public void MakeSelectSound()
+    public void MakeSelectSound(RectTransform textPosition)
     {
         SoundManager.instance.PlaySingle(selectSound);
+
+        if (textPosition != null) { 
+            Vector3 newPosition = pointer.rectTransform.anchoredPosition;
+            newPosition.y = textPosition.anchoredPosition.y + 13.5f;
+            pointer.rectTransform.anchoredPosition = newPosition;
+        }
+    }
+
+    public void MakeSelectSound()
+    {
+        MakeSelectSound(null);
     }
 
 
