@@ -58,12 +58,21 @@ public class KnightAI : MonoBehaviour {
     private bool isInLimitPoint = false;
     private int layerMask = (~((1 << 13) | (1 << 2) | (1 << 11) | (1 << 8))) | (1 << 9) | (1 << 0);
 
+	private Transform _knightModel;
+	private SpriteRenderer _spriteRenderer;
+	private ParticleSystem _particleSystem;
+	private int _tiltCounter;
+
     void Start()
     {
         playerPos = player.GetComponent<Transform>();
         animator = GetComponent<Animator>();
         swordCollider.enabled = false;
         animator.SetInteger("DeadRandom", -1);
+		_knightModel = transform.FindChild("Soldier");
+		_spriteRenderer = transform.GetComponent<SpriteRenderer>();
+		_particleSystem = transform.GetComponent<ParticleSystem>();
+		_tiltCounter = 0;
     }
 
     void OnCollisionEnter(Collision coll)
@@ -367,6 +376,11 @@ public class KnightAI : MonoBehaviour {
                 case enemy_states.HITTED:
                     // State to put particles or something
                     break;
+
+/*				case enemy_states.DEATH:
+					animator.speed = animator.speed + 0.01f;
+					break;
+*/
             }
         }
         else
@@ -426,7 +440,9 @@ public class KnightAI : MonoBehaviour {
             fieldOfView.enabled = false;
             headCollider.enabled = false;
             isInAttack = false;
-        }
+        	InvokeRepeating("TiltModel", 0f, 0.1f);
+			_tiltCounter = 0;
+		}
         else
         {
             StartCoroutine(ActivateColliders(0.2f));
@@ -463,4 +479,45 @@ public class KnightAI : MonoBehaviour {
             states = enemy_states.WAIT;
         }
     }
+
+	public void TiltModel ()
+	{
+		if (_knightModel.gameObject.activeInHierarchy) {
+			_knightModel.gameObject.SetActive (false);
+		} else {
+			_knightModel.gameObject.SetActive (true);
+		}
+		++_tiltCounter;
+		if (_tiltCounter >= 10) {
+			CancelInvoke("TiltModel");
+            KnightToSprite();
+		}
+	}
+
+	public void KnightToSprite ()
+	{
+		_knightModel.gameObject.SetActive(false);
+		Vector3 pos = transform.position;
+		pos.y += 2f;
+		pos.z = 1f;
+		transform.position = pos;
+		transform.localScale = new Vector3(6f,6f,6f);
+		transform.rotation = new Quaternion(0f,0f,0f,0f);
+		_spriteRenderer.enabled = true;
+        _particleSystem.Play();
+        Invoke("SpriteToDead", 3.0f);
+	}
+
+    public void SpriteToDead()
+    {
+        _spriteRenderer.enabled = false;
+        _particleSystem.Play();
+        Invoke("DisableGO", 2.0f);
+    }
+
+    public void DisableGO()
+    {
+        gameObject.SetActive(false);
+    }
+
 }

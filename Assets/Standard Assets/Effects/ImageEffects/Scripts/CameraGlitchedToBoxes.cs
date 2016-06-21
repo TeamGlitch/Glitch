@@ -73,6 +73,25 @@ public class CameraGlitchedToBoxes : ImageEffectBase {
                 }
                 else
                 {
+				    for (int z = 0; z < 100; z += 1) {
+					    for (int w = 0; w < 100; ++w) {
+							if (InsideBox(z,w, horizontalPercentage, verticalPercentage)) {
+							    if (Random.value < inestability) {
+								    if (Random.value > 0.5) {
+									    texture.SetPixel (z, w, new Color32 (0, 0, 0, 0));
+								    } else {
+									    texture.SetPixel (z, w, new Color32 (2, 0, 0, 0));
+								    }
+							    } else {
+								    texture.SetPixel (z, w, new Color32 (1, 0, 0, 0));
+							    }
+						    } 
+							else {
+							    texture.SetPixel (z, w, new Color32 (1, 0, 0, 0));
+						    }
+					    }
+				    }
+                }
 
                     //If it wasn't distorting, create a distortion
                     distort();
@@ -163,4 +182,33 @@ public class CameraGlitchedToBoxes : ImageEffectBase {
             texture = correction;
         }
 	}
+
+	private bool BorderBox(int x, int y, float horizontalPercentage, float verticalPercentage)
+	{
+		for (int w = 0; w < boxesPositions.Count; ++w)
+		{
+			if ((x > boxPositionInPercentage [w].x - horizontalPercentage &&
+				x < boxPositionInPercentage [w].x - horizontalPercentage + 1f &&
+				y > boxPositionInPercentage [w].y - verticalPercentage &&
+				y < boxPositionInPercentage [w].y + verticalPercentage) ||
+
+				(x < boxPositionInPercentage [w].x + horizontalPercentage &&
+				x > boxPositionInPercentage [w].x + horizontalPercentage - 1f &&
+				y > boxPositionInPercentage [w].y - verticalPercentage &&
+				y < boxPositionInPercentage [w].y + verticalPercentage) ||
+
+				(y > boxPositionInPercentage [w].y - verticalPercentage &&
+				y < boxPositionInPercentage [w].y - verticalPercentage + 1f &&
+				x > boxPositionInPercentage [w].x - horizontalPercentage &&
+				x < boxPositionInPercentage [w].x + horizontalPercentage) ||
+
+				(y < boxPositionInPercentage [w].y + verticalPercentage &&
+				y > boxPositionInPercentage [w].y + verticalPercentage - 1f &&
+				x > boxPositionInPercentage [w].x - horizontalPercentage &&
+				x < boxPositionInPercentage [w].x + horizontalPercentage))
+				return true;
+		}
+		return false;
+	}
+
 }

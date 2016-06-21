@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 5b6f3bff3707e094ab019f1d36be151f
 timeCreated: 1465492001
+=======
+guid: a37eb0569a8775d4daadc16cfb1e5093
+timeCreated: 1465394133
+>>>>>>> BossIA
 licenseType: Free
 MonoImporter:
   serializedVersion: 2

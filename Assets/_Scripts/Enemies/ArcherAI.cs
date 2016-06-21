@@ -54,76 +54,10 @@ public class ArcherAI : MonoBehaviour {
     private bool shooted = false;           // Boolean to initialize new arrow
     private int layerMask = (~((1 << 13) | (1 << 2) | (1 << 11))) | (1 << 9) | (1 << 0);
 
-    // Trigger that detect player and change the state to Shoot
-    void OnTriggerStay(Collider coll)
-    {
-        // If is the player and between player and archer isn't anything then shoot him
-        if (coll.CompareTag("Player"))
-        {
-            //Ray from origin to player
-            origin = transform.position;
-            origin.y += transform.localScale.y*0.75f;
-            ray = new Ray(origin, player.transform.position - origin);
-
-            if (Vector3.Distance(player.transform.position, transform.position) <= maxSightMeleeAttack)
-            {
-                // If distance is low changes to melee attack
-                speed = meleeAttackSpeed;
-                timePerKick = 0.0f;
-                states = enemy_states.MELEE_ATTACK;
-            }
-            else if (Physics.Raycast(ray, out hit, maxSightShoot, layerMask) && (sight == false) && (states != enemy_states.HITTED) && (hit.collider.gameObject.CompareTag("Player")))
-            {
-                // Else changes to Shoot
-                sight = true;
-                speed = shootSpeed;
-                states = enemy_states.SHOOT;
-            }
-        }
-    }
-
-    // Trigger for when she loses of sight Glitch 
-    void OnTriggerExit(Collider coll)
-    {
-        if (coll.CompareTag("Player"))
-        {
-            sight = false;
-            if (Vector3.Distance(player.transform.position, transform.position) < maxSightShoot)
-            {
-                // If the distance is lower than maxSightShoot turns
-                states = enemy_states.TURN;
-            }
-            else
-            {
-                // Else Glitch escape and she wait
-                speed = waitSpeed;
-                states = enemy_states.WAIT;
-            }
-        }
-    }
-
-    void OnCollisionEnter(Collision coll)
-    {
-        // If collides with glitch, enemy turns kinematic to avoid push
-        if ((states != enemy_states.DEATH) && (sight == true) && (coll.contacts[0].otherCollider.CompareTag("Player")))
-        {
-            rigid.isKinematic = true;
-        }
-        else if ((sight == false) && (coll.contacts[0].otherCollider.CompareTag("Player")))
-        {
-            rigid.isKinematic = true;
-            states = enemy_states.TURN;
-        }
-    }
-
-    void OnCollisionExit(Collision coll)
-    {
-        // If exit collides with glitch, enemy return to non kinematic
-        if (coll.collider.gameObject.CompareTag("Player"))
-        {
-            rigid.isKinematic = false;
-        }
-    }
+	private SpriteRenderer _spriteRenderer;
+    private Transform _archerModel;
+    private ParticleSystem _particleSystem;
+    private int _tiltCounter;
 
     void Start()
     {
@@ -131,6 +65,9 @@ public class ArcherAI : MonoBehaviour {
         arrowPool = new ObjectPool(arrow);
         animator = GetComponent<Animator>();
         animator.SetInteger("DeadRandom", -1);
+        _spriteRenderer = transform.GetComponent<SpriteRenderer>();
+        _archerModel = transform.FindChild("arquera_animclip");
+        _particleSystem = transform.GetComponent<ParticleSystem>();
     }
 
     void Update()
@@ -141,7 +78,7 @@ public class ArcherAI : MonoBehaviour {
             // Update state and speed in animator
             animator.SetInteger("State", (int)states);
             animator.SetFloat("Speed", speed * speedConstant);
-           
+
             switch (states)
             {
                 // Enemy shoot arrows to Glitch
@@ -306,6 +243,76 @@ public class ArcherAI : MonoBehaviour {
         }
     }
 
+    // Trigger that detect player and change the state to Shoot
+    void OnTriggerStay(Collider coll)
+    {
+        // If is the player and between player and archer isn't anything then shoot him
+        if (coll.CompareTag("Player"))
+        {
+            //Ray from origin to player
+            origin = transform.position;
+            origin.y += transform.localScale.y*0.75f;
+            ray = new Ray(origin, player.transform.position - origin);
+
+            if (Vector3.Distance(player.transform.position, transform.position) <= maxSightMeleeAttack)
+            {
+                // If distance is low changes to melee attack
+                speed = meleeAttackSpeed;
+                timePerKick = 0.0f;
+                states = enemy_states.MELEE_ATTACK;
+            }
+            else if (Physics.Raycast(ray, out hit, maxSightShoot, layerMask) && (sight == false) && (states != enemy_states.HITTED) && (hit.collider.gameObject.CompareTag("Player")))
+            {
+                // Else changes to Shoot
+                sight = true;
+                speed = shootSpeed;
+                states = enemy_states.SHOOT;
+            }
+        }
+    }
+
+    // Trigger for when she loses of sight Glitch 
+    void OnTriggerExit(Collider coll)
+    {
+        if (coll.CompareTag("Player"))
+        {
+            sight = false;
+            if (Vector3.Distance(player.transform.position, transform.position) < maxSightShoot)
+            {
+                // If the distance is lower than maxSightShoot turns
+                states = enemy_states.TURN;
+            }
+            else
+            {
+                // Else Glitch escape and she wait
+                speed = waitSpeed;
+                states = enemy_states.WAIT;
+            }
+        }
+    }
+
+    void OnCollisionEnter(Collision coll)
+    {
+        // If collides with glitch, enemy turns kinematic to avoid push
+        if ((states != enemy_states.DEATH) && (sight == true) && (coll.contacts[0].otherCollider.CompareTag("Player")))
+        {
+            rigid.isKinematic = true;
+        }
+        else if ((sight == false) && (coll.contacts[0].otherCollider.CompareTag("Player")))
+        {
+            rigid.isKinematic = true;
+            states = enemy_states.TURN;
+        }
+    }
+
+    void OnCollisionExit(Collision coll)
+    {
+        // If exit collides with glitch, enemy return to non kinematic
+        if (coll.collider.gameObject.CompareTag("Player"))
+        {
+            rigid.isKinematic = false;
+        }
+    }
 
     // Trigger of shoot animation that calculates all again to change direction if i need it
     public void ShootedTrigger()
@@ -428,8 +435,52 @@ public class ArcherAI : MonoBehaviour {
         fieldOfView.enabled = false;
         headCollider.enabled = false;
         SoundManager.instance.PlaySingle(hitSound);
-
+        InvokeRepeating("TiltModel", 0f, 0.1f);
         // To impulse player from enemy
         player.ReactToAttack(transform.position.x);
+    }
+
+    public void TiltModel()
+    {
+        if (_archerModel.gameObject.activeInHierarchy)
+        {
+            _archerModel.gameObject.SetActive(false);
+        }
+        else
+        {
+            _archerModel.gameObject.SetActive(true);
+        }
+        ++_tiltCounter;
+        if (_tiltCounter >= 10)
+        {
+            CancelInvoke("TiltModel");
+            KnightToSprite();
+        }
+    }
+
+    public void KnightToSprite()
+    {
+        _archerModel.gameObject.SetActive(false);
+        Vector3 pos = transform.position;
+        pos.y += 2f;
+        pos.z = 1f;
+        transform.position = pos;
+		transform.localScale = new Vector3(6f,6f,6f);
+        transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
+        _spriteRenderer.enabled = true;
+        _particleSystem.Play();
+       Invoke("SpriteToDead", 3.0f);
+    }
+
+    public void SpriteToDead()
+    {
+        _spriteRenderer.enabled = false;
+        _particleSystem.Play();
+        Invoke("DisableGO", 2.0f);
+    }
+
+    public void DisableGO()
+    {
+        gameObject.SetActive(false);
     }
 }

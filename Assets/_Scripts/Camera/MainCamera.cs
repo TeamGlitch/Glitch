@@ -24,7 +24,6 @@ public class MainCamera : MonoBehaviour {
 
 	void OnEnable() {
 		CameraZones.SetActive(true);
-
 	}
 
 	void Update()
