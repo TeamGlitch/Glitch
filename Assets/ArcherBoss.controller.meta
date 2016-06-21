@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: a57d747110b501840ab6f64fbb140b25
 timeCreated: 1466325746
+=======
+guid: ad5d3eeba3e2e9b4a8c42b2e53f0734a
+timeCreated: 1466333236
+>>>>>>> BossWithModel
 licenseType: Free
 NativeFormatImporter:
   userData: 
