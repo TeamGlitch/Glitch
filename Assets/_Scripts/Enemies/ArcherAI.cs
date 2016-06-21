@@ -469,7 +469,7 @@ public class ArcherAI : MonoBehaviour {
         transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
         _spriteRenderer.enabled = true;
         _particleSystem.Play();
-//       Invoke("SpriteToDead", 3.0f);
+       Invoke("SpriteToDead", 3.0f);
     }
 
     public void SpriteToDead()

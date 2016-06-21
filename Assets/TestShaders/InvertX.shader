@@ -1,4 +1,4 @@
-Shader "Hidden/InvertY"
+Shader "Hidden/InvertX"
 {
 	Properties
 	{
