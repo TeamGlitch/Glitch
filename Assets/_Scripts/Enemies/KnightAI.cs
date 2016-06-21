@@ -50,10 +50,12 @@ public class KnightAI : MonoBehaviour {
     private float time;
     private float rotationTime = 0.0f;
     private float searchRotationTime = 1.0f;
+    [SerializeField]
     private int lives = 2;
     private Animator animator;
     private float timePerAttack = 0.0f;
     private Vector3 origin;
+    private bool attacked = false;
     private bool isInAttack = false;
     private bool isInLimitPoint = false;
     private int layerMask = (~((1 << 13) | (1 << 2) | (1 << 11) | (1 << 8))) | (1 << 9) | (1 << 0);
@@ -403,24 +405,27 @@ public class KnightAI : MonoBehaviour {
     // Logic of attacked received. Deactivates temporary all the colliders.
     public void Attacked()
     {
-        speed = attackSpeed;
-        states = enemy_states.HITTED;
-        --lives;
-        print(lives);
-        SoundManager.instance.PlaySingle(hitSound);
+        if (!attacked)
+        {
+            attacked = true;
+            speed = attackSpeed;
+            states = enemy_states.HITTED;
+            --lives;
+            SoundManager.instance.PlaySingle(hitSound);
 
-        if (lives <= 0)
-        {
-            states = enemy_states.DEATH;
-            collider.enabled = false;
-            swordCollider.enabled = false;
-            fieldOfView.enabled = false;
-            headCollider.enabled = false;
-            isInAttack = false;
-        }
-        else
-        {
-            StartCoroutine(ActivateColliders(0.2f));
+            if (lives <= 0)
+            {
+                states = enemy_states.DEATH;
+                collider.enabled = false;
+                swordCollider.enabled = false;
+                fieldOfView.enabled = false;
+                headCollider.enabled = false;
+                isInAttack = false;
+            }
+            else
+            {
+                StartCoroutine(ActivateColliders(0.2f));
+            }
         }
 
         // To impulse player from enemy
@@ -436,6 +441,7 @@ public class KnightAI : MonoBehaviour {
         if (states != enemy_states.DEATH)
         {
             rigid.isKinematic = false;
+            attacked = false;
         }
     }
 
