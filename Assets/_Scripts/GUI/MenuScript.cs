@@ -5,40 +5,56 @@ using InControl;
 
 public class MenuScript : MonoBehaviour {
 
-	public Canvas quitMenu;
-	public Canvas levelSelectionMenu;
-	public Canvas helpMenu;
-	public Canvas creditsMenu;
-	public Button startText;
-	public Button exitText;
-	public Button levelSelectText;
-	public Button creditsText;
-	public Button HelpText;
-	public Button keyboardButton;
-	public Button gamepadButton;
-	public Image keyboardImage;
-	public Image gamepadImage;
-	public Button backButtonInHelp;
-	public Button firstLevelSelectButton;
-	public Button firstHelpButton;
-	public Button firstExitButton;
-	public Button firstCreditsButton;
-    public Text loadingText;
-
+    //References by screen//
+    public Button startText;
     public Image pointer;
 
+    public Text loadingText;
+
+    public Canvas levelSelectionMenu;
+    public Button levelSelectText;
+    public Button firstLevelSelectButton;
+
+    public Canvas optionsMenu;
+    public Button OptionsText;
+    public Button ControlsButton;
+
+    public Canvas helpMenu;
+    public Button firstHelpButton;
+    public Button keyboardButton;
+    public Button gamepadButton;
+    public Button backButtonInHelp;
+    public Image keyboardImage;
+    public Image gamepadImage;
+
+    public Canvas graphicsMenu;
+    public Dropdown resolutions;
+    public Toggle fullscreen;
+    public Button applyButton;
+
+    public Canvas creditsMenu;
+    public Button firstCreditsButton;
+
+	public Canvas quitMenu;
+    public Button exitText;
+    public Button firstExitButton;
+
+    //SOUND//
     public AudioClip backSound;
     public AudioClip selectSound;
     public AudioClip confirmSound;
 
+    //MISCELLANEA//
 	private float lastTimeActive = 0;
 	private bool onMainScreen = true;
 
 	void Start () 
     {
+        optionsMenu.enabled = false;
 		quitMenu.enabled = false;
 		levelSelectionMenu.enabled = false;
 		helpMenu.enabled = false;
+        graphicsMenu.enabled = false;
 		creditsMenu.enabled = false;
 		startText.Select ();
 
@@ -68,9 +84,8 @@ public class MenuScript : MonoBehaviour {
         levelSelectionMenu.enabled = false;
         startText.gameObject.SetActive(false);
         levelSelectText.gameObject.SetActive(false);
-        HelpText.gameObject.SetActive(false);
         exitText.gameObject.SetActive(false);
-        creditsText.gameObject.SetActive(false);
+        OptionsText.gameObject.SetActive(false);
         loadingText.gameObject.SetActive(true);
 		SoundManager.instance.musicSource.Stop();
 		onMainScreen = false;
@@ -92,25 +107,45 @@ public class MenuScript : MonoBehaviour {
         levelSelectionMenu.enabled = false;
         startText.gameObject.SetActive(false);
         levelSelectText.gameObject.SetActive(false);
-        HelpText.gameObject.SetActive(false);
         exitText.gameObject.SetActive(false);
-        creditsText.gameObject.SetActive(false);
+        OptionsText.gameObject.SetActive(false);
         loadingText.gameObject.SetActive(true);
         SoundManager.instance.musicSource.Stop();
         onMainScreen = false;
         Loader.LoadScene("Level1");
     }
 
+    public void OptionsPress(){
+        SoundManager.instance.PlaySingle(confirmSound);
+        optionsMenu.enabled = true;
+
+		startText.enabled = false;
+		levelSelectText.enabled = false;
+		exitText.enabled = false;
+        OptionsText.enabled = false;
+
+		onMainScreen = false;
+
+		ControlsButton.Select ();
+    }
+
+    public void ReturnToOptions()
+    {
+        SoundManager.instance.PlaySingle(backSound);
+
+        optionsMenu.enabled = true;
+        helpMenu.enabled = false;
+        graphicsMenu.enabled = false;
+        creditsMenu.enabled = false;
+
+        ControlsButton.Select();
+    }
+
 	public void HelpPress()
 	{
         SoundManager.instance.PlaySingle(confirmSound);
         helpMenu.enabled = true;
-
-		startText.enabled = false;
-		levelSelectText.enabled = false;
-		HelpText.enabled = false;
-		exitText.enabled = false;
-		creditsText.enabled = false;
+        optionsMenu.enabled = false;
 
 		keyboardButton.enabled = false;
 		gamepadButton.enabled = true;
@@ -123,11 +158,56 @@ public class MenuScript : MonoBehaviour {
 		customNav.selectOnUp = gamepadButton;
 		backButtonInHelp.navigation = customNav;
 
-		onMainScreen = false;
-
 		firstHelpButton.Select ();
 	}
 
+    public void GraphicsPress(){
+        SoundManager.instance.PlaySingle(confirmSound);
+        graphicsMenu.enabled = true;
+        optionsMenu.enabled = false;
+
+        resolutions.options.Clear();
+        Resolution[] resolutionList = Screen.resolutions;
+        foreach (Resolution res in resolutionList)
+        {
+            Dropdown.OptionData entry = new Dropdown.OptionData();
+            entry.text = res.width + "x" + res.height;
+            resolutions.options.Add(entry);
+        }
+
+        if (Screen.fullScreen)
+            fullscreen.isOn = true;
+        else
+            fullscreen.isOn = false;
+
+        resolutions.Select();
+    }
+
+    public void ChangesApplicable(){
+        if (Screen.fullScreen != fullscreen.isOn ||
+            Screen.resolutions[resolutions.value].height != Screen.currentResolution.height ||
+            Screen.resolutions[resolutions.value].width != Screen.currentResolution.width)
+        {
+                applyButton.interactable = true;
+        } else
+        {
+                applyButton.interactable = false;
+        }
+    }
+
+    public void ApplyChanges(){
+        Resolution newRes = Screen.resolutions[resolutions.value];
+        Screen.SetResolution(newRes.width, newRes.height, fullscreen.isOn);
+    }
+
+    public void CreditsMenu()
+    {
+        SoundManager.instance.PlaySingle(confirmSound);
+        creditsMenu.enabled = true;
+        optionsMenu.enabled = false;
+
+        firstCreditsButton.Select();
+    }
 
 	public void QuitPress()
 	{
@@ -136,9 +216,8 @@ public class MenuScript : MonoBehaviour {
 
 		startText.enabled = false;
 		levelSelectText.enabled = false;
-		HelpText.enabled = false;
+        OptionsText.enabled = false;
 		exitText.enabled = false;
-		creditsText.enabled = false;
 
 		onMainScreen = false;
 
@@ -182,35 +261,18 @@ public class MenuScript : MonoBehaviour {
         SoundManager.instance.PlaySingle(backSound);
         quitMenu.enabled = false;
 		levelSelectionMenu.enabled = false;
-		helpMenu.enabled = false;
+		optionsMenu.enabled = false;
 		creditsMenu.enabled = false;
 
 		startText.enabled = true;
 		levelSelectText.enabled = true;
-		HelpText.enabled = true;
 		exitText.enabled = true;
-		creditsText.enabled = true;
+        OptionsText.enabled = true;
 
 		onMainScreen = true;
 		lastTimeActive = Time.time;
 
 		startText.Select ();
-	}
-
-	public void CreditsMenu()
-	{
-        SoundManager.instance.PlaySingle(confirmSound);
-        creditsMenu.enabled = true;
-
-		startText.enabled = false;
-		levelSelectText.enabled = false;
-		HelpText.enabled = false;
-		exitText.enabled = false;
-		creditsText.enabled = false;
-
-		onMainScreen = false;
-
-		firstCreditsButton.Select ();
 	}
 
 	public void ExitGame()
