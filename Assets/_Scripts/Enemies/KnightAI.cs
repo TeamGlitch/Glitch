@@ -440,6 +440,7 @@ public class KnightAI : MonoBehaviour {
                 fieldOfView.enabled = false;
                 headCollider.enabled = false;
                 isInAttack = false;
+                InvokeRepeating("TiltModel", 0f, 0.1f);
             }
             else
             {
@@ -517,6 +518,7 @@ public class KnightAI : MonoBehaviour {
         _spriteRenderer.enabled = false;
         _particleSystem.Play();
         Invoke("DisableGO", 2.0f);
+        DropItems();
     }
 
     public void DisableGO()
@@ -524,7 +526,7 @@ public class KnightAI : MonoBehaviour {
         gameObject.SetActive(false);
     }
 
-    public void dropItems()
+    public void DropItems()
     {
         if (item1 == null || item1.activeInHierarchy)
         {

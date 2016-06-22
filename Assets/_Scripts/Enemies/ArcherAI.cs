@@ -426,7 +426,6 @@ public class ArcherAI : MonoBehaviour {
         states = enemy_states.DEATH;
         animator.SetBool("Attack", false);
         animator.SetBool("Shoot", false);
-        dropItems();
         rigid.isKinematic = true;
         collider.enabled = false;
         kickCollider.enabled = false;
@@ -475,6 +474,7 @@ public class ArcherAI : MonoBehaviour {
         spriteRenderer.enabled = false;
         particleSystem.Play();
         Invoke("DisableGO", 2.0f);
+        DropItems();
     }
 
     public void DisableGO()
@@ -482,7 +482,7 @@ public class ArcherAI : MonoBehaviour {
         gameObject.SetActive(false);
 	}
 
-    public void dropItems()
+    public void DropItems()
     {
         if (item1 == null || item1.activeInHierarchy)
         {
