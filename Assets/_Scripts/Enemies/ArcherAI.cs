@@ -58,6 +58,10 @@ public class ArcherAI : MonoBehaviour {
     private Animator animator;
     private float timePerKick = 0.0f;
     private bool shooted = false;           // Boolean to initialize new arrow
+    private SpriteRenderer spriteRenderer;
+    private Transform archerModel;
+    private ParticleSystem particleSystem;
+    private int tiltCounter;
     private int layerMask = (~((1 << 13) | (1 << 2) | (1 << 11))) | (1 << 9) | (1 << 0);
 
     // Trigger that detect player and change the state to Shoot
@@ -134,9 +138,9 @@ public class ArcherAI : MonoBehaviour {
         itemPool = new ObjectPool(item);
         animator = GetComponent<Animator>();
         animator.SetInteger("DeadRandom", -1);
-        _spriteRenderer = transform.GetComponent<SpriteRenderer>();
-        _archerModel = transform.FindChild("arquera_animclip");
-        _particleSystem = transform.GetComponent<ParticleSystem>();
+        spriteRenderer = transform.GetComponent<SpriteRenderer>();
+        archerModel = transform.FindChild("arquera_animclip");
+        particleSystem = transform.GetComponent<ParticleSystem>();
     }
 
     void Update()
@@ -436,16 +440,16 @@ public class ArcherAI : MonoBehaviour {
 
     public void TiltModel()
     {
-        if (_archerModel.gameObject.activeInHierarchy)
+        if (archerModel.gameObject.activeInHierarchy)
         {
-            _archerModel.gameObject.SetActive(false);
+            archerModel.gameObject.SetActive(false);
         }
         else
         {
-            _archerModel.gameObject.SetActive(true);
+            archerModel.gameObject.SetActive(true);
         }
-        ++_tiltCounter;
-        if (_tiltCounter >= 10)
+        ++tiltCounter;
+        if (tiltCounter >= 10)
         {
             CancelInvoke("TiltModel");
             KnightToSprite();
@@ -454,22 +458,22 @@ public class ArcherAI : MonoBehaviour {
 
     public void KnightToSprite()
     {
-        _archerModel.gameObject.SetActive(false);
+        archerModel.gameObject.SetActive(false);
         Vector3 pos = transform.position;
         pos.y += 2f;
         pos.z = 1f;
         transform.position = pos;
 		transform.localScale = new Vector3(6f,6f,6f);
         transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
-        _spriteRenderer.enabled = true;
-        _particleSystem.Play();
+        spriteRenderer.enabled = true;
+        particleSystem.Play();
        Invoke("SpriteToDead", 3.0f);
     }
 
     public void SpriteToDead()
     {
-        _spriteRenderer.enabled = false;
-        _particleSystem.Play();
+        spriteRenderer.enabled = false;
+        particleSystem.Play();
         Invoke("DisableGO", 2.0f);
     }
 
