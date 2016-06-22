@@ -28,6 +28,7 @@ public class MenuScript : MonoBehaviour {
     public Image gamepadImage;
 
     public Canvas graphicsMenu;
+    public Dropdown qualityLevel;
     public Dropdown resolutions;
     public Toggle fullscreen;
     public Button applyButton;
@@ -169,18 +170,36 @@ public class MenuScript : MonoBehaviour {
 		firstHelpButton.Select ();
 	}
 
-    public void GraphicsPress(){
+    public void GraphicsPress()
+    {
+
         SoundManager.instance.PlaySingle(confirmSound);
         graphicsMenu.enabled = true;
         optionsMenu.enabled = false;
 
-        resolutions.options.Clear();
-        Resolution[] resolutionList = Screen.resolutions;
-        foreach (Resolution res in resolutionList)
+        qualityLevel.options.Clear();
+        string[] names = QualitySettings.names;
+        for (int i = 0; i < names.Length; i++)
         {
             Dropdown.OptionData entry = new Dropdown.OptionData();
-            entry.text = res.width + "x" + res.height;
+            entry.text = names[i];
+            qualityLevel.options.Add(entry);
+        }
+        qualityLevel.value = QualitySettings.GetQualityLevel();
+
+        resolutions.options.Clear();
+        Resolution[] resolutionList = Screen.resolutions;
+        for(int i = 0; i < resolutionList.Length; i++)
+        {
+            Dropdown.OptionData entry = new Dropdown.OptionData();
+            entry.text = resolutionList[i].width + "x" + resolutionList[i].height;
             resolutions.options.Add(entry);
+
+            if (resolutionList[i].width == Screen.width &&
+                resolutionList[i].height == Screen.height)
+            {
+                resolutions.value = i;
+            }
         }
 
         if (Screen.fullScreen)
@@ -189,6 +208,19 @@ public class MenuScript : MonoBehaviour {
             fullscreen.isOn = false;
 
         resolutions.Select();
+
+    }
+
+
+    public void ChangeResolutionFullscreen()
+    {
+        Resolution newRes = Screen.resolutions[resolutions.value];
+        Screen.SetResolution(newRes.width, newRes.height, fullscreen.isOn);
+    }
+
+    public void ChangeQuality()
+    {
+        QualitySettings.SetQualityLevel(qualityLevel.value);
     }
 
     public void AudioPress() {
@@ -276,23 +308,6 @@ public class MenuScript : MonoBehaviour {
             SoundManager.instance.musicSource.time = musicTime;
         }
 
-    }
-
-    public void ChangesApplicable(){
-        if (Screen.fullScreen != fullscreen.isOn ||
-            Screen.resolutions[resolutions.value].height != Screen.currentResolution.height ||
-            Screen.resolutions[resolutions.value].width != Screen.currentResolution.width)
-        {
-                applyButton.interactable = true;
-        } else
-        {
-                applyButton.interactable = false;
-        }
-    }
-
-    public void ApplyChanges(){
-        Resolution newRes = Screen.resolutions[resolutions.value];
-        Screen.SetResolution(newRes.width, newRes.height, fullscreen.isOn);
     }
 
     public void CreditsMenu()
