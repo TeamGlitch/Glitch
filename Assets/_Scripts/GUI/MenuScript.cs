@@ -31,7 +31,6 @@ public class MenuScript : MonoBehaviour {
     public Dropdown qualityLevel;
     public Dropdown resolutions;
     public Toggle fullscreen;
-    public Button applyButton;
 
     public Canvas audioMenu;
     public Slider musicSlider;
