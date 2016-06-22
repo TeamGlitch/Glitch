@@ -54,10 +54,72 @@ public class ArcherAI : MonoBehaviour {
     private bool shooted = false;           // Boolean to initialize new arrow
     private int layerMask = (~((1 << 13) | (1 << 2) | (1 << 11))) | (1 << 9) | (1 << 0);
 
-	private SpriteRenderer _spriteRenderer;
-    private Transform _archerModel;
-    private ParticleSystem _particleSystem;
-    private int _tiltCounter;
+    // Trigger that detect player and change the state to Shoot
+    void OnTriggerStay(Collider coll)
+    {
+        // If is the player and between player and archer isn't anything then shoot him
+        if (coll.CompareTag("Player"))
+        {
+            //Ray from origin to player
+            origin = transform.position;
+            origin.y += transform.localScale.y*0.75f;
+            ray = new Ray(origin, player.transform.position - origin);
+
+            if ((Vector3.Distance(player.transform.position, transform.position) <= maxSightMeleeAttack) && (states != enemy_states.MELEE_ATTACK))
+            {
+                // If distance is low changes to melee attack
+                speed = meleeAttackSpeed;
+                timePerKick = 0.0f;
+                states = enemy_states.MELEE_ATTACK;
+            }
+            else if (Physics.Raycast(ray, out hit, maxSightShoot, layerMask) && (states != enemy_states.HITTED) && (hit.collider.gameObject.CompareTag("Player")))
+            {
+                // Else changes to Shoot
+                sight = true;
+                speed = shootSpeed;
+                states = enemy_states.SHOOT;
+            }
+            else if (sight == true) 
+            {
+                sight = false;
+                animator.SetBool("Shoot", false);
+            }
+        }
+    }
+
+    // Trigger for when she loses of sight Glitch 
+    void OnTriggerExit(Collider coll)
+    {
+        if (coll.CompareTag("Player"))
+        {
+            sight = false;
+            if (Vector3.Distance(player.transform.position, transform.position) < maxSightShoot)
+            {
+                // If the distance is lower than maxSightShoot turns
+                states = enemy_states.TURN;
+            }
+            else
+            {
+                // Else Glitch escape and she wait
+                speed = waitSpeed;
+                states = enemy_states.WAIT;
+            }
+        }
+    }
+
+    void OnCollisionEnter(Collision coll)
+    {
+        // If collides with glitch, enemy turns kinematic to avoid push
+        if ((states != enemy_states.DEATH) && (sight == true) && (coll.contacts[0].otherCollider.CompareTag("Player")))
+        {
+            rigid.isKinematic = true;
+        }
+        else if ((sight == false) && (coll.contacts[0].otherCollider.CompareTag("Player")))
+        {
+            rigid.isKinematic = true;
+            states = enemy_states.TURN;
+        }
+    }
 
     void Start()
     {
@@ -89,10 +151,11 @@ public class ArcherAI : MonoBehaviour {
                     // If player deaths archer waits, else if is possible shoots
                     if (player.playerController.state == PlayerController.player_state.DEATH)
                     {
+                        animator.SetBool("Shoot", false);
                         states = enemy_states.WAIT;
                         sight = false;
                     }
-                    else if ((player.playerController.state != PlayerController.player_state.DEATH) && ((arrow == null) || (!arrow.activeInHierarchy)))
+                    else if ((sight) && ((arrow == null) || (!arrow.activeInHierarchy)))
                     {
                         animator.SetBool("Shoot", true);
                         shooted = false;
@@ -212,6 +275,7 @@ public class ArcherAI : MonoBehaviour {
                     timePerKick -= world.lag;
                     if (timePerKick <= 0.0f)
                     {
+                        kickCollider.enabled = true;
                         animator.SetBool("Attack", true);
                     }
 
@@ -240,77 +304,6 @@ public class ArcherAI : MonoBehaviour {
         {
             // If slowfps is active then speed in animations is 0
             animator.SetFloat("Speed", 0.0f);
-        }
-    }
-
-    // Trigger that detect player and change the state to Shoot
-    void OnTriggerStay(Collider coll)
-    {
-        // If is the player and between player and archer isn't anything then shoot him
-        if (coll.CompareTag("Player"))
-        {
-            //Ray from origin to player
-            origin = transform.position;
-            origin.y += transform.localScale.y*0.75f;
-            ray = new Ray(origin, player.transform.position - origin);
-
-            if (Vector3.Distance(player.transform.position, transform.position) <= maxSightMeleeAttack)
-            {
-                // If distance is low changes to melee attack
-                speed = meleeAttackSpeed;
-                timePerKick = 0.0f;
-                states = enemy_states.MELEE_ATTACK;
-            }
-            else if (Physics.Raycast(ray, out hit, maxSightShoot, layerMask) && (sight == false) && (states != enemy_states.HITTED) && (hit.collider.gameObject.CompareTag("Player")))
-            {
-                // Else changes to Shoot
-                sight = true;
-                speed = shootSpeed;
-                states = enemy_states.SHOOT;
-            }
-        }
-    }
-
-    // Trigger for when she loses of sight Glitch 
-    void OnTriggerExit(Collider coll)
-    {
-        if (coll.CompareTag("Player"))
-        {
-            sight = false;
-            if (Vector3.Distance(player.transform.position, transform.position) < maxSightShoot)
-            {
-                // If the distance is lower than maxSightShoot turns
-                states = enemy_states.TURN;
-            }
-            else
-            {
-                // Else Glitch escape and she wait
-                speed = waitSpeed;
-                states = enemy_states.WAIT;
-            }
-        }
-    }
-
-    void OnCollisionEnter(Collision coll)
-    {
-        // If collides with glitch, enemy turns kinematic to avoid push
-        if ((states != enemy_states.DEATH) && (sight == true) && (coll.contacts[0].otherCollider.CompareTag("Player")))
-        {
-            rigid.isKinematic = true;
-        }
-        else if ((sight == false) && (coll.contacts[0].otherCollider.CompareTag("Player")))
-        {
-            rigid.isKinematic = true;
-            states = enemy_states.TURN;
-        }
-    }
-
-    void OnCollisionExit(Collision coll)
-    {
-        // If exit collides with glitch, enemy return to non kinematic
-        if (coll.collider.gameObject.CompareTag("Player"))
-        {
-            rigid.isKinematic = false;
         }
     }
 
@@ -400,15 +393,8 @@ public class ArcherAI : MonoBehaviour {
     public void FinishKickTrigger()
     {
         animator.SetBool("Attack", false);
+        kickCollider.enabled = false;
         timePerKick = 1.0f;
-    }
-
-
-    // Trigger of hit animation
-    public void HittedTrigger()
-    {
-        speed = waitSpeed;
-        states = enemy_states.DEATH;
     }
 
 
@@ -425,8 +411,8 @@ public class ArcherAI : MonoBehaviour {
     public void Defeated()
     {
         sight = false;
-        speed = meleeAttackSpeed;
-        states = enemy_states.HITTED;
+        speed = waitSpeed;
+        states = enemy_states.DEATH;
         animator.SetBool("Attack", false);
         animator.SetBool("Shoot", false);
         rigid.isKinematic = true;

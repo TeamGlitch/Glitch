@@ -50,10 +50,12 @@ public class KnightAI : MonoBehaviour {
     private float time;
     private float rotationTime = 0.0f;
     private float searchRotationTime = 1.0f;
+    [SerializeField]
     private int lives = 2;
     private Animator animator;
     private float timePerAttack = 0.0f;
     private Vector3 origin;
+    private bool attacked = false;
     private bool isInAttack = false;
     private bool isInLimitPoint = false;
     private int layerMask = (~((1 << 13) | (1 << 2) | (1 << 11) | (1 << 8))) | (1 << 9) | (1 << 0);
@@ -80,7 +82,7 @@ public class KnightAI : MonoBehaviour {
         BerserkerAI berserker;
         KnightAI knight;
 
-        if ((coll.contacts[0].thisCollider.CompareTag("Knight")) && (coll.contacts[0].otherCollider.CompareTag("Player")))
+        if (coll.contacts[0].otherCollider.CompareTag("Player"))
         {
             rigid.isKinematic = true;
             if (player.transform.position.y >= (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2))
@@ -159,15 +161,6 @@ public class KnightAI : MonoBehaviour {
                 berserker = coll.contacts[0].otherCollider.GetComponent<BerserkerAI>();
                 berserker.states = BerserkerAI.enemy_states.CHASE;
             }
-        }
-    }
-
-    void OnCollisionExit(Collision coll)
-    {
-        // If exit collides with glitch, enemy return to non kinematic
-        if (coll.collider.gameObject.CompareTag("Player") && states != enemy_states.DEATH)
-        {
-            rigid.isKinematic = false;
         }
     }
 
@@ -426,26 +419,27 @@ public class KnightAI : MonoBehaviour {
     // Logic of attacked received. Deactivates temporary all the colliders.
     public void Attacked()
     {
-        speed = attackSpeed;
-        states = enemy_states.HITTED;
-        --lives;
-        SoundManager.instance.PlaySingle(hitSound);
+        if (!attacked)
+        {
+            attacked = true;
+            speed = attackSpeed;
+            states = enemy_states.HITTED;
+            --lives;
+            SoundManager.instance.PlaySingle(hitSound);
 
-        if (lives <= 0)
-        {
-            states = enemy_states.DEATH;
-            rigid.isKinematic = true;
-            collider.enabled = false;
-            swordCollider.enabled = false;
-            fieldOfView.enabled = false;
-            headCollider.enabled = false;
-            isInAttack = false;
-        	InvokeRepeating("TiltModel", 0f, 0.1f);
-			_tiltCounter = 0;
-		}
-        else
-        {
-            StartCoroutine(ActivateColliders(0.2f));
+            if (lives <= 0)
+            {
+                states = enemy_states.DEATH;
+                collider.enabled = false;
+                swordCollider.enabled = false;
+                fieldOfView.enabled = false;
+                headCollider.enabled = false;
+                isInAttack = false;
+            }
+            else
+            {
+                StartCoroutine(ActivateColliders(0.2f));
+            }
         }
 
         // To impulse player from enemy
@@ -458,6 +452,11 @@ public class KnightAI : MonoBehaviour {
         yield return new WaitForSeconds(wait);
         headCollider.enabled = true;
         collider.enabled = true;
+        if (states != enemy_states.DEATH)
+        {
+            rigid.isKinematic = false;
+            attacked = false;
+        }
     }
 
     // Logic of attack
