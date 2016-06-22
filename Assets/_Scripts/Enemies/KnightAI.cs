@@ -42,7 +42,11 @@ public class KnightAI : MonoBehaviour {
     public enemy_states states = enemy_states.PATROL;
     public World world;
     public AudioClip hitSound;
+    public GameObject item;
 
+    private static GameObject item1;
+    private static GameObject item2;
+    private ObjectPool itemPool;
     private Transform playerPos;
     private Vector3 lastPosition;
     private Ray ray;
@@ -69,6 +73,7 @@ public class KnightAI : MonoBehaviour {
     {
         playerPos = player.GetComponent<Transform>();
         animator = GetComponent<Animator>();
+        itemPool = new ObjectPool(item);
         swordCollider.enabled = false;
         animator.SetInteger("DeadRandom", -1);
 		_knightModel = transform.FindChild("Soldier");
@@ -519,4 +524,42 @@ public class KnightAI : MonoBehaviour {
         gameObject.SetActive(false);
     }
 
+    public void dropItems()
+    {
+        if (item1 == null || item1.activeInHierarchy)
+        {
+            item1 = itemPool.getObject();
+        }
+        else
+        {
+            item1.SetActive(true);
+        }
+        CollectibleScript itemScript = item1.GetComponent<CollectibleScript>();
+        itemScript.player = player;
+        itemScript.isFalling = true;
+        float rand = Random.Range(-5.0f, 5.0f);
+        item1.transform.position = new Vector3(transform.position.x, transform.position.y + collider.bounds.extents.y, 0.0f);
+        Rigidbody rigid = item1.GetComponent<Rigidbody>();
+        rigid.isKinematic = false;
+        rigid.AddForce(rand, 15.0f, 0.0f, ForceMode.Impulse);
+        itemScript.Parable();
+
+        if (item2 == null || item2.activeInHierarchy)
+        {
+            item2 = itemPool.getObject();
+        }
+        else
+        {
+            item2.SetActive(true);
+        }
+        itemScript = item2.GetComponent<CollectibleScript>();
+        itemScript.player = player;
+        itemScript.isFalling = true;
+        rand = Random.Range(-5.0f, 5.0f);
+        item2.transform.position = new Vector3(transform.position.x, transform.position.y + collider.bounds.extents.y, 0.0f);
+        rigid = item2.GetComponent<Rigidbody>();
+        rigid.isKinematic = false;
+        rigid.AddForce(rand, 15.0f, 0.0f, ForceMode.Impulse);
+        itemScript.Parable();
+    }
 }
