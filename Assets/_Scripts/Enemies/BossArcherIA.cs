@@ -459,6 +459,12 @@ public class BossArcherIA : MonoBehaviour {
         _fallingJump = true;
     }
 
+    public void StartFallingAnimationEnded()
+    {
+        Vector3 auxPos = transform.position + new Vector3(-2f, -2.2f, 0f);
+        transform.position = auxPos;
+    }
+
     #endregion
 
     #region Shoot
