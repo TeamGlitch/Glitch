@@ -32,6 +32,12 @@ public class MenuScript : MonoBehaviour {
     public Toggle fullscreen;
     public Button applyButton;
 
+    public Canvas audioMenu;
+    public Slider musicSlider;
+    public Slider soundSlider;
+    public Slider panSlider;
+    public Dropdown speakersMode;
+
     public Canvas creditsMenu;
     public Button firstCreditsButton;
 
@@ -55,6 +61,7 @@ public class MenuScript : MonoBehaviour {
 		levelSelectionMenu.enabled = false;
 		helpMenu.enabled = false;
         graphicsMenu.enabled = false;
+        audioMenu.enabled = false;
 		creditsMenu.enabled = false;
 		startText.Select ();
 
@@ -136,6 +143,7 @@ public class MenuScript : MonoBehaviour {
         optionsMenu.enabled = true;
         helpMenu.enabled = false;
         graphicsMenu.enabled = false;
+        audioMenu.enabled = false;
         creditsMenu.enabled = false;
 
         ControlsButton.Select();
@@ -181,6 +189,93 @@ public class MenuScript : MonoBehaviour {
             fullscreen.isOn = false;
 
         resolutions.Select();
+    }
+
+    public void AudioPress() {
+        SoundManager.instance.PlaySingle(confirmSound);
+        audioMenu.enabled = true;
+        optionsMenu.enabled = false;
+
+        musicSlider.value = SoundManager.instance.musicSource.volume;
+        soundSlider.value = SoundManager.instance.efxSource1.volume;
+        panSlider.value = SoundManager.instance.musicSource.panStereo;
+
+        if (AudioSettings.speakerMode == AudioSpeakerMode.Mono)
+            speakersMode.value = 0;
+        else if(AudioSettings.speakerMode == AudioSpeakerMode.Stereo)
+            speakersMode.value = 1;
+        else if(AudioSettings.speakerMode == AudioSpeakerMode.Quad)
+            speakersMode.value = 2;
+        else if(AudioSettings.speakerMode == AudioSpeakerMode.Surround)
+            speakersMode.value = 3;
+        else if(AudioSettings.speakerMode == AudioSpeakerMode.Mode5point1)
+            speakersMode.value = 4;
+        else if(AudioSettings.speakerMode == AudioSpeakerMode.Mode7point1)
+            speakersMode.value = 5;
+        else if(AudioSettings.speakerMode == AudioSpeakerMode.Prologic)
+            speakersMode.value = 6;
+
+        musicSlider.Select();
+    }
+
+    public void ChangeMusicVolume(){
+        SoundManager.instance.musicSource.volume = musicSlider.value;
+    }
+
+    public void ChangeSoundVolume()
+    {
+        SoundManager.instance.efxSource1.volume = soundSlider.value;
+        SoundManager.instance.efxSource2.volume = soundSlider.value;
+        SoundManager.instance.efxSource3.volume = soundSlider.value;
+        SoundManager.instance.efxSource4.volume = soundSlider.value;
+        SoundManager.instance.efxSource5.volume = soundSlider.value;
+
+        SoundManager.instance.PlaySingle(confirmSound);
+    }
+
+    public void ChangePan(){
+
+        SoundManager.instance.musicSource.panStereo = panSlider.value;
+
+        SoundManager.instance.efxSource1.panStereo = panSlider.value;
+        SoundManager.instance.efxSource2.panStereo = panSlider.value;
+        SoundManager.instance.efxSource3.panStereo = panSlider.value;
+        SoundManager.instance.efxSource4.panStereo = panSlider.value;
+        SoundManager.instance.efxSource5.panStereo = panSlider.value;
+
+    }
+
+    public void ChangeSpeakerMode(){
+
+        float musicTime = -1;
+
+        if (SoundManager.instance.musicSource.isPlaying)
+        {
+            musicTime = SoundManager.instance.musicSource.time;
+        }
+
+        AudioConfiguration config = AudioSettings.GetConfiguration();
+
+        switch (speakersMode.value){
+            
+            case 0: config.speakerMode = AudioSpeakerMode.Mono; break;
+            case 1: config.speakerMode = AudioSpeakerMode.Stereo; break;
+            case 2: config.speakerMode = AudioSpeakerMode.Quad; break;
+            case 3: config.speakerMode = AudioSpeakerMode.Surround; break;
+            case 4: config.speakerMode = AudioSpeakerMode.Mode5point1; break;
+            case 5: config.speakerMode = AudioSpeakerMode.Mode7point1; break;
+            case 6: config.speakerMode = AudioSpeakerMode.Prologic; break;
+
+        }
+
+        AudioSettings.Reset(config);
+
+        if (musicTime != -1)
+        {
+            SoundManager.instance.musicSource.Play();
+            SoundManager.instance.musicSource.time = musicTime;
+        }
+
     }
 
     public void ChangesApplicable(){
