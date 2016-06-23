@@ -45,11 +45,6 @@ public class BossArcherIA : MonoBehaviour {
     }
 
     public float horizontalVelocity = 1.0f;
-    public float jumpForceM2M = 1000.0f;
-    public float jumpForceM2E = 1400.0f;
-    public float jumpForceE2M = 1500.0f;
-    public float jumpForceZ = 100f;
-    private float _jumpForce;
 
     public float timeInPreShoot = 2.0f;
     public float timeInPostShoot = 2.0f;
@@ -88,6 +83,14 @@ public class BossArcherIA : MonoBehaviour {
 
     private float _currentSpecialSpeed = 1f;
 
+    private Vector3 currentStartJumpPoint;
+    private Vector3 currentEndJumpPoint;
+    private Vector3 currentMiddleJumpPoint;
+    public Transform[] EndJumpPoint;
+    public Transform[] MiddleJumpPoint;
+    private float timeJumping;
+    public float timeToJump = 2.0f;
+
     #endregion
 
     #region Init & Update
@@ -101,7 +104,7 @@ public class BossArcherIA : MonoBehaviour {
         _bossPos = bossArcherPos.MEDIUMRIGHT;
         _bossState = bossArcherIA.PRESHOOT;
         _timeSinceStateChanged = 0.0f;
-        _jumpForce = jumpForceM2M;
+        timeJumping = 0.0f;
 
         _arrows = new Transform[arrowPool.childCount];
         for(int i=0; i < arrowPool.childCount; ++i)
@@ -133,13 +136,22 @@ public class BossArcherIA : MonoBehaviour {
                 break;
 
             case bossArcherIA.FALLING_JUMP:
-                _rigidbody.velocity = new Vector3(0f, 0f, 0f);
+                _rigidbody.velocity = new Vector3(0f, _rigidbody.velocity.y, 0f);
                 if (_fallingJump)
                     _bossState = bossArcherIA.MOVING;
                 break;
 
             case bossArcherIA.JUMPING:
-                if (IsGrounded() && _rigidbody.velocity.y < 0)
+                float perc;
+                timeJumping += Time.deltaTime;
+                perc = timeJumping / timeToJump;
+                perc = perc * perc * (3f - 2f * perc);
+                Vector3 firstLerpPoint = Vector3.Lerp(currentStartJumpPoint, currentMiddleJumpPoint, perc);
+                Vector3 secondLerpPoint = Vector3.Lerp(currentMiddleJumpPoint, currentEndJumpPoint, perc);
+                Vector3 currentPosition = Vector3.Lerp(firstLerpPoint, secondLerpPoint, perc);
+                transform.position = currentPosition;
+
+                if (IsGrounded() && perc >= 0.5f)
                 {
                     _bossState = bossArcherIA.FALLING_JUMP;
                 }
@@ -205,45 +217,37 @@ public class BossArcherIA : MonoBehaviour {
                         case bossArcherPos.MAXLEFT:
                             _movingRight = true;
                             _bossPos = bossArcherPos.MEDIUMLEFT;
-                            _jumpForce = jumpForceE2M;
                             break;
 
                         case bossArcherPos.MEDIUMLEFT:
                             random = Random.Range(1, 3);
-                            _jumpForce = jumpForceM2M;
-//                            if (random == 1)
-//                            {
+                            if (random == 1)
+                            {
                                 _movingRight = true;
-                                _jumpForce = jumpForceM2M;
                                 _bossPos = bossArcherPos.MEDIUMRIGHT;
-/*                            }
+                            }
                             else
                             {
                                 _movingRight = false;
-                                _jumpForce = jumpForceM2E;
                                 _bossPos = bossArcherPos.MAXLEFT;
-                            }*/
+                            }
                             break;
                         case bossArcherPos.MEDIUMRIGHT:
                             random = Random.Range(1, 3);
-                            _jumpForce = jumpForceM2M;
-/*                            if (random == 1)
+                            if (random == 1)
                             {
                                 _movingRight = true;
-                                _jumpForce = jumpForceM2E;
                                 _bossPos = bossArcherPos.MAXRIGHT;
                             }
                             else
-                            {*/
+                            {
                                 _movingRight = false;
-                                _jumpForce = jumpForceM2M;
                                 _bossPos = bossArcherPos.MEDIUMLEFT;
-                            //}
+                            }
                             break;
                         case bossArcherPos.MAXRIGHT:
                             _movingRight = false;
                             _bossPos = bossArcherPos.MEDIUMRIGHT;
-                            _jumpForce = jumpForceE2M;
                             break;
                     }
                     if (_movingRight)
@@ -289,25 +293,41 @@ public class BossArcherIA : MonoBehaviour {
     {
         if(coll.transform.name == "JumpPoint" && _bossState == bossArcherIA.MOVING)
         {
+            currentStartJumpPoint = transform.position;
+            timeJumping = 0.0f;
             if(_bossPos == bossArcherPos.MAXRIGHT)
             {
-                _rigidbody.AddForce(new Vector3(0f, _jumpForce, -jumpForceZ));                
+                currentEndJumpPoint = EndJumpPoint[5].position + new Vector3(1f,-1f,0f);
+                currentMiddleJumpPoint = MiddleJumpPoint[2].position;
             }
             else if (_bossPos == bossArcherPos.MAXLEFT)
             {
-                _rigidbody.AddForce(new Vector3(0f, _jumpForce, -jumpForceZ));
+                currentEndJumpPoint = EndJumpPoint[0].position + new Vector3(-1f, -1f, 0f);
+                currentMiddleJumpPoint = MiddleJumpPoint[0].position;
             }
             else if (_bossPos == bossArcherPos.MEDIUMLEFT && _movingRight)
             {
-                _rigidbody.AddForce(new Vector3(0f, _jumpForce, jumpForceZ));
+                currentEndJumpPoint = EndJumpPoint[1].position + new Vector3(1f, -1f, 0f);
+                currentMiddleJumpPoint = MiddleJumpPoint[0].position;
+            }
+            else if (_bossPos == bossArcherPos.MEDIUMLEFT && !_movingRight)
+            {
+                currentEndJumpPoint = EndJumpPoint[2].position + new Vector3(-1f, -1f, 0f);
+                currentMiddleJumpPoint = MiddleJumpPoint[1].position;
+            }
+            else if (_bossPos == bossArcherPos.MEDIUMRIGHT && _movingRight)
+            {
+                currentEndJumpPoint = EndJumpPoint[3].position + new Vector3(1f, -1f, 0f);
+                currentMiddleJumpPoint = MiddleJumpPoint[1].position;
             }
             else if (_bossPos == bossArcherPos.MEDIUMRIGHT && !_movingRight)
             {
-                _rigidbody.AddForce(new Vector3(0f, _jumpForce, jumpForceZ));
+                currentEndJumpPoint = EndJumpPoint[4].position + new Vector3(-1f, -1f, 0f);
+                currentMiddleJumpPoint = MiddleJumpPoint[2].position;
             }
             else
             {
-                _rigidbody.AddForce(new Vector3(0f, _jumpForce, 0f));                
+                Debug.Log("HEHE; ERROR");
             }
             _bossState = bossArcherIA.JUMPING;
             _fallingJump = false;
