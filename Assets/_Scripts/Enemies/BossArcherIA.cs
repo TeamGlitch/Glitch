@@ -91,6 +91,11 @@ public class BossArcherIA : MonoBehaviour {
     private float timeJumping;
     public float timeToJump = 2.0f;
 
+    public float timeToMoveZWhileFall = 1.0f;
+    private float startZPosWhenDead;
+    private float timeFalling = 0.0f;
+    public float endZPosWhenDead = 6f - 5.06f;
+    private bool _fallingDead = false;
     #endregion
 
     #region Init & Update
@@ -275,6 +280,18 @@ public class BossArcherIA : MonoBehaviour {
                     break;
 
             case bossArcherIA.HITTED:
+                break;
+
+            case bossArcherIA.DEAD:
+                if(_fallingDead)
+                {
+                    timeFalling += Time.deltaTime;
+                    float percentage = timeFalling / timeToMoveZWhileFall;
+                    if (percentage >= 1.0f)
+                        percentage = 1.0f;
+                    float zPos = Mathf.Lerp(startZPosWhenDead, endZPosWhenDead, percentage);
+                    transform.position = new Vector3(transform.position.x, transform.position.y, zPos);
+                }
                 break;
 
         }
@@ -482,7 +499,11 @@ public class BossArcherIA : MonoBehaviour {
     public void StartFallingAnimationEnded()
     {
         Vector3 auxPos = transform.position + new Vector3(-2f, -2.2f, 0f);
+        _rigidbody.useGravity = true;
+        startZPosWhenDead = transform.position.z;
+        timeFalling = 0.0f;
         transform.position = auxPos;
+        _fallingDead = true;
     }
 
     #endregion
