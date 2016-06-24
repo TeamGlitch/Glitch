@@ -17,8 +17,6 @@ public class CheckPoint : MonoBehaviour
     private Renderer cylinderRenderer = null;
     private float speed = 9.0f;
 
-    public bool startPoint = false;
-
     void Start()
     {
         //Find the particle system
