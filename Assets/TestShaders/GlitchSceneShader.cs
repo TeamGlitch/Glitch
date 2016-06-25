@@ -14,6 +14,9 @@ public class GlitchSceneShader : ImageEffectBase
     private RectTransform guiRectTrans;
 
     public float initialXPos = -375f;
+    private float timeSinceChangePoint = 0.0f;
+    public float timeToFillEffect = 2.0f;
+    public float offsetWhenEffectStart = 0.5f;
 
     // Use this for initialization
     void Start()
@@ -27,8 +30,11 @@ public class GlitchSceneShader : ImageEffectBase
     // Called by camera to apply image effect
     void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
-        if (!playerScript.lastCheckPoint.startPoint)
+        if (!playerScript.lastCheckPoint.startPoint && maxXPos != playerScript.lastCheckPoint.transform.position.x)
+        {
             maxXPos = playerScript.lastCheckPoint.transform.position.x;
+            timeSinceChangePoint = 0.0f;
+        }
         if (maxXPos > playerScript.transform.position.x && !glitchLineShader.active &&
             ((Time.unscaledTime % 20f >= 0f && Time.unscaledTime % 20f <= 3f) || (Time.unscaledTime % 20f >= 8f && Time.unscaledTime % 20f <= 12f)))
             glitchLineShader.active = true;
@@ -39,6 +45,13 @@ public class GlitchSceneShader : ImageEffectBase
             glitchLineShader.active = false;
         Vector3 maxPos = new Vector3(maxXPos, playerTransform.position.y, playerTransform.position.z);
         float percentageMaxPosition = CalculatebGlitchPositionsInPercentage(maxPos);
+
+        if(timeSinceChangePoint <= timeToFillEffect)
+        {
+            timeSinceChangePoint += Time.deltaTime;
+            float perc = 1f - timeSinceChangePoint / timeToFillEffect;
+            percentageMaxPosition -= offsetWhenEffectStart * perc;
+        }
 
         //If it does, creates a 2D texture with 1x'divisions'
         //texel size and arbitrary asigns 0 and 2 to glitchy 
