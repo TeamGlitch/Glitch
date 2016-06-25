@@ -3,6 +3,8 @@ using InControl;
 
 public class SlowFPS : MonoBehaviour
 {
+    public delegate void SlowFPSChangedStatus();
+    public event SlowFPSChangedStatus SlowFPSChangedStatusEvent;
 
     public World world;
     public ParticleSystem glitchParticle;
@@ -40,7 +42,10 @@ public class SlowFPS : MonoBehaviour
             if (powerActive == false)
             {
                 powerActive = true;
-                cameraGlitchedToBoxes.isFPSActivated = true;
+                if (SlowFPSChangedStatusEvent != null)
+                    SlowFPSChangedStatusEvent();
+                if (cameraGlitchedToBoxes != null)
+                    cameraGlitchedToBoxes.isFPSActivated = true;
                 world.doUpdate = false;
                 timeLastUpdate = Time.time;
                 world.toggleSlowFPS();
@@ -126,8 +131,11 @@ public class SlowFPS : MonoBehaviour
         if(powerActive)
         {
             powerActive = false;
+            if (SlowFPSChangedStatusEvent != null)
+                SlowFPSChangedStatusEvent();
             world.toggleSlowFPS();
-            cameraGlitchedToBoxes.isFPSActivated = false;
+            if (cameraGlitchedToBoxes != null)
+                cameraGlitchedToBoxes.isFPSActivated = false;
             if (SlowFPSDeactivated != null)
                 SlowFPSDeactivated();
             glitchOffsetCamera.enabled = false;

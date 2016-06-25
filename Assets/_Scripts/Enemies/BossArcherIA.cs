@@ -44,12 +44,7 @@ public class BossArcherIA : MonoBehaviour {
         ELEVEN_NEAR_GLITCH
     }
 
-    public float horizontalVelocity = 1.0f;
-    public float jumpForceM2M = 1000.0f;
-    public float jumpForceM2E = 1400.0f;
-    public float jumpForceE2M = 1500.0f;
-    public float jumpForceZ = 100f;
-    private float _jumpForce;
+    public float horizontalVelocity = 10.0f;
 
     public float timeInPreShoot = 2.0f;
     public float timeInPostShoot = 2.0f;
@@ -64,7 +59,7 @@ public class BossArcherIA : MonoBehaviour {
 
     public Transform arrowPool;
     private Transform[] _arrows;
-    private Rigidbody[] _arrowsRigidBody;
+    private BossArrowScript[] _arrowsScript;
 
     private float _maxLeft = -32.5f;
     private float _maxRight = 32.5f;
@@ -88,6 +83,25 @@ public class BossArcherIA : MonoBehaviour {
 
     private float _currentSpecialSpeed = 1f;
 
+    private Vector3 currentStartJumpPoint;
+    private Vector3 currentEndJumpPoint;
+    private Vector3 currentMiddleJumpPoint;
+    public Transform[] EndJumpPoint;
+    public Transform[] MiddleJumpPoint;
+    private float timeJumping;
+    public float timeToJump = 2.0f;
+
+    public float timeToMoveZWhileFall = 1.0f;
+    private float startZPosWhenDead;
+    private float timeFalling = 0.0f;
+    public float endZPosWhenDead = 6f - 5.06f;
+    private bool _fallingDead = false;
+
+    public World world;
+
+    private bool slowFPSactivated = false;
+    public SlowFPS slowFPS;
+
     #endregion
 
     #region Init & Update
@@ -101,178 +115,186 @@ public class BossArcherIA : MonoBehaviour {
         _bossPos = bossArcherPos.MEDIUMRIGHT;
         _bossState = bossArcherIA.PRESHOOT;
         _timeSinceStateChanged = 0.0f;
-        _jumpForce = jumpForceM2M;
+        timeJumping = 0.0f;
 
         _arrows = new Transform[arrowPool.childCount];
         for(int i=0; i < arrowPool.childCount; ++i)
         {
             _arrows[i] = arrowPool.GetChild(i);
         }
-        _arrowsRigidBody = new Rigidbody[arrowPool.childCount];
+        _arrowsScript = new BossArrowScript[arrowPool.childCount];
         for (int i = 0; i < _arrows.Length; ++i)
         {
-            _arrowsRigidBody[i] = _arrows[i].GetComponent<Rigidbody>();
+            _arrowsScript[i] = _arrows[i].GetComponent<BossArrowScript>();
         }
         _animator = transform.GetComponent<Animator>();
         _firstStopPoint = true;
+        slowFPS.SlowFPSChangedStatusEvent += SlowFPSStateChanged;
     }
 
     // Update is called once per frame
     void Update () {
-	    switch(_bossState)
+        if(world.doUpdate)
         {
-            case bossArcherIA.MOVING:
-                if(_movingRight)
-                {
-                    _rigidbody.velocity = new Vector3(horizontalVelocity, 0f, 0f);
-                }
-                else
-                {
-                    _rigidbody.velocity = new Vector3(-horizontalVelocity, 0f, 0f);
-                }
-                break;
+            switch (_bossState)
+            {
+                case bossArcherIA.MOVING:
+                    transform.Translate(Vector3.forward * world.lag * horizontalVelocity);
+                    break;
 
-            case bossArcherIA.FALLING_JUMP:
-                _rigidbody.velocity = new Vector3(0f, 0f, 0f);
-                if (_fallingJump)
-                    _bossState = bossArcherIA.MOVING;
-                break;
+                case bossArcherIA.FALLING_JUMP:
+                    if (_fallingJump)
+                        _bossState = bossArcherIA.MOVING;
+                    break;
 
-            case bossArcherIA.JUMPING:
-                if (IsGrounded() && _rigidbody.velocity.y < 0)
-                {
-                    _bossState = bossArcherIA.FALLING_JUMP;
-                }
-                break;
+                case bossArcherIA.JUMPING:
+                    float perc;
+                    timeJumping += world.lag;
+                    perc = timeJumping / timeToJump;
+                    perc = perc * perc * (3f - 2f * perc);
 
-            case bossArcherIA.PRESHOOT:
-                _timeSinceStateChanged += Time.deltaTime;
-                if(_timeSinceStateChanged >= timeInPreShoot)
-                {
-                    _bossState = bossArcherIA.SHOOTING;
-                    _animator.speed = _currentSpecialSpeed;
-                    _animator.SetTrigger("Attack");
-                    _areArrowsReady = false;
-                }
-                break;
+                    Vector3 firstLerpPoint = Vector3.Lerp(currentStartJumpPoint, currentMiddleJumpPoint, perc);
+                    Vector3 secondLerpPoint = Vector3.Lerp(currentMiddleJumpPoint, currentEndJumpPoint, perc);
+                    Vector3 currentPosition = Vector3.Lerp(firstLerpPoint, secondLerpPoint, perc);
+                    transform.position = currentPosition;
 
-            case bossArcherIA.SHOOTING:
-                if (!_areArrowsReady)
-                {
-                    _areArrowsReady = true;
-                    int random = Random.Range(1, 10);
-                    random = 9;
-                    switch (random)
+                    if (IsGrounded() && perc >= 0.5f)
                     {
-                        case 1:
-                            PrepareArrows(shootTypes.LEFT_TO_RIGHT);
-                            break;
-                        case 2:
-                            PrepareArrows(shootTypes.RIGHT_TO_LEFT);
-                            break;
-                        case 3:
-                            PrepareArrows(shootTypes.THREE_NEAR_GLITCH);
-                            break;
-                        case 4:
-                            PrepareArrows(shootTypes.FIVE_NEAR_GLITCH);
-                            break;
-                        case 5:
-                            PrepareArrows(shootTypes.SEVEN_NEAR_GLITCH);
-                            break;
-                        case 6:
-                            PrepareArrows(shootTypes.NINE_NEAR_GLITCH);
-                            break;
-                        case 7:
-                            PrepareArrows(shootTypes.ELEVEN_NEAR_GLITCH);
-                            break;
-                        case 8:
-                            PrepareArrows(shootTypes.SIDES_TO_MIDDLE);
-                            break;
-                        case 9:
-                            PrepareArrows(shootTypes.ULTRA_DIFFICULT_ULTRA);
-                            break;
+                        _bossState = bossArcherIA.FALLING_JUMP;
                     }
-                }
-                break;
+                    break;
 
-            case bossArcherIA.POSTSHOOT:
-                _timeSinceStateChanged += Time.deltaTime;
-                if(_timeSinceStateChanged >= timeInPostShoot)
-                {
-                    int random;
-                    switch(_bossPos)
+                case bossArcherIA.PRESHOOT:
+                    _timeSinceStateChanged += world.lag;
+                    if (_timeSinceStateChanged >= timeInPreShoot)
                     {
-                        case bossArcherPos.MAXLEFT:
-                            _movingRight = true;
-                            _bossPos = bossArcherPos.MEDIUMLEFT;
-                            _jumpForce = jumpForceE2M;
-                            break;
+                        _bossState = bossArcherIA.SHOOTING;
+                        _animator.speed = _currentSpecialSpeed;
+                        _animator.SetTrigger("Attack");
+                        _areArrowsReady = false;
+                    }
+                    break;
 
-                        case bossArcherPos.MEDIUMLEFT:
-                            random = Random.Range(1, 3);
-                            _jumpForce = jumpForceM2M;
-//                            if (random == 1)
-//                            {
+                case bossArcherIA.SHOOTING:
+                    if (!_areArrowsReady)
+                    {
+                        _areArrowsReady = true;
+                        int random = Random.Range(1, 10);
+                        switch (random)
+                        {
+                            case 1:
+                                PrepareArrows(shootTypes.LEFT_TO_RIGHT);
+                                break;
+                            case 2:
+                                PrepareArrows(shootTypes.RIGHT_TO_LEFT);
+                                break;
+                            case 3:
+                                PrepareArrows(shootTypes.THREE_NEAR_GLITCH);
+                                break;
+                            case 4:
+                                PrepareArrows(shootTypes.FIVE_NEAR_GLITCH);
+                                break;
+                            case 5:
+                                PrepareArrows(shootTypes.SEVEN_NEAR_GLITCH);
+                                break;
+                            case 6:
+                                PrepareArrows(shootTypes.NINE_NEAR_GLITCH);
+                                break;
+                            case 7:
+                                PrepareArrows(shootTypes.ELEVEN_NEAR_GLITCH);
+                                break;
+                            case 8:
+                                PrepareArrows(shootTypes.SIDES_TO_MIDDLE);
+                                break;
+                            case 9:
+                                PrepareArrows(shootTypes.ULTRA_DIFFICULT_ULTRA);
+                                break;
+                        }
+                    }
+                    break;
+
+                case bossArcherIA.POSTSHOOT:
+                    _timeSinceStateChanged += world.lag;
+                    if (_timeSinceStateChanged >= timeInPostShoot)
+                    {
+                        int random;
+                        switch (_bossPos)
+                        {
+                            case bossArcherPos.MAXLEFT:
                                 _movingRight = true;
-                                _jumpForce = jumpForceM2M;
-                                _bossPos = bossArcherPos.MEDIUMRIGHT;
-/*                            }
-                            else
-                            {
-                                _movingRight = false;
-                                _jumpForce = jumpForceM2E;
-                                _bossPos = bossArcherPos.MAXLEFT;
-                            }*/
-                            break;
-                        case bossArcherPos.MEDIUMRIGHT:
-                            random = Random.Range(1, 3);
-                            _jumpForce = jumpForceM2M;
-/*                            if (random == 1)
-                            {
-                                _movingRight = true;
-                                _jumpForce = jumpForceM2E;
-                                _bossPos = bossArcherPos.MAXRIGHT;
-                            }
-                            else
-                            {*/
-                                _movingRight = false;
-                                _jumpForce = jumpForceM2M;
                                 _bossPos = bossArcherPos.MEDIUMLEFT;
-                            //}
-                            break;
-                        case bossArcherPos.MAXRIGHT:
-                            _movingRight = false;
-                            _bossPos = bossArcherPos.MEDIUMRIGHT;
-                            _jumpForce = jumpForceE2M;
-                            break;
+                                break;
+
+                            case bossArcherPos.MEDIUMLEFT:
+                                random = Random.Range(1, 3);
+                                if (random == 1)
+                                {
+                                    _movingRight = true;
+                                    _bossPos = bossArcherPos.MEDIUMRIGHT;
+                                }
+                                else
+                                {
+                                    _movingRight = false;
+                                    _bossPos = bossArcherPos.MAXLEFT;
+                                }
+                                break;
+                            case bossArcherPos.MEDIUMRIGHT:
+                                random = Random.Range(1, 3);
+                                if (random == 1)
+                                {
+                                    _movingRight = true;
+                                    _bossPos = bossArcherPos.MAXRIGHT;
+                                }
+                                else
+                                {
+                                    _movingRight = false;
+                                    _bossPos = bossArcherPos.MEDIUMLEFT;
+                                }
+                                break;
+                            case bossArcherPos.MAXRIGHT:
+                                _movingRight = false;
+                                _bossPos = bossArcherPos.MEDIUMRIGHT;
+                                break;
+                        }
+                        if (_movingRight)
+                        {
+                            _bossState = bossArcherIA.TURNING_LEFT_TO_RUN;
+                            _animator.SetBool("Run", true);
+                            _animator.speed = _currentSpecialSpeed;
+                            _animator.SetTrigger("TurnLeft");
+                        }
+                        else
+                        {
+                            _bossState = bossArcherIA.TURNING_RIGHT_TO_RUN;
+                            _animator.SetBool("Run", true);
+                            _animator.speed = _currentSpecialSpeed;
+                            _animator.SetTrigger("TurnRight");
+                        }
                     }
-                    if (_movingRight)
-                    {
-                        _bossState = bossArcherIA.TURNING_LEFT_TO_RUN;
-                        _animator.SetBool("Run", true);
-                        _animator.speed = _currentSpecialSpeed;
-                        _animator.SetTrigger("TurnLeft");
-                    }
-                    else
-                    {
-                        _bossState = bossArcherIA.TURNING_RIGHT_TO_RUN;
-                        _animator.SetBool("Run", true);
-                        _animator.speed = _currentSpecialSpeed;
-                        _animator.SetTrigger("TurnRight");
-                    }
-                }
-                break;
+                    break;
 
                 case bossArcherIA.TURNING_LEFT_TO_RUN:
                 case bossArcherIA.TURNING_RIGHT_TO_RUN:
                 case bossArcherIA.TURNING_LEFT_TO_STOP:
                 case bossArcherIA.TURNING_RIGHT_TO_STOP:
-                    _rigidbody.velocity = new Vector3(0f, 0f, 0f);
                     break;
 
-            case bossArcherIA.HITTED:
-                break;
+                case bossArcherIA.HITTED:
+                    break;
 
+                case bossArcherIA.DEAD:
+                    if (_fallingDead)
+                    {
+                        timeFalling += world.lag;
+                        float percentage = timeFalling / timeToMoveZWhileFall;
+                        if (percentage >= 1.0f)
+                            percentage = 1.0f;
+                        float zPos = Mathf.Lerp(startZPosWhenDead, endZPosWhenDead, percentage);
+                        transform.position = new Vector3(transform.position.x, transform.position.y, zPos);
+                    }
+                    break;
+
+            }
         }
 
         if(Input.GetKeyDown(KeyCode.P))
@@ -289,25 +311,41 @@ public class BossArcherIA : MonoBehaviour {
     {
         if(coll.transform.name == "JumpPoint" && _bossState == bossArcherIA.MOVING)
         {
+            currentStartJumpPoint = transform.position;
+            timeJumping = 0.0f;
             if(_bossPos == bossArcherPos.MAXRIGHT)
             {
-                _rigidbody.AddForce(new Vector3(0f, _jumpForce, -jumpForceZ));                
+                currentEndJumpPoint = EndJumpPoint[5].position + new Vector3(1f,-1f,0f);
+                currentMiddleJumpPoint = MiddleJumpPoint[2].position;
             }
             else if (_bossPos == bossArcherPos.MAXLEFT)
             {
-                _rigidbody.AddForce(new Vector3(0f, _jumpForce, -jumpForceZ));
+                currentEndJumpPoint = EndJumpPoint[0].position + new Vector3(-1f, -1f, 0f);
+                currentMiddleJumpPoint = MiddleJumpPoint[0].position;
             }
             else if (_bossPos == bossArcherPos.MEDIUMLEFT && _movingRight)
             {
-                _rigidbody.AddForce(new Vector3(0f, _jumpForce, jumpForceZ));
+                currentEndJumpPoint = EndJumpPoint[1].position + new Vector3(1f, -1f, 0f);
+                currentMiddleJumpPoint = MiddleJumpPoint[0].position;
+            }
+            else if (_bossPos == bossArcherPos.MEDIUMLEFT && !_movingRight)
+            {
+                currentEndJumpPoint = EndJumpPoint[2].position + new Vector3(-1f, -1f, 0f);
+                currentMiddleJumpPoint = MiddleJumpPoint[1].position;
+            }
+            else if (_bossPos == bossArcherPos.MEDIUMRIGHT && _movingRight)
+            {
+                currentEndJumpPoint = EndJumpPoint[3].position + new Vector3(1f, -1f, 0f);
+                currentMiddleJumpPoint = MiddleJumpPoint[1].position;
             }
             else if (_bossPos == bossArcherPos.MEDIUMRIGHT && !_movingRight)
             {
-                _rigidbody.AddForce(new Vector3(0f, _jumpForce, jumpForceZ));
+                currentEndJumpPoint = EndJumpPoint[4].position + new Vector3(-1f, -1f, 0f);
+                currentMiddleJumpPoint = MiddleJumpPoint[2].position;
             }
             else
             {
-                _rigidbody.AddForce(new Vector3(0f, _jumpForce, 0f));                
+                Debug.Log("HEHE; ERROR");
             }
             _bossState = bossArcherIA.JUMPING;
             _fallingJump = false;
@@ -321,7 +359,6 @@ public class BossArcherIA : MonoBehaviour {
         {
             if (_bossPos == bossArcherPos.MEDIUMLEFT || _bossPos == bossArcherPos.MEDIUMRIGHT)
                 transform.position = new Vector3(transform.position.x, transform.position.y, 17.5f-5.34f);
-            _rigidbody.velocity = new Vector3(0.0f, 0.0f, 0.0f);
             if (_movingRight)
             {
                 _bossState = bossArcherIA.TURNING_RIGHT_TO_STOP;
@@ -361,7 +398,6 @@ public class BossArcherIA : MonoBehaviour {
                 timeInPreShoot = 0f;
                 timeInPostShoot = 0f;
                 _animator.SetTrigger("Hitted");
-                _rigidbody.velocity = new Vector3(0f, _rigidbody.velocity.y, 0f);
                 _bossState = bossArcherIA.HITTED;
             }
             else if(lives == 2)
@@ -370,7 +406,6 @@ public class BossArcherIA : MonoBehaviour {
                 timeInPreShoot = 1f;
                 timeInPostShoot = 1f;
                 _animator.SetTrigger("Hitted");
-                _rigidbody.velocity = new Vector3(0f, _rigidbody.velocity.y, 0f);
                 _bossState = bossArcherIA.HITTED;
             }
         }
@@ -392,7 +427,6 @@ public class BossArcherIA : MonoBehaviour {
             timeInPreShoot = 0f;
             timeInPostShoot = 0f;
             _animator.SetTrigger("Hitted");
-            _rigidbody.velocity = new Vector3(0f, _rigidbody.velocity.y, 0f);
             _bossState = bossArcherIA.HITTED;
         }
         else if (lives == 2)
@@ -401,7 +435,6 @@ public class BossArcherIA : MonoBehaviour {
             timeInPreShoot = 1f;
             timeInPostShoot = 1f;
             _animator.SetTrigger("Hitted");
-            _rigidbody.velocity = new Vector3(0f, _rigidbody.velocity.y, 0f);
             _bossState = bossArcherIA.HITTED;
         }
     }
@@ -462,7 +495,25 @@ public class BossArcherIA : MonoBehaviour {
     public void StartFallingAnimationEnded()
     {
         Vector3 auxPos = transform.position + new Vector3(-2f, -2.2f, 0f);
+        _rigidbody.useGravity = true;
+        startZPosWhenDead = transform.position.z;
+        timeFalling = 0.0f;
         transform.position = auxPos;
+        _fallingDead = true;
+    }
+
+    public void SlowFPSStateChanged()
+    {
+        if(slowFPSactivated)
+        {
+            slowFPSactivated = false;
+            _animator.speed = 1f;
+        }
+        else
+        {
+            slowFPSactivated = true;
+            _animator.speed = 0.5f;
+        }
     }
 
     #endregion
@@ -483,9 +534,8 @@ public class BossArcherIA : MonoBehaviour {
                 {
                     _arrows[i].gameObject.SetActive(false);
                     _arrows[i].position = new Vector3(_maxLeft + i * distanceBetweenArrows, prepareArrowYPos, 0f);
-                    _arrows[i].rotation = new Quaternion(0f,0f,0f,0f);
-                    _arrowsRigidBody[i].velocity = Vector3.zero;
-                    _arrowsRigidBody[i].angularVelocity = Vector3.zero;
+                    _arrows[i].localEulerAngles = new Vector3(0f,180f,0f);
+                    _arrowsScript[i].canMove = false;
                 }
                 break;
 
@@ -494,9 +544,8 @@ public class BossArcherIA : MonoBehaviour {
                 {
                     _arrows[i].gameObject.SetActive(false);
                     _arrows[i].position = new Vector3(_maxRight - i * distanceBetweenArrows, prepareArrowYPos, 0f);
-                    _arrows[i].rotation = new Quaternion(0f, 0f, 0f, 0f);
-                    _arrowsRigidBody[i].velocity = Vector3.zero;
-                    _arrowsRigidBody[i].angularVelocity = Vector3.zero;
+                    _arrows[i].localEulerAngles = new Vector3(0f,180f,0f);
+                    _arrowsScript[i].canMove = false;
                 }
                 break;
 
@@ -512,9 +561,8 @@ public class BossArcherIA : MonoBehaviour {
                     {
                         _arrows[i].position = new Vector3(_maxLeft + (i / 2 + 1) * distanceBetweenArrows, prepareArrowYPos, 0f);
                     }
-                    _arrows[i].rotation = new Quaternion(0f, 0f, 0f, 0f);
-                    _arrowsRigidBody[i].velocity = Vector3.zero;
-                    _arrowsRigidBody[i].angularVelocity = Vector3.zero;
+                    _arrows[i].localEulerAngles = new Vector3(0f,180f,0f);
+                    _arrowsScript[i].canMove = false;
                 }
                 break;
 
@@ -530,9 +578,9 @@ public class BossArcherIA : MonoBehaviour {
                     {
                         _arrows[i].position = new Vector3(_maxRight - (i-_arrows.Length) * distanceBetweenArrows, prepareArrowYPos, 0f);
                     }
-                    _arrows[i].rotation = new Quaternion(0f, 0f, 0f, 0f);
-                    _arrowsRigidBody[i].velocity = Vector3.zero;
-                    _arrowsRigidBody[i].angularVelocity = Vector3.zero;
+                    _arrows[i].localEulerAngles = new Vector3(0f,180f,0f);
+                    _arrowsScript[i].canMove = false;
+
                 }
                 break;
 
@@ -577,12 +625,13 @@ public class BossArcherIA : MonoBehaviour {
                     _arrows[i].position = new Vector3(objectiveTransform.position.x + (i / 2 + 1) * distanceBetweenArrows, prepareArrowYPos, 0f);
                 }
                 _arrows[i].rotation = new Quaternion(0f, 0f, 0f, 0f);
-                _arrowsRigidBody[i].velocity = Vector3.zero;
-                _arrowsRigidBody[i].angularVelocity = Vector3.zero;
+                _arrowsScript[i].canMove = false;
+
             }
             for (int i = numberOfArrows; i < _arrows.Length; ++i)
             {
                 _arrows[i].gameObject.SetActive(false);
+                _arrowsScript[i].canMove = false;
             }
 
         }
@@ -647,8 +696,7 @@ public class BossArcherIA : MonoBehaviour {
                 {
                     for (int j = i; j < i + 5; ++j )
                     {
-                        _arrowsRigidBody[j].detectCollisions = true;
-                        _arrowsRigidBody[j].isKinematic = false;
+                        _arrowsScript[j].ShootArrow();
                         _arrows[j].gameObject.SetActive(true);
                     }
                     i += 5;
@@ -666,17 +714,14 @@ public class BossArcherIA : MonoBehaviour {
                     if (numberOfArrows % 2 != 0 && i == 0)
                     {
                         _arrows[i].gameObject.SetActive(true);
-                        _arrowsRigidBody[i].isKinematic = false;
-                        _arrowsRigidBody[i].detectCollisions = true;
+                        _arrowsScript[i].ShootArrow();
                     }
                     else
                     {
                         _arrows[i].gameObject.SetActive(true);
-                        _arrowsRigidBody[i].detectCollisions = true;
-                        _arrowsRigidBody[i].isKinematic = false;
+                        _arrowsScript[i].ShootArrow();
                         _arrows[i + 1].gameObject.SetActive(true);
-                        _arrowsRigidBody[i+1].detectCollisions = true;
-                        _arrowsRigidBody[i+1].isKinematic = false;
+                        _arrowsScript[i+1].ShootArrow();
                         ++i;
                     }
                     ++i;
