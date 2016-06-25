@@ -1,0 +1,27 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class RootsManager : MonoBehaviour {
+    public GlitchRoots [] roots;
+    public bool isActivable = true;
+
+    public void AllGlitched()
+    {
+        for (int i = 0; i < 4; ++i)
+        {
+            roots[i].RootGlitched();
+        }
+        StartCoroutine(GlitchesAvailable(5.0f));
+    }
+
+    // Coroutine activate capacity of Glitch
+    IEnumerator GlitchesAvailable(float wait)
+    {
+        yield return new WaitForSeconds(wait);
+        for (int i = 0; i < 4; ++i)
+        {
+            roots[i].TurnToNormality();
+        }
+        isActivable = true;
+    }
+}
