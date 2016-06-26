@@ -96,6 +96,8 @@ public class BossArcherIA : MonoBehaviour
     private float startZPosWhenDead;
     private float timeFalling = 0.0f;
     public float endZPosWhenDead = 6f - 5.06f;
+    public float startXPosWhenDead;
+    public float endXPosWhenDead;
     private bool _fallingDead = false;
 
     public World world;
@@ -187,36 +189,60 @@ public class BossArcherIA : MonoBehaviour
                     if (!_areArrowsReady)
                     {
                         _areArrowsReady = true;
-                        int random = Random.Range(1, 10);
-                        switch (random)
+                        int random;
+                        if (lives == 3)
                         {
-                            case 1:
-                                PrepareArrows(shootTypes.LEFT_TO_RIGHT);
-                                break;
-                            case 2:
-                                PrepareArrows(shootTypes.RIGHT_TO_LEFT);
-                                break;
-                            case 3:
-                                PrepareArrows(shootTypes.THREE_NEAR_GLITCH);
-                                break;
-                            case 4:
-                                PrepareArrows(shootTypes.FIVE_NEAR_GLITCH);
-                                break;
-                            case 5:
-                                PrepareArrows(shootTypes.SEVEN_NEAR_GLITCH);
-                                break;
-                            case 6:
-                                PrepareArrows(shootTypes.NINE_NEAR_GLITCH);
-                                break;
-                            case 7:
-                                PrepareArrows(shootTypes.ELEVEN_NEAR_GLITCH);
-                                break;
-                            case 8:
-                                PrepareArrows(shootTypes.SIDES_TO_MIDDLE);
-                                break;
-                            case 9:
-                                PrepareArrows(shootTypes.ULTRA_DIFFICULT_ULTRA);
-                                break;
+                            random = Random.Range(1, 5);
+                            switch (random)
+                            {
+                                case 1:
+                                    PrepareArrows(shootTypes.THREE_NEAR_GLITCH);
+                                    break;
+                                case 2:
+                                    PrepareArrows(shootTypes.FIVE_NEAR_GLITCH);
+                                    break;
+                                case 3:
+                                    PrepareArrows(shootTypes.SEVEN_NEAR_GLITCH);
+                                    break;
+                                case 4:
+                                    PrepareArrows(shootTypes.NINE_NEAR_GLITCH);
+                                    break;
+                            }
+                        }
+                        else if(lives == 2)
+                        {
+                            random = Random.Range(1, 4);
+                            switch (random)
+                            {
+                                case 1:
+                                    PrepareArrows(shootTypes.LEFT_TO_RIGHT);
+                                    break;
+                                case 2:
+                                    PrepareArrows(shootTypes.RIGHT_TO_LEFT);
+                                    break;
+                                case 3:
+                                    PrepareArrows(shootTypes.ELEVEN_NEAR_GLITCH);
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            random = Random.Range(1, 5);
+                            switch (random)
+                            {
+                                case 1:
+                                    PrepareArrows(shootTypes.LEFT_TO_RIGHT);
+                                    break;
+                                case 2:
+                                    PrepareArrows(shootTypes.RIGHT_TO_LEFT);
+                                    break;
+                                case 3:
+                                    PrepareArrows(shootTypes.SIDES_TO_MIDDLE);
+                                    break;
+                                case 4:
+                                    PrepareArrows(shootTypes.ULTRA_DIFFICULT_ULTRA);
+                                    break;
+                            }
                         }
                     }
                     break;
@@ -297,8 +323,9 @@ public class BossArcherIA : MonoBehaviour
                         float percentage = timeFalling / timeToMoveZWhileFall;
                         if (percentage >= 1.0f)
                             percentage = 1.0f;
+                        float xPos = Mathf.Lerp(startXPosWhenDead, endXPosWhenDead, percentage);
                         float zPos = Mathf.Lerp(startZPosWhenDead, endZPosWhenDead, percentage);
-                        transform.position = new Vector3(transform.position.x, transform.position.y, zPos);
+                        transform.position = new Vector3(xPos, transform.position.y, zPos);
                     }
                     break;
 
@@ -317,7 +344,7 @@ public class BossArcherIA : MonoBehaviour
 
     public void OnTriggerEnter(Collider coll)
     {
-        if (coll.transform.name == "JumpPoint" && _bossState == bossArcherIA.MOVING)
+        if (coll.transform.name == "JumpPoint" && _bossState == bossArcherIA.MOVING && _bossState != bossArcherIA.DEAD)
         {
             currentStartJumpPoint = transform.position;
             timeJumping = 0.0f;
@@ -359,11 +386,11 @@ public class BossArcherIA : MonoBehaviour
             _fallingJump = false;
             _animator.SetTrigger("Jump");
         }
-        else if (coll.transform.name == "StopPoint" && _firstStopPoint)
+        else if (coll.transform.name == "StopPoint" && _firstStopPoint && _bossState != bossArcherIA.DEAD)
         {
             _firstStopPoint = false;
         }
-        else if (coll.transform.name == "StopPoint" && !_firstStopPoint)
+        else if (coll.transform.name == "StopPoint" && !_firstStopPoint && _bossState != bossArcherIA.DEAD)
         {
             if (_bossPos == bossArcherPos.MEDIUMLEFT || _bossPos == bossArcherPos.MEDIUMRIGHT)
                 transform.position = new Vector3(transform.position.x, transform.position.y, 17.5f - 5.34f);
@@ -390,7 +417,7 @@ public class BossArcherIA : MonoBehaviour
             _animator.speed = 1f;
             _animator.SetTrigger("GroundHitted");
         }
-        else if (coll.collider.CompareTag("BossHit") && Time.time - timeWhenLastHitted >= 1f)
+        else if (coll.collider.CompareTag("BossHit") && Time.time - timeWhenLastHitted >= 1f && _bossState != bossArcherIA.DEAD)
         {
             timeWhenLastHitted = Time.time;
             transform.localEulerAngles = new Vector3(0f, 180f, 0f);
@@ -505,6 +532,11 @@ public class BossArcherIA : MonoBehaviour
     {
         Vector3 auxPos = transform.position + new Vector3(-2f, -2.2f, 0f);
         _rigidbody.useGravity = true;
+        startXPosWhenDead = endXPosWhenDead = transform.position.x;
+        if (transform.position.x >= 16f)
+        {
+            endXPosWhenDead = startXPosWhenDead + 2f;
+        }
         startZPosWhenDead = transform.position.z;
         timeFalling = 0.0f;
         transform.position = auxPos;
@@ -585,7 +617,7 @@ public class BossArcherIA : MonoBehaviour
                     }
                     else
                     {
-                        _arrows[i].position = new Vector3(_maxRight - (i - _arrows.Length) * distanceBetweenArrows, prepareArrowYPos, 0f);
+                        _arrows[i].position = new Vector3(_maxRight - (i - _arrows.Length/2) * distanceBetweenArrows, prepareArrowYPos, 0f);
                     }
                     _arrows[i].localEulerAngles = new Vector3(0f, 180f, 0f);
                     _arrowsScript[i].canMove = false;
