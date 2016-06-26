@@ -62,8 +62,8 @@ public class BossArcherIA : MonoBehaviour
     private Transform[] _arrows;
     private BossArrowScript[] _arrowsScript;
 
-    private float _maxLeft = -32.5f;
-    private float _maxRight = 32.5f;
+    private float _maxLeft = -36f;
+    private float _maxRight = 36f;
     public float prepareArrowYPos = 12f;
 
     public float timeToShootArrows = 3f;
