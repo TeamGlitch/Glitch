@@ -120,7 +120,7 @@ public class BossArcherIA : MonoBehaviour
         _boxCollider = transform.GetComponent<BoxCollider>();
         _timeSinceStateChanged = 0.0f;
         _bossPos = bossArcherPos.MEDIUMRIGHT;
-        _bossState = bossArcherIA.PRESHOOT;
+        _bossState = bossArcherIA.IDLE;
         _timeSinceStateChanged = 0.0f;
         timeJumping = 0.0f;
 
@@ -254,10 +254,13 @@ public class BossArcherIA : MonoBehaviour
                 case bossArcherIA.TURNING_RIGHT_TO_RUN:
                 case bossArcherIA.TURNING_LEFT_TO_STOP:
                 case bossArcherIA.TURNING_RIGHT_TO_STOP:
-                    break;
-
                 case bossArcherIA.HITTED:
                     break;
+
+                case bossArcherIA.IDLE:
+                    if (Input.GetKeyDown(KeyCode.P))
+                        _bossState = bossArcherIA.PRESHOOT;
+                        break;
 
                 case bossArcherIA.DEAD:
                     if (_fallingDead)
