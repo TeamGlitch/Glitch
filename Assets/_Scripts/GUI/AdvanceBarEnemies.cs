@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class AdvanceBarEnemies : MonoBehaviour {
 
-    private const float maxTime = 300.0f;
+    private const float maxTime = 0.5f * 60f;
 
     public Slider slider;
 
@@ -19,6 +19,8 @@ public class AdvanceBarEnemies : MonoBehaviour {
 
     void Update()
     {
+        //TODO: Se deberia ralentizar con slowfps?
+        //TODO: Funciona durante el scroll inicial del nivel. Probablemente también en pantallas de game over y alguna más.
         slider.value += Time.deltaTime;
         if (slider.value >= maxTime)
         {
