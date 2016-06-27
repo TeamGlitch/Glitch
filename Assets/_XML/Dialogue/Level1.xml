@@ -1,10 +1,10 @@
 ﻿<!--?xml version=”1.0” encoding=”UTF-8”?-->
+<!--?xml version=”1.0” encoding=”UTF-8”?-->
 <Dialogue lang="English">
 	<Scene id="0">
 		<T>[face=Glitch]Hello! You can go to the next message with A.</T>
 		<T>I can also skip it automatically.[wait=1.5][skip]</T>
-		<T>[
-    ]And you can't skip this text! Go on! Try it![wait=2]&#xA;See?[wait=0.5] Told ya.</T>
+		<T>[]And you can't skip this text! Go on! Try it![wait=2]&#xA;See?[wait=0.5] Told ya.</T>
 		<T>[playermove=false][noskip]You can make the player stop moving...[wait=2]</T>
 		<T>[playermove=true][noskip]...Or allow you to, so the message goes while playing.</T>
 		<T>I can talk [wait=1][speed=0]really fast [wait=1][speed=0.5]or really slow.</T>
@@ -23,16 +23,21 @@
 	</Scene>
 	<Scene id="1">
 		<T>[face=None][playermove=false]Welcome to Artichoke Kingdom!</T>
-		<T>You can move using the left pad.</T>
-		<T>And jump pressing the A button.</T>
+		<T>Move with the left pad</T>
+		<T>And jump pressing A. The more you press the more you are going to jump!</T>
 	</Scene>
 	<Scene id="2">
-		<T>[face=None][playermove=false]You can use your teleport pressing the X button on the ground or in the air.</T>
+		<T>[face=None][playermove=false]Press X to use your teleport</T>
+		<T>[face=None][playermove=false]You will teleport to the direction you are pointing with the left pad in the moment you press the button</T>
+		<T>[face=None][playermove=false]You can try to catch that items above that tree to try it</T>
 	</Scene>
 	<Scene id="3">
-		<T>[face=None][playermove=false]You can create error boxes when you see an exclamation pressing the Y button.</T>
+		<T>[face=None][playermove=false]Did you see this exclamation? And this distorsion?</T>
+		<T>[face=None][playermove=false]Press Y when you see these distorsions to create error boxes!</T>
 	</Scene>
 	<Scene id="4">
-		<T>[face=None][playermove=false]You can make the time go slower pressing the B button.</T>
+		<T>[face=None][playermove=false]Wait, these are traps? You can need to make the time go through this section...</T>
+		<T>[face=None][playermove=false]If you press B you can make time go slower and if you press again you will make the time go right again</T>
+		<T>[face=None][playermove=false]But care, you can only have this power activated a small amount of time</T>
 	</Scene>
 </Dialogue>
