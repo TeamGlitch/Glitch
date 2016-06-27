@@ -41,10 +41,6 @@ SubShader {
 			//Applies movement and correction textures to
 			//the x of the uv and returns the result
 			half4 normal = tex2D (_DispTex, i.uv.xy);
-
-			if (_MainTex_TexelSize.y < 0)
-				i.uv.y = 1-i.uv.y;
-
 			half4 correction = tex2D (_Corr, i.uv.xy);
 			i.uv.x += (normal.x - correction.x) * _Intensity;
 			half4 final = tex2D(_MainTex,  i.uv.xy);
