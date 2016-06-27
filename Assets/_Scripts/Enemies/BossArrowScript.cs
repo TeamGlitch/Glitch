@@ -27,7 +27,8 @@ public class BossArrowScript : MonoBehaviour {
 
     public void ShootArrow()
     {
-        _rigidBody.detectCollisions = true;
+		if(_rigidBody != null)
+	        _rigidBody.detectCollisions = true;
         canMove = true;
     }
 
@@ -37,7 +38,7 @@ public class BossArrowScript : MonoBehaviour {
         {
             player.Death();
         }
-        else
+        else if(!coll.transform.CompareTag("Archer"))
         {
             canMove = false;
             _rigidBody.detectCollisions = false;
