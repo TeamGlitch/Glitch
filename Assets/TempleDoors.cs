@@ -12,6 +12,8 @@ public class TempleDoors : MonoBehaviour {
 
     public World world;
 
+    private BoxCollider boxCollider;
+
     private enum door_state
     {
         GOING_UP,
@@ -28,6 +30,11 @@ public class TempleDoors : MonoBehaviour {
         _doorState = door_state.WAITING;
         _timeSinceStateChanged = 0.0f;
         _initialPosition = transform.position;
+        BoxCollider[] boxColliders = transform.GetComponents<BoxCollider>();
+        boxCollider = boxColliders[0];
+        if (!boxCollider.isTrigger)
+            boxCollider = boxColliders[1];
+        boxCollider.enabled = false;
     }
 	
 	// Update is called once per frame
@@ -68,6 +75,8 @@ public class TempleDoors : MonoBehaviour {
                     {
                         _timeSinceStateChanged = 0.0f;
                         _doorState = door_state.GOING_DOWN;
+                        boxCollider.enabled = true;
+
                     }
                     break;
 
@@ -76,6 +85,8 @@ public class TempleDoors : MonoBehaviour {
                     {
                         _timeSinceStateChanged = 0.0f;
                         _doorState = door_state.GOING_UP;
+                        boxCollider.enabled = false;
+
                     }
                     break;
             }
