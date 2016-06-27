@@ -108,6 +108,8 @@ public class BossArcherIA : MonoBehaviour
 
     public BossArrowScript upArrow;
 
+	private bool shootInThisPlatform = false;
+
     #endregion
 
     #region Init & Update
@@ -173,6 +175,7 @@ public class BossArcherIA : MonoBehaviour
 
                     if (IsGrounded() && perc >= 0.5f)
                     {
+						shootInThisPlatform = false;
                         _bossState = bossArcherIA.FALLING_JUMP;
                     }
                     break;
@@ -327,11 +330,11 @@ public class BossArcherIA : MonoBehaviour
             _fallingJump = false;
             _animator.SetTrigger("Jump");
         }
-        else if (coll.transform.name == "StopPoint" && _firstStopPoint && _bossState != bossArcherIA.DEAD)
+        else if (coll.transform.name == "StopPoint" && _firstStopPoint && _bossState != bossArcherIA.DEAD && !shootInThisPlatform)
         {
             _firstStopPoint = false;
         }
-        else if (coll.transform.name == "StopPoint" && !_firstStopPoint && _bossState != bossArcherIA.DEAD)
+        else if (coll.transform.name == "StopPoint" && !_firstStopPoint && _bossState != bossArcherIA.DEAD && !shootInThisPlatform)
         {
             if (_bossPos == bossArcherPos.MEDIUMLEFT || _bossPos == bossArcherPos.MEDIUMRIGHT)
                 transform.position = new Vector3(transform.position.x, transform.position.y, 17.5f - 5.34f);
@@ -395,7 +398,10 @@ public class BossArcherIA : MonoBehaviour
         else if (lives == 1)
             _currentSpecialSpeed = 3f;
 
-        _bossState = bossArcherIA.PRESHOOT;
+		if(!shootInThisPlatform)
+	        _bossState = bossArcherIA.PRESHOOT;
+		else
+			_bossState = bossArcherIA.MOVING;
         _timeSinceStateChanged = 0.0f;
     }
 
@@ -595,8 +601,8 @@ public class BossArcherIA : MonoBehaviour
     public void ShootUpArrow()
     {
         upArrow.gameObject.SetActive(true);
-        upArrow.ShootArrow();
         upArrow.transform.position = new Vector3(transform.position.x + 0.18f, transform.position.y + 3.2f, transform.position.z - 0.07f);
+        upArrow.ShootArrow();
     }
 
     public void ShootArrows()
@@ -661,6 +667,7 @@ public class BossArcherIA : MonoBehaviour
                     break;
             }
         }
+		shootInThisPlatform = true;
         StartCoroutine("CO_ShootArrows");
     }
 

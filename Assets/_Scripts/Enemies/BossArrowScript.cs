@@ -27,7 +27,8 @@ public class BossArrowScript : MonoBehaviour {
 
     public void ShootArrow()
     {
-        _rigidBody.detectCollisions = true;
+		if(_rigidBody != null)
+	        _rigidBody.detectCollisions = true;
         canMove = true;
     }
 
