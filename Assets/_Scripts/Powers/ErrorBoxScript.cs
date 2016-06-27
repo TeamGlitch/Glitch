@@ -55,7 +55,8 @@ public class ErrorBoxScript : MonoBehaviour
         switch (state)
         {
             case (error_box_state.NON_REACHED):
-                if (activable){
+                if (activable)
+                {
                     playerScript.IncreaseActivableBox();
                     cameraGlitchedToBoxes.AddBox(transform.position);
                     state = error_box_state.SLEEPING;
@@ -65,7 +66,8 @@ public class ErrorBoxScript : MonoBehaviour
             case (error_box_state.SLEEPING):
 
                 if ((!activable && playerController.state != PlayerController.player_state.TELEPORTING) ||
-                    activable && playerController.state == PlayerController.player_state.DEATH){
+                    activable && playerController.state == PlayerController.player_state.DEATH)
+                {
                     activable = false;
                     playerScript.DecreaseActivableBox();
                     cameraGlitchedToBoxes.RemoveBox(transform.position);
@@ -121,7 +123,8 @@ public class ErrorBoxScript : MonoBehaviour
                     timeStateChange = Time.time;
                     state = error_box_state.DISSAPEARING;
                 }
-                else{
+                else
+                {
 
                     if (Time.time - lastFlicker >= flickTime)
                     {
@@ -138,8 +141,8 @@ public class ErrorBoxScript : MonoBehaviour
 
                         lastFlicker = Time.time;
                     }
-                } 
-                
+                }
+
                 break;
 
             case (error_box_state.DISSAPEARING):
