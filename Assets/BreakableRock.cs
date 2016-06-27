@@ -33,10 +33,8 @@ public class BreakableRock : MonoBehaviour {
     {
         for (int i = 0; i < transforms.Length; i++)
         {
-            rigidBodies[i].isKinematic = true;
             transforms[i].localPosition = initialTrans[i];
             transforms[i].localRotation = initialRot[i];
-            boxes[i].enabled = false;
         }
         transform.position = initPosition;
         transform.rotation = initRot;
@@ -53,6 +51,16 @@ public class BreakableRock : MonoBehaviour {
                 rigidBodies[i].isKinematic = false;
                 boxes[i].enabled = true;
             }
+            Invoke("DisableColliders", 2.0f);
+        }
+    }
+
+    public void DisableColliders()
+    {
+        for (int i = 0; i < rigidBodies.Length; i++)
+        {
+            rigidBodies[i].isKinematic = true;
+            boxes[i].enabled = false;
         }
     }
 }
