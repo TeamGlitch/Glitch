@@ -148,6 +148,10 @@ public class BossArcherIA : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (slowFPSactivated)
+            _animator.speed = 0.5f;
+        else
+            _animator.speed = 1f;
         if (world.doUpdate)
         {
             if (!_fallingDead)
