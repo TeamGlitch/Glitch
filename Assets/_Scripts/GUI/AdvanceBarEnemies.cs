@@ -16,7 +16,7 @@ public class AdvanceBarEnemies : MonoBehaviour {
 
     private endtimeState state;
 
-    private const float maxTime = 0.3f * 60f;
+    private const float maxTime = 5f * 60f;
     private float time = 0.0f;
     private float stateChange = 0f;
 
