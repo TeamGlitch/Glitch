@@ -49,10 +49,12 @@ public class BossArcherIA : MonoBehaviour
     public float timeInPreShoot = 2.0f;
     public float timeInPostShoot = 2.0f;
     private float _timeSinceStateChanged;
+    [SerializeField]
     private bool _movingRight = true;
 
     [SerializeField]
     private bossArcherIA _bossState;
+    [SerializeField]
     private bossArcherPos _bossPos;
     private Rigidbody _rigidbody;
     private BoxCollider _boxCollider;
@@ -201,7 +203,6 @@ public class BossArcherIA : MonoBehaviour
                         {
                             case bossArcherPos.MAXLEFT:
                                 _movingRight = true;
-                                _bossPos = bossArcherPos.MEDIUMLEFT;
                                 break;
 
                             case bossArcherPos.MEDIUMLEFT:
@@ -209,12 +210,10 @@ public class BossArcherIA : MonoBehaviour
                                 if (random == 1)
                                 {
                                     _movingRight = true;
-                                    _bossPos = bossArcherPos.MEDIUMRIGHT;
                                 }
                                 else
                                 {
                                     _movingRight = false;
-                                    _bossPos = bossArcherPos.MAXLEFT;
                                 }
                                 break;
                             case bossArcherPos.MEDIUMRIGHT:
@@ -222,17 +221,14 @@ public class BossArcherIA : MonoBehaviour
                                 if (random == 1)
                                 {
                                     _movingRight = true;
-                                    _bossPos = bossArcherPos.MAXRIGHT;
                                 }
                                 else
                                 {
                                     _movingRight = false;
-                                    _bossPos = bossArcherPos.MEDIUMLEFT;
                                 }
                                 break;
                             case bossArcherPos.MAXRIGHT:
                                 _movingRight = false;
-                                _bossPos = bossArcherPos.MEDIUMRIGHT;
                                 break;
                         }
                         if (_movingRight)
@@ -293,33 +289,39 @@ public class BossArcherIA : MonoBehaviour
             timeJumping = 0.0f;
             if (_bossPos == bossArcherPos.MAXRIGHT)
             {
-                currentEndJumpPoint = EndJumpPoint[5].position + new Vector3(1f, -1f, 0f);
+                _bossPos = bossArcherPos.MEDIUMRIGHT;
+                currentEndJumpPoint = EndJumpPoint[4].position + new Vector3(-1f, -1f, 0f);
                 currentMiddleJumpPoint = MiddleJumpPoint[2].position;
             }
             else if (_bossPos == bossArcherPos.MAXLEFT)
             {
-                currentEndJumpPoint = EndJumpPoint[0].position + new Vector3(-1f, -1f, 0f);
+                _bossPos = bossArcherPos.MEDIUMLEFT;
+                currentEndJumpPoint = EndJumpPoint[1].position + new Vector3(+1f, -1f, 0f);
                 currentMiddleJumpPoint = MiddleJumpPoint[0].position;
             }
             else if (_bossPos == bossArcherPos.MEDIUMLEFT && _movingRight)
             {
-                currentEndJumpPoint = EndJumpPoint[1].position + new Vector3(1f, -1f, 0f);
-                currentMiddleJumpPoint = MiddleJumpPoint[0].position;
-            }
-            else if (_bossPos == bossArcherPos.MEDIUMLEFT && !_movingRight)
-            {
-                currentEndJumpPoint = EndJumpPoint[2].position + new Vector3(-1f, -1f, 0f);
-                currentMiddleJumpPoint = MiddleJumpPoint[1].position;
-            }
-            else if (_bossPos == bossArcherPos.MEDIUMRIGHT && _movingRight)
-            {
+                _bossPos = bossArcherPos.MEDIUMRIGHT;
                 currentEndJumpPoint = EndJumpPoint[3].position + new Vector3(1f, -1f, 0f);
                 currentMiddleJumpPoint = MiddleJumpPoint[1].position;
             }
+            else if (_bossPos == bossArcherPos.MEDIUMLEFT && !_movingRight)
+            {
+                _bossPos = bossArcherPos.MAXLEFT;
+                currentEndJumpPoint = EndJumpPoint[0].position + new Vector3(-1f, -1f, 0f);
+                currentMiddleJumpPoint = MiddleJumpPoint[0].position;
+            }
+            else if (_bossPos == bossArcherPos.MEDIUMRIGHT && _movingRight)
+            {
+                _bossPos = bossArcherPos.MAXRIGHT;
+                currentEndJumpPoint = EndJumpPoint[5].position + new Vector3(1f, -1f, 0f);
+                currentMiddleJumpPoint = MiddleJumpPoint[2].position;
+            }
             else if (_bossPos == bossArcherPos.MEDIUMRIGHT && !_movingRight)
             {
-                currentEndJumpPoint = EndJumpPoint[4].position + new Vector3(-1f, -1f, 0f);
-                currentMiddleJumpPoint = MiddleJumpPoint[2].position;
+                _bossPos = bossArcherPos.MEDIUMLEFT;
+                currentEndJumpPoint = EndJumpPoint[2].position + new Vector3(-1f, -1f, 0f);
+                currentMiddleJumpPoint = MiddleJumpPoint[1].position;
             }
             else
             {
@@ -399,8 +401,20 @@ public class BossArcherIA : MonoBehaviour
 
 		if(!shootInThisPlatform)
 	        _bossState = bossArcherIA.PRESHOOT;
-		else
-			_bossState = bossArcherIA.MOVING;
+		else if(_movingRight)
+        {
+            _bossState = bossArcherIA.TURNING_LEFT_TO_RUN;
+            _animator.SetBool("Run", true);
+            _animator.speed = _currentSpecialSpeed;
+            _animator.SetTrigger("TurnLeft");
+        }
+        else
+        {
+            _bossState = bossArcherIA.TURNING_RIGHT_TO_RUN;
+            _animator.SetBool("Run", true);
+            _animator.speed = _currentSpecialSpeed;
+            _animator.SetTrigger("TurnRight");
+        }
         _timeSinceStateChanged = 0.0f;
     }
 
