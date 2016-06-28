@@ -1,5 +1,5 @@
-<!--?xml version=”1.0” encoding=”UTF-8”?-->
-<!--?xml version=”1.0” encoding=”UTF-8”?-->
+<!--?xml version=â€1.0â€ encoding=â€UTF-8â€?-->
+<!--?xml version=â€1.0â€ encoding=â€UTF-8â€?-->
 <Dialogue lang="English">
 	<Scene id="0">
 		<T>[face=Glitch]Hello! You can go to the next message with A.</T>
@@ -24,8 +24,8 @@
 	<Scene id="1">
 		<T>[face=Bug][playermove=false]Hey watchout, Glitch!</T>
 		<T>[face=Bug][playermove=false]There is the archer, and seems to be pretty angry...</T>
-		<T>[face=None][playermove=false]Your path ends here. You aren't a heroe, system error!!</T>
+		<T>[face=None][playermove=false]Your path ends here. You aren't a hero, system error!!</T>
 		<T>[face=Glitch][playermove=false]What she called me, bug!?</T>
-		<T>[face=Bug][playermove=false]Glitch her!</T>
+		<T>[face=Bug][playermove=false]Glitch her through the roots!</T>
 	</Scene>
 </Dialogue>
