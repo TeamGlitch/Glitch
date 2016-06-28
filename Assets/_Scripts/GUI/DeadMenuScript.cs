@@ -118,7 +118,7 @@ public class DeadMenuScript : MonoBehaviour {
         float end = glitchBar.slider.maxValue;
         float percent = (checkpointPosition.x - begin) / (end - begin);
 
-        enemyBar.slider.value = enemyBar.slider.maxValue * percent;
+        enemyBar.Reanimated(percent);
 
         player.ContinueAfterDeath(fib(timesDead + 1) * 10);
     }
