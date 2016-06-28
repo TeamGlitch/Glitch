@@ -5,44 +5,44 @@ using InControl;
 
 public class MenuScript : MonoBehaviour {
 
-	public Canvas quitMenu;
-	public Canvas levelSelectionMenu;
-	public Canvas helpMenu;
-	public Canvas creditsMenu;
-	public Button startText;
-	public Button exitText;
-	public Button levelSelectText;
-	public Button creditsText;
-	public Button HelpText;
-	public Button keyboardButton;
-	public Button gamepadButton;
-	public Image keyboardImage;
-	public Image gamepadImage;
-	public Button backButtonInHelp;
-	public Button firstLevelSelectButton;
-	public Button firstHelpButton;
-	public Button firstExitButton;
-	public Button firstCreditsButton;
+    //References by screen//
+    public Button startText;
+    public Image pointer;
+
     public Text loadingText;
 
+    public Canvas levelSelectionMenu;
+    public Button levelSelectText;
+    public Button firstLevelSelectButton;
+
+    private OptionsMenuScript options;
+    public Button OptionsText;
+
+	public Canvas quitMenu;
+    public Button exitText;
+    public Button firstExitButton;
+
+    //SOUND//
     public AudioClip backSound;
     public AudioClip selectSound;
     public AudioClip confirmSound;
 
+    //MISCELLANEA//
 	private float lastTimeActive = 0;
 	private bool onMainScreen = true;
 
 	void Start () 
     {
+
 		quitMenu.enabled = false;
 		levelSelectionMenu.enabled = false;
-		helpMenu.enabled = false;
-		creditsMenu.enabled = false;
 		startText.Select ();
 
 		//Play the menu music and check this time as the last active
 		lastTimeActive = Time.time;
 		SoundManager.instance.musicSource.Play();
+
+        options =  GetComponent<OptionsMenuScript>();
 	}
 
 	void Update(){
@@ -66,9 +66,8 @@ public class MenuScript : MonoBehaviour {
         levelSelectionMenu.enabled = false;
         startText.gameObject.SetActive(false);
         levelSelectText.gameObject.SetActive(false);
-        HelpText.gameObject.SetActive(false);
         exitText.gameObject.SetActive(false);
-        creditsText.gameObject.SetActive(false);
+        OptionsText.gameObject.SetActive(false);
         loadingText.gameObject.SetActive(true);
 		SoundManager.instance.musicSource.Stop();
 		onMainScreen = false;
@@ -90,42 +89,27 @@ public class MenuScript : MonoBehaviour {
         levelSelectionMenu.enabled = false;
         startText.gameObject.SetActive(false);
         levelSelectText.gameObject.SetActive(false);
-        HelpText.gameObject.SetActive(false);
         exitText.gameObject.SetActive(false);
-        creditsText.gameObject.SetActive(false);
+        OptionsText.gameObject.SetActive(false);
         loadingText.gameObject.SetActive(true);
         SoundManager.instance.musicSource.Stop();
         onMainScreen = false;
         Loader.LoadScene("Level1");
     }
 
-	public void HelpPress()
-	{
+    public void OptionsPress(){
+
         SoundManager.instance.PlaySingle(confirmSound);
-        helpMenu.enabled = true;
 
 		startText.enabled = false;
 		levelSelectText.enabled = false;
-		HelpText.enabled = false;
 		exitText.enabled = false;
-		creditsText.enabled = false;
-
-		keyboardButton.enabled = false;
-		gamepadButton.enabled = true;
-
-		keyboardImage.enabled = true;
-		gamepadImage.enabled = false;
-
-		Navigation customNav = new Navigation();
-		customNav.mode = Navigation.Mode.Explicit;
-		customNav.selectOnUp = gamepadButton;
-		backButtonInHelp.navigation = customNav;
+        OptionsText.enabled = false;
 
 		onMainScreen = false;
 
-		firstHelpButton.Select ();
-	}
-
+        options.Enable();
+    }
 
 	public void QuitPress()
 	{
@@ -134,45 +118,12 @@ public class MenuScript : MonoBehaviour {
 
 		startText.enabled = false;
 		levelSelectText.enabled = false;
-		HelpText.enabled = false;
+        OptionsText.enabled = false;
 		exitText.enabled = false;
-		creditsText.enabled = false;
 
 		onMainScreen = false;
 
 		firstExitButton.Select ();
-	}
-
-	public void KeyboardPress()
-	{
-        SoundManager.instance.PlaySingle(confirmSound);
-        keyboardButton.enabled = false;
-		gamepadButton.enabled = true;
-		keyboardImage.enabled = true;
-		gamepadImage.enabled = false;
-
-		Navigation customNav = new Navigation();
-		customNav.mode = Navigation.Mode.Explicit;
-		customNav.selectOnUp = gamepadButton;
-		backButtonInHelp.navigation = customNav;
-
-		gamepadButton.Select ();
-	}
-
-	public void GamepadPress()
-	{
-        SoundManager.instance.PlaySingle(confirmSound);
-        keyboardButton.enabled = true;
-		gamepadButton.enabled = false;
-		keyboardImage.enabled = false;
-		gamepadImage.enabled = true;
-
-		Navigation customNav = new Navigation();
-		customNav.mode = Navigation.Mode.Explicit;
-		customNav.selectOnUp = keyboardButton;
-		backButtonInHelp.navigation = customNav;
-
-		keyboardButton.Select ();
 	}
 
 	public void NoPress()
@@ -180,14 +131,12 @@ public class MenuScript : MonoBehaviour {
         SoundManager.instance.PlaySingle(backSound);
         quitMenu.enabled = false;
 		levelSelectionMenu.enabled = false;
-		helpMenu.enabled = false;
-		creditsMenu.enabled = false;
+        options.Disable();
 
 		startText.enabled = true;
 		levelSelectText.enabled = true;
-		HelpText.enabled = true;
 		exitText.enabled = true;
-		creditsText.enabled = true;
+        OptionsText.enabled = true;
 
 		onMainScreen = true;
 		lastTimeActive = Time.time;
@@ -195,30 +144,25 @@ public class MenuScript : MonoBehaviour {
 		startText.Select ();
 	}
 
-	public void CreditsMenu()
-	{
-        SoundManager.instance.PlaySingle(confirmSound);
-        creditsMenu.enabled = true;
-
-		startText.enabled = false;
-		levelSelectText.enabled = false;
-		HelpText.enabled = false;
-		exitText.enabled = false;
-		creditsText.enabled = false;
-
-		onMainScreen = false;
-
-		firstCreditsButton.Select ();
-	}
-
 	public void ExitGame()
 	{
         Application.Quit();
 	}
 
-    public void MakeSelectSound()
+    public void MakeSelectSound(RectTransform textPosition)
     {
         SoundManager.instance.PlaySingle(selectSound);
+
+        if (textPosition != null) { 
+            Vector3 newPosition = pointer.rectTransform.anchoredPosition;
+            newPosition.y = textPosition.anchoredPosition.y + 13.5f;
+            pointer.rectTransform.anchoredPosition = newPosition;
+        }
+    }
+
+    public void MakeSelectSound()
+    {
+        MakeSelectSound(null);
     }
 
 
