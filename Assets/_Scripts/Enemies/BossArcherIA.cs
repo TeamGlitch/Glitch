@@ -46,6 +46,7 @@ public class BossArcherIA : MonoBehaviour
 
     public float horizontalVelocity = 10.0f;
     public Door door;
+    public bool start = false;
     public float timeInPreShoot = 2.0f;
     public float timeInPostShoot = 2.0f;
     private float _timeSinceStateChanged;
@@ -260,9 +261,12 @@ public class BossArcherIA : MonoBehaviour
                     break;
 
                 case bossArcherIA.IDLE:
-                    if (Input.GetKeyDown(KeyCode.P))
+                    if (start)
+                    {
                         _bossState = bossArcherIA.PRESHOOT;
-                        break;
+                        start = false;
+                    }
+                    break;
 
                 case bossArcherIA.DEAD:
                     if (_fallingDead)

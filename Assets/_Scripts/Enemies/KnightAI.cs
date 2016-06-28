@@ -89,12 +89,9 @@ public class KnightAI : MonoBehaviour {
 
         if (coll.contacts[0].otherCollider.CompareTag("Player"))
         {
-            rigid.isKinematic = true;
             if (player.transform.position.y >= (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2))
             {
                 Attacked();
-                headCollider.enabled = false;
-                collider.enabled = false;
             }
             else if (sight == false)
             {
@@ -402,7 +399,6 @@ public class KnightAI : MonoBehaviour {
     {
         if (states != enemy_states.DEATH)
         {
-            rigid.isKinematic = false;
             speed = chaseSpeed;
             states = enemy_states.CHASE;
         }
@@ -426,19 +422,20 @@ public class KnightAI : MonoBehaviour {
     {
         if (!attacked)
         {
+            rigid.isKinematic = true;
             attacked = true;
             speed = attackSpeed;
             states = enemy_states.HITTED;
             --lives;
+            collider.enabled = false;
+            swordCollider.enabled = false;
+            headCollider.enabled = false;
             SoundManager.instance.PlaySingle(hitSound);
 
             if (lives <= 0)
             {
                 states = enemy_states.DEATH;
-                collider.enabled = false;
-                swordCollider.enabled = false;
                 fieldOfView.enabled = false;
-                headCollider.enabled = false;
                 isInAttack = false;
                 InvokeRepeating("TiltModel", 0f, 0.1f);
             }
@@ -458,6 +455,7 @@ public class KnightAI : MonoBehaviour {
         yield return new WaitForSeconds(wait);
         headCollider.enabled = true;
         collider.enabled = true;
+        swordCollider.enabled = true;
         if (states != enemy_states.DEATH)
         {
             rigid.isKinematic = false;
