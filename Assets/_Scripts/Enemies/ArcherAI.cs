@@ -459,21 +459,21 @@ public class ArcherAI : MonoBehaviour {
     {
         archerModel.gameObject.SetActive(false);
         Vector3 pos = transform.position;
-        pos.y += 2f;
+        pos.y += 1.5f;
         pos.z = 1f;
         transform.position = pos;
-		transform.localScale = new Vector3(6f,6f,6f);
+		transform.localScale = new Vector3(4f,4f,4f);
         transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
         spriteRenderer.enabled = true;
         particleSystem.Play();
-       Invoke("SpriteToDead", 3.0f);
+       Invoke("SpriteToDead", 1.0f);
     }
 
     public void SpriteToDead()
     {
         spriteRenderer.enabled = false;
         particleSystem.Play();
-        Invoke("DisableGO", 2.0f);
+        Invoke("DisableGO", 1.0f);
         DropItems();
     }
 
