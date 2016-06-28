@@ -35,13 +35,13 @@ public class GlitchSceneShader : ImageEffectBase
             maxXPos = playerScript.lastCheckPoint.transform.position.x;
             timeSinceChangePoint = 0.0f;
         }
-        if (maxXPos > playerScript.transform.position.x && !glitchLineShader.active &&
+        if (maxXPos - 5f > playerScript.transform.position.x && !glitchLineShader.active &&
             ((Time.unscaledTime % 20f >= 0f && Time.unscaledTime % 20f <= 3f) || (Time.unscaledTime % 20f >= 8f && Time.unscaledTime % 20f <= 12f)))
             glitchLineShader.active = true;
-        else if (maxXPos > playerScript.transform.position.x && glitchLineShader.active &&
+        else if (maxXPos - 5f > playerScript.transform.position.x && glitchLineShader.active &&
             ((Time.unscaledTime % 20f > 3f && Time.unscaledTime % 20f < 8f) || (Time.unscaledTime % 20f > 12f && Time.unscaledTime % 20f < 20f)))
             glitchLineShader.active = false;
-        else if (maxXPos < playerScript.transform.position.x && glitchLineShader.active)
+        else if (maxXPos - 5f < playerScript.transform.position.x && glitchLineShader.active)
             glitchLineShader.active = false;
         Vector3 maxPos = new Vector3(maxXPos, playerTransform.position.y, playerTransform.position.z);
         float percentageMaxPosition = CalculatebGlitchPositionsInPercentage(maxPos);
