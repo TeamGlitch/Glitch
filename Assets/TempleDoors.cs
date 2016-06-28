@@ -65,6 +65,7 @@ public class TempleDoors : MonoBehaviour {
                         lerp = 1.0f;
                         _timeSinceStateChanged = 0.0f;
                         _doorState = door_state.WAITING_DOWN;
+                        boxCollider.enabled = false;
                     }
                     auxY = Mathf.Lerp(_initialPosition.y, _initialPosition.y - distance, lerp);
                     transform.position = new Vector3(transform.position.x, auxY, transform.position.z);
@@ -85,7 +86,6 @@ public class TempleDoors : MonoBehaviour {
                     {
                         _timeSinceStateChanged = 0.0f;
                         _doorState = door_state.GOING_UP;
-                        boxCollider.enabled = false;
 
                     }
                     break;

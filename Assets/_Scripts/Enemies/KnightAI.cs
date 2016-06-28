@@ -503,21 +503,21 @@ public class KnightAI : MonoBehaviour {
 	{
 		_knightModel.gameObject.SetActive(false);
 		Vector3 pos = transform.position;
-		pos.y += 2f;
+		pos.y += 1.5f;
 		pos.z = 1f;
 		transform.position = pos;
-		transform.localScale = new Vector3(6f,6f,6f);
+		transform.localScale = new Vector3(4f,4f,4f);
 		transform.rotation = new Quaternion(0f,0f,0f,0f);
 		_spriteRenderer.enabled = true;
         _particleSystem.Play();
-        Invoke("SpriteToDead", 3.0f);
+        Invoke("SpriteToDead", 1.0f);
 	}
 
     public void SpriteToDead()
     {
         _spriteRenderer.enabled = false;
         _particleSystem.Play();
-        Invoke("DisableGO", 2.0f);
+        Invoke("DisableGO", 1.0f);
         DropItems();
     }
 
