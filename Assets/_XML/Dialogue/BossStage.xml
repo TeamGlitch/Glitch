@@ -23,9 +23,9 @@
 	</Scene>
 	<Scene id="1">
 		<T>[face=Bug][playermove=false]Hey watchout, Glitch!</T>
-		<T>[face=Bug][playermove=false]There is the archer, and seems to be pretty angry...</T>
-		<T>[face=None][playermove=false]Your path ends here. You aren't a hero, system error!!</T>
-		<T>[face=Glitch][playermove=false]What she called me, bug!?</T>
-		<T>[face=Bug][playermove=false]Glitch her through the roots!</T>
+		<T>There is the archer hero, and she seems to be pretty angry...</T>
+		<T>[face=None]Your path ends here. You aren't a hero, system error!!</T>
+		<T>[face=Glitch]What!? Bug, did you hear that? I dare you to say it again!</T>
+		<T>[face=Bug]Try to glitch her through the roots!</T>
 	</Scene>
 </Dialogue>

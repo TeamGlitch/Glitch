@@ -22,22 +22,27 @@
 		<T>So yeah, have fun.</T>
 	</Scene>
 	<Scene id="1">
-		<T>[face=None][playermove=false]Welcome to Artichoke Kingdom!</T>
-		<T>Move with the left pad</T>
-		<T>And jump pressing A. The more you press the more you are going to jump!</T>
+		<T>[face=None][playermove=false]Welcome to the Artichoke Kingdom!</T>
+		<T>You can move tilting the left stick.</T>
+		<T>You can also jump pressing A. The longer you press, the higher you're going to jump!</T>
 	</Scene>
 	<Scene id="2">
-		<T>[face=None][playermove=false]Press X to use your teleport</T>
-		<T>[face=None][playermove=false]You will teleport to the direction you are pointing with the left pad in the moment you press the button</T>
-		<T>[face=None][playermove=false]You can try to catch that items above that tree to try it</T>
+		<T>[face=None][playermove=false]Press the X button to use your teleport.</T>
+		<T>You will teleport in the direction the left stick was pointing at when the button was pressed.</T>
+    <T>It ignores any collisions, so you can use it to go through walls, enemies and other solid objects.</T>
+    <T>It can be used on ground and while jumping. So it's kind of a double jump!</T>
+		<T>If you want to test it, try to pick the items over this tree.</T>
 	</Scene>
 	<Scene id="3">
-		<T>[face=None][playermove=false]Did you see this exclamation? And this distorsion?</T>
-		<T>[face=None][playermove=false]Press Y when you see these distorsions to create error boxes!</T>
+		<T>[face=None][playermove=false]Do you see the exclamation over you head? And the distortion in front of you?</T>
+    <T>If there's an exclamation over you head, it means that you can bug something on the level pressing Y.</T>
+		<T>Using this power near this kind of distortions will create platforms!</T>
 	</Scene>
 	<Scene id="4">
-		<T>[face=None][playermove=false]Wait, these are traps? You can need to make the time go through this section...</T>
-		<T>[face=None][playermove=false]If you press B you can make time go slower and if you press again you will make the time go right again</T>
-		<T>[face=None][playermove=false]But care, you can only have this power activated a small amount of time</T>
+		<T>[face=None][playermove=false]Wait, these are traps? You may need to make time go slower to get through this.</T>
+		<T>If you press B you will make the game's FPS drop, slowing it down. It should make things a little bit easier!</T>
+    <T>You can deactivate it whenever you want by pressing B again.</T>
+    <T>But be careful, it doesn't last forever! Keep an eye on the bar under your lives. It indicates how much time left you have.</T>
+    <T>The bar will start filling itself once the power is deactivated, so don't worry about that.</T>
 	</Scene>
 </Dialogue>
