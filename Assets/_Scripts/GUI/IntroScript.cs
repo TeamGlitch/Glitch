@@ -38,11 +38,16 @@ public class IntroScript : MonoBehaviour {
         logoMenu = logoscreen.GetChild(0).GetChild(0).GetComponent<RectTransform>();
         logoMenu.position = new Vector3(3000,0,-1);
 
-        
+        Loader.LoadScene("menu", false, true, false);
 	}
 
 	// Update is called once per frame
 	void Update () {
+
+        if (InputManager.ActiveDevice.AnyButton.WasPressed){
+            Loader.allowToFinish();
+            return;
+        }
 
         if (phase == introPhases.PRE_LOGOSCREEN || phase == introPhases.LOGOSCREEN){
 			
@@ -157,9 +162,9 @@ public class IntroScript : MonoBehaviour {
 
             case introPhases.INTROMOVIE:
 
-                if (Time.time > timeToEnd || InputManager.ActiveDevice.AnyButton.WasPressed)
+                if (Time.time > timeToEnd)
                 {
-                    Loader.LoadScene("menu");
+                    Loader.allowToFinish();
                 }
                 else if (Camera.current == Camera.main)
                 {
