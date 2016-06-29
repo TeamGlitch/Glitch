@@ -154,7 +154,9 @@ public class Player : MonoBehaviour {
 	public void DecreaseActivableBox()
 	{
 		--numberOfBoxesActivable;
-		if (numberOfBoxesActivable == 0) {
+        if (numberOfBoxesActivable < 0)
+            numberOfBoxesActivable = 0;
+		if (numberOfBoxesActivable == 0 && boxUIActivated.activeSelf) {
 			boxUIActivated.SetActive (false);
 		}
 	}
