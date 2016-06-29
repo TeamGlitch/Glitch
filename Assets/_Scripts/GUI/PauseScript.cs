@@ -13,7 +13,7 @@ public class PauseScript : MonoBehaviour {
 
 	public void resumePress()
 	{
-		if (pauseMenu.active)
+		if (pauseMenu.activeInHierarchy)
 		{
 			playerPowers.SetActive (true);
 			Time.timeScale = 1.0f;
