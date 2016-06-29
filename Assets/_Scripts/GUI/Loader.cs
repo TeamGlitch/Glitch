@@ -10,29 +10,30 @@ public class Loader : MonoBehaviour {
 
     private static AsyncOperation async;    //Async operation
     private static string actualLevel;      //Currently loadingLevel
+    private static string lastLevel;        //Last level name
 
+    //States
+    private static bool loading = false;                //Is it loading?
+    private static bool loaded = false;                 //It has finished loading
+    private static bool allowLoadingToFinish = false;   //Allow the player to continue
 
-    private static bool loading = false;    //Is it loading?
-    private static bool interfaceShowing = false; //Its the interface visible?
-    private static bool interfaceLoad = false; //It's the interface needed for loading?
-    private static bool automaticLoad = false; //It's the loading automatic?
-    private static bool allowLoadingToFinish = false;     //Allow the player to continue
+    //Configuration
+    private static bool interfaceLoad = false;          //It's the interface needed for loading?
+    private static bool automaticLoad = false;          //Does it need player input to continue after finishing?
 
-    private static bool loaded = false;
-
+    //UI
+    private GameObject loadingUI;                           //Direct reference to the loading UI
     public Text text;                       //Screen text
     public Text percent;                    //Screen percent text
 
     private float nextLine = 0;                         //When the next line will be written
-    private GameObject loadingUI;                           //Direct reference to the loading UI
 
     private string[] phrases = { "Loading enemies hostility", "Ensuring ragequit situations", "Rendering stereotypical hacker binary patterns",
                                "Sharpening enemies weapons", "Coordinating AI stupidity", "Leaking memory", "Compiling innecesary break commands",
                                "Making noise for no reason", "Retrieving nostalgia", "Making bad design decisions", "Pretending actual bugs are intended bugs",
                                "Loading loading screens", "Initializing recursive recursive recursive functions functions functions", 
                                "Making up false loading operations", "Looking at GitHub to see who made a code mistake"};
-	
-	// Update is called once per frame
+
     void Awake()
     {
         //Check if there is already an instance of Loader
@@ -40,6 +41,8 @@ public class Loader : MonoBehaviour {
             //if not, set it to this.
             instance = this;
             loadingUI = transform.GetChild(0).gameObject;
+            DontDestroyOnLoad(gameObject);
+            text.text = "*** Commondore 64 Basic V2 **** \n\n\n\n\n\n\n\n\n\n\n\n\n\n";
         }
         //If instance already exists:
         else if (instance != this)
@@ -48,9 +51,6 @@ public class Loader : MonoBehaviour {
             Destroy(gameObject);
         }
 
-        DontDestroyOnLoad(gameObject);
-
-        text.text = "*** Commondore 64 Basic V2 **** \n\n\n\n\n\n\n\n\n\n\n\n\n\n";
 	}
 
     void Update(){
@@ -93,7 +93,6 @@ public class Loader : MonoBehaviour {
                 //Lower than 90%
                 else
                 {
-                    print("uh?");
                     int percnt = (int)((100 * async.progress) + (10 * (async.progress / 0.9f)));
                     percent.text = "Now Loading: " + percnt + "%";
 
@@ -148,6 +147,7 @@ public class Loader : MonoBehaviour {
     {
         if (!loading && actualLevel != levelName){
 
+            lastLevel = actualLevel;
             actualLevel = levelName;
             async = SceneManager.LoadSceneAsync(levelName);
 
@@ -198,5 +198,9 @@ public class Loader : MonoBehaviour {
 
     public static void allowToFinish(){
         allowLoadingToFinish = true;
+    }
+
+    public static string getLastLevel(){
+        return lastLevel;
     }
 }
