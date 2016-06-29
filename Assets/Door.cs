@@ -4,6 +4,7 @@ using System.Collections;
 public class Door : MonoBehaviour {
 
     public SphereCollider sphere;
+    public BoxCollider box;
 
     private Animator animator;
 
@@ -16,7 +17,7 @@ public class Door : MonoBehaviour {
     {
         if (coll.CompareTag("Player"))
         {
-            print("HAS GANADO!");
+            Loader.LoadScene("Congratulations");
         }
     }
 
@@ -24,5 +25,6 @@ public class Door : MonoBehaviour {
     {
         animator.SetBool("Open", true);
         sphere.enabled = false;
+        box.enabled = true;
     }
 }

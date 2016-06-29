@@ -36,8 +36,10 @@ public class Loader : MonoBehaviour {
         }
         //If instance already exists:
         else if (instance != this)
+        {
             //Destroy this, this enforces our singleton pattern so there can only be one instance of SoundManager.
             Destroy(gameObject);
+        }
 
         DontDestroyOnLoad(gameObject);
 
