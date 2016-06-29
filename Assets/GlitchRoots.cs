@@ -3,6 +3,8 @@ using System.Collections;
 using InControl;
 
 public class GlitchRoots : MonoBehaviour {
+    public AudioClip fall;
+    public AudioClip glitch;
     public GameObject rootAssociated;
     public Shader glitchShader;
     public Shader plusShader;
@@ -45,6 +47,7 @@ public class GlitchRoots : MonoBehaviour {
             player.boxUIActivated.SetActive(true);
             if (InputManager.ActiveDevice.Action4.IsPressed)
             {
+                SoundManager.instance.PlaySingle(fall);
                 rootRender.material.shader = glitchShader;
                 StartCoroutine(DeactivateGlitch(2.0f));
                 rocksRigids[0].isKinematic = false;
@@ -72,6 +75,7 @@ public class GlitchRoots : MonoBehaviour {
     IEnumerator DeactivateGlitch(float wait)
     {
         yield return new WaitForSeconds(wait);
+        SoundManager.instance.PlaySingle(glitch);
         manager.AllGlitched();
     }
 

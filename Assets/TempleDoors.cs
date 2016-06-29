@@ -3,6 +3,7 @@ using System.Collections;
 
 public class TempleDoors : MonoBehaviour {
 
+    public AudioClip fall;
     public float timeToGoUp = 1f;
     public float timeToGoDown = 0.25f;
     public float timeWaiting = 2.0f;
@@ -66,6 +67,7 @@ public class TempleDoors : MonoBehaviour {
                         timeSinceStateChanged = 0.0f;
                         doorState = door_state.WAITING_DOWN;
                         boxCollider.enabled = false;
+                        //SoundManager.instance.PlaySingle(fall);
                     }
                     auxY = Mathf.Lerp(initialPosition.y, initialPosition.y - distance, lerp);
                     transform.position = new Vector3(transform.position.x, auxY, transform.position.z);

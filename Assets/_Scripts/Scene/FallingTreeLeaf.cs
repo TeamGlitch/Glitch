@@ -3,6 +3,7 @@ using System.Collections;
 
 public class FallingTreeLeaf : MonoBehaviour {
 
+    public AudioClip glitch;
 	public float timeBeforeFall = 1.0f;
     public float timeBeforeDisappear = 1.0f;
     public Player playerScript;
@@ -47,6 +48,7 @@ public class FallingTreeLeaf : MonoBehaviour {
 	
 	void OnTriggerEnter(Collider collider) {
 		if (collider.CompareTag("Player")) {
+            SoundManager.instance.PlaySingle(glitch);
 			colliderTouched = true;
             branchRenderer.material.shader = distorsionShader;
             leafRenderer.material.shader = distorsionShader;
