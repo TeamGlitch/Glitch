@@ -44,7 +44,7 @@ public class World : MonoBehaviour {
 
         if (InputManager.ActiveDevice.MenuWasPressed && pauseMenu.activeInHierarchy)
         {
-            if(pauseScript.Unpause())
+            pauseScript.Unpause();
             pauseMenu.SetActive(false);
         }
         else if (InputManager.ActiveDevice.MenuWasPressed)

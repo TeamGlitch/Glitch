@@ -127,8 +127,4 @@ public class glitchFragment : MonoBehaviour {
 			break;
 		}
 	}
-
-    public void Reactivate(){
-        noMoreLives = false;
-    }
 }
