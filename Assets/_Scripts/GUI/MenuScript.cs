@@ -97,6 +97,20 @@ public class MenuScript : MonoBehaviour {
         Loader.LoadScene("Level1");
     }
 
+    public void LevelBossPress()
+    {
+        SoundManager.instance.PlaySingle(confirmSound);
+        levelSelectionMenu.enabled = false;
+        startText.gameObject.SetActive(false);
+        levelSelectText.gameObject.SetActive(false);
+        exitText.gameObject.SetActive(false);
+        OptionsText.gameObject.SetActive(false);
+        loadingText.gameObject.SetActive(true);
+        SoundManager.instance.musicSource.Stop();
+        onMainScreen = false;
+        Loader.LoadScene("Boss Stage");
+    }
+
     public void OptionsPress(){
 
         SoundManager.instance.PlaySingle(confirmSound);
