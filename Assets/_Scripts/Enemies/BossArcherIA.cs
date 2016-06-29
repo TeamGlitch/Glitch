@@ -112,6 +112,10 @@ public class BossArcherIA : MonoBehaviour
 
 	private bool shootInThisPlatform = false;
 
+    public AudioClip bowSound;
+    public AudioClip jumpSound;
+
+
     #endregion
 
     #region Init & Update
@@ -296,6 +300,7 @@ public class BossArcherIA : MonoBehaviour
         {
             currentStartJumpPoint = transform.position;
             timeJumping = 0.0f;
+            SoundManager.instance.PlaySingle(jumpSound);
             if (bossPos == bossArcherPos.MAXRIGHT)
             {
                 bossPos = bossArcherPos.MEDIUMRIGHT;
@@ -622,6 +627,7 @@ public class BossArcherIA : MonoBehaviour
 
     public void ShootUpArrow()
     {
+        SoundManager.instance.PlaySingle(bowSound);
         upArrow.gameObject.SetActive(true);
         upArrow.transform.position = new Vector3(transform.position.x + 0.18f, transform.position.y + 3.2f, transform.position.z - 0.07f);
         upArrow.ShootArrow();

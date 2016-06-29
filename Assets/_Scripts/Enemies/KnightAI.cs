@@ -42,6 +42,7 @@ public class KnightAI : MonoBehaviour {
     public enemy_states states = enemy_states.PATROL;
     public World world;
     public AudioClip hitSound;
+    public AudioClip explosionSound;
     public GameObject item;
 
     private static GameObject item1;
@@ -64,10 +65,10 @@ public class KnightAI : MonoBehaviour {
     private bool isInLimitPoint = false;
     private int layerMask = (~((1 << 13) | (1 << 2) | (1 << 11) | (1 << 8))) | (1 << 9) | (1 << 0);
 
-	private Transform _knightModel;
-	private SpriteRenderer _spriteRenderer;
-	private ParticleSystem _particleSystem;
-	private int _tiltCounter;
+	private Transform knightModel;
+	private SpriteRenderer spriteRenderer;
+	private ParticleSystem particleSystem;
+	private int tiltCounter;
 
     void Start()
     {
@@ -76,10 +77,10 @@ public class KnightAI : MonoBehaviour {
         itemPool = new ObjectPool(item);
         swordCollider.enabled = false;
         animator.SetInteger("DeadRandom", -1);
-		_knightModel = transform.FindChild("Soldier");
-		_spriteRenderer = transform.GetComponent<SpriteRenderer>();
-		_particleSystem = transform.GetComponent<ParticleSystem>();
-		_tiltCounter = 0;
+		knightModel = transform.FindChild("Soldier");
+		spriteRenderer = transform.GetComponent<SpriteRenderer>();
+		particleSystem = transform.GetComponent<ParticleSystem>();
+		tiltCounter = 0;
     }
 
     void OnCollisionEnter(Collision coll)
@@ -485,13 +486,13 @@ public class KnightAI : MonoBehaviour {
 
 	public void TiltModel ()
 	{
-		if (_knightModel.gameObject.activeInHierarchy) {
-			_knightModel.gameObject.SetActive (false);
+		if (knightModel.gameObject.activeInHierarchy) {
+			knightModel.gameObject.SetActive (false);
 		} else {
-			_knightModel.gameObject.SetActive (true);
+			knightModel.gameObject.SetActive (true);
 		}
-		++_tiltCounter;
-		if (_tiltCounter >= 10) {
+		++tiltCounter;
+		if (tiltCounter >= 10) {
 			CancelInvoke("TiltModel");
             KnightToSprite();
 		}
@@ -499,22 +500,25 @@ public class KnightAI : MonoBehaviour {
 
 	public void KnightToSprite ()
 	{
-		_knightModel.gameObject.SetActive(false);
+		knightModel.gameObject.SetActive(false);
 		Vector3 pos = transform.position;
 		pos.y += 1.5f;
 		pos.z = 1f;
 		transform.position = pos;
 		transform.localScale = new Vector3(4f,4f,4f);
 		transform.rotation = new Quaternion(0f,0f,0f,0f);
-		_spriteRenderer.enabled = true;
-        _particleSystem.Play();
+		spriteRenderer.enabled = true;
+        particleSystem.Play();
+        SoundManager.instance.PlaySingle(explosionSound);
+        
         Invoke("SpriteToDead", 1.0f);
 	}
 
     public void SpriteToDead()
     {
-        _spriteRenderer.enabled = false;
-        _particleSystem.Play();
+        spriteRenderer.enabled = false;
+        particleSystem.Play();
+        SoundManager.instance.PlaySingle(explosionSound);
         Invoke("DisableGO", 1.0f);
         DropItems();
     }

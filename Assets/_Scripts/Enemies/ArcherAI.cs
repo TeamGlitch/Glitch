@@ -40,6 +40,8 @@ public class ArcherAI : MonoBehaviour {
     public BoxCollider kickCollider;
     public BoxCollider headCollider;
 	public AudioClip hitSound;
+    public AudioClip bowSound;
+    public AudioClip explosionSound;
 
     private static GameObject item1;
     private static GameObject item2;
@@ -366,6 +368,7 @@ public class ArcherAI : MonoBehaviour {
             }
             arrow.SetActive(true);
             animator.SetBool("Shoot", false);
+            SoundManager.instance.PlaySingle(bowSound);
             shooted = true;
         }
     }
@@ -466,13 +469,15 @@ public class ArcherAI : MonoBehaviour {
         transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
         spriteRenderer.enabled = true;
         particleSystem.Play();
-       Invoke("SpriteToDead", 1.0f);
+        SoundManager.instance.PlaySingle(explosionSound);
+        Invoke("SpriteToDead", 1.0f);
     }
 
     public void SpriteToDead()
     {
         spriteRenderer.enabled = false;
         particleSystem.Play();
+        SoundManager.instance.PlaySingle(explosionSound);
         Invoke("DisableGO", 1.0f);
         DropItems();
     }
