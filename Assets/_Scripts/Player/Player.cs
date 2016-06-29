@@ -253,4 +253,19 @@ public class Player : MonoBehaviour {
             _timeLastEnemyHitted = Time.time;
         }
     }
+
+    public void ContinueAfterDeath(int price){
+
+        items -= price;
+        guiItem.GUIItemRepresent();
+
+        for (int i = 0; i < glitchPartPool.buffer.Count; i++){
+            glitchPartPool.buffer[i].GetComponent<glitchFragment>().Reactivate();
+        }
+
+        healCompletely();
+        lastLife = false;
+
+        deadMenuScript.gameObject.SetActive(false);
+    }
 }
