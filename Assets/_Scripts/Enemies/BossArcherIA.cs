@@ -44,6 +44,8 @@ public class BossArcherIA : MonoBehaviour
         ELEVEN_NEAR_GLITCH
     }
 
+    public AudioClip hit;
+    public AudioClip scream;
     public float horizontalVelocity = 10.0f;
     public Door door;
     public bool start = false;
@@ -294,7 +296,6 @@ public class BossArcherIA : MonoBehaviour
                         float xPos = Mathf.Lerp(startXPosWhenDead, endXPosWhenDead, percentage);
                         float zPos = Mathf.Lerp(startZPosWhenDead, endZPosWhenDead, percentage);
                         transform.position = new Vector3(xPos, transform.position.y, zPos);
-                        door.OpenDoor();
                     }
                     break;
 
@@ -390,14 +391,17 @@ public class BossArcherIA : MonoBehaviour
         }
         else if (coll.collider.CompareTag("BossHit") && Time.time - timeWhenLastHitted >= 1f && bossState != bossArcherIA.DEAD)
         {
+            SoundManager.instance.PlaySingle(hit);
             timeWhenLastHitted = Time.time;
             transform.localEulerAngles = new Vector3(0f, 180f, 0f);
             animator.speed = 1f;
             --lives;
             if (lives == 0)
             {
+                SoundManager.instance.PlaySingle(scream);
                 animator.SetTrigger("LastHitted");
                 bossState = bossArcherIA.DEAD;
+                door.OpenDoor();
             }
             else if (lives == 1)
             {
