@@ -81,7 +81,7 @@ public class BossArcherIA : MonoBehaviour
     private bool fallingJump = false;
     private bool firstStopPoint = true;
 
-    public int lives = 3;
+    private int lives = 3;
 
     private float currentSpecialSpeed = 1f;
 
@@ -153,22 +153,10 @@ public class BossArcherIA : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (slowFPSactivated && (bossState == bossArcherIA.JUMPING || bossState == bossArcherIA.FALLING_JUMP))
-        {
+        if (slowFPSactivated)
             animator.speed = 0.5f;
-        }
-        else if (slowFPSactivated)
-        {
-            animator.speed = currentSpecialSpeed * 0.5f;
-        }
-        else if (bossState == bossArcherIA.JUMPING || bossState == bossArcherIA.FALLING_JUMP)
-        {
-            animator.speed = 1f;
-        }
         else
-        {
-            animator.speed = currentSpecialSpeed;
-        }
+            animator.speed = 1f;
         if (world.doUpdate)
         {
             if (!fallingDead)
@@ -425,42 +413,7 @@ public class BossArcherIA : MonoBehaviour
         else if (lives == 1)
             currentSpecialSpeed = 3f;
 
-        int random;
-        switch (bossPos)
-        {
-            case bossArcherPos.MAXLEFT:
-                movingRight = true;
-                break;
-
-            case bossArcherPos.MEDIUMLEFT:
-                random = Random.Range(1, 3);
-                if (random == 1)
-                {
-                    movingRight = true;
-                }
-                else
-                {
-                    movingRight = false;
-                }
-                break;
-            case bossArcherPos.MEDIUMRIGHT:
-                random = Random.Range(1, 3);
-                if (random == 1)
-                {
-                    movingRight = true;
-                }
-                else
-                {
-                    movingRight = false;
-                }
-                break;
-            case bossArcherPos.MAXRIGHT:
-                movingRight = false;
-                break;
-        }
-
-
-        if (!shootInThisPlatform)
+		if(!shootInThisPlatform)
 	        bossState = bossArcherIA.PRESHOOT;
 		else if(movingRight)
         {
@@ -610,7 +563,7 @@ public class BossArcherIA : MonoBehaviour
                     }
                     else
                     {
-                        arrows[i].position = new Vector3(maxRight - (i - arrows.Length/2 + 0.5f) * distanceBetweenArrows, prepareArrowYPos, 0f);
+                        arrows[i].position = new Vector3(maxRight - (i - arrows.Length/2) * distanceBetweenArrows, prepareArrowYPos, 0f);
                     }
                     arrows[i].localEulerAngles = new Vector3(0f, 180f, 0f);
                     arrowsScript[i].canMove = false;
@@ -678,7 +631,6 @@ public class BossArcherIA : MonoBehaviour
         upArrow.gameObject.SetActive(true);
         upArrow.transform.position = new Vector3(transform.position.x + 0.18f, transform.position.y + 3.2f, transform.position.z - 0.07f);
         upArrow.ShootArrow();
-        Invoke("ShootArrows", 0.5f);
     }
 
     public void ShootArrows()
