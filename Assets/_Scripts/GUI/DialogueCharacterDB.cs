@@ -49,13 +49,20 @@ public class DialogueCharacterDB {
 			else if (name == "bug") {
 				character.faceAnimation = Resources.LoadAll<Sprite> ("Sprites/Faces/bug-face").ToList ();
 				character.pitch = 1.6f;
-			} else {
-				
-				//If it's not in the dictionary and it doesn't exist, simply return "none"
-				loadedCharacters.TryGetValue("none", out character);
-				return character;
+            }
+            else if (name == "archer")
+            {
+                character.faceAnimation = Resources.LoadAll<Sprite>("Sprites/Faces/archer").ToList();
+                character.pitch = 1.0f;
+            }
+            else
+            {
 
-			}
+                //If it's not in the dictionary and it doesn't exist, simply return "none"
+                loadedCharacters.TryGetValue("none", out character);
+                return character;
+
+            }
 
 			//If it does exist, store the data in the dictionary for fast future uses
 			loadedCharacters.Add(name, character);
