@@ -176,7 +176,7 @@ public class OptionsMenuScript : MonoBehaviour {
         optionsMenu.SetActive(false);
 
         musicSlider.value = SoundManager.instance.musicSource.volume;
-        soundSlider.value = SoundManager.instance.efxSource1.volume;
+        soundSlider.value = SoundManager.instance.efxSources[0].volume;
         panSlider.value = SoundManager.instance.musicSource.panStereo;
 
         if (AudioSettings.speakerMode == AudioSpeakerMode.Mono)
@@ -204,11 +204,11 @@ public class OptionsMenuScript : MonoBehaviour {
 
     public void ChangeSoundVolume()
     {
-        SoundManager.instance.efxSource1.volume = soundSlider.value;
-        SoundManager.instance.efxSource2.volume = soundSlider.value;
-        SoundManager.instance.efxSource3.volume = soundSlider.value;
-        SoundManager.instance.efxSource4.volume = soundSlider.value;
-        SoundManager.instance.efxSource5.volume = soundSlider.value;
+        SoundManager.instance.efxSources[0].volume = soundSlider.value;
+        SoundManager.instance.efxSources[1].volume = soundSlider.value;
+        SoundManager.instance.efxSources[2].volume = soundSlider.value;
+        SoundManager.instance.efxSources[3].volume = soundSlider.value;
+        SoundManager.instance.efxSources[4].volume = soundSlider.value;
 
         SoundManager.instance.PlaySingle(confirmSound);
     }
@@ -218,11 +218,11 @@ public class OptionsMenuScript : MonoBehaviour {
 
         SoundManager.instance.musicSource.panStereo = panSlider.value;
 
-        SoundManager.instance.efxSource1.panStereo = panSlider.value;
-        SoundManager.instance.efxSource2.panStereo = panSlider.value;
-        SoundManager.instance.efxSource3.panStereo = panSlider.value;
-        SoundManager.instance.efxSource4.panStereo = panSlider.value;
-        SoundManager.instance.efxSource5.panStereo = panSlider.value;
+        SoundManager.instance.efxSources[0].panStereo = panSlider.value;
+        SoundManager.instance.efxSources[1].panStereo = panSlider.value;
+        SoundManager.instance.efxSources[2].panStereo = panSlider.value;
+        SoundManager.instance.efxSources[3].panStereo = panSlider.value;
+        SoundManager.instance.efxSources[4].panStereo = panSlider.value;
 
     }
 
