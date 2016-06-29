@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 //Everything is temporal!
 public class EndPointScript : MonoBehaviour {
+
     public GameObject titlesGameObject;
     public Text title;
     public Text subtitle;
@@ -24,8 +25,11 @@ public class EndPointScript : MonoBehaviour {
 	}
 
 	void Update(){
+
 		if (endGame != -1 && Time.time >= endGame) {
-            Loader.LoadScene("Congratulations");
+            Loader.LoadScene("Congratulations", false, true, true);
 		}
+
 	}
+
 }
