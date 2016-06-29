@@ -204,11 +204,10 @@ public class OptionsMenuScript : MonoBehaviour {
 
     public void ChangeSoundVolume()
     {
-        SoundManager.instance.efxSources[0].volume = soundSlider.value;
-        SoundManager.instance.efxSources[1].volume = soundSlider.value;
-        SoundManager.instance.efxSources[2].volume = soundSlider.value;
-        SoundManager.instance.efxSources[3].volume = soundSlider.value;
-        SoundManager.instance.efxSources[4].volume = soundSlider.value;
+        for(int i=0; i < SoundManager.instance.efxSources.Length; ++i)
+        {
+            SoundManager.instance.efxSources[i].volume = soundSlider.value;
+        }
 
         SoundManager.instance.PlaySingle(confirmSound);
     }
@@ -218,12 +217,10 @@ public class OptionsMenuScript : MonoBehaviour {
 
         SoundManager.instance.musicSource.panStereo = panSlider.value;
 
-        SoundManager.instance.efxSources[0].panStereo = panSlider.value;
-        SoundManager.instance.efxSources[1].panStereo = panSlider.value;
-        SoundManager.instance.efxSources[2].panStereo = panSlider.value;
-        SoundManager.instance.efxSources[3].panStereo = panSlider.value;
-        SoundManager.instance.efxSources[4].panStereo = panSlider.value;
-
+        for (int i = 0; i < SoundManager.instance.efxSources.Length; ++i)
+        {
+            SoundManager.instance.efxSources[i].panStereo = panSlider.value;
+        }
     }
 
     public void ChangeSpeakerMode()

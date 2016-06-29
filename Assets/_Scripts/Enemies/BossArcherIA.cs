@@ -49,41 +49,41 @@ public class BossArcherIA : MonoBehaviour
     public bool start = false;
     public float timeInPreShoot = 2.0f;
     public float timeInPostShoot = 2.0f;
-    private float _timeSinceStateChanged;
+    private float timeSinceStateChanged;
     [SerializeField]
-    private bool _movingRight = true;
+    private bool movingRight = true;
 
     [SerializeField]
-    private bossArcherIA _bossState;
+    private bossArcherIA bossState;
     [SerializeField]
-    private bossArcherPos _bossPos;
-    private Rigidbody _rigidbody;
-    private BoxCollider _boxCollider;
+    private bossArcherPos bossPos;
+    private Rigidbody rigidbody;
+    private BoxCollider boxCollider;
 
     public Transform arrowPool;
-    private Transform[] _arrows;
-    private BossArrowScript[] _arrowsScript;
+    private Transform[] arrows;
+    private BossArrowScript[] arrowsScript;
 
-    private float _maxLeft = -36f;
-    private float _maxRight = 36f;
+    private float maxLeft = -36f;
+    private float maxRight = 36f;
     public float prepareArrowYPos = 12f;
 
     public float timeToShootArrows = 3f;
 
-    private shootTypes _lastShootType;
+    private shootTypes lastShootType;
 
     public Transform objectiveTransform;
 
-    private Animator _animator;
+    private Animator animator;
 
-    private int _layerMask = (~((1 << 13) | (1 << 2) | (1 << 11) | (1 << 8))) | (1 << 9) | (1 << 0);
+    private int layerMask = (~((1 << 13) | (1 << 2) | (1 << 11) | (1 << 8))) | (1 << 9) | (1 << 0);
 
-    private bool _fallingJump = false;
-    private bool _firstStopPoint = true;
+    private bool fallingJump = false;
+    private bool firstStopPoint = true;
 
     private int lives = 3;
 
-    private float _currentSpecialSpeed = 1f;
+    private float currentSpecialSpeed = 1f;
 
     private Vector3 currentStartJumpPoint;
     private Vector3 currentEndJumpPoint;
@@ -99,7 +99,7 @@ public class BossArcherIA : MonoBehaviour
     public float endZPosWhenDead = 6f - 5.06f;
     public float startXPosWhenDead;
     public float endXPosWhenDead;
-    private bool _fallingDead = false;
+    private bool fallingDead = false;
 
     public World world;
 
@@ -120,26 +120,26 @@ public class BossArcherIA : MonoBehaviour
     void Start()
     {
 
-        _rigidbody = transform.GetComponent<Rigidbody>();
-        _boxCollider = transform.GetComponent<BoxCollider>();
-        _timeSinceStateChanged = 0.0f;
-        _bossPos = bossArcherPos.MEDIUMRIGHT;
-        _bossState = bossArcherIA.IDLE;
-        _timeSinceStateChanged = 0.0f;
+        rigidbody = transform.GetComponent<Rigidbody>();
+        boxCollider = transform.GetComponent<BoxCollider>();
+        timeSinceStateChanged = 0.0f;
+        bossPos = bossArcherPos.MEDIUMRIGHT;
+        bossState = bossArcherIA.IDLE;
+        timeSinceStateChanged = 0.0f;
         timeJumping = 0.0f;
 
-        _arrows = new Transform[arrowPool.childCount];
+        arrows = new Transform[arrowPool.childCount];
         for (int i = 0; i < arrowPool.childCount; ++i)
         {
-            _arrows[i] = arrowPool.GetChild(i);
+            arrows[i] = arrowPool.GetChild(i);
         }
-        _arrowsScript = new BossArrowScript[arrowPool.childCount];
-        for (int i = 0; i < _arrows.Length; ++i)
+        arrowsScript = new BossArrowScript[arrowPool.childCount];
+        for (int i = 0; i < arrows.Length; ++i)
         {
-            _arrowsScript[i] = _arrows[i].GetComponent<BossArrowScript>();
+            arrowsScript[i] = arrows[i].GetComponent<BossArrowScript>();
         }
-        _animator = transform.GetComponent<Animator>();
-        _firstStopPoint = true;
+        animator = transform.GetComponent<Animator>();
+        firstStopPoint = true;
         slowFPS.SlowFPSChangedStatusEvent += SlowFPSStateChanged;
         timeWhenLastHitted = Time.time;
 
@@ -150,22 +150,22 @@ public class BossArcherIA : MonoBehaviour
     void Update()
     {
         if (slowFPSactivated)
-            _animator.speed = 0.5f;
+            animator.speed = 0.5f;
         else
-            _animator.speed = 1f;
+            animator.speed = 1f;
         if (world.doUpdate)
         {
-            if (!_fallingDead)
-                _rigidbody.velocity = Vector3.zero;
-            switch (_bossState)
+            if (!fallingDead)
+                rigidbody.velocity = Vector3.zero;
+            switch (bossState)
             {
                 case bossArcherIA.MOVING:
                     transform.Translate(Vector3.forward * world.lag * horizontalVelocity);
                     break;
 
                 case bossArcherIA.FALLING_JUMP:
-                    if (_fallingJump)
-                        _bossState = bossArcherIA.MOVING;
+                    if (fallingJump)
+                        bossState = bossArcherIA.MOVING;
                     break;
 
                 case bossArcherIA.JUMPING:
@@ -182,17 +182,17 @@ public class BossArcherIA : MonoBehaviour
                     if (IsGrounded() && perc >= 0.5f)
                     {
 						shootInThisPlatform = false;
-                        _bossState = bossArcherIA.FALLING_JUMP;
+                        bossState = bossArcherIA.FALLING_JUMP;
                     }
                     break;
 
                 case bossArcherIA.PRESHOOT:
-                    _timeSinceStateChanged += world.lag;
-                    if (_timeSinceStateChanged >= timeInPreShoot)
+                    timeSinceStateChanged += world.lag;
+                    if (timeSinceStateChanged >= timeInPreShoot)
                     {
-                        _bossState = bossArcherIA.SHOOTING;
-                        _animator.speed = _currentSpecialSpeed;
-                        _animator.SetTrigger("Attack");
+                        bossState = bossArcherIA.SHOOTING;
+                        animator.speed = currentSpecialSpeed;
+                        animator.SetTrigger("Attack");
                     }
                     break;
 
@@ -200,55 +200,55 @@ public class BossArcherIA : MonoBehaviour
                     break;
 
                 case bossArcherIA.POSTSHOOT:
-                    _timeSinceStateChanged += world.lag;
-                    if (_timeSinceStateChanged >= timeInPostShoot)
+                    timeSinceStateChanged += world.lag;
+                    if (timeSinceStateChanged >= timeInPostShoot)
                     {
                         int random;
-                        switch (_bossPos)
+                        switch (bossPos)
                         {
                             case bossArcherPos.MAXLEFT:
-                                _movingRight = true;
+                                movingRight = true;
                                 break;
 
                             case bossArcherPos.MEDIUMLEFT:
                                 random = Random.Range(1, 3);
                                 if (random == 1)
                                 {
-                                    _movingRight = true;
+                                    movingRight = true;
                                 }
                                 else
                                 {
-                                    _movingRight = false;
+                                    movingRight = false;
                                 }
                                 break;
                             case bossArcherPos.MEDIUMRIGHT:
                                 random = Random.Range(1, 3);
                                 if (random == 1)
                                 {
-                                    _movingRight = true;
+                                    movingRight = true;
                                 }
                                 else
                                 {
-                                    _movingRight = false;
+                                    movingRight = false;
                                 }
                                 break;
                             case bossArcherPos.MAXRIGHT:
-                                _movingRight = false;
+                                movingRight = false;
                                 break;
                         }
-                        if (_movingRight)
+                        if (movingRight)
                         {
-                            _bossState = bossArcherIA.TURNING_LEFT_TO_RUN;
-                            _animator.SetBool("Run", true);
-                            _animator.speed = _currentSpecialSpeed;
-                            _animator.SetTrigger("TurnLeft");
+                            bossState = bossArcherIA.TURNING_LEFT_TO_RUN;
+                            animator.SetBool("Run", true);
+                            animator.speed = currentSpecialSpeed;
+                            animator.SetTrigger("TurnLeft");
                         }
                         else
                         {
-                            _bossState = bossArcherIA.TURNING_RIGHT_TO_RUN;
-                            _animator.SetBool("Run", true);
-                            _animator.speed = _currentSpecialSpeed;
-                            _animator.SetTrigger("TurnRight");
+                            bossState = bossArcherIA.TURNING_RIGHT_TO_RUN;
+                            animator.SetBool("Run", true);
+                            animator.speed = currentSpecialSpeed;
+                            animator.SetTrigger("TurnRight");
                         }
                     }
                     break;
@@ -263,13 +263,13 @@ public class BossArcherIA : MonoBehaviour
                 case bossArcherIA.IDLE:
                     if (start)
                     {
-                        _bossState = bossArcherIA.PRESHOOT;
+                        bossState = bossArcherIA.PRESHOOT;
                         start = false;
                     }
                     break;
 
                 case bossArcherIA.DEAD:
-                    if (_fallingDead)
+                    if (fallingDead)
                     {
                         timeFalling += world.lag;
                         float percentage = timeFalling / timeToMoveZWhileFall;
@@ -292,43 +292,43 @@ public class BossArcherIA : MonoBehaviour
 
     public void OnTriggerEnter(Collider coll)
     {
-        if (coll.transform.name == "JumpPoint" && _bossState == bossArcherIA.MOVING && _bossState != bossArcherIA.DEAD)
+        if (coll.transform.name == "JumpPoint" && bossState == bossArcherIA.MOVING && bossState != bossArcherIA.DEAD)
         {
             currentStartJumpPoint = transform.position;
             timeJumping = 0.0f;
-            if (_bossPos == bossArcherPos.MAXRIGHT)
+            if (bossPos == bossArcherPos.MAXRIGHT)
             {
-                _bossPos = bossArcherPos.MEDIUMRIGHT;
+                bossPos = bossArcherPos.MEDIUMRIGHT;
                 currentEndJumpPoint = EndJumpPoint[4].position + new Vector3(-1f, -1f, 0f);
                 currentMiddleJumpPoint = MiddleJumpPoint[2].position;
             }
-            else if (_bossPos == bossArcherPos.MAXLEFT)
+            else if (bossPos == bossArcherPos.MAXLEFT)
             {
-                _bossPos = bossArcherPos.MEDIUMLEFT;
+                bossPos = bossArcherPos.MEDIUMLEFT;
                 currentEndJumpPoint = EndJumpPoint[1].position + new Vector3(+1f, -1f, 0f);
                 currentMiddleJumpPoint = MiddleJumpPoint[0].position;
             }
-            else if (_bossPos == bossArcherPos.MEDIUMLEFT && _movingRight)
+            else if (bossPos == bossArcherPos.MEDIUMLEFT && movingRight)
             {
-                _bossPos = bossArcherPos.MEDIUMRIGHT;
+                bossPos = bossArcherPos.MEDIUMRIGHT;
                 currentEndJumpPoint = EndJumpPoint[3].position + new Vector3(1f, -1f, 0f);
                 currentMiddleJumpPoint = MiddleJumpPoint[1].position;
             }
-            else if (_bossPos == bossArcherPos.MEDIUMLEFT && !_movingRight)
+            else if (bossPos == bossArcherPos.MEDIUMLEFT && !movingRight)
             {
-                _bossPos = bossArcherPos.MAXLEFT;
+                bossPos = bossArcherPos.MAXLEFT;
                 currentEndJumpPoint = EndJumpPoint[0].position + new Vector3(-1f, -1f, 0f);
                 currentMiddleJumpPoint = MiddleJumpPoint[0].position;
             }
-            else if (_bossPos == bossArcherPos.MEDIUMRIGHT && _movingRight)
+            else if (bossPos == bossArcherPos.MEDIUMRIGHT && movingRight)
             {
-                _bossPos = bossArcherPos.MAXRIGHT;
+                bossPos = bossArcherPos.MAXRIGHT;
                 currentEndJumpPoint = EndJumpPoint[5].position + new Vector3(1f, -1f, 0f);
                 currentMiddleJumpPoint = MiddleJumpPoint[2].position;
             }
-            else if (_bossPos == bossArcherPos.MEDIUMRIGHT && !_movingRight)
+            else if (bossPos == bossArcherPos.MEDIUMRIGHT && !movingRight)
             {
-                _bossPos = bossArcherPos.MEDIUMLEFT;
+                bossPos = bossArcherPos.MEDIUMLEFT;
                 currentEndJumpPoint = EndJumpPoint[2].position + new Vector3(-1f, -1f, 0f);
                 currentMiddleJumpPoint = MiddleJumpPoint[1].position;
             }
@@ -336,67 +336,67 @@ public class BossArcherIA : MonoBehaviour
             {
                 Debug.Log("HEHE; ERROR");
             }
-            _bossState = bossArcherIA.JUMPING;
-            _fallingJump = false;
-            _animator.SetTrigger("Jump");
+            bossState = bossArcherIA.JUMPING;
+            fallingJump = false;
+            animator.SetTrigger("Jump");
         }
-        else if (coll.transform.name == "StopPoint" && _firstStopPoint && _bossState != bossArcherIA.DEAD && !shootInThisPlatform)
+        else if (coll.transform.name == "StopPoint" && firstStopPoint && bossState != bossArcherIA.DEAD && !shootInThisPlatform)
         {
-            _firstStopPoint = false;
+            firstStopPoint = false;
         }
-        else if (coll.transform.name == "StopPoint" && !_firstStopPoint && _bossState != bossArcherIA.DEAD && !shootInThisPlatform)
+        else if (coll.transform.name == "StopPoint" && !firstStopPoint && bossState != bossArcherIA.DEAD && !shootInThisPlatform)
         {
-            if (_bossPos == bossArcherPos.MEDIUMLEFT || _bossPos == bossArcherPos.MEDIUMRIGHT)
+            if (bossPos == bossArcherPos.MEDIUMLEFT || bossPos == bossArcherPos.MEDIUMRIGHT)
                 transform.position = new Vector3(transform.position.x, transform.position.y, 17.5f - 5.34f);
-            if (_movingRight)
+            if (movingRight)
             {
-                _bossState = bossArcherIA.TURNING_RIGHT_TO_STOP;
-                _animator.speed = _currentSpecialSpeed;
-                _animator.SetTrigger("TurnRight");
+                bossState = bossArcherIA.TURNING_RIGHT_TO_STOP;
+                animator.speed = currentSpecialSpeed;
+                animator.SetTrigger("TurnRight");
             }
             else
             {
-                _bossState = bossArcherIA.TURNING_LEFT_TO_STOP;
-                _animator.speed = _currentSpecialSpeed;
-                _animator.SetTrigger("TurnLeft");
+                bossState = bossArcherIA.TURNING_LEFT_TO_STOP;
+                animator.speed = currentSpecialSpeed;
+                animator.SetTrigger("TurnLeft");
             }
-            _animator.SetBool("Run", false);
+            animator.SetBool("Run", false);
         }
     }
 
     public void OnCollisionEnter(Collision coll)
     {
-        if (_bossState == bossArcherIA.DEAD && !coll.collider.CompareTag("BossHit") && Time.time - timeWhenLastHitted >= 1f)
+        if (bossState == bossArcherIA.DEAD && !coll.collider.CompareTag("BossHit") && Time.time - timeWhenLastHitted >= 1f)
         {
-            _animator.speed = 1f;
-            _animator.SetTrigger("GroundHitted");
+            animator.speed = 1f;
+            animator.SetTrigger("GroundHitted");
         }
-        else if (coll.collider.CompareTag("BossHit") && Time.time - timeWhenLastHitted >= 1f && _bossState != bossArcherIA.DEAD)
+        else if (coll.collider.CompareTag("BossHit") && Time.time - timeWhenLastHitted >= 1f && bossState != bossArcherIA.DEAD)
         {
             timeWhenLastHitted = Time.time;
             transform.localEulerAngles = new Vector3(0f, 180f, 0f);
-            _animator.speed = 1f;
+            animator.speed = 1f;
             --lives;
             if (lives == 0)
             {
-                _animator.SetTrigger("LastHitted");
-                _bossState = bossArcherIA.DEAD;
+                animator.SetTrigger("LastHitted");
+                bossState = bossArcherIA.DEAD;
             }
             else if (lives == 1)
             {
                 timeToShootArrows = 1;
                 timeInPreShoot = 0f;
                 timeInPostShoot = 0f;
-                _animator.SetTrigger("Hitted");
-                _bossState = bossArcherIA.HITTED;
+                animator.SetTrigger("Hitted");
+                bossState = bossArcherIA.HITTED;
             }
             else if (lives == 2)
             {
                 timeToShootArrows = 2;
                 timeInPreShoot = 1f;
                 timeInPostShoot = 1f;
-                _animator.SetTrigger("Hitted");
-                _bossState = bossArcherIA.HITTED;
+                animator.SetTrigger("Hitted");
+                bossState = bossArcherIA.HITTED;
             }
         }
     }
@@ -404,27 +404,27 @@ public class BossArcherIA : MonoBehaviour
     public void InsultingAnimationEnded()
     {
         if (lives == 2)
-            _currentSpecialSpeed = 2f;
+            currentSpecialSpeed = 2f;
         else if (lives == 1)
-            _currentSpecialSpeed = 3f;
+            currentSpecialSpeed = 3f;
 
 		if(!shootInThisPlatform)
-	        _bossState = bossArcherIA.PRESHOOT;
-		else if(_movingRight)
+	        bossState = bossArcherIA.PRESHOOT;
+		else if(movingRight)
         {
-            _bossState = bossArcherIA.TURNING_LEFT_TO_RUN;
-            _animator.SetBool("Run", true);
-            _animator.speed = _currentSpecialSpeed;
-            _animator.SetTrigger("TurnLeft");
+            bossState = bossArcherIA.TURNING_LEFT_TO_RUN;
+            animator.SetBool("Run", true);
+            animator.speed = currentSpecialSpeed;
+            animator.SetTrigger("TurnLeft");
         }
         else
         {
-            _bossState = bossArcherIA.TURNING_RIGHT_TO_RUN;
-            _animator.SetBool("Run", true);
-            _animator.speed = _currentSpecialSpeed;
-            _animator.SetTrigger("TurnRight");
+            bossState = bossArcherIA.TURNING_RIGHT_TO_RUN;
+            animator.SetBool("Run", true);
+            animator.speed = currentSpecialSpeed;
+            animator.SetTrigger("TurnRight");
         }
-        _timeSinceStateChanged = 0.0f;
+        timeSinceStateChanged = 0.0f;
     }
 
     #endregion
@@ -434,45 +434,45 @@ public class BossArcherIA : MonoBehaviour
     private bool IsGrounded()
     {
         bool result;
-        result = Physics.Raycast(new Vector3(transform.position.x, transform.position.y + _boxCollider.center.y, transform.position.z), -Vector3.up, _boxCollider.size.y + 0.1f, 1, QueryTriggerInteraction.Ignore);
+        result = Physics.Raycast(new Vector3(transform.position.x, transform.position.y + boxCollider.center.y, transform.position.z), -Vector3.up, boxCollider.size.y + 0.1f, 1, QueryTriggerInteraction.Ignore);
         return result;
     }
 
     public void EndTurning()
     {
-        if (_bossState == bossArcherIA.TURNING_LEFT_TO_RUN)
+        if (bossState == bossArcherIA.TURNING_LEFT_TO_RUN)
         {
             transform.localEulerAngles = new Vector3(0f, 90f, 0f);
-            _bossState = bossArcherIA.MOVING;
+            bossState = bossArcherIA.MOVING;
         }
-        else if (_bossState == bossArcherIA.TURNING_RIGHT_TO_RUN)
+        else if (bossState == bossArcherIA.TURNING_RIGHT_TO_RUN)
         {
             transform.localEulerAngles = new Vector3(0f, 270f, 0f);
-            _bossState = bossArcherIA.MOVING;
+            bossState = bossArcherIA.MOVING;
         }
-        else if (_bossState == bossArcherIA.TURNING_LEFT_TO_STOP)
+        else if (bossState == bossArcherIA.TURNING_LEFT_TO_STOP)
         {
             transform.localEulerAngles = new Vector3(0f, 180f, 0f);
-            _bossState = bossArcherIA.PRESHOOT;
+            bossState = bossArcherIA.PRESHOOT;
         }
-        else if (_bossState == bossArcherIA.TURNING_RIGHT_TO_STOP)
+        else if (bossState == bossArcherIA.TURNING_RIGHT_TO_STOP)
         {
             transform.localEulerAngles = new Vector3(0f, 180f, 0f);
-            _bossState = bossArcherIA.PRESHOOT;
+            bossState = bossArcherIA.PRESHOOT;
         }
-        _animator.speed = 1;
+        animator.speed = 1;
     }
 
     public void EndJump()
     {
-        _animator.speed = _currentSpecialSpeed;
-        _fallingJump = true;
+        animator.speed = currentSpecialSpeed;
+        fallingJump = true;
     }
 
     public void StartFallingAnimationEnded()
     {
         Vector3 auxPos = transform.position + new Vector3(-2f, -2.2f, 0f);
-        _rigidbody.useGravity = true;
+        rigidbody.useGravity = true;
         startXPosWhenDead = endXPosWhenDead = transform.position.x;
         if (transform.position.x >= 16f)
         {
@@ -481,7 +481,7 @@ public class BossArcherIA : MonoBehaviour
         startZPosWhenDead = transform.position.z;
         timeFalling = 0.0f;
         transform.position = auxPos;
-        _fallingDead = true;
+        fallingDead = true;
     }
 
     public void SlowFPSStateChanged()
@@ -489,12 +489,12 @@ public class BossArcherIA : MonoBehaviour
         if (slowFPSactivated)
         {
             slowFPSactivated = false;
-            _animator.speed = 1f;
+            animator.speed = 1f;
         }
         else
         {
             slowFPSactivated = true;
-            _animator.speed = 0.5f;
+            animator.speed = 0.5f;
         }
     }
 
@@ -504,64 +504,64 @@ public class BossArcherIA : MonoBehaviour
 
     private void PrepareArrows(shootTypes shootType)
     {
-        _lastShootType = shootType;
-        float distance = _maxRight - _maxLeft;
-        float distanceBetweenArrows = distance / (_arrows.Length / 2);
+        lastShootType = shootType;
+        float distance = maxRight - maxLeft;
+        float distanceBetweenArrows = distance / (arrows.Length / 2);
         bool shootDependingObjective = false;
         int numberOfArrows = 0;
         switch (shootType)
         {
             case shootTypes.LEFT_TO_RIGHT:
-                for (int i = 0; i < _arrows.Length; ++i)
+                for (int i = 0; i < arrows.Length; ++i)
                 {
-                    _arrows[i].gameObject.SetActive(false);
-                    _arrows[i].position = new Vector3(_maxLeft + i * distanceBetweenArrows, prepareArrowYPos, 0f);
-                    _arrows[i].localEulerAngles = new Vector3(0f, 180f, 0f);
-                    _arrowsScript[i].canMove = false;
+                    arrows[i].gameObject.SetActive(false);
+                    arrows[i].position = new Vector3(maxLeft + i * distanceBetweenArrows, prepareArrowYPos, 0f);
+                    arrows[i].localEulerAngles = new Vector3(0f, 180f, 0f);
+                    arrowsScript[i].canMove = false;
                 }
                 break;
 
             case shootTypes.RIGHT_TO_LEFT:
-                for (int i = 0; i < _arrows.Length; ++i)
+                for (int i = 0; i < arrows.Length; ++i)
                 {
-                    _arrows[i].gameObject.SetActive(false);
-                    _arrows[i].position = new Vector3(_maxRight - i * distanceBetweenArrows, prepareArrowYPos, 0f);
-                    _arrows[i].localEulerAngles = new Vector3(0f, 180f, 0f);
-                    _arrowsScript[i].canMove = false;
+                    arrows[i].gameObject.SetActive(false);
+                    arrows[i].position = new Vector3(maxRight - i * distanceBetweenArrows, prepareArrowYPos, 0f);
+                    arrows[i].localEulerAngles = new Vector3(0f, 180f, 0f);
+                    arrowsScript[i].canMove = false;
                 }
                 break;
 
             case shootTypes.SIDES_TO_MIDDLE:
-                for (int i = 0; i < _arrows.Length; ++i)
+                for (int i = 0; i < arrows.Length; ++i)
                 {
-                    _arrows[i].gameObject.SetActive(false);
+                    arrows[i].gameObject.SetActive(false);
                     if (i % 2 == 0)
                     {
-                        _arrows[i].position = new Vector3(_maxRight - i / 2 * distanceBetweenArrows, prepareArrowYPos, 0f);
+                        arrows[i].position = new Vector3(maxRight - i / 2 * distanceBetweenArrows, prepareArrowYPos, 0f);
                     }
                     else
                     {
-                        _arrows[i].position = new Vector3(_maxLeft + (i / 2 + 1) * distanceBetweenArrows, prepareArrowYPos, 0f);
+                        arrows[i].position = new Vector3(maxLeft + (i / 2 + 1) * distanceBetweenArrows, prepareArrowYPos, 0f);
                     }
-                    _arrows[i].localEulerAngles = new Vector3(0f, 180f, 0f);
-                    _arrowsScript[i].canMove = false;
+                    arrows[i].localEulerAngles = new Vector3(0f, 180f, 0f);
+                    arrowsScript[i].canMove = false;
                 }
                 break;
 
             case shootTypes.ULTRA_DIFFICULT_ULTRA:
-                for (int i = 0; i < _arrows.Length; ++i)
+                for (int i = 0; i < arrows.Length; ++i)
                 {
-                    _arrows[i].gameObject.SetActive(false);
-                    if (i < (_arrows.Length / 2))
+                    arrows[i].gameObject.SetActive(false);
+                    if (i < (arrows.Length / 2))
                     {
-                        _arrows[i].position = new Vector3(_maxLeft + i * distanceBetweenArrows, prepareArrowYPos, 0f);
+                        arrows[i].position = new Vector3(maxLeft + i * distanceBetweenArrows, prepareArrowYPos, 0f);
                     }
                     else
                     {
-                        _arrows[i].position = new Vector3(_maxRight - (i - _arrows.Length/2) * distanceBetweenArrows, prepareArrowYPos, 0f);
+                        arrows[i].position = new Vector3(maxRight - (i - arrows.Length/2) * distanceBetweenArrows, prepareArrowYPos, 0f);
                     }
-                    _arrows[i].localEulerAngles = new Vector3(0f, 180f, 0f);
-                    _arrowsScript[i].canMove = false;
+                    arrows[i].localEulerAngles = new Vector3(0f, 180f, 0f);
+                    arrowsScript[i].canMove = false;
 
                 }
                 break;
@@ -597,23 +597,23 @@ public class BossArcherIA : MonoBehaviour
         {
             for (int i = 0; i < numberOfArrows; ++i)
             {
-                _arrows[i].gameObject.SetActive(false);
+                arrows[i].gameObject.SetActive(false);
                 if (i % 2 == 0)
                 {
-                    _arrows[i].position = new Vector3(objectiveTransform.position.x - (i / 2) * distanceBetweenArrows, prepareArrowYPos, 0f);
+                    arrows[i].position = new Vector3(objectiveTransform.position.x - (i / 2) * distanceBetweenArrows, prepareArrowYPos, 0f);
                 }
                 else
                 {
-                    _arrows[i].position = new Vector3(objectiveTransform.position.x + (i / 2 + 1) * distanceBetweenArrows, prepareArrowYPos, 0f);
+                    arrows[i].position = new Vector3(objectiveTransform.position.x + (i / 2 + 1) * distanceBetweenArrows, prepareArrowYPos, 0f);
                 }
-                _arrows[i].rotation = new Quaternion(0f, 0f, 0f, 0f);
-                _arrowsScript[i].canMove = false;
+                arrows[i].rotation = new Quaternion(0f, 0f, 0f, 0f);
+                arrowsScript[i].canMove = false;
 
             }
-            for (int i = numberOfArrows; i < _arrows.Length; ++i)
+            for (int i = numberOfArrows; i < arrows.Length; ++i)
             {
-                _arrows[i].gameObject.SetActive(false);
-                _arrowsScript[i].canMove = false;
+                arrows[i].gameObject.SetActive(false);
+                arrowsScript[i].canMove = false;
             }
 
         }
@@ -631,9 +631,9 @@ public class BossArcherIA : MonoBehaviour
     {
         upArrow.gameObject.SetActive(false);
         upArrow.canMove = false;
-        _bossState = bossArcherIA.POSTSHOOT;
-        _timeSinceStateChanged = 0.0f;
-        _animator.speed = 1f;
+        bossState = bossArcherIA.POSTSHOOT;
+        timeSinceStateChanged = 0.0f;
+        animator.speed = 1f;
         int random;
         if (lives == 3)
         {
@@ -699,18 +699,18 @@ public class BossArcherIA : MonoBehaviour
         bool oneByOne = false;
         int i;
         int numberOfArrows = 0;
-        switch (_lastShootType)
+        switch (lastShootType)
         {
             case shootTypes.LEFT_TO_RIGHT:
             case shootTypes.RIGHT_TO_LEFT:
             case shootTypes.SIDES_TO_MIDDLE:
                 oneByOne = true;
-                numberOfArrows = _arrows.Length / 2;
+                numberOfArrows = arrows.Length / 2;
                 break;
 
             case shootTypes.ULTRA_DIFFICULT_ULTRA:
                 oneByOne = true;
-                numberOfArrows = _arrows.Length;
+                numberOfArrows = arrows.Length;
                 break;
 
             case shootTypes.THREE_NEAR_GLITCH:
@@ -739,12 +739,12 @@ public class BossArcherIA : MonoBehaviour
             while (i < numberOfArrows)
             {
                 timeShooting += Time.deltaTime;
-                if (timeShooting >= (i * timeToShootArrows / _arrows.Length))
+                if (timeShooting >= (i * timeToShootArrows / arrows.Length))
                 {
                     for (int j = i; j < i + 5; ++j)
                     {
-                        _arrowsScript[j].ShootArrow();
-                        _arrows[j].gameObject.SetActive(true);
+                        arrowsScript[j].ShootArrow();
+                        arrows[j].gameObject.SetActive(true);
                     }
                     i += 5;
                 }
@@ -756,19 +756,19 @@ public class BossArcherIA : MonoBehaviour
             while (i < numberOfArrows)
             {
                 timeShooting += Time.deltaTime;
-                if (timeShooting >= (i * timeToShootArrows / (_arrows.Length * 2)))
+                if (timeShooting >= (i * timeToShootArrows / (arrows.Length * 2)))
                 {
                     if (numberOfArrows % 2 != 0 && i == 0)
                     {
-                        _arrows[i].gameObject.SetActive(true);
-                        _arrowsScript[i].ShootArrow();
+                        arrows[i].gameObject.SetActive(true);
+                        arrowsScript[i].ShootArrow();
                     }
                     else
                     {
-                        _arrows[i].gameObject.SetActive(true);
-                        _arrowsScript[i].ShootArrow();
-                        _arrows[i + 1].gameObject.SetActive(true);
-                        _arrowsScript[i + 1].ShootArrow();
+                        arrows[i].gameObject.SetActive(true);
+                        arrowsScript[i].ShootArrow();
+                        arrows[i + 1].gameObject.SetActive(true);
+                        arrowsScript[i + 1].ShootArrow();
                         ++i;
                     }
                     ++i;

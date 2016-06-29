@@ -5,13 +5,13 @@ public class BossArrowScript : MonoBehaviour {
 
     public Player player;
     public World world;
-    private Rigidbody _rigidBody;
+    private Rigidbody rigidBody;
     public float speed = 10f;
     public bool canMove;
 
     void Start()
     {
-        _rigidBody = transform.GetComponent<Rigidbody>();
+        rigidBody = transform.GetComponent<Rigidbody>();
         canMove = false;
     }
 
@@ -27,8 +27,8 @@ public class BossArrowScript : MonoBehaviour {
 
     public void ShootArrow()
     {
-		if(_rigidBody != null)
-	        _rigidBody.detectCollisions = true;
+		if(rigidBody != null)
+	        rigidBody.detectCollisions = true;
         canMove = true;
     }
 
@@ -41,7 +41,7 @@ public class BossArrowScript : MonoBehaviour {
         else if(!coll.transform.CompareTag("Archer"))
         {
             canMove = false;
-            _rigidBody.detectCollisions = false;
+            rigidBody.detectCollisions = false;
         }
     }
 

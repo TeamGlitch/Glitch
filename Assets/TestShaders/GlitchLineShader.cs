@@ -8,14 +8,14 @@ public class GlitchLineShader : ImageEffectBase
 
     public bool active = false;
 
-    private float _random;
+    private float random;
     // Postprocess the image
     void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
         if (active)
         {
-            _random = Random.Range(0.0f, 1.0f);
-            material.SetFloat("yPercentage", _random);
+            random = Random.Range(0.0f, 1.0f);
+            material.SetFloat("yPercentage", random);
         }
         else
         {

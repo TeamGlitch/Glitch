@@ -8,7 +8,7 @@ public class TempleDoors : MonoBehaviour {
     public float timeWaiting = 2.0f;
 
     public float distance = 0.07f;
-    private Vector3 _initialPosition;
+    private Vector3 initialPosition;
 
     public World world;
 
@@ -22,14 +22,14 @@ public class TempleDoors : MonoBehaviour {
         WAITING_DOWN
     };
 
-    private door_state _doorState;
-    private float _timeSinceStateChanged;
+    private door_state doorState;
+    private float timeSinceStateChanged;
 
 	// Use this for initialization
 	void Start () {
-        _doorState = door_state.WAITING;
-        _timeSinceStateChanged = 0.0f;
-        _initialPosition = transform.position;
+        doorState = door_state.WAITING;
+        timeSinceStateChanged = 0.0f;
+        initialPosition = transform.position;
         BoxCollider[] boxColliders = transform.GetComponents<BoxCollider>();
         boxCollider = boxColliders[0];
         if (!boxCollider.isTrigger)
@@ -41,51 +41,51 @@ public class TempleDoors : MonoBehaviour {
 	void Update () {
         if(world.doUpdate)
         {
-            _timeSinceStateChanged += world.lag;
+            timeSinceStateChanged += world.lag;
             float lerp;
             float auxY;
-            switch (_doorState)
+            switch (doorState)
             {
                 case door_state.GOING_UP:
-                    lerp = _timeSinceStateChanged / timeToGoUp;
+                    lerp = timeSinceStateChanged / timeToGoUp;
                     if (lerp >= 1.0f)
                     {
                         lerp = 1.0f;
-                        _timeSinceStateChanged = 0.0f;
-                        _doorState = door_state.WAITING;
+                        timeSinceStateChanged = 0.0f;
+                        doorState = door_state.WAITING;
                     }
-                    auxY = Mathf.Lerp(_initialPosition.y - distance, _initialPosition.y, lerp);
+                    auxY = Mathf.Lerp(initialPosition.y - distance, initialPosition.y, lerp);
                     transform.position = new Vector3(transform.position.x, auxY, transform.position.z);
                     break;
 
                 case door_state.GOING_DOWN:
-                    lerp = _timeSinceStateChanged / timeToGoDown;
+                    lerp = timeSinceStateChanged / timeToGoDown;
                     if (lerp >= 1.0f)
                     {
                         lerp = 1.0f;
-                        _timeSinceStateChanged = 0.0f;
-                        _doorState = door_state.WAITING_DOWN;
+                        timeSinceStateChanged = 0.0f;
+                        doorState = door_state.WAITING_DOWN;
                         boxCollider.enabled = false;
                     }
-                    auxY = Mathf.Lerp(_initialPosition.y, _initialPosition.y - distance, lerp);
+                    auxY = Mathf.Lerp(initialPosition.y, initialPosition.y - distance, lerp);
                     transform.position = new Vector3(transform.position.x, auxY, transform.position.z);
                     break;
 
                 case door_state.WAITING:
-                    if (_timeSinceStateChanged >= timeWaiting)
+                    if (timeSinceStateChanged >= timeWaiting)
                     {
-                        _timeSinceStateChanged = 0.0f;
-                        _doorState = door_state.GOING_DOWN;
+                        timeSinceStateChanged = 0.0f;
+                        doorState = door_state.GOING_DOWN;
                         boxCollider.enabled = true;
 
                     }
                     break;
 
                 case door_state.WAITING_DOWN:
-                    if (_timeSinceStateChanged >= timeWaiting)
+                    if (timeSinceStateChanged >= timeWaiting)
                     {
-                        _timeSinceStateChanged = 0.0f;
-                        _doorState = door_state.GOING_UP;
+                        timeSinceStateChanged = 0.0f;
+                        doorState = door_state.GOING_UP;
 
                     }
                     break;
