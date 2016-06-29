@@ -98,7 +98,7 @@ public class DeadMenuScript : MonoBehaviour {
 
 	public void RestartPress()
 	{
-        Loader.LoadScene("Level1");
+        Loader.ReloadScene();
 	}
 
 	public void MenuPress()

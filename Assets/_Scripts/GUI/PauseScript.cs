@@ -24,7 +24,7 @@ public class PauseScript : MonoBehaviour {
 	public void restartPress()
 	{
 		Time.timeScale = 1.0f;
-        Loader.LoadScene("Level1");
+        Loader.ReloadScene();
 	}
 
 	public void menuPress()

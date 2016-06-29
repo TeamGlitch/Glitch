@@ -43,6 +43,7 @@ public class Loader : MonoBehaviour {
             loadingUI = transform.GetChild(0).gameObject;
             DontDestroyOnLoad(gameObject);
             text.text = "*** Commondore 64 Basic V2 **** \n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+            actualLevel = SceneManager.GetActiveScene().name;
         }
         //If instance already exists:
         else if (instance != this)
@@ -146,44 +147,57 @@ public class Loader : MonoBehaviour {
     public static void LoadScene(string levelName, bool useInterface = true, bool isAutomatic = false, bool allowed = true)
     {
         if (!loading && actualLevel != levelName){
-
-            lastLevel = actualLevel;
-            actualLevel = levelName;
-            async = SceneManager.LoadSceneAsync(levelName);
-
-            loading = true;
-            loaded = false;
-            async.allowSceneActivation = false;
-
-            if (useInterface){
-                interfaceLoad = true;
-            }
-            else 
-            {
-                interfaceLoad = false;
-            }
-
-            if (isAutomatic)
-            {
-                automaticLoad = true;
-            }
-            else
-            {
-                automaticLoad = false;
-            }
-
-            if (allowed)
-            {
-                allowLoadingToFinish = true;
-            }
-            else
-            {
-                allowLoadingToFinish = false;
-            }
-
-            instance.prepareLoading();
-
+            sceneLoading(levelName, useInterface, isAutomatic, allowed);
         }
+    }
+
+    public static void ReloadScene(bool useInterface = true, bool isAutomatic = false, bool allowed = true)
+    {
+        if (!loading){
+            sceneLoading(actualLevel, useInterface, isAutomatic, allowed);
+        }
+    }
+
+    private static void sceneLoading(string levelName, bool useInterface = true, bool isAutomatic = false, bool allowed = true)
+    {
+
+        lastLevel = actualLevel;
+        actualLevel = levelName;
+        async = SceneManager.LoadSceneAsync(levelName);
+
+        loading = true;
+        loaded = false;
+        async.allowSceneActivation = false;
+
+        if (useInterface)
+        {
+            interfaceLoad = true;
+        }
+        else
+        {
+            interfaceLoad = false;
+        }
+
+        if (isAutomatic)
+        {
+            automaticLoad = true;
+        }
+        else
+        {
+            automaticLoad = false;
+        }
+
+        if (allowed)
+        {
+            allowLoadingToFinish = true;
+        }
+        else
+        {
+            allowLoadingToFinish = false;
+        }
+
+        instance.prepareLoading();
+
     }
 
     public void prepareLoading()
