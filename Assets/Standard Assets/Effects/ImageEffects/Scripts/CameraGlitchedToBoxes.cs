@@ -14,7 +14,7 @@ public class CameraGlitchedToBoxes : ImageEffectBase
     public float cycleDuration = 0.05f; //Duration of a glitch cycle
     public float frequency = 0.15f;     //Probability of a glitch cycle having a glitch effect
     public float inestability = 0.3f;	//Probability of a given division to have movement
-
+    public GlitchOffsetCamera glitchOffsetCamera;
     public bool isFPSActivated = false;
 
     public Canvas gui;
@@ -59,7 +59,7 @@ public class CameraGlitchedToBoxes : ImageEffectBase
                 //texel size and arbitrary asigns 0 and 2 to glitchy 
                 //divisions and 1 to non-glitchy divisions
                 texture = new Texture2D(100, 100);
-                if ((QualitySettings.antiAliasing != 0 && isFPSActivated) || (QualitySettings.antiAliasing == 0 && !isFPSActivated))
+                if ((QualitySettings.antiAliasing != 0 && glitchOffsetCamera.enabled) || (QualitySettings.antiAliasing == 0 && !glitchOffsetCamera.enabled))
                 {
                     for (int z = 0; z < 100; z += 1)
                     {
