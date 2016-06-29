@@ -6,18 +6,18 @@ public class PauseScript : MonoBehaviour {
 
 	public GameObject playerPowers;
 
-	public Canvas pauseMenu;
+	public GameObject pauseMenu;
 	public Button resumeButton;
 	public Button restartButton;
 	public Button menuButton;
 
 	public void resumePress()
 	{
-		if (pauseMenu.enabled)
+		if (pauseMenu.active)
 		{
 			playerPowers.SetActive (true);
 			Time.timeScale = 1.0f;
-            pauseMenu.gameObject.SetActive(false);
+            gameObject.SetActive(false);
 		}
 	}
 
@@ -33,17 +33,42 @@ public class PauseScript : MonoBehaviour {
         Loader.LoadScene("menu");
 	}
 
+    public void optionPress(){
+
+        pauseMenu.SetActive(false);
+        resumeButton.enabled = false;
+        restartButton.enabled = false;
+        menuButton.enabled = false;
+
+    }
+
+    public void returnToMenu(){
+
+        pauseMenu.SetActive(true);
+        resumeButton.enabled = true;
+        restartButton.enabled = true;
+        menuButton.enabled = true;
+
+        resumeButton.Select();
+
+    }
 
     public void Pause()
     {
-        resumeButton.Select();
-        Time.timeScale = 0.0f;
         playerPowers.SetActive(true);
+        Time.timeScale = 0.0f;
+        resumeButton.Select();
     }
 
-    public void Unpause()
+    public bool Unpause()
     {
-        Time.timeScale = 1.0f;
-        playerPowers.SetActive(true);
+        if (pauseMenu.active)
+        {
+            Time.timeScale = 1.0f;
+            playerPowers.SetActive(true);
+            return true;
+        }
+        
+        return false;
     }
 }
