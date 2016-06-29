@@ -3,6 +3,7 @@ using System.Collections;
 
 public class RootsManager : MonoBehaviour {
     public GlitchRoots [] roots;
+    public BossArcherIA boss;
     public bool isActivable = true;
 
     public void AllGlitched()
@@ -22,6 +23,13 @@ public class RootsManager : MonoBehaviour {
         {
             roots[i].TurnToNormality();
         }
-        isActivable = true;
+        if (boss.lives > 0)
+        {
+            isActivable = true;
+        }
+        else
+        {
+            isActivable = false;
+        }
     }
 }

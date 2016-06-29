@@ -37,6 +37,7 @@ public class BossArrowScript : MonoBehaviour {
         if(coll.transform.CompareTag("Player"))
         {
             player.DecrementLives(1);
+            player.DecreaseActivableBox();
         }
         else if(!coll.transform.CompareTag("Archer"))
         {
