@@ -90,6 +90,7 @@ public class KnightAI : MonoBehaviour {
 
         if (coll.contacts[0].otherCollider.CompareTag("Player"))
         {
+            rigid.isKinematic = true;
             if (player.transform.position.y >= (transform.position.y + coll.contacts[0].thisCollider.bounds.extents.y * 2))
             {
                 Attacked();
@@ -410,6 +411,10 @@ public class KnightAI : MonoBehaviour {
     {
         swordCollider.enabled = false;
         isInAttack = false;
+        if (lives > 0)
+        {
+            rigid.isKinematic = false;
+        }
     }
 
     // Trigger of begin attack, enables colliders of axes

@@ -81,7 +81,7 @@ public class BossArcherIA : MonoBehaviour
     private bool fallingJump = false;
     private bool firstStopPoint = true;
 
-    private int lives = 3;
+    public int lives = 3;
 
     private float currentSpecialSpeed = 1f;
 

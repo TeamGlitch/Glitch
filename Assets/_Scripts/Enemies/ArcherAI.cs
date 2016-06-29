@@ -288,8 +288,8 @@ public class ArcherAI : MonoBehaviour {
                     timePerKick -= world.lag;
                     if (timePerKick <= 0.0f)
                     {
-                        kickCollider.enabled = true;
                         animator.SetBool("Attack", true);
+                        kickCollider.enabled = true;
                     }
 
                     if (Vector3.Distance(player.transform.position, transform.position) > maxSightMeleeAttack)
