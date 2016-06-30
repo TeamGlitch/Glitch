@@ -7,6 +7,7 @@ public class CollectibleScript : MonoBehaviour {
     public AudioClip itemSound;
     public int orderNum;
     public bool isFalling = false;
+    public BoxCollider collider;
 
 	void OnTriggerEnter(Collider collider)
 	{
@@ -25,5 +26,6 @@ public class CollectibleScript : MonoBehaviour {
     {
         yield return new WaitForSeconds(wait);
         GetComponent<Rigidbody>().isKinematic = true;
+        collider.enabled = true;
     }
 }

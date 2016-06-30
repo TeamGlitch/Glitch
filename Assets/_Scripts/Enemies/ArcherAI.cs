@@ -503,7 +503,9 @@ public class ArcherAI : MonoBehaviour {
         float rand = Random.Range(-5.0f, 5.0f);
         item1.transform.position = new Vector3(transform.position.x, transform.position.y + collider.bounds.extents.y, 0.0f);
         Rigidbody rigid = item1.GetComponent<Rigidbody>();
+        BoxCollider boxCollider = item1.GetComponent<BoxCollider>();
         rigid.isKinematic = false;
+        boxCollider.enabled = false;
         rigid.AddForce(rand, 15.0f, 0.0f, ForceMode.Impulse);
         itemScript.Parable();
 
@@ -521,7 +523,9 @@ public class ArcherAI : MonoBehaviour {
         rand = Random.Range(-5.0f, 5.0f);
         item2.transform.position = new Vector3(transform.position.x, transform.position.y + collider.bounds.extents.y, 0.0f);
         rigid = item2.GetComponent<Rigidbody>();
+        boxCollider = item2.GetComponent<BoxCollider>();
         rigid.isKinematic = false;
+        boxCollider.enabled = false;
         rigid.AddForce(rand, 15.0f, 0.0f, ForceMode.Impulse);
         itemScript.Parable();
 
@@ -540,7 +544,9 @@ public class ArcherAI : MonoBehaviour {
         item3.transform.position = new Vector3(transform.position.x, transform.position.y + collider.bounds.extents.y, 0.0f);
         item3.GetComponent<Rigidbody>().AddForce(rand, 1.0f, 0.0f, ForceMode.Impulse);
         rigid = item3.GetComponent<Rigidbody>();
+        boxCollider = item3.GetComponent<BoxCollider>();
         rigid.isKinematic = false;
+        boxCollider.enabled = false;
         rigid.AddForce(rand, 15.0f, 0.0f, ForceMode.Impulse);
         itemScript.Parable();
 
@@ -558,7 +564,9 @@ public class ArcherAI : MonoBehaviour {
         rand = Random.Range(-5.0f, 5.0f);
         item4.transform.position = new Vector3(transform.position.x, transform.position.y + collider.bounds.extents.y, 0.0f);
         rigid = item4.GetComponent<Rigidbody>();
+        boxCollider = item4.GetComponent<BoxCollider>();
         rigid.isKinematic = false;
+        boxCollider.enabled = false;
         rigid.AddForce(rand, 15.0f, 0.0f, ForceMode.Impulse);
         itemScript.Parable();
     }
