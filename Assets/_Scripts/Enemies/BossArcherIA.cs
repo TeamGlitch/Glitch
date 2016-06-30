@@ -384,12 +384,12 @@ public class BossArcherIA : MonoBehaviour
 
     public void OnCollisionEnter(Collision coll)
     {
-        if (bossState == bossArcherIA.DEAD && !coll.collider.CompareTag("BossHit") && Time.time - timeWhenLastHitted >= 2f)
+        if (bossState == bossArcherIA.DEAD && !coll.collider.CompareTag("BossHit") && Time.time - timeWhenLastHitted >= 1f)
         {
             animator.speed = 1f;
             animator.SetTrigger("GroundHitted");
         }
-        else if (coll.collider.CompareTag("BossHit") && Time.time - timeWhenLastHitted >= 1f && bossState != bossArcherIA.DEAD)
+        else if (coll.collider.CompareTag("BossHit") && Time.time - timeWhenLastHitted >= 2f && bossState != bossArcherIA.DEAD)
         {
             SoundManager.instance.PlaySingle(hit);
             timeWhenLastHitted = Time.time;
