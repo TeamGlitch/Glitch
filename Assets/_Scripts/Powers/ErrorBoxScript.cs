@@ -165,9 +165,7 @@ public class ErrorBoxScript : MonoBehaviour
 
                 if (Time.time - timeStateChange > timeCooldownBox)
                 {
-                    state = error_box_state.SLEEPING;
-                    playerScript.IncreaseActivableBox();
-                    cameraGlitchedToBoxes.AddBox(transform.position);
+                    state = error_box_state.NON_REACHED;
                 }
                 break;
         }

@@ -95,7 +95,6 @@ public class Player : MonoBehaviour {
 
         if (numberOfBoxesActivable > 0 && Camera.main != null)
         {
-
 			float correction = Camera.main.transform.position.z / correctionFactorForExclamation;
 
 			boxUIActivatedRectTransform.sizeDelta = new Vector2 (exclamationSize.x/correction, exclamationSize.y/correction);
@@ -145,7 +144,7 @@ public class Player : MonoBehaviour {
 
 	public void IncreaseActivableBox()
 	{
-		if (numberOfBoxesActivable == 0) {
+        if (numberOfBoxesActivable == 0) {
 			boxUIActivated.SetActive (true);
 		}
 		++numberOfBoxesActivable;
@@ -153,7 +152,7 @@ public class Player : MonoBehaviour {
 
 	public void DecreaseActivableBox()
 	{
-		--numberOfBoxesActivable;
+        --numberOfBoxesActivable;
         if (numberOfBoxesActivable < 0)
             numberOfBoxesActivable = 0;
 		if (numberOfBoxesActivable == 0 && boxUIActivated.activeSelf) {
