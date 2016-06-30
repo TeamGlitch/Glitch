@@ -384,7 +384,7 @@ public class BossArcherIA : MonoBehaviour
 
     public void OnCollisionEnter(Collision coll)
     {
-        if (bossState == bossArcherIA.DEAD && !coll.collider.CompareTag("BossHit") && Time.time - timeWhenLastHitted >= 1f)
+        if (bossState == bossArcherIA.DEAD && !coll.collider.CompareTag("BossHit") && Time.time - timeWhenLastHitted >= 2f)
         {
             animator.speed = 1f;
             animator.SetTrigger("GroundHitted");
