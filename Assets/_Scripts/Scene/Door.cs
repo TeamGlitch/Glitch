@@ -19,7 +19,7 @@ public class Door : MonoBehaviour {
     {
         if (coll.CompareTag("Player"))
         {
-            Loader.LoadScene("Congratulations");
+            Loader.LoadScene("Congratulations", false, true, true);
         }
     }
 

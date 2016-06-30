@@ -5,7 +5,7 @@ public class Congratulations : MonoBehaviour {
     public void ReturnToMenu(){
         if (Loader.getLastLevel() == "Boss Stage")
         {
-            Loader.LoadScene("menu");
+            Loader.LoadScene("menu", false, true, true);
         }
         else
         {
