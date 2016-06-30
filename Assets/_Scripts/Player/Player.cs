@@ -103,10 +103,10 @@ public class Player : MonoBehaviour {
 			Vector3 boxUIPosition = new Vector3(transform.position.x, transform.position.y + 2.0f, 0);
 			Vector3 camPosition = Camera.main.WorldToScreenPoint(boxUIPosition);
 
-			camPosition.x *= guiRectTrans.rect.width / Camera.main.pixelWidth; 
-			camPosition.y *= guiRectTrans.rect.height / Camera.main.pixelHeight; 
+            camPosition.x *= guiRectTrans.rect.width / Screen.width; 
+			camPosition.y *= guiRectTrans.rect.height / Screen.height;
 
-			boxUIActivatedRectTransform.anchoredPosition = camPosition;
+            boxUIActivatedRectTransform.anchoredPosition = camPosition;
 
 		}
 	
