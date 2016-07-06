@@ -46,6 +46,7 @@ public class BossArcherIA : MonoBehaviour
 
     public AudioClip hit;
     public AudioClip scream;
+    public DebrisManagerGlitch glitchDebris;        // Debris in "z" of Glitch
     public float horizontalVelocity = 10.0f;
     public Door door;
     public bool start = false;
@@ -417,6 +418,7 @@ public class BossArcherIA : MonoBehaviour
                 timeInPreShoot = 1f;
                 timeInPostShoot = 1f;
                 animator.SetTrigger("Hitted");
+                glitchDebris.Fall();
                 bossState = bossArcherIA.HITTED;
             }
         }

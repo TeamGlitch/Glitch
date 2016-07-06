@@ -13,7 +13,7 @@ public class BreakableRock : MonoBehaviour {
     private Quaternion[] initialRot;
     private BoxCollider[] boxes;
 
-    void Start()
+    void Awake()
     {
         initPosition = transform.position;
         initRot = transform.rotation;
