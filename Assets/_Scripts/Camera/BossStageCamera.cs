@@ -3,8 +3,21 @@ using System.Collections;
 
 public class BossStageCamera : MonoBehaviour {
 
+    private const float maxZoom = 47.2f;
+    private const float minZoom = 60.0f;
+    private const float maxZoomTime = 0.5f;
+
+    public Camera camera;
+    public GameObject colliders;
+    public Transform startPoint;
+
+    private float zoomTime = 0;
+    private bool zoomIn = false;
+    private bool zoomOut = false;
+
     void Start()
     {
+
         // set the desired aspect ratio (the values in this example are
         // hard-coded for 16:9, but you could make them into public
         // variables instead so you can set them at design time)
@@ -15,9 +28,6 @@ public class BossStageCamera : MonoBehaviour {
 
         // current viewport height should be scaled by this amount
         float scaleheight = windowaspect / targetaspect;
-
-        // obtain camera component so we can modify its viewport
-        Camera camera = GetComponent<Camera>();
 
         // if scaled height is less than current height, add letterbox
         if (scaleheight < 1.0f)
@@ -45,5 +55,44 @@ public class BossStageCamera : MonoBehaviour {
             camera.rect = rect;
         }
     }
-	
+
+    void Update()
+    {
+        if (zoomIn == true)
+        {
+            zoomTime += Time.deltaTime;
+            camera.fieldOfView = Mathf.Lerp(minZoom, maxZoom, zoomTime / maxZoomTime);
+
+            if (zoomTime > maxZoomTime)
+            {
+                zoomIn = false;
+                zoomTime = 0.0f;
+            }
+        }
+        else if (zoomOut == true)
+        {
+            zoomTime += Time.deltaTime;
+            camera.fieldOfView = Mathf.Lerp(maxZoom, minZoom, zoomTime / maxZoomTime);
+
+            if (zoomTime > maxZoomTime)
+            {
+                zoomOut = false;
+                zoomTime = 0.0f;
+            }
+        }
+    }
+
+    public void ZoomIn()
+    {
+        startPoint.localPosition = new Vector3(-8.8f, startPoint.localPosition.y, startPoint.localPosition.z);
+        zoomIn = true;
+        colliders.SetActive(true);
+    }
+
+    public void ZoomOut()
+    {
+
+        zoomOut = true;
+        colliders.SetActive(false);
+    }
 }
