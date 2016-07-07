@@ -4,6 +4,7 @@ using System.Collections;
 public class DebrisManagerGlitch : MonoBehaviour {
 
     public Debris[] debris;
+    public CameraShake shake;
 
     private int rand1;
     private int rand2;
@@ -20,6 +21,7 @@ public class DebrisManagerGlitch : MonoBehaviour {
         rand3 = Random.Range(0, debris.Length);
         debris[rand3].Fall();
 
+        shake.shakeIt = true;
         Invoke("Restart", 5.0f);
     }
 
