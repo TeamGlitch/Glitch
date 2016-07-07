@@ -55,7 +55,7 @@ public class MenuScript : MonoBehaviour {
 				//If a given time has passed without input, play the intro
 			} else if (Time.time > lastTimeActive + 60f) {
 				SoundManager.instance.musicSource.Stop();
-                Loader.LoadScene("Intro");
+                Loader.LoadScene("Intro", false);
 			}
 		}
 	}
@@ -71,7 +71,16 @@ public class MenuScript : MonoBehaviour {
         loadingText.gameObject.SetActive(true);
 		SoundManager.instance.musicSource.Stop();
 		onMainScreen = false;
-        Loader.LoadScene("Level1");
+
+        if (Loader.getLastLevel() == "None")
+        {
+            Loader.LoadScene("Level1", false);
+        }
+        else
+        {
+            Loader.LoadScene(Loader.getLastLevel(), false);
+        }
+        
     }
 
 	public void LevelSelectPress()
@@ -94,7 +103,7 @@ public class MenuScript : MonoBehaviour {
         loadingText.gameObject.SetActive(true);
         SoundManager.instance.musicSource.Stop();
         onMainScreen = false;
-        Loader.LoadScene("Level1");
+        Loader.LoadScene("Level1", false);
     }
 
     public void LevelBossPress()
@@ -108,7 +117,7 @@ public class MenuScript : MonoBehaviour {
         loadingText.gameObject.SetActive(true);
         SoundManager.instance.musicSource.Stop();
         onMainScreen = false;
-        Loader.LoadScene("Boss Stage");
+        Loader.LoadScene("Boss Stage", false);
     }
 
     public void OptionsPress(){

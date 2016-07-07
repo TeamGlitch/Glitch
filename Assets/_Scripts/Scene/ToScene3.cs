@@ -9,6 +9,7 @@ public class ToScene3 : MonoBehaviour
     {
         if (coll.gameObject.CompareTag("Player"))
         {
+            //TODO: NEEEDS TO USE LOADER
             SceneManager.LoadScene("Level Boss3");
         }
     }

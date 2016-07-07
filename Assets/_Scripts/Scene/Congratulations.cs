@@ -3,13 +3,13 @@ using System.Collections;
 
 public class Congratulations : MonoBehaviour {
     public void ReturnToMenu(){
-        if (Loader.getLastLevel() == "Boss Stage")
+        if (Loader.getLastScene() == "Boss Stage")
         {
-            Loader.LoadScene("menu", false, true, true);
+            Loader.LoadScene("menu", false, false, true, true);
         }
         else
         {
-            Loader.LoadScene("Boss Stage");
+            Loader.LoadScene("Boss Stage", false);
         }
     }
 }

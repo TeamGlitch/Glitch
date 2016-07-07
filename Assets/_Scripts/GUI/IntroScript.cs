@@ -33,7 +33,7 @@ public class IntroScript : MonoBehaviour {
         logoMenu = logoscreen.GetChild(0).GetChild(0).GetComponent<RectTransform>();
         logoMenu.position = new Vector3(3000,0,-1);
 
-        Loader.LoadScene("menu", false, true, false);
+        Loader.LoadScene("menu", false, false, true, false);
 	}
 
 	// Update is called once per frame

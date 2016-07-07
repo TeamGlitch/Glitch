@@ -27,7 +27,7 @@ public class EndPointScript : MonoBehaviour {
 	void Update(){
 
 		if (endGame != -1 && Time.time >= endGame) {
-            Loader.LoadScene("Congratulations", false, true, true);
+            Loader.LoadScene("Congratulations", true, false, true, true);
 		}
 
 	}

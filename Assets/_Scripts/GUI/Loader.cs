@@ -7,11 +7,12 @@ using UnityEngine.EventSystems;
 
 public class Loader : MonoBehaviour {
 
-    public static Loader instance = null;   //Singleton instance
+    public static Loader instance = null;       //Singleton instance
 
-    private static AsyncOperation async;    //Async operation
-    private static string actualLevel;      //Currently loadingLevel
-    private static string lastLevel;        //Last level name
+    private static AsyncOperation async;        //Async operation
+    private static string actualScene;          //Current scene
+    private static string lastScene;            //Last scene name
+    private static string lastLevel = "None";   //Last level name
 
     //States
     private static bool loading = false;                //Is it loading?
@@ -23,12 +24,12 @@ public class Loader : MonoBehaviour {
     private static bool automaticLoad = false;          //Does it need player input to continue after finishing?
 
     //UI
-    private GameObject loadingUI;                           //Direct reference to the loading UI
+    private GameObject loadingUI;           //Direct reference to the loading UI
     public Text text;                       //Screen text
     public Text percent;                    //Screen percent text
-    public AudioClip confirmSound;         //Confirm sound
+    public AudioClip confirmSound;          //Confirm sound
 
-    private float nextLine = 0;                         //When the next line will be written
+    private float nextLine = 0;             //When the next line will be written
 
     private string[] phrases = { "Loading enemies hostility", "Ensuring ragequit situations", "Rendering stereotypical hacker binary patterns",
                                "Sharpening enemies weapons", "Coordinating AI stupidity", "Leaking memory", "Compiling innecesary break commands",
@@ -45,7 +46,7 @@ public class Loader : MonoBehaviour {
             loadingUI = transform.GetChild(0).gameObject;
             DontDestroyOnLoad(gameObject);
             text.text = "*** Commondore 64 Basic V2 **** \n\n\n\n\n\n\n\n\n\n\n\n\n\n";
-            actualLevel = SceneManager.GetActiveScene().name;
+            actualScene = SceneManager.GetActiveScene().name;
         }
         //If instance already exists:
         else if (instance != this)
@@ -147,12 +148,17 @@ public class Loader : MonoBehaviour {
     }
 
     //Loads a given scene.
+    //Level = The scene we're exiting was a level
     //Use interface = If active, the loading screen will be visible.
     //Is automatic = If inactive, the player will need to push any button to continue after it has finished loading to go to the next scene.
     //Allowed = If inactive, the next scene will load but an outside allowToFinish() call will be needed to go to the next scene.
-    public static void LoadScene(string levelName, bool useInterface = true, bool isAutomatic = false, bool allowed = true)
+    public static void LoadScene(string levelName, bool level, bool useInterface = true, bool isAutomatic = false, bool allowed = true)
     {
-        if (!loading && actualLevel != levelName){
+        if (!loading && actualScene != levelName){
+
+            if (level)
+                lastLevel = actualScene;
+
             sceneLoading(levelName, useInterface, isAutomatic, allowed);
         }
     }
@@ -160,7 +166,7 @@ public class Loader : MonoBehaviour {
     public static void ReloadScene(bool useInterface = true, bool isAutomatic = false, bool allowed = true)
     {
         if (!loading){
-            sceneLoading(actualLevel, useInterface, isAutomatic, allowed);
+            sceneLoading(actualScene, useInterface, isAutomatic, allowed);
         }
     }
 
@@ -168,8 +174,8 @@ public class Loader : MonoBehaviour {
     {
         EventSystem.current.SetSelectedGameObject(null);
 
-        lastLevel = actualLevel;
-        actualLevel = levelName;
+        lastScene = actualScene;
+        actualScene = levelName;
         async = SceneManager.LoadSceneAsync(levelName);
 
         loading = true;
@@ -224,6 +230,9 @@ public class Loader : MonoBehaviour {
         allowLoadingToFinish = true;
     }
 
+    public static string getLastScene(){
+        return lastScene;
+    }
     public static string getLastLevel(){
         return lastLevel;
     }
