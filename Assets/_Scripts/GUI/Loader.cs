@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using InControl;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class Loader : MonoBehaviour {
 
@@ -25,6 +26,7 @@ public class Loader : MonoBehaviour {
     private GameObject loadingUI;                           //Direct reference to the loading UI
     public Text text;                       //Screen text
     public Text percent;                    //Screen percent text
+    public AudioClip confirmSound;         //Confirm sound
 
     private float nextLine = 0;                         //When the next line will be written
 
@@ -67,6 +69,7 @@ public class Loader : MonoBehaviour {
 
                     //If we're now in the next scene
                     if (async.isDone){
+                        Time.timeScale = 1.0f;
                         loading = false;
                         loadingUI.SetActive(false);
                     
@@ -79,6 +82,7 @@ public class Loader : MonoBehaviour {
                         {
                             //Allow to load
                             async.allowSceneActivation = true;
+                            SoundManager.instance.PlaySingle(confirmSound);
                         }
 
                     }
@@ -160,6 +164,7 @@ public class Loader : MonoBehaviour {
 
     private static void sceneLoading(string levelName, bool useInterface = true, bool isAutomatic = false, bool allowed = true)
     {
+        EventSystem.current.SetSelectedGameObject(null);
 
         lastLevel = actualLevel;
         actualLevel = levelName;
@@ -172,6 +177,7 @@ public class Loader : MonoBehaviour {
         if (useInterface)
         {
             interfaceLoad = true;
+            Time.timeScale = 0.0f;
         }
         else
         {
