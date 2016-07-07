@@ -6,6 +6,7 @@ public class BreakableRock : MonoBehaviour {
     public Rigidbody[] rigidBodies;
     public Transform[] transforms;
     public BoxCollider box;
+    public AudioClip impact;
 
     private Vector3 initPosition;
     private Quaternion initRot;
@@ -51,6 +52,22 @@ public class BreakableRock : MonoBehaviour {
                 rigidBodies[i].isKinematic = false;
                 boxes[i].enabled = true;
             }
+            SoundManager.instance.PlaySingle(impact);
+            Invoke("DisableColliders", 2.0f);
+        }
+    }
+
+    void OnTriggerEnter(Collider coll)
+    {
+        if (coll.CompareTag("Player") || coll.CompareTag("Floor"))
+        {
+            box.enabled = false;
+            for (int i = 0; i < rigidBodies.Length; i++)
+            {
+                rigidBodies[i].isKinematic = false;
+                boxes[i].enabled = true;
+            }
+            SoundManager.instance.PlaySingle(impact);
             Invoke("DisableColliders", 2.0f);
         }
     }

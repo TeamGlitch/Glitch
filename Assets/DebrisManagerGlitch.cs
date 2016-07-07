@@ -5,6 +5,7 @@ public class DebrisManagerGlitch : MonoBehaviour {
 
     public Debris[] debris;
     public CameraShake shake;
+    public AudioClip fall;
 
     private int rand1;
     private int rand2;
@@ -22,6 +23,8 @@ public class DebrisManagerGlitch : MonoBehaviour {
         debris[rand3].Fall();
 
         shake.shakeIt = true;
+
+        SoundManager.instance.PlaySingle(fall);
         Invoke("Restart", 5.0f);
     }
 
