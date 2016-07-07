@@ -2,8 +2,6 @@
 using System.Collections;
 using InControl;
 
-[RequireComponent (typeof (AudioSource))]
-
 public class IntroScript : MonoBehaviour {
     public enum introPhases
     {
@@ -21,7 +19,6 @@ public class IntroScript : MonoBehaviour {
     public AudioClip amigaSound;
     public Transform logoscreen;
 
-    private AudioSource audio;
     private RectTransform logoMenu;
 
     private introPhases phase = introPhases.ALLBLACK;
@@ -30,10 +27,8 @@ public class IntroScript : MonoBehaviour {
     private float timeToEnd;
 
 	void Start(){
-		audio = GetComponent<AudioSource>();
 
 		GetComponent<Renderer>().material.mainTexture = movie as MovieTexture;
-		audio.clip = movie.audioClip;
 
         logoMenu = logoscreen.GetChild(0).GetChild(0).GetComponent<RectTransform>();
         logoMenu.position = new Vector3(3000,0,-1);
@@ -152,8 +147,9 @@ public class IntroScript : MonoBehaviour {
 
                 if (Time.time > phaseStart + 2.5f){
                     logoscreen.gameObject.SetActive(false);
+                    SoundManager.instance.PlaySingle(movie.audioClip);
                     movie.Play();
-                    audio.Play();
+
                     timeToEnd = Time.time + movie.duration;
                     phase = introPhases.INTROMOVIE;
                 }

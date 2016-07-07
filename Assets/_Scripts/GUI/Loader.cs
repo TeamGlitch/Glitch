@@ -82,6 +82,7 @@ public class Loader : MonoBehaviour {
                         {
                             //Allow to load
                             async.allowSceneActivation = true;
+                            SoundManager.instance.setAllowNewSounds(true);
                             SoundManager.instance.PlaySingle(confirmSound);
                         }
 
@@ -126,6 +127,7 @@ public class Loader : MonoBehaviour {
                         {
                             //If it's automatic
                             async.allowSceneActivation = true;
+                            SoundManager.instance.MuteAll();
                             loading = false;
                         }
 
@@ -178,6 +180,8 @@ public class Loader : MonoBehaviour {
         {
             interfaceLoad = true;
             Time.timeScale = 0.0f;
+            SoundManager.instance.MuteAll();
+            SoundManager.instance.setAllowNewSounds(false);
         }
         else
         {
