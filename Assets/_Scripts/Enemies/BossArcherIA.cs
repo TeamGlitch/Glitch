@@ -617,9 +617,11 @@ public class BossArcherIA : MonoBehaviour
         int numberOfArrows = 0;
         float offset;
         int j;
+        int random;
         switch (shootType)
         {
             case shootTypes.NEW_SHOOT_TIPE_EASY_1:
+                random = Random.Range(-2, 3);
                 for(int i = 0; i < 22; ++i)
                 {
                     if (i < 5)
@@ -649,15 +651,15 @@ public class BossArcherIA : MonoBehaviour
                     }
 
                     arrows[i].gameObject.SetActive(false);
-                    arrows[i].position = new Vector3(maxLeft + offset + j * distanceBetweenArrows, prepareArrowYPos, 0f);
+                    arrows[i].position = new Vector3(maxLeft + random * distanceBetweenArrows + offset + j * distanceBetweenArrows, prepareArrowYPos, 0f);
                     arrows[i].localEulerAngles = new Vector3(0f, 180f, 0f);
                     arrowsScript[i].canMove = false;
                     arrows[i + 22].gameObject.SetActive(false);
-                    arrows[i + 22].position = new Vector3(maxLeft + offset + j * distanceBetweenArrows + distanceBetweenArrows / 2.0f, prepareArrowYPos, 0f);
+                    arrows[i + 22].position = new Vector3(maxLeft + random * distanceBetweenArrows + offset + j * distanceBetweenArrows + distanceBetweenArrows / 2.0f, prepareArrowYPos, 0f);
                     arrows[i + 22].localEulerAngles = new Vector3(0f, 180f, 0f);
                     arrowsScript[i].canMove = false;
                     arrows[i + 44].gameObject.SetActive(false);
-                    arrows[i + 44].position = new Vector3(maxLeft + offset + j * distanceBetweenArrows + distanceBetweenArrows / 4.0f, prepareArrowYPos, 0f);
+                    arrows[i + 44].position = new Vector3(maxLeft + random * distanceBetweenArrows + offset + j * distanceBetweenArrows + distanceBetweenArrows / 4.0f, prepareArrowYPos, 0f);
                     arrows[i + 44].localEulerAngles = new Vector3(0f, 180f, 0f);
                     arrowsScript[i].canMove = false;
                 }
