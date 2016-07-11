@@ -458,6 +458,8 @@ public class BossArcherIA : MonoBehaviour
             else if (lives == 2)
             {
                 animator.SetTrigger("Hitted");
+                camera.ZoomArcherIn();
+                glitchDebris.Fall();
                 bossState = bossArcherIA.HITTED;
             }
             else if (lives == 3)
@@ -466,13 +468,13 @@ public class BossArcherIA : MonoBehaviour
                 timeInPreShoot = 1f;
                 timeInPostShoot = 1f;
                 animator.SetTrigger("Hitted");
-                glitchDebris.Fall();
                 camera.ZoomArcherIn();
                 bossState = bossArcherIA.HITTED;
             }
             else if (lives == 4)
             {
                 animator.SetTrigger("Hitted");
+                camera.ZoomArcherIn();
                 bossState = bossArcherIA.HITTED;
             }
         }

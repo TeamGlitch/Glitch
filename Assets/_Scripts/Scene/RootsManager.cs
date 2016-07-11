@@ -12,7 +12,7 @@ public class RootsManager : MonoBehaviour {
         {
             roots[i].RootGlitched();
         }
-        StartCoroutine(GlitchesAvailable(5.0f));
+        StartCoroutine(GlitchesAvailable(7.0f));
     }
 
     // Coroutine activate capacity of Glitch
