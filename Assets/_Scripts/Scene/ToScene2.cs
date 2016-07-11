@@ -8,6 +8,7 @@ public class ToScene2 : MonoBehaviour {
     {
         if (coll.gameObject.CompareTag("Player"))
         {
+            //TODO: NEEEDS TO USE LOADER
             SceneManager.LoadScene("Level Boss2");
         }
     }

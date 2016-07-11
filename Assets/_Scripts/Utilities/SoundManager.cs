@@ -9,6 +9,7 @@ public class SoundManager : MonoBehaviour
     private int currentAudioSource = 0;
     public static SoundManager instance = null;
 
+    private bool allowNewSounds = true;
 
     // Use this for initialization
     void Awake()
@@ -35,23 +36,54 @@ public class SoundManager : MonoBehaviour
     //Used to play single sound clips.
     public void PlaySingle(AudioClip clip)
     {
-        int firstAudioSource = currentAudioSource;
-        ++currentAudioSource;
-        if (currentAudioSource >= efxSources.Length)
-            currentAudioSource = 0;
-        while (efxSources[currentAudioSource].isPlaying && firstAudioSource != currentAudioSource)
-        {
-            ++currentAudioSource;
-            if (currentAudioSource >= efxSources.Length)
-                currentAudioSource = 0;
+        if (allowNewSounds){
+
+            int firstAudioSource = currentAudioSource;
+
+            do
+            {
+                ++currentAudioSource;
+                if (currentAudioSource >= efxSources.Length)
+                    currentAudioSource = 0;
+            } while (efxSources[currentAudioSource].isPlaying && firstAudioSource != currentAudioSource);
+
+            efxSources[currentAudioSource].clip = clip;
+            efxSources[currentAudioSource].Play();
+
         }
-        efxSources[currentAudioSource].clip = clip;
-        efxSources[currentAudioSource].Play();
+
     }
 
     public void ChangeMusicSpeed(float speed)
     {
         musicSource.pitch = speed;
+    }
+
+    public void MuteAll()
+    {
+        if (musicSource.isPlaying)
+            musicSource.Stop();
+
+
+        for (int i = 0; i < efxSources.Length; i++)
+        {
+            if (efxSources[i].isPlaying)
+            {
+                efxSources[i].Stop();
+            }
+
+
+        }
+
+    }
+
+    public void setAllowNewSounds(bool value){
+        allowNewSounds = value;
+    }
+
+    public bool getAllowNewSounds()
+    {
+        return allowNewSounds;
     }
 
 }
