@@ -44,6 +44,7 @@ public class BossArcherIA : MonoBehaviour
         ELEVEN_NEAR_GLITCH
     }
 
+    public BossStageCamera camera;
     public AudioClip hit;
     public AudioClip scream;
     public DebrisManagerGlitch glitchDebris;        // Debris in "z" of Glitch
@@ -401,6 +402,7 @@ public class BossArcherIA : MonoBehaviour
             {
                 SoundManager.instance.PlaySingle(scream);
                 animator.SetTrigger("LastHitted");
+                camera.ZoomOut();
                 bossState = bossArcherIA.DEAD;
                 door.OpenDoor();
             }
@@ -410,6 +412,7 @@ public class BossArcherIA : MonoBehaviour
                 timeInPreShoot = 0f;
                 timeInPostShoot = 0f;
                 animator.SetTrigger("Hitted");
+                camera.ZoomArcherIn();
                 bossState = bossArcherIA.HITTED;
             }
             else if (lives == 2)
@@ -419,6 +422,7 @@ public class BossArcherIA : MonoBehaviour
                 timeInPostShoot = 1f;
                 animator.SetTrigger("Hitted");
                 glitchDebris.Fall();
+                camera.ZoomArcherIn();
                 bossState = bossArcherIA.HITTED;
             }
         }
@@ -426,6 +430,8 @@ public class BossArcherIA : MonoBehaviour
 
     public void InsultingAnimationEnded()
     {
+        camera.ZoomArcherOut();
+
         if (lives == 2)
             currentSpecialSpeed = 2f;
         else if (lives == 1)
