@@ -42,14 +42,13 @@ public class BossArcherIA : MonoBehaviour
         SEVEN_NEAR_GLITCH,
         NINE_NEAR_GLITCH,
         ELEVEN_NEAR_GLITCH,
-        NEW_SHOOT_TIPE_EASY_1,
-        NEW_SHOOT_TIPE_EASY_2
+        NEW_SHOOT_TYPE_BIG,
+        NEW_SHOOT_TYPE_NORMAL,
+        NEW_SHOOT_TYPE_SMALL
     }
 
-    public BossStageCamera camera;
     public AudioClip hit;
     public AudioClip scream;
-    public DebrisManagerGlitch glitchDebris;        // Debris in "z" of Glitch
     public float horizontalVelocity = 10.0f;
     public Door door;
     public bool start = false;
@@ -74,7 +73,7 @@ public class BossArcherIA : MonoBehaviour
     private float maxRight = 26f;
     public float prepareArrowYPos = 12f;
 
-    public float timeToShootArrows = 3f;
+    public float timeToShootArrows = 1f;
 
     private shootTypes lastShootType;
 
@@ -116,11 +115,13 @@ public class BossArcherIA : MonoBehaviour
 
     public BossArrowScript upArrow;
 
-	private bool shootInThisPlatform = false;
+    private bool shootInThisPlatform = false;
 
     public AudioClip bowSound;
     public AudioClip jumpSound;
 
+    private bool canShoot = true;
+    public Player playerScript;
 
     #endregion
 
@@ -152,6 +153,9 @@ public class BossArcherIA : MonoBehaviour
         firstStopPoint = true;
         slowFPS.SlowFPSChangedStatusEvent += SlowFPSStateChanged;
         timeWhenLastHitted = Time.time;
+
+        playerScript.PlayerDeadEvent += GlitchDead;
+        playerScript.PlayerReviveEvent += GlitchRevives;
 
         upArrow.gameObject.SetActive(false);
     }
@@ -203,18 +207,25 @@ public class BossArcherIA : MonoBehaviour
 
                     if (IsGrounded() && perc >= 0.5f)
                     {
-						shootInThisPlatform = false;
+                        shootInThisPlatform = false;
                         bossState = bossArcherIA.FALLING_JUMP;
                     }
                     break;
 
                 case bossArcherIA.PRESHOOT:
-                    timeSinceStateChanged += world.lag;
-                    if (timeSinceStateChanged >= timeInPreShoot)
+                    if (canShoot)
                     {
-                        bossState = bossArcherIA.SHOOTING;
-                        animator.speed = currentSpecialSpeed;
-                        animator.SetTrigger("Attack");
+                        timeSinceStateChanged += world.lag;
+                        if (timeSinceStateChanged >= timeInPreShoot)
+                        {
+                            bossState = bossArcherIA.SHOOTING;
+                            animator.speed = currentSpecialSpeed;
+                            animator.SetTrigger("Attack");
+                        }
+                    }
+                    else
+                    {
+                        timeSinceStateChanged = 0.0f;
                     }
                     break;
 
@@ -352,7 +363,7 @@ public class BossArcherIA : MonoBehaviour
             }
             else if (bossPos == bossArcherPos.MEDIUMLEFT && movingRight)
             {
-                if(random == 1)
+                if (random == 1)
                 {
                     bossPos = bossArcherPos.MEDIUMRIGHT;
                     currentEndJumpPoint = EndJumpPoint[3].position + new Vector3(1f, -1f, 0f);
@@ -442,39 +453,31 @@ public class BossArcherIA : MonoBehaviour
             {
                 SoundManager.instance.PlaySingle(scream);
                 animator.SetTrigger("LastHitted");
-                camera.ZoomOut();
                 bossState = bossArcherIA.DEAD;
                 door.OpenDoor();
             }
             else if (lives == 1)
             {
-                timeToShootArrows = 1;
                 timeInPreShoot = 0f;
                 timeInPostShoot = 0f;
                 animator.SetTrigger("Hitted");
-                camera.ZoomArcherIn();
                 bossState = bossArcherIA.HITTED;
             }
             else if (lives == 2)
             {
                 animator.SetTrigger("Hitted");
-                camera.ZoomArcherIn();
-                glitchDebris.Fall();
                 bossState = bossArcherIA.HITTED;
             }
             else if (lives == 3)
             {
-                timeToShootArrows = 2;
                 timeInPreShoot = 1f;
                 timeInPostShoot = 1f;
                 animator.SetTrigger("Hitted");
-                camera.ZoomArcherIn();
                 bossState = bossArcherIA.HITTED;
             }
             else if (lives == 4)
             {
                 animator.SetTrigger("Hitted");
-                camera.ZoomArcherIn();
                 bossState = bossArcherIA.HITTED;
             }
         }
@@ -482,8 +485,6 @@ public class BossArcherIA : MonoBehaviour
 
     public void InsultingAnimationEnded()
     {
-        camera.ZoomArcherOut();
-
         if (lives == 2)
             currentSpecialSpeed = 2f;
         else if (lives == 1)
@@ -525,8 +526,8 @@ public class BossArcherIA : MonoBehaviour
 
 
         if (!shootInThisPlatform)
-	        bossState = bossArcherIA.PRESHOOT;
-		else if(movingRight)
+            bossState = bossArcherIA.PRESHOOT;
+        else if (movingRight)
         {
             bossState = bossArcherIA.TURNING_LEFT_TO_RUN;
             animator.SetBool("Run", true);
@@ -614,6 +615,16 @@ public class BossArcherIA : MonoBehaviour
         }
     }
 
+    public void GlitchDead()
+    {
+        canShoot = false;
+    }
+
+    public void GlitchRevives()
+    {
+        canShoot = true;
+    }
+
     #endregion
 
     #region Shoot
@@ -630,9 +641,9 @@ public class BossArcherIA : MonoBehaviour
         int random;
         switch (shootType)
         {
-            case shootTypes.NEW_SHOOT_TIPE_EASY_1:
+            case shootTypes.NEW_SHOOT_TYPE_SMALL:
                 random = Random.Range(-2, 3);
-                for(int i = 0; i < 22; ++i)
+                for (int i = 0; i < 22; ++i)
                 {
                     if (i < 5)
                     {
@@ -671,6 +682,96 @@ public class BossArcherIA : MonoBehaviour
                     arrows[i + 44].gameObject.SetActive(false);
                     arrows[i + 44].position = new Vector3(maxLeft + random * distanceBetweenArrows + offset + j * distanceBetweenArrows + distanceBetweenArrows / 4.0f, prepareArrowYPos, 0f);
                     arrows[i + 44].localEulerAngles = new Vector3(0f, 180f, 0f);
+                    arrowsScript[i].canMove = false;
+                }
+                break;
+
+            case shootTypes.NEW_SHOOT_TYPE_NORMAL:
+                random = Random.Range(-2, 3);
+                for (int i = 0; i < 18; ++i)
+                {
+                    if (i < 3)
+                    {
+                        offset = 0f;
+                        j = i;
+                    }
+                    else if (i < 7)
+                    {
+                        offset = 6f * distanceBetweenArrows;
+                        j = i - 3;
+                    }
+                    else if (i < 11)
+                    {
+                        offset = 13 * distanceBetweenArrows;
+                        j = i - 7;
+                    }
+                    else if (i < 15)
+                    {
+                        offset = 20f * distanceBetweenArrows;
+                        j = i - 11;
+                    }
+                    else
+                    {
+                        offset = 27f * distanceBetweenArrows;
+                        j = i - 15;
+                    }
+
+                    arrows[i].gameObject.SetActive(false);
+                    arrows[i].position = new Vector3(maxLeft + random * distanceBetweenArrows + offset + j * distanceBetweenArrows, prepareArrowYPos, 0f);
+                    arrows[i].localEulerAngles = new Vector3(0f, 180f, 0f);
+                    arrowsScript[i].canMove = false;
+                    arrows[i + 18].gameObject.SetActive(false);
+                    arrows[i + 18].position = new Vector3(maxLeft + random * distanceBetweenArrows + offset + j * distanceBetweenArrows + distanceBetweenArrows / 2.0f, prepareArrowYPos, 0f);
+                    arrows[i + 18].localEulerAngles = new Vector3(0f, 180f, 0f);
+                    arrowsScript[i].canMove = false;
+                    arrows[i + 36].gameObject.SetActive(false);
+                    arrows[i + 36].position = new Vector3(maxLeft + random * distanceBetweenArrows + offset + j * distanceBetweenArrows + distanceBetweenArrows / 4.0f, prepareArrowYPos, 0f);
+                    arrows[i + 36].localEulerAngles = new Vector3(0f, 180f, 0f);
+                    arrowsScript[i].canMove = false;
+                }
+                break;
+
+            case shootTypes.NEW_SHOOT_TYPE_BIG:
+                random = Random.Range(-2, 3);
+                for (int i = 0; i < 14; ++i)
+                {
+                    if (i < 2)
+                    {
+                        offset = 0f;
+                        j = i;
+                    }
+                    else if (i < 5)
+                    {
+                        offset = 6f * distanceBetweenArrows;
+                        j = i - 2;
+                    }
+                    else if (i < 8)
+                    {
+                        offset = 13 * distanceBetweenArrows;
+                        j = i - 5;
+                    }
+                    else if (i < 11)
+                    {
+                        offset = 20f * distanceBetweenArrows;
+                        j = i - 8;
+                    }
+                    else
+                    {
+                        offset = 27f * distanceBetweenArrows;
+                        j = i - 11;
+                    }
+
+                    arrows[i].gameObject.SetActive(false);
+                    arrows[i].position = new Vector3(maxLeft + random * distanceBetweenArrows + offset + j * distanceBetweenArrows, prepareArrowYPos, 0f);
+                    arrows[i].localEulerAngles = new Vector3(0f, 180f, 0f);
+                    arrowsScript[i].canMove = false;
+                    arrows[i + 14].gameObject.SetActive(false);
+                    arrows[i + 14].position = new Vector3(maxLeft + random * distanceBetweenArrows + offset + j * distanceBetweenArrows + distanceBetweenArrows / 2.0f, prepareArrowYPos, 0f);
+                    arrows[i + 14].localEulerAngles = new Vector3(0f, 180f, 0f);
+                    arrowsScript[i].canMove = false;
+                    arrows[i + 28].gameObject.SetActive(false);
+                    arrows[i + 28].position = new Vector3(maxLeft + random * distanceBetweenArrows + offset + j * distanceBetweenArrows + distanceBetweenArrows / 4.0f, prepareArrowYPos, 0f);
+                    arrows[i + 28].localEulerAngles = new Vector3(0f, 180f, 0f);
                     arrowsScript[i].canMove = false;
                 }
                 break;
@@ -722,7 +823,7 @@ public class BossArcherIA : MonoBehaviour
                     }
                     else
                     {
-                        arrows[i].position = new Vector3(maxRight - (i - arrows.Length/ 2 + 0.5f) * distanceBetweenArrows, prepareArrowYPos, 0f);
+                        arrows[i].position = new Vector3(maxRight - (i - arrows.Length / 2 + 0.5f) * distanceBetweenArrows, prepareArrowYPos, 0f);
                     }
                     arrows[i].localEulerAngles = new Vector3(0f, 180f, 0f);
                     arrowsScript[i].canMove = false;
@@ -807,60 +908,82 @@ public class BossArcherIA : MonoBehaviour
         int random;
         if (lives == 5)
         {
-            random = Random.Range(1, 5);
+            PrepareArrows(shootTypes.FIVE_NEAR_GLITCH);
+        }
+        else if (lives == 4)
+        {
+            random = Random.Range(1, 3);
             switch (random)
             {
                 case 1:
-                    PrepareArrows(shootTypes.THREE_NEAR_GLITCH);
-                    break;
-                case 2:
-                    PrepareArrows(shootTypes.FIVE_NEAR_GLITCH);
-                    break;
-                case 3:
-                    PrepareArrows(shootTypes.SEVEN_NEAR_GLITCH);
-                    break;
-                case 4:
                     PrepareArrows(shootTypes.NINE_NEAR_GLITCH);
                     break;
-            }
-        }
-        else if (lives >= 3)
-        {
-            random = Random.Range(1, 4);
-            switch (random)
-            {
-                case 1:
-                    PrepareArrows(shootTypes.LEFT_TO_RIGHT);
-                    break;
                 case 2:
-                    PrepareArrows(shootTypes.RIGHT_TO_LEFT);
-                    break;
-                case 3:
-                    PrepareArrows(shootTypes.ELEVEN_NEAR_GLITCH);
+                    PrepareArrows(shootTypes.NEW_SHOOT_TYPE_BIG);
                     break;
             }
         }
-        else if(lives >=  1)
+        else if (lives == 3)
         {
             random = Random.Range(1, 5);
             switch (random)
             {
                 case 1:
-                    PrepareArrows(shootTypes.LEFT_TO_RIGHT);
+                    PrepareArrows(shootTypes.ELEVEN_NEAR_GLITCH);
                     break;
                 case 2:
-                    PrepareArrows(shootTypes.RIGHT_TO_LEFT);
+                    PrepareArrows(shootTypes.NEW_SHOOT_TYPE_NORMAL);
                     break;
                 case 3:
-                    PrepareArrows(shootTypes.SIDES_TO_MIDDLE);
+                    PrepareArrows(shootTypes.LEFT_TO_RIGHT);
+                    break;
+                case 4:
+                    PrepareArrows(shootTypes.RIGHT_TO_LEFT);
+                    break;
+            }
+        }
+        else if (lives == 2)
+        {
+            random = Random.Range(1, 5);
+            switch (random)
+            {
+                case 1:
+                    PrepareArrows(shootTypes.NEW_SHOOT_TYPE_SMALL);
+                    break;
+                case 2:
+                    PrepareArrows(shootTypes.LEFT_TO_RIGHT);
+                    break;
+                case 3:
+                    PrepareArrows(shootTypes.RIGHT_TO_LEFT);
                     break;
                 case 4:
                     PrepareArrows(shootTypes.ULTRA_DIFFICULT_ULTRA);
                     break;
             }
         }
-        PrepareArrows(shootTypes.NEW_SHOOT_TIPE_EASY_1);
-		shootInThisPlatform = true;
+        else if (lives == 1)
+        {
+            random = Random.Range(1, 6);
+            switch (random)
+            {
+                case 1:
+                    PrepareArrows(shootTypes.NEW_SHOOT_TYPE_SMALL);
+                    break;
+                case 2:
+                    PrepareArrows(shootTypes.LEFT_TO_RIGHT);
+                    break;
+                case 3:
+                    PrepareArrows(shootTypes.RIGHT_TO_LEFT);
+                    break;
+                case 4:
+                    PrepareArrows(shootTypes.ELEVEN_NEAR_GLITCH);
+                    break;
+                case 5:
+                    PrepareArrows(shootTypes.ULTRA_DIFFICULT_ULTRA);
+                    break;
+            }
+        }
+        shootInThisPlatform = true;
         StartCoroutine("CO_ShootArrows");
     }
 
@@ -868,27 +991,41 @@ public class BossArcherIA : MonoBehaviour
     {
         float timeShooting = -Time.deltaTime;
         bool newShoot = false;
-        bool oneByOne = false;
         int i;
         int numberOfArrows = 0;
-        lastShootType = shootTypes.NEW_SHOOT_TIPE_EASY_1;
+        int arrowsAtTheSameTime = 5;
         switch (lastShootType)
         {
             case shootTypes.LEFT_TO_RIGHT:
             case shootTypes.RIGHT_TO_LEFT:
             case shootTypes.SIDES_TO_MIDDLE:
-                oneByOne = true;
+                newShoot = true;
                 numberOfArrows = 30;
+                arrowsAtTheSameTime = 5;
                 break;
 
-            case shootTypes.NEW_SHOOT_TIPE_EASY_1:
+            case shootTypes.NEW_SHOOT_TYPE_BIG:
                 newShoot = true;
-                numberOfArrows = 45;
+                numberOfArrows = 42;
+                arrowsAtTheSameTime = 14;
+                break;
+
+            case shootTypes.NEW_SHOOT_TYPE_NORMAL:
+                newShoot = true;
+                numberOfArrows = 54;
+                arrowsAtTheSameTime = 18;
+                break;
+
+            case shootTypes.NEW_SHOOT_TYPE_SMALL:
+                newShoot = true;
+                numberOfArrows = 66;
+                arrowsAtTheSameTime = 22;
                 break;
 
             case shootTypes.ULTRA_DIFFICULT_ULTRA:
                 newShoot = true;
-                numberOfArrows = arrows.Length;
+                numberOfArrows = 60;
+                arrowsAtTheSameTime = 5;
                 break;
 
             case shootTypes.THREE_NEAR_GLITCH:
@@ -919,29 +1056,12 @@ public class BossArcherIA : MonoBehaviour
                 timeShooting += Time.deltaTime;
                 if (timeShooting >= (i * timeToShootArrows / arrows.Length))
                 {
-                    for (int j = i; j < i + 21; ++j)
+                    for (int j = i; j < i + arrowsAtTheSameTime; ++j)
                     {
                         arrowsScript[j].ShootArrow();
                         arrows[j].gameObject.SetActive(true);
                     }
-                    i += 21;
-                }
-                yield return null;
-            }
-        }
-        if (oneByOne)
-        {
-            while (i < numberOfArrows)
-            {
-                timeShooting += Time.deltaTime;
-                if (timeShooting >= (i * timeToShootArrows / arrows.Length))
-                {
-                    for (int j = i; j < i + 5; ++j)
-                    {
-                        arrowsScript[j].ShootArrow();
-                        arrows[j].gameObject.SetActive(true);
-                    }
-                    i += 5;
+                    i += arrowsAtTheSameTime;
                 }
                 yield return null;
             }
@@ -953,7 +1073,7 @@ public class BossArcherIA : MonoBehaviour
                 timeShooting += Time.deltaTime;
                 if (timeShooting >= (i * timeToShootArrows / (arrows.Length * 2)))
                 {
-                    if (numberOfArrows % 2 != 0 && (i%(numberOfArrows / 3.0f) == 0))
+                    if (numberOfArrows % 2 != 0 && (i % (numberOfArrows / 3.0f) == 0))
                     {
                         arrows[i].gameObject.SetActive(true);
                         arrowsScript[i].ShootArrow();
