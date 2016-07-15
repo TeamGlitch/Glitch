@@ -44,32 +44,14 @@ public class BreakableRock : MonoBehaviour {
 
     void OnCollisionEnter(Collision coll)
     {
-        if (coll.collider.CompareTag("Player") || coll.collider.CompareTag("Floor"))
+        box.enabled = false;
+        for (int i = 0; i < rigidBodies.Length; i++)
         {
-            box.enabled = false;
-            for (int i = 0; i < rigidBodies.Length; i++)
-            {
-                rigidBodies[i].isKinematic = false;
-                boxes[i].enabled = true;
-            }
-            SoundManager.instance.PlaySingle(impact);
-            Invoke("DisableColliders", 2.0f);
+            rigidBodies[i].isKinematic = false;
+            boxes[i].enabled = true;
         }
-    }
-
-    void OnTriggerEnter(Collider coll)
-    {
-        if (coll.CompareTag("Player") || coll.CompareTag("Floor"))
-        {
-            box.enabled = false;
-            for (int i = 0; i < rigidBodies.Length; i++)
-            {
-                rigidBodies[i].isKinematic = false;
-                boxes[i].enabled = true;
-            }
-            SoundManager.instance.PlaySingle(impact);
-            Invoke("DisableColliders", 2.0f);
-        }
+        SoundManager.instance.PlaySingle(impact);
+        Invoke("DisableColliders", 2.0f);
     }
 
     public void DisableColliders()
