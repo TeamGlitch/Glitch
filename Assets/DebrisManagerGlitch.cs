@@ -35,4 +35,12 @@ public class DebrisManagerGlitch : MonoBehaviour {
         debris[rand3].Restart();
         Invoke("Fall", 1.0f);
     }
+
+    public void ArcherDead()
+    {
+        for (int i = 0; i < debris.Length; ++i)
+        {
+            debris[i].Reubicate();
+        }
+    }
 }

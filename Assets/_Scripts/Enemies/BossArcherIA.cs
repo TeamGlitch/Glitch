@@ -443,6 +443,7 @@ public class BossArcherIA : MonoBehaviour
                 SoundManager.instance.PlaySingle(scream);
                 animator.SetTrigger("LastHitted");
                 camera.ZoomOut();
+                glitchDebris.ArcherDead();
                 bossState = bossArcherIA.DEAD;
                 door.OpenDoor();
             }

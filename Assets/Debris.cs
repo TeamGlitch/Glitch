@@ -4,6 +4,7 @@ using System.Collections;
 public class Debris : MonoBehaviour {
     private Rigidbody[] rocksRigids;
     private BreakableRock[] debrisScript;
+    private int rand;
 
     void Awake()
     {
@@ -34,5 +35,18 @@ public class Debris : MonoBehaviour {
         rocksRigids[1].isKinematic = false;
         rocksRigids[2].isKinematic = false;
         rocksRigids[3].isKinematic = false;
+    }
+
+    public void Reubicate()
+    {
+        rand = Random.Range(0, 2);
+        if (rand == 0)
+        {
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -0.125f);
+        }
+        else
+        {
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0.2f);
+        }
     }
 }
