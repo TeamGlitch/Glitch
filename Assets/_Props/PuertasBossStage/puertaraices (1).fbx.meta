@@ -19,6 +19,7 @@ ModelImporter:
     4300002: polySurface9
     7400000: abrir
     7400002: cerrar
+    7400004: abierta
     9500000: //RootNode
     13700000: polySurface9
     13700002: pPlane1
@@ -43,6 +44,44 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     clipAnimations:
+    - serializedVersion: 16
+      name: abierta
+      takeName: abrir
+      firstFrame: 29
+      lastFrame: 30
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: puerta_raices
+        weight: 1
+      - path: puerta_raices/polySurface9
+        weight: 1
+      - path: puerta_raices/pPlane1
+        weight: 1
+      - path: puerta_raices1
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 1
     - serializedVersion: 16
       name: cerrar
       takeName: cerrar
@@ -80,7 +119,7 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
+      additiveReferencePoseFrame: 1
     - serializedVersion: 16
       name: abrir
       takeName: abrir
@@ -118,7 +157,7 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
+      additiveReferencePoseFrame: 1
     isReadable: 1
   meshes:
     lODScreenPercentages: []

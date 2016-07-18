@@ -85,6 +85,15 @@ public class Player : MonoBehaviour {
         }
 	}
 
+    void OnCollisionEnter(Collision coll)
+    {
+        //If there's a collision with some lethal thing in scene
+        if (coll.gameObject.CompareTag("Death"))
+        {
+            DecrementLives(1);
+        }
+    }
+
 	void Update(){
 	
 		//If it's moving to the checkpoint, do so until the time to move it's over
