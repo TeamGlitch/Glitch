@@ -74,12 +74,12 @@ public class DeadMenuScript : MonoBehaviour {
 
                 if (player.items >= fibonacciValue)
                 {
+                    continueButton.interactable = true;
                     continueButton.Select();
                 }
                 else
                 {
                     restartButton.Select();
-                    continueButton.interactable = false;
 
                     Navigation nav = menuButton.navigation;
                     nav.selectOnUp = null;
@@ -130,6 +130,7 @@ public class DeadMenuScript : MonoBehaviour {
 	{
 		glitchedCameraScript.enabled = true;
 		deadMenu.enabled = false;
+        continueButton.interactable = false;
 		timeDead = 0.0f;
         divisions = glitchedCameraScript.divisions;
         intensity = glitchedCameraScript.intensity;
