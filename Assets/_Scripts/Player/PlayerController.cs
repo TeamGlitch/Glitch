@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
 
     //State
 	public player_state state;
-	public bool allowMovement;
+	public bool allowMovement = true;           //Don't move assignation to Start. Must be here.
 
 	//Player Components
 	private SpriteRenderer spriteRenderer;			//Reference to the sprite renderer
@@ -113,7 +113,6 @@ public class PlayerController : MonoBehaviour
         slowFPS = transform.FindChild("Powers/SlowFPS").GetComponent<SlowFPS>();
 
         state = player_state.IN_GROUND;
-        allowMovement = true;
     }
 
     void FixedUpdate()

@@ -33,3 +33,4 @@ sysinfo.txt
 !/[Pp]rojectSettings/ProjectSettings.asset
 !/[Pp]rojectSettings/DynamicsManager.asset
 !/[Pp]rojectSettings/Physics2DSettings.asset
+!/[Pp]rojectSettings/QualitySettings.asset

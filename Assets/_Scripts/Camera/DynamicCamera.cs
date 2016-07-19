@@ -12,12 +12,14 @@ public class DynamicCamera : MonoBehaviour {
 	};
 
 	public Transform player;
+    public PlayerController playerC;
 	public Camera mainCamera;
 	public World world;
 	public GameObject titles;
+    public AdvanceBarEnemies advanceBarEnemies;
+
 	public int speed = 10;
 	public int zoomSpeed;
-
 
 	private dynamic_camera_state state = dynamic_camera_state.PANNING;
 	private float delay = 5.0f;
@@ -25,6 +27,10 @@ public class DynamicCamera : MonoBehaviour {
 	private int zPosition = -12;
 
 	private Vector3 zoomSpeedVector;
+
+    void Start(){
+        playerC.allowMovement = false;
+    }
 
 	void Update () {
 
@@ -76,6 +82,8 @@ public class DynamicCamera : MonoBehaviour {
 	// movements) and deactive this class.
 	void beginGame()
 	{
+        playerC.allowMovement = true;
+        advanceBarEnemies.Pause(false);
 		mainCamera.transform.position = transform.position;
 		world.enabled = true;
 		gameObject.SetActive(false);
