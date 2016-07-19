@@ -13,7 +13,6 @@ public class World : MonoBehaviour {
 		UPDATING				//DoUpdate returns to false
 	};
 
-	public PlayerController player;
     public GameObject mainCamera;
     public GameObject powers;
     public GameObject gui;
@@ -32,7 +31,6 @@ public class World : MonoBehaviour {
 
 	void Start()
     {
-		// We begin the game activating camera and movements of player
         mainCamera.SetActive(true);
         gui.SetActive(true);
 		dialogues.SetActive(true);

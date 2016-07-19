@@ -15,6 +15,7 @@ public class AdvanceBarEnemies : MonoBehaviour {
     };
 
     private endtimeState state;
+    private endtimeState lastStateBeforePause = endtimeState.MOVING;
 
     private const float maxTime = 5f * 60f;
     private float time = 0.0f;
@@ -29,11 +30,27 @@ public class AdvanceBarEnemies : MonoBehaviour {
 
     public AudioClip powerDownSound;
 
+
+
     void Start()
     {
         slider.maxValue = maxTime;
         slider.minValue = 0.0f;
-        state = endtimeState.MOVING;
+        state = endtimeState.NOT_MOVING;
+    }
+
+    public void Pause (bool pause)
+    {
+        if (pause)
+        {
+            if (state != endtimeState.NOT_MOVING)
+                lastStateBeforePause = state;
+            state = endtimeState.NOT_MOVING;
+        }
+        else
+        {
+            state = lastStateBeforePause;
+        }
     }
 
     void Update()
