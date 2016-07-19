@@ -147,8 +147,10 @@ public class IntroScript : MonoBehaviour {
 
                 if (Time.time > phaseStart + 2.5f){
                     logoscreen.gameObject.SetActive(false);
-                    SoundManager.instance.PlaySingle(movie.audioClip);
+
+                    adjustCamera();
                     movie.Play();
+                    SoundManager.instance.PlaySingle(movie.audioClip);
 
                     timeToEnd = Time.time + movie.duration;
                     phase = introPhases.INTROMOVIE;
@@ -164,12 +166,16 @@ public class IntroScript : MonoBehaviour {
                 }
                 else if (Camera.current == Camera.main)
                 {
-                    float height = Camera.current.orthographicSize * 2;
-                    float width = Camera.current.aspect * height;
-                    transform.localScale = new Vector3(width, height, 0.1f);
+                    adjustCamera();
                 }
 
                 break;
         }
 	}
+
+    private void adjustCamera(){
+        float height = Camera.current.orthographicSize * 2;
+        float width = Camera.current.aspect * height;
+        transform.localScale = new Vector3(width, height, 0.1f);
+    }
 }
