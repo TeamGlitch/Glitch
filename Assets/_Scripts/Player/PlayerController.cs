@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
 
     //State
 	public player_state state;
-	public bool allowMovement = true;           //Don't move assignation to Start. Must be here.
+	public bool allowMovement;       
 
 	//Player Components
 	private SpriteRenderer spriteRenderer;			//Reference to the sprite renderer
@@ -102,6 +102,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        allowMovement = true;
         spriteRenderer = transform.GetComponentInChildren<SpriteRenderer>();
         plAnimation = transform.GetComponentInChildren<Animator>();
 

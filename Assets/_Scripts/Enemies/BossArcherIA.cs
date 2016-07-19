@@ -47,8 +47,10 @@ public class BossArcherIA : MonoBehaviour
         NEW_SHOOT_TYPE_SMALL
     }
 
+    public BossStageCamera camera;
     public AudioClip hit;
     public AudioClip scream;
+    public DebrisManagerGlitch glitchDebris;        // Debris in "z" of Glitch
     public float horizontalVelocity = 10.0f;
     public Door door;
     public bool start = false;
