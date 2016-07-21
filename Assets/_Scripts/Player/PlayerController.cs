@@ -445,12 +445,13 @@ public class PlayerController : MonoBehaviour
 
         // Correct Z position
         Vector3 position = transform.position;
-        if (position.z != zPosition)
+        if (position.z != zPosition && !float.IsNaN(zPosition))
             position.z = zPosition;
-        transform.position = position;
+        if(!float.IsNaN(position.x) && !float.IsNaN(position.y) && !float.IsNaN(position.z))
+            transform.position = position;
 
 		//If there's horizontal movement
-		if (!isInGround && currentVelocity != 0) {
+		if (!isInGround && currentVelocity != 0f) {
 
 			//Three raycast are made
 			Vector3 pos1 = transform.position;
@@ -463,14 +464,14 @@ public class PlayerController : MonoBehaviour
 
 
 			//If it's to the right
-			if (currentVelocity > 0){
+			if (currentVelocity > 0f){
 
 				//Checks the raycast
 				//OPTIMIZATION NOTE: this if CAN'T be included in the last one)
 				if (Physics.Raycast (pos1, Vector3.right, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)
 					|| Physics.Raycast (pos2, Vector3.right, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)
 					|| Physics.Raycast (pos3, Vector3.right, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)) {
-					currentVelocity = 0;
+					currentVelocity = 0f;
 				}
 
 			} else {
@@ -480,14 +481,15 @@ public class PlayerController : MonoBehaviour
 				if (!isInGround && (Physics.Raycast (pos1, Vector3.left, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)
 					|| Physics.Raycast (pos2, Vector3.left, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)
 					|| Physics.Raycast (pos3, Vector3.left, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore))) {
-					currentVelocity = 0;
+					currentVelocity = 0f;
 				}
 			}
 				
 		}
 
 		Vector3 velocity = rigidBody.velocity;
-		velocity.x = currentVelocity;
+        if(!float.IsNaN(currentVelocity))
+            velocity.x = currentVelocity;
 		rigidBody.velocity = velocity;
 
         if (state == player_state.IN_GROUND && currentVelocity != 0)
