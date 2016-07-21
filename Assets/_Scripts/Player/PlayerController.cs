@@ -389,10 +389,7 @@ public class PlayerController : MonoBehaviour
             switch (playerMovingType)
             {
                 case moving_type.STOPING:
-                    if (timeToChangeDependingVelocity == 0f)
-                        currentVelocity = 0.0f;
-                    else
-                        currentVelocity = Mathf.Lerp(velocityWhenChangedState, 0.0f, timeSinceChangeMoving / timeToChangeDependingVelocity);
+                    currentVelocity = Mathf.Lerp(velocityWhenChangedState, 0.0f, timeSinceChangeMoving / timeToChangeDependingVelocity);
                     break;
                 case moving_type.CHANGING_DIRECTION:
                     if (moveDirection.x > 0.0f)
@@ -405,16 +402,10 @@ public class PlayerController : MonoBehaviour
                     }
                     break;
                 case moving_type.GOING_RIGHT:
-                    if (timeToChangeDependingVelocity == 0f)
-                        currentVelocity = maxSpeed;
-                    else
-                        currentVelocity = Mathf.Lerp(velocityWhenChangedState, maxSpeed, timeSinceChangeMoving / timeToChangeDependingVelocity);
+                    currentVelocity = Mathf.Lerp(velocityWhenChangedState, maxSpeed, timeSinceChangeMoving / timeToChangeDependingVelocity);
                     break;
                 case moving_type.GOING_LEFT:
-                    if (timeToChangeDependingVelocity == 0f)
-                        currentVelocity = -maxSpeed;
-                    else
-                        currentVelocity = Mathf.Lerp(velocityWhenChangedState, -maxSpeed, timeSinceChangeMoving / timeToChangeDependingVelocity);
+                    currentVelocity = Mathf.Lerp(velocityWhenChangedState, -maxSpeed, timeSinceChangeMoving / timeToChangeDependingVelocity);
                     break;
             }
 
@@ -454,10 +445,9 @@ public class PlayerController : MonoBehaviour
 
         // Correct Z position
         Vector3 position = transform.position;
-        if (position.z != zPosition && !float.IsNaN(zPosition))
+        if (position.z != zPosition)
             position.z = zPosition;
-        if(!float.IsNaN(position.x) && !float.IsNaN(position.y) && !float.IsNaN(position.z))
-            transform.position = position;
+        transform.position = position;
 
 		//If there's horizontal movement
 		if (!isInGround && currentVelocity != 0f) {
@@ -515,7 +505,7 @@ public class PlayerController : MonoBehaviour
 
 
         //Plays the dust particle effect
-        if (state == player_state.IN_GROUND && currentVelocity != 0f)
+        if (state == player_state.IN_GROUND && currentVelocity != 0)
         {
             if (dustParticles.isStopped)
             {
