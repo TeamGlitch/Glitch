@@ -389,7 +389,10 @@ public class PlayerController : MonoBehaviour
             switch (playerMovingType)
             {
                 case moving_type.STOPING:
-                    currentVelocity = Mathf.Lerp(velocityWhenChangedState, 0.0f, timeSinceChangeMoving / timeToChangeDependingVelocity);
+                    if (timeToChangeDependingVelocity == 0f)
+                        currentVelocity = 0.0f;
+                    else
+                        currentVelocity = Mathf.Lerp(velocityWhenChangedState, 0.0f, timeSinceChangeMoving / timeToChangeDependingVelocity);
                     break;
                 case moving_type.CHANGING_DIRECTION:
                     if (moveDirection.x > 0.0f)
@@ -402,10 +405,16 @@ public class PlayerController : MonoBehaviour
                     }
                     break;
                 case moving_type.GOING_RIGHT:
-                    currentVelocity = Mathf.Lerp(velocityWhenChangedState, maxSpeed, timeSinceChangeMoving / timeToChangeDependingVelocity);
+                    if (timeToChangeDependingVelocity == 0f)
+                        currentVelocity = maxSpeed;
+                    else
+                        currentVelocity = Mathf.Lerp(velocityWhenChangedState, maxSpeed, timeSinceChangeMoving / timeToChangeDependingVelocity);
                     break;
                 case moving_type.GOING_LEFT:
-                    currentVelocity = Mathf.Lerp(velocityWhenChangedState, -maxSpeed, timeSinceChangeMoving / timeToChangeDependingVelocity);
+                    if (timeToChangeDependingVelocity == 0f)
+                        currentVelocity = -maxSpeed;
+                    else
+                        currentVelocity = Mathf.Lerp(velocityWhenChangedState, -maxSpeed, timeSinceChangeMoving / timeToChangeDependingVelocity);
                     break;
             }
 
@@ -506,7 +515,7 @@ public class PlayerController : MonoBehaviour
 
 
         //Plays the dust particle effect
-        if (state == player_state.IN_GROUND && currentVelocity != 0)
+        if (state == player_state.IN_GROUND && currentVelocity != 0f)
         {
             if (dustParticles.isStopped)
             {
