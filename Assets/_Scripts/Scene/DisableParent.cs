@@ -3,10 +3,12 @@ using System.Collections;
 
 public class DisableParent : MonoBehaviour {
 
+    public GameObject gameobjectToDisable;
+
 	void OnTriggerExit(Collider collider)
 	{
-		if(collider.tag == "Player" && collider.transform.position.x > transform.position.x)
-			transform.parent.gameObject.SetActive (false);
+		if(collider.tag == "Player")
+            gameobjectToDisable.SetActive (false);
 	}
 
 }
