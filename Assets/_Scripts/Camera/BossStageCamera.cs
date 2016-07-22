@@ -19,6 +19,7 @@ public class BossStageCamera : MonoBehaviour {
 
     public Transform archer;
     public Camera camera;
+    public CameraShake shake;
     public GameObject colliders;
     public Transform startPoint;
     public Player player;
@@ -69,6 +70,11 @@ public class BossStageCamera : MonoBehaviour {
                 break;
 
             case camera_state.ZOOM_IN_ARCHER:
+                if (shake.shakeIt)
+                {
+                    camera.transform.position = initialPosition;
+                    shake.shakeIt = false;
+                }
                 zoomTime += Time.deltaTime;
                 camera.fieldOfView = Mathf.Lerp(maxZoom, archerZoom, zoomTime / maxZoomTime);
                 camera.transform.position = new Vector3(Mathf.Lerp(initialPosition.x, archerPosition.x, zoomTime / maxZoomTime),
@@ -82,6 +88,11 @@ public class BossStageCamera : MonoBehaviour {
                 break;
 
             case camera_state.ZOOM_OUT_ARCHER:
+                if (shake.shakeIt)
+                {
+                    camera.transform.position = initialPosition;
+                    shake.shakeIt = false;
+                }
                 zoomTime += Time.deltaTime;
                 camera.fieldOfView = Mathf.Lerp(archerZoom, maxZoom, zoomTime / maxZoomTime);
                 camera.transform.position = new Vector3(Mathf.Lerp(archerPosition.x, initialPosition.x, zoomTime / maxZoomTime),
