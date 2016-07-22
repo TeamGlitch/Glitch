@@ -13,6 +13,7 @@ public class BreakableRock : MonoBehaviour {
     private Vector3[] initialTrans;
     private Quaternion[] initialRot;
     private BoxCollider[] boxes;
+    private bool end = false;
 
     void Awake()
     {
@@ -39,7 +40,18 @@ public class BreakableRock : MonoBehaviour {
         }
         transform.position = initPosition;
         transform.rotation = initRot;
-        box.enabled = true;
+        if (!end)
+        {
+            box.enabled = true;
+        }
+    }
+
+    public void Reubicate(float z)
+    {
+        end = true;
+        DisableColliders();
+        box.enabled = false;
+        initPosition.z = 0;
     }
 
     void OnCollisionEnter(Collision coll)

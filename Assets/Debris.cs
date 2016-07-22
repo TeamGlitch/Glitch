@@ -40,13 +40,20 @@ public class Debris : MonoBehaviour {
     public void Reubicate()
     {
         rand = Random.Range(0, 2);
+        float z;
         if (rand == 0)
         {
-            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -0.125f);
+            z = -0.125f;
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, z);
         }
         else
         {
-            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0.2f);
+            z = 0.2f;
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, z);
         }
+        debrisScript[0].Reubicate(z);
+        debrisScript[1].Reubicate(z);
+        debrisScript[2].Reubicate(z);
+        debrisScript[3].Reubicate(z);
     }
 }

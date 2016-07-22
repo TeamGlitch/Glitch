@@ -476,6 +476,7 @@ public class BossArcherIA : MonoBehaviour
             {
                 timeInPreShoot = 1f;
                 timeInPostShoot = 1f;
+                glitchDebris.Fall();
                 animator.SetTrigger("Hitted");
                 bossState = bossArcherIA.HITTED;
             }
