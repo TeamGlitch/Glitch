@@ -42,6 +42,7 @@ public class DebrisManagerGlitch : MonoBehaviour {
         for (int i = 0; i < debris.Length; ++i)
         {
             debris[i].Reubicate();
+            debris[i].Restart();
         }
     }
 }

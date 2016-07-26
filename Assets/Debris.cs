@@ -72,13 +72,13 @@ public class Debris : MonoBehaviour {
         if (rand == 0)
         {
             z = -0.125f;
-            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, z);
+            transform.localPosition = new Vector3(initPos.x, initPos.y, z);
         }
         else
         {
             z = 0.2f;
-            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, z);
+            transform.localPosition = new Vector3(initPos.x, initPos.y, z);
         }
-        initPos = transform.localPosition;
+        initPos.z = transform.localPosition.z;
     }
 }
