@@ -14,26 +14,27 @@ public class DebrisManagerGlitch : MonoBehaviour {
     public void Fall()
     {
         rand1 = Random.Range(0, debris.Length);
-        debris[rand1].Fall();
+        if (debris[rand1].mode == Debris.debris_state.WAITING)
+        {
+            debris[rand1].Fall();
+        }
 
-        rand2 = Random.Range(0, debris.Length);
-        debris[rand2].Fall();
+        if (debris[rand2].mode == Debris.debris_state.WAITING)
+        {
+            rand2 = Random.Range(0, debris.Length);
+            debris[rand2].Fall();
+        }
 
-        rand3 = Random.Range(0, debris.Length);
-        debris[rand3].Fall();
+        if (debris[rand3].mode == Debris.debris_state.WAITING)
+        {
+            rand3 = Random.Range(0, debris.Length);
+            debris[rand3].Fall();
+        }
 
         shake.shakeIt = true;
 
         SoundManager.instance.PlaySingle(fall);
-        Invoke("Restart", 5.0f);
-    }
-
-    public void Restart()
-    {
-        debris[rand1].Restart();
-        debris[rand2].Restart();
-        debris[rand3].Restart();
-        Invoke("Fall", 1.0f);
+        Invoke("Fall", 10.0f);
     }
 
     public void ArcherDead()

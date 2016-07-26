@@ -2,39 +2,67 @@
 using System.Collections;
 
 public class Debris : MonoBehaviour {
-    private Rigidbody[] rocksRigids;
-    private BreakableRock[] debrisScript;
-    private int rand;
 
-    void Awake()
+    public enum debris_state
     {
-        rocksRigids = new Rigidbody[transform.childCount];
-        debrisScript = new BreakableRock[transform.childCount];
-        for (int i = 0; i < transform.childCount; ++i)
+        WAITING,
+        FALLING
+    };
+    
+    public debris_state mode = debris_state.WAITING;
+    public AudioClip impact;
+    public World world;
+
+    private BoxCollider collider;
+    private int rand;
+    private Animator anim;
+    private float yPos;
+    private Vector3 initPos;
+
+    void Start()
+    {
+        collider = GetComponent<BoxCollider>();
+        initPos = transform.localPosition;
+        yPos = initPos.y;
+        anim = GetComponent<Animator>();
+    }
+
+    void Update()
+    {
+        if (world.doUpdate)
         {
-            debrisScript[i] = transform.GetChild(i).GetComponent<BreakableRock>();
-            rocksRigids[i] = transform.GetChild(i).GetComponent<Rigidbody>();
+            switch (mode)
+            {
+                case debris_state.FALLING:
+                    yPos -= world.lag;
+                    transform.Translate(0.0f, yPos, 0.0f);
+                    break;
+            }
         }
+    }
+
+    void OnCollisionEnter(Collision coll)
+    {
+        SoundManager.instance.PlaySingle(impact);
+        collider.enabled = false;
+        Invoke("Restart", 5.0f);
+        anim.SetInteger("State", 1);
+        mode = debris_state.WAITING;
     }
 
     public void Restart()
     {
-        rocksRigids[0].isKinematic = true;
-        rocksRigids[1].isKinematic = true;
-        rocksRigids[2].isKinematic = true;
-        rocksRigids[3].isKinematic = true;
-        debrisScript[0].Restart();
-        debrisScript[1].Restart();
-        debrisScript[2].Restart();
-        debrisScript[3].Restart();
+        collider.enabled = true;
+        yPos = initPos.y;
+        anim.SetInteger("State", 0);
+        transform.localPosition = initPos;
+        mode = debris_state.WAITING;
     }
 
     public void Fall()
     {
-        rocksRigids[0].isKinematic = false;
-        rocksRigids[1].isKinematic = false;
-        rocksRigids[2].isKinematic = false;
-        rocksRigids[3].isKinematic = false;
+        anim.SetInteger("State", 0);
+        mode = debris_state.FALLING;
     }
 
     public void Reubicate()
@@ -51,9 +79,6 @@ public class Debris : MonoBehaviour {
             z = 0.2f;
             transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, z);
         }
-        debrisScript[0].Reubicate(z);
-        debrisScript[1].Reubicate(z);
-        debrisScript[2].Reubicate(z);
-        debrisScript[3].Reubicate(z);
+        initPos = transform.localPosition;
     }
 }
