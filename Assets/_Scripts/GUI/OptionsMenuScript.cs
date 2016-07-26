@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.Xml;
 
 public class OptionsMenuScript : MonoBehaviour {
 
@@ -199,63 +200,27 @@ public class OptionsMenuScript : MonoBehaviour {
 
     public void ChangeMusicVolume()
     {
-        SoundManager.instance.musicSource.volume = musicSlider.value;
+        SoundManager.instance.setMusicVolume(musicSlider.value);
     }
 
     public void ChangeSoundVolume()
     {
-        for(int i=0; i < SoundManager.instance.efxSources.Length; ++i)
-        {
-            SoundManager.instance.efxSources[i].volume = soundSlider.value;
-        }
-
+        SoundManager.instance.setSoundVolume(soundSlider.value);
         SoundManager.instance.PlaySingle(confirmSound);
     }
 
     public void ChangePan()
     {
-
-        SoundManager.instance.musicSource.panStereo = panSlider.value;
-
-        for (int i = 0; i < SoundManager.instance.efxSources.Length; ++i)
-        {
-            SoundManager.instance.efxSources[i].panStereo = panSlider.value;
-        }
+        SoundManager.instance.setPan(panSlider.value);
     }
 
     public void ChangeSpeakerMode()
     {
+        SoundManager.instance.setMode(speakersMode.value);
+    }
 
-        float musicTime = -1;
-
-        if (SoundManager.instance.musicSource.isPlaying)
-        {
-            musicTime = SoundManager.instance.musicSource.time;
-        }
-
-        AudioConfiguration config = AudioSettings.GetConfiguration();
-
-        switch (speakersMode.value)
-        {
-
-            case 0: config.speakerMode = AudioSpeakerMode.Mono; break;
-            case 1: config.speakerMode = AudioSpeakerMode.Stereo; break;
-            case 2: config.speakerMode = AudioSpeakerMode.Quad; break;
-            case 3: config.speakerMode = AudioSpeakerMode.Surround; break;
-            case 4: config.speakerMode = AudioSpeakerMode.Mode5point1; break;
-            case 5: config.speakerMode = AudioSpeakerMode.Mode7point1; break;
-            case 6: config.speakerMode = AudioSpeakerMode.Prologic; break;
-
-        }
-
-        AudioSettings.Reset(config);
-
-        if (musicTime != -1)
-        {
-            SoundManager.instance.musicSource.Play();
-            SoundManager.instance.musicSource.time = musicTime;
-        }
-
+    public void SaveChangesOnAudio(){
+        SoundManager.instance.SaveConfiguration();
     }
 
     public void CreditsMenu()
