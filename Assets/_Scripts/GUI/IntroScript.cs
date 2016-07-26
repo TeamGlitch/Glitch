@@ -28,6 +28,8 @@ public class IntroScript : MonoBehaviour {
 
 	void Start(){
 
+        SoundManager.instance.LoadConfiguration();
+
 		GetComponent<Renderer>().material.mainTexture = movie as MovieTexture;
 
         logoMenu = logoscreen.GetChild(0).GetChild(0).GetComponent<RectTransform>();
