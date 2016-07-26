@@ -4,7 +4,7 @@ using System.Collections;
 public class RootsManager : MonoBehaviour {
     public GlitchRoots [] roots;
     public BossArcherIA boss;
-    public bool isActivable = true;
+    public bool isActivable = false;
 
     public void AllGlitched()
     {

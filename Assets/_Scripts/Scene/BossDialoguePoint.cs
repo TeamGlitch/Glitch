@@ -9,6 +9,7 @@ public class BossDialoguePoint : MonoBehaviour {
     public BossStageCamera camera;
 	public DialogueScript dialogueScript;
     public PlayerController player;
+    public RootsManager roots;
     public Door door;
 	public int sceneNum;
 
@@ -47,6 +48,7 @@ public class BossDialoguePoint : MonoBehaviour {
     void ZoomCamera()
     {
         camera.ZoomIn();
+        roots.isActivable = true;
         gameObject.SetActive(false);
     }
 }
