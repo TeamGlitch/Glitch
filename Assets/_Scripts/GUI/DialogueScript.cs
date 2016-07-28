@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using InControl;
 using System.Xml;
+using InControl;
 
 public class DialogueScript : MonoBehaviour {
 
@@ -32,6 +33,7 @@ public class DialogueScript : MonoBehaviour {
 
 	//External References
 	public PlayerController player;						//The player reference
+    public AdvanceBarEnemies advanceBarEnemies = null;  //The enemies advance bar
 
 	//Internal References
 	public GameObject dialogueBox;						//The dialogue box reference
@@ -39,7 +41,8 @@ public class DialogueScript : MonoBehaviour {
 	private Text dialogueBoxText;						//The dialogue box text reference
 	private RectTransform dialogueBoxTextRectTransform;	//The RecTransform of the dialogueBoxText
 	private Image background;							//The dialogue box background
-	private GameObject continueButton;					//The continue button reference
+	private GameObject continueButtonController;		//The continue button for controllers reference
+    private GameObject continueButtonKeyboard;          //The continue button for keyboards reference
 	private AudioSource audio;							//The audio source reference
 
 	//Message variables
@@ -92,7 +95,8 @@ public class DialogueScript : MonoBehaviour {
 
 		audio = gameObject.GetComponent<AudioSource>();
 		background = dialogueBox.transform.FindChild("background").gameObject.GetComponent<Image>();
-		continueButton = dialogueBox.transform.FindChild("ContinueButton").gameObject;
+		continueButtonController = dialogueBox.transform.FindChild("ContinueButtonController").gameObject;
+        continueButtonKeyboard = dialogueBox.transform.FindChild("ContinueButtonKeyboard").gameObject;
 
 		//Initialize variables
 		dialogueCharacterDB = new DialogueCharacterDB();
@@ -100,7 +104,8 @@ public class DialogueScript : MonoBehaviour {
 		//Make initial preparations
 		state = dialogueBoxState.OFF;
 		dialogueBox.SetActive(false);
-		continueButton.SetActive(false);
+		continueButtonController.SetActive(false);
+        continueButtonKeyboard.SetActive(false);
 	}
 	
 	// Update is called once per frame
@@ -114,20 +119,16 @@ public class DialogueScript : MonoBehaviour {
 				messageToPrint = messageList[0];
 
 				//Cleans the tags and stores it as the clean message
-				int i = 0;
+				letterIndex = 0;
 				cleanMessage = "";
-				while (i < messageToPrint.Length) {
-					if (messageToPrint[i] == '[') {
-						while (i < messageToPrint.Length && messageToPrint[i] != ']') {
-							i++;
-						}
-						if (messageToPrint[i] == ']') {
-							i++;
-						}
+				while (letterIndex < messageToPrint.Length) {
+                    if (messageToPrint[letterIndex] == '[')
+                    {
+                        preRead();
 					} else {
-						cleanMessage += messageToPrint[i];
-						i++;
+                        cleanMessage += messageToPrint[letterIndex];
 					}
+                    letterIndex++;
 				}
 
 				//Sets the properties to default and starts writting
@@ -189,7 +190,10 @@ public class DialogueScript : MonoBehaviour {
 						//Remove the message from the list and activate the continue button (if it doesn't autojump)
 						messageList.RemoveAt(0);
 						if (!autoJump) {
-							continueButton.SetActive(true);
+                            if (InputManager.ActiveDevice.Name == "Keyboard/Mouse")
+                                continueButtonKeyboard.SetActive(true);
+                            else
+							    continueButtonController.SetActive(true);
 						}
 
 					} else {
@@ -235,12 +239,15 @@ public class DialogueScript : MonoBehaviour {
 				if (InputManager.ActiveDevice.Action1.WasPressed || autoJump) {
 
 					corruptedPosition = -1;
-					continueButton.SetActive(false);
+					continueButtonController.SetActive(false);
+                    continueButtonKeyboard.SetActive(false);
 
 					//If there are more text, we return to the prepare_text state
 					if (messageList.Count > 0) {
 						state = dialogueBoxState.PREPARE_TEXT;
 					} else {
+                        if (advanceBarEnemies != null)
+                            advanceBarEnemies.Pause(false);
 						dialogueBox.SetActive(false);
 						if (player.allowMovement == false) {
 							player.allowMovement = true;
@@ -397,6 +404,51 @@ public class DialogueScript : MonoBehaviour {
 		}
 	}
 
+    private void preRead(){
+
+        //TODO: Inicio común con lo superior. Crear función común
+
+        string tag = "";		//The tag name
+        string value = "";		//The tag value
+        bool tagging = true;	//Where writting the tag? Else, we're writting the value
+        letterIndex++;
+
+        //Do until the ']' or the message end
+        while (letterIndex < messageToPrint.Length && messageToPrint[letterIndex] != ']')
+        {
+
+            //If it's the =, we're now writting the value
+            if (messageToPrint[letterIndex] == '=')
+            {
+                tagging = false;
+            }
+            else
+            {
+                //Store the value where needed
+                if (tagging)
+                {
+                    tag += messageToPrint[letterIndex];
+                }
+                else
+                {
+                    value += messageToPrint[letterIndex];
+                }
+            }
+            letterIndex++;
+        }
+
+        //If it ended with ']' (not unclosed tag), search in the effects
+        if (messageToPrint[letterIndex] == ']')
+        {
+            if ((tag == "controller" && InputManager.ActiveDevice.Name != "Keyboard/Mouse")
+            || (tag == "keyboard" && InputManager.ActiveDevice.Name == "Keyboard/Mouse"))
+            {
+                messageToPrint = messageToPrint.Insert(letterIndex + 1, value);
+            }
+        }
+
+    }
+
 	public void callScene(int sceneNum){
 
 		//We read the scene text of the given id
@@ -411,5 +463,8 @@ public class DialogueScript : MonoBehaviour {
 		dialogueBox.SetActive(true);
         player.allowMovement = false;
 		state = dialogueBoxState.PREPARE_TEXT;
+
+        if(advanceBarEnemies != null)
+            advanceBarEnemies.Pause(true);
 	}
 }

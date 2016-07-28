@@ -15,12 +15,14 @@ public class AdvanceBarEnemies : MonoBehaviour {
     };
 
     private endtimeState state;
+    private endtimeState lastStateBeforePause = endtimeState.MOVING;
 
-    private const float maxTime = 5f * 60f;
+    private const float maxTime = 300.0f;
     private float time = 0.0f;
     private float stateChange = 0f;
 
     public Player player;
+    public PlayerController playerController;
 
     public Slider slider;
     public Canvas powerDown;
@@ -29,11 +31,27 @@ public class AdvanceBarEnemies : MonoBehaviour {
 
     public AudioClip powerDownSound;
 
+
+
     void Start()
     {
         slider.maxValue = maxTime;
         slider.minValue = 0.0f;
-        state = endtimeState.MOVING;
+        state = endtimeState.NOT_MOVING;
+    }
+
+    public void Pause (bool pause)
+    {
+        if (pause)
+        {
+            if (state != endtimeState.NOT_MOVING)
+                lastStateBeforePause = state;
+            state = endtimeState.NOT_MOVING;
+        }
+        else
+        {
+            state = lastStateBeforePause;
+        }
     }
 
     void Update()
@@ -54,6 +72,7 @@ public class AdvanceBarEnemies : MonoBehaviour {
                     powerDown.enabled = true;
                     blackScreen.color = new Color(0, 0, 0, 0);
                     levelCompleteText.enabled = false;
+                    levelCompleteText.text = "The heroes have arrived to destination!";
                     stateChange = Time.time;
                 }
                 break;
@@ -61,6 +80,7 @@ public class AdvanceBarEnemies : MonoBehaviour {
             case endtimeState.POWER_DOWNING:
 
                 float percent = (Time.time - stateChange) / 2.5f;
+                playerController.allowMovement = false;
 
                 if (percent > 1) { 
                     percent = 1;

@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
 
     //State
 	public player_state state;
-	public bool allowMovement;
+	public bool allowMovement;       
 
 	//Player Components
 	private SpriteRenderer spriteRenderer;			//Reference to the sprite renderer
@@ -102,6 +102,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        allowMovement = true;
         spriteRenderer = transform.GetComponentInChildren<SpriteRenderer>();
         plAnimation = transform.GetComponentInChildren<Animator>();
 
@@ -113,7 +114,6 @@ public class PlayerController : MonoBehaviour
         slowFPS = transform.FindChild("Powers/SlowFPS").GetComponent<SlowFPS>();
 
         state = player_state.IN_GROUND;
-        allowMovement = true;
     }
 
     void FixedUpdate()
@@ -450,7 +450,7 @@ public class PlayerController : MonoBehaviour
         transform.position = position;
 
 		//If there's horizontal movement
-		if (!isInGround && currentVelocity != 0) {
+		if (!isInGround && currentVelocity != 0f) {
 
 			//Three raycast are made
 			Vector3 pos1 = transform.position;
@@ -463,14 +463,14 @@ public class PlayerController : MonoBehaviour
 
 
 			//If it's to the right
-			if (currentVelocity > 0){
+			if (currentVelocity > 0f){
 
 				//Checks the raycast
 				//OPTIMIZATION NOTE: this if CAN'T be included in the last one)
 				if (Physics.Raycast (pos1, Vector3.right, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)
 					|| Physics.Raycast (pos2, Vector3.right, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)
 					|| Physics.Raycast (pos3, Vector3.right, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)) {
-					currentVelocity = 0;
+					currentVelocity = 0f;
 				}
 
 			} else {
@@ -480,14 +480,15 @@ public class PlayerController : MonoBehaviour
 				if (!isInGround && (Physics.Raycast (pos1, Vector3.left, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)
 					|| Physics.Raycast (pos2, Vector3.left, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore)
 					|| Physics.Raycast (pos3, Vector3.left, boxCollider.bounds.extents.x * 2, layerMask, QueryTriggerInteraction.Ignore))) {
-					currentVelocity = 0;
+					currentVelocity = 0f;
 				}
 			}
 				
 		}
 
 		Vector3 velocity = rigidBody.velocity;
-		velocity.x = currentVelocity;
+        if(!float.IsNaN(currentVelocity))
+            velocity.x = currentVelocity;
 		rigidBody.velocity = velocity;
 
         if (state == player_state.IN_GROUND && currentVelocity != 0)

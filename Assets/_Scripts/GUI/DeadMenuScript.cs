@@ -34,8 +34,11 @@ public class DeadMenuScript : MonoBehaviour {
 		deadMenu = GetComponent<Canvas>();
 		restartButton = transform.FindChild("Restart Game").GetComponent<Button> ();
 		menuButton = transform.FindChild("Main Menu").GetComponent<Button>();
-        continueButton = transform.FindChild("Continue").GetComponent<Button>();
-        respawnObject = transform.FindChild("Respawn_object").GetComponent<Image>();
+
+        Transform continueT = transform.FindChild("Continue");
+        continueButton = continueT.GetComponent<Button>();
+        respawnObject = continueT.FindChild("Respawn_object").GetComponent<Image>();
+
 		gameObject.SetActive(false);
 		playerPowers.SetActive (false);
 	}
@@ -71,12 +74,12 @@ public class DeadMenuScript : MonoBehaviour {
 
                 if (player.items >= fibonacciValue)
                 {
+                    continueButton.interactable = true;
                     continueButton.Select();
                 }
                 else
                 {
                     restartButton.Select();
-                    continueButton.interactable = false;
 
                     Navigation nav = menuButton.navigation;
                     nav.selectOnUp = null;
@@ -103,7 +106,7 @@ public class DeadMenuScript : MonoBehaviour {
 
 	public void MenuPress()
 	{
-        Loader.LoadScene("menu");
+        Loader.LoadScene("menu", true, false, true, true);
 	}
 
     public void ContinuePress(){
@@ -127,6 +130,7 @@ public class DeadMenuScript : MonoBehaviour {
 	{
 		glitchedCameraScript.enabled = true;
 		deadMenu.enabled = false;
+        continueButton.interactable = false;
 		timeDead = 0.0f;
         divisions = glitchedCameraScript.divisions;
         intensity = glitchedCameraScript.intensity;

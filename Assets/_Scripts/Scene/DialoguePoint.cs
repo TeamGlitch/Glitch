@@ -3,17 +3,19 @@ using System.Collections;
 
 using System.Collections.Generic;
 
-public class DialoguePoint : MonoBehaviour {
+public class DialoguePoint : MonoBehaviour
+{
 
-	public DialogueScript dialogueScript;
-	public int sceneNum;
-	private bool used = false;
+    public DialogueScript dialogueScript;
+    public int sceneNum;
+    private bool used = false;
 
-	void OnTriggerEnter(Collider coll){
-		if((coll.gameObject.CompareTag("Player")) && !used)
-		{
-			dialogueScript.callScene(sceneNum);
-			used = true;
-		}
-	}
+    void OnTriggerEnter(Collider coll)
+    {
+        if ((coll.gameObject.CompareTag("Player")) && !used)
+        {
+            dialogueScript.callScene(sceneNum);
+            used = true;
+        }
+    }
 }

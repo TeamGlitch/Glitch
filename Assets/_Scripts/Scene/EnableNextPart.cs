@@ -7,7 +7,7 @@ public class EnableNextPart : MonoBehaviour {
 
 	void OnTriggerExit(Collider collider)
 	{
-		if (collider.tag == "Player" && collider.transform.position.x > transform.position.x)
+		if (collider.tag == "Player")
 			nextPart.SetActive (true);
 	}
 }

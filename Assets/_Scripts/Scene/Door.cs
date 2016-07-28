@@ -6,6 +6,7 @@ public class Door : MonoBehaviour {
     public SphereCollider sphere;
     public BoxCollider box;
     public AudioClip sound;
+    public Animator leftDoor;
 
     private Animator animator;
 
@@ -13,13 +14,15 @@ public class Door : MonoBehaviour {
     {
         SoundManager.instance.PlaySingle(sound);
         animator = GetComponent<Animator>();
+        leftDoor.SetBool("Close", true);
+        animator.SetBool("Close", true);
     }
 
     void OnTriggerEnter(Collider coll)
     {
         if (coll.CompareTag("Player"))
         {
-            Loader.LoadScene("Congratulations", false, true, true);
+            Loader.LoadScene("Congratulations", true, false, true, true);
         }
     }
 

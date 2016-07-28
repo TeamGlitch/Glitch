@@ -28,6 +28,8 @@ public class CameraGlitchedToBoxes : ImageEffectBase
     public List<Vector3> boxesPositions;
     public List<Vector2> boxPositionInPercentage;
 
+    private Texture2D distortionBase;
+
     void Start()
     {
         //Creates a 1x1 texel texture with relative value 1 for correction
@@ -39,84 +41,50 @@ public class CameraGlitchedToBoxes : ImageEffectBase
         guiRectTrans = gui.GetComponent<RectTransform>();
         boxPositionInPercentage = new List<Vector2>();
         boxesPositions = new List<Vector3>();
+
+        distortionBase = new Texture2D(100, 100);
+        for (int z = 0; z < 100; z += 1)
+        {
+            for (int w = 0; w < 100; ++w)
+            {
+                distortionBase.SetPixel(z, w, new Color32(1, 0, 0, 0));
+            }
+        }
     }
 
     // Called by camera to apply image effect
     void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
-        CalculatebBoxPositionsInPercentage();
-        //If the glitch cycle has ended
-        float horizontalPercentage = (correctionDueToAspect / Camera.main.aspect) * (correctionMarkerWidth / Camera.main.transform.position.z) / 2.0f;
-        float verticalPercentage = (correctionMarkerHeight / Camera.main.transform.position.z) / 2.0f;
 
+        //If the glitch cycle has ended
         if (Time.time >= cycleEnd)
         {
             //Checks if the new glitch cycle has glitch effect
-            if (Random.value < frequency)
+            if (boxesPositions.Count > 0 && Random.value < frequency)
             {
 
                 //If it does, creates a 2D texture with 1x'divisions'
                 //texel size and arbitrary asigns 0 and 2 to glitchy 
                 //divisions and 1 to non-glitchy divisions
-                texture = new Texture2D(100, 100);
-                if ((QualitySettings.antiAliasing != 0 && glitchOffsetCamera.enabled) || (QualitySettings.antiAliasing == 0 && !glitchOffsetCamera.enabled))
+                texture = Instantiate(distortionBase) as Texture2D;
+
+                CalculatebBoxPositionsInPercentage();
+                float horizontalPercentage = (correctionDueToAspect / Camera.main.aspect) * (correctionMarkerWidth / Camera.main.transform.position.z) / 2.0f;
+                float verticalPercentage = (correctionMarkerHeight / Camera.main.transform.position.z) / 2.0f;
+
+                for (int z = 0; z < 100; z += 1)
                 {
-                    for (int z = 0; z < 100; z += 1)
+                    for (int w = 0; w < 100; ++w)
                     {
-                        for (int w = 0; w < 100; ++w)
+                        if (InsideBox(z, 99 - w, horizontalPercentage, verticalPercentage) && Random.value < inestability)
                         {
-                            if (InsideBox(z, 99 - w, horizontalPercentage, verticalPercentage))
+                            if (Random.value > 0.5)
                             {
-                                if (Random.value < inestability)
-                                {
-                                    if (Random.value > 0.5)
-                                    {
-                                        texture.SetPixel(z, w, new Color32(0, 0, 0, 0));
-                                    }
-                                    else
-                                    {
-                                        texture.SetPixel(z, w, new Color32(2, 0, 0, 0));
-                                    }
-                                }
-                                else
-                                {
-                                    texture.SetPixel(z, w, new Color32(1, 0, 0, 0));
-                                }
+                                texture.SetPixel(z, w, new Color32(0, 0, 0, 0));
                             }
                             else
                             {
-                                texture.SetPixel(z, w, new Color32(1, 0, 0, 0));
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    for (int z = 0; z < 100; z += 1)
-                    {
-                        for (int w = 0; w < 100; ++w)
-                        {
-                            if (InsideBox(z, w, horizontalPercentage, verticalPercentage))
-                            {
-                                if (Random.value < inestability)
-                                {
-                                    if (Random.value > 0.5)
-                                    {
-                                        texture.SetPixel(z, w, new Color32(0, 0, 0, 0));
-                                    }
-                                    else
-                                    {
-                                        texture.SetPixel(z, w, new Color32(2, 0, 0, 0));
-                                    }
-                                }
-                                else
-                                {
-                                    texture.SetPixel(z, w, new Color32(1, 0, 0, 0));
-                                }
-                            }
-                            else
-                            {
-                                texture.SetPixel(z, w, new Color32(1, 0, 0, 0));
+                                texture.SetPixel(z, w, new Color32(2, 0, 0, 0));
                             }
                         }
                     }
@@ -135,7 +103,9 @@ public class CameraGlitchedToBoxes : ImageEffectBase
                 texture = correction;
 
             }
+
             cycleEnd = Time.time + cycleDuration;
+
         }
 
         //Sends properties to the shader and paints

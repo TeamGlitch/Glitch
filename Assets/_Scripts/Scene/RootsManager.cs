@@ -4,7 +4,7 @@ using System.Collections;
 public class RootsManager : MonoBehaviour {
     public GlitchRoots [] roots;
     public BossArcherIA boss;
-    public bool isActivable = true;
+    public bool isActivable = false;
 
     public void AllGlitched()
     {
@@ -12,7 +12,7 @@ public class RootsManager : MonoBehaviour {
         {
             roots[i].RootGlitched();
         }
-        StartCoroutine(GlitchesAvailable(5.0f));
+        StartCoroutine(GlitchesAvailable(7.0f));
     }
 
     // Coroutine activate capacity of Glitch

@@ -15,9 +15,9 @@ public class EndPointScript : MonoBehaviour {
 
 		if(coll.gameObject.CompareTag("Player")){
             titlesGameObject.SetActive(true);
-			title.text = "Level Complete!";
+            title.text = "Level 1... complete?";
 			title.color = Color.red;
-			subtitle.text = "Good work not screwing up";
+			subtitle.text = "Time for a boss";
 			coll.transform.gameObject.GetComponent<PlayerController>().allowMovement = false;
 			endGame = Time.time + 3.0f;
             enabled = true;
@@ -27,7 +27,7 @@ public class EndPointScript : MonoBehaviour {
 	void Update(){
 
 		if (endGame != -1 && Time.time >= endGame) {
-            Loader.LoadScene("Congratulations", false, true, true);
+            Loader.LoadScene("Congratulations", true, false, true, true);
 		}
 
 	}
