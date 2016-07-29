@@ -6,6 +6,7 @@ public class CameraCorrectionPoint : MonoBehaviour {
 	//How the camera is when going to the right
 	//and how the camera is when going to the left
 	public CameraBehaviour behaviour;
+    public float playerPositionX = 0.27f;
 
 	// Use this for initialization
 	void Awake () {
@@ -57,6 +58,8 @@ public class CameraCorrectionPoint : MonoBehaviour {
 				controller.upRail.transform.position = upRail;
 				controller.downRail.transform.position = downRail;
 			}
+
+            controller.playerPositionX = playerPositionX;
 
 		}
 
