@@ -85,8 +85,7 @@ public class PlayerController : MonoBehaviour
 
 	private bool previouslySticked = false;
 
-    [SerializeField]
-    private moving_type playerMovingType = moving_type.IDLE;
+    public moving_type playerMovingType = moving_type.IDLE;
 
 	private int layerMask = ~((1 << 1) | (1 << 2) | (1 << 4) | (1 << 5) | (1 << 8) | (1 << 9) | (1 << 10) | (1 << 11) | (1 << 13));
 

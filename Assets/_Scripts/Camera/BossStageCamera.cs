@@ -124,13 +124,13 @@ public class BossStageCamera : MonoBehaviour {
     {
         archerPosition = archer.transform.position;
         playerRigid.isKinematic = true;
-        playerCollider.enabled = false;
+        playerCollider.isTrigger = true;
         mode = camera_state.ZOOM_IN_ARCHER;
     }
 
     public void ZoomArcherOut()
     {
-        playerCollider.enabled = true;
+        playerCollider.isTrigger = false;
         playerRigid.isKinematic = false;
         mode = camera_state.ZOOM_OUT_ARCHER;   
     }

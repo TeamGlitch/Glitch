@@ -56,6 +56,7 @@ public class BossArcherIA : MonoBehaviour
     public bool start = false;
     public float timeInPreShoot = 2.0f;
     public float timeInPostShoot = 2.0f;
+    public bool holesActivated = false;
     private float timeSinceStateChanged;
     [SerializeField]
     private bool movingRight = true;
@@ -462,6 +463,7 @@ public class BossArcherIA : MonoBehaviour
             }
             else if (lives == 1)
             {
+                holesActivated = true;
                 camera.ZoomArcherIn();
                 timeInPreShoot = 0f;
                 timeInPostShoot = 0f;
@@ -470,12 +472,14 @@ public class BossArcherIA : MonoBehaviour
             }
             else if (lives == 2)
             {
+                holesActivated = true;
                 camera.ZoomArcherIn();
                 animator.SetTrigger("Hitted");
                 bossState = bossArcherIA.HITTED;
             }
             else if (lives == 3)
             {
+                holesActivated = true;
                 camera.ZoomArcherIn();
                 timeInPreShoot = 1f;
                 timeInPostShoot = 1f;
@@ -485,6 +489,7 @@ public class BossArcherIA : MonoBehaviour
             }
             else if (lives == 4)
             {
+                holesActivated = true;
                 camera.ZoomArcherIn();
                 animator.SetTrigger("Hitted");
                 bossState = bossArcherIA.HITTED;
@@ -494,12 +499,14 @@ public class BossArcherIA : MonoBehaviour
 
     public void InsultingAnimationEnded()
     {
+
         if (lives == 2)
             currentSpecialSpeed = 2f;
         else if (lives == 1)
             currentSpecialSpeed = 3f;
 
         camera.ZoomArcherOut();
+        holesActivated = false;
         int random;
         switch (bossPos)
         {
