@@ -4,19 +4,37 @@ using System.Collections;
 public class RootScript : MonoBehaviour {
 
     public World world;
+    public bool horizontal = false;
     public bool down = true;
+    public bool toLeft = false;
 
     private bool top;
+    private bool right;
 
     void Start()
     {
-        if (down)
+        if (horizontal)
         {
-            top = true;
+            if (toLeft)
+            {
+                right = true;
+            }
+            else
+            {
+                right = false;
+            }
+
         }
         else
         {
-            top = false;
+            if (down)
+            {
+                top = true;
+            }
+            else
+            {
+                top = false;
+            }
         }
     }
 
@@ -24,33 +42,75 @@ public class RootScript : MonoBehaviour {
     {
         if (!coll.collider.CompareTag("Player"))
         {
-            if (!down)
+            if (horizontal)
             {
-                down = true;
-                if (top)
+                if (!right)
                 {
-                    enabled = false;
+                    right = true;
+                }
+                else
+                {
+                    right = false;
                 }
             }
             else
             {
-                down = false;
-                if (!top)
+                if (!down)
                 {
-                    enabled = false;
+                    down = true;
+                    if (top)
+                    {
+                        enabled = false;
+                    }
+                }
+                else
+                {
+                    down = false;
+                    if (!top)
+                    {
+                        enabled = false;
+                    }
                 }
             }
         }
     }
 
 	void Update () {
-        if (down)
+        if (horizontal)
         {
-            transform.Translate(0.0f, -world.lag * 20, 0.0f);
+            if (toLeft)
+            {
+                if (!right)
+                {
+                    transform.Translate(world.lag * 10, 0.0f, 0.0f);
+                }
+                else
+                {
+                    transform.Translate(-world.lag * 30, 0.0f, 0.0f);
+                }
+            }
+            else
+            {
+                if (!right)
+                {
+                    transform.Translate(world.lag * 30, 0.0f, 0.0f);
+                }
+                else
+                {
+                    transform.Translate(-world.lag * 10, 0.0f, 0.0f);
+                }
+            }
         }
         else
         {
-            transform.Translate(0.0f, world.lag * 10, 0.0f);
+            if (down)
+            {
+                transform.Translate(0.0f, -world.lag * 20, 0.0f);
+            }
+            else
+            {
+                transform.Translate(0.0f, world.lag * 10, 0.0f);
+            }
         }
 	}
 }
