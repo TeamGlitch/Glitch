@@ -13,6 +13,8 @@ public class SoundManager : MonoBehaviour
 
     private bool allowNewSounds = true;
 
+    private bool configurationLoaded = false;
+
     // Use this for initialization
     void Awake()
     {
@@ -37,21 +39,27 @@ public class SoundManager : MonoBehaviour
 
     public void LoadConfiguration(){
 
-        if(!tryToLoadConfiguration()){
+        if(!configurationLoaded)
+        {
+            configurationLoaded = true;
 
-            //If the file doesn't exist o there is a problem, restores the default values
-            System.IO.File.WriteAllLines("config.xml", new string[] {
-            "<!--?xml version=”1.0” encoding=”UTF-8”?-->",
-            "<!--?xml version=”1.0” encoding=”UTF-8”?-->",
-            "<confg>",
-            "<music>0.5</music>",
-            "<sfx>0.5</sfx>",
-            "<pan>0</pan>",
-            "<mode>1</mode>",
-            "</confg>"
-            });
+            if(!tryToLoadConfiguration())
+            {
 
-            tryToLoadConfiguration();
+                //If the file doesn't exist o there is a problem, restores the default values
+                System.IO.File.WriteAllLines("config.xml", new string[] {
+                "<!--?xml version=”1.0” encoding=”UTF-8”?-->",
+                "<!--?xml version=”1.0” encoding=”UTF-8”?-->",
+                "<confg>",
+                "<music>0.5</music>",
+                "<sfx>0.5</sfx>",
+                "<pan>0</pan>",
+                "<mode>1</mode>",
+                "</confg>"
+                });
+
+                tryToLoadConfiguration();
+            }
         }
     }
 
