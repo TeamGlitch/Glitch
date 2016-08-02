@@ -55,7 +55,7 @@ public class MenuScript : MonoBehaviour {
 				//If a given time has passed without input, play the intro
 			} else if (Time.time > lastTimeActive + 60f) {
 				SoundManager.instance.musicSource.Stop();
-                Loader.LoadScene("Intro", false);
+                Loader.LoadScene("Intro", false, false, true, true);
 			}
 		}
 	}
