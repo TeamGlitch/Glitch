@@ -16,7 +16,7 @@ public class MainCamera : MonoBehaviour {
 	//Following mode
 	public float maxUp = 0.5f;
 	public float maxDown = 0.33f;
-	private float playerPositionX = 0.27f; //In percent
+	public float playerPositionX = 0.27f; //In percent
 
 	//On_rails mode
 	public Transform upRail;
