@@ -253,6 +253,7 @@ public class DialogueScript : MonoBehaviour {
 							player.allowMovement = true;
 							player.playerActivedJump = true;
 						}
+                        state = dialogueBoxState.OFF;
 					}
 
 				} else {

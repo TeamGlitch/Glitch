@@ -17,7 +17,7 @@ public class AdvanceBarEnemies : MonoBehaviour {
     private endtimeState state;
     private endtimeState lastStateBeforePause = endtimeState.MOVING;
 
-    private const float maxTime = 300.0f;
+    public float maxTime = 300.0f;
     private float time = 0.0f;
     private float stateChange = 0f;
 
@@ -66,21 +66,23 @@ public class AdvanceBarEnemies : MonoBehaviour {
                 }
                 else
                 {
-                    state = endtimeState.POWER_DOWNING;
-                    SoundManager.instance.musicSource.Pause();
-                    SoundManager.instance.PlaySingle(powerDownSound);
-                    powerDown.enabled = true;
-                    blackScreen.color = new Color(0, 0, 0, 0);
-                    levelCompleteText.enabled = false;
-                    levelCompleteText.text = "The heroes have arrived to destination!";
-                    stateChange = Time.time;
+                    if(player.lives > 0)
+                    { 
+                        state = endtimeState.POWER_DOWNING;
+                        SoundManager.instance.musicSource.Pause();
+                        SoundManager.instance.PlaySingle(powerDownSound);
+                        powerDown.enabled = true;
+                        blackScreen.color = new Color(0, 0, 0, 0);
+                        levelCompleteText.enabled = false;
+                        stateChange = Time.time;
+                        playerController.allowMovement = false;
+                    }
                 }
                 break;
 
             case endtimeState.POWER_DOWNING:
 
                 float percent = (Time.time - stateChange) / 2.5f;
-                playerController.allowMovement = false;
 
                 if (percent > 1) { 
                     percent = 1;
