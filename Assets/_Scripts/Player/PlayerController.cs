@@ -7,6 +7,9 @@ using InControl;
 public class PlayerController : MonoBehaviour 
 {
     public AudioClip jumpSound;
+    public AudioClip walkSound;
+    private AudioSource walkSource = null;
+
     public GlitchOffsetCamera glitchOffsetCamera;
 
     public enum player_state
@@ -119,6 +122,7 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
 		previouslySticked = false;
+
         // State-changing calculations
         switch (state)
         {
@@ -504,17 +508,28 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        //Plays the dust particle effect
+        //Plays the dust particle effect & walking sound
         if (state == player_state.IN_GROUND && currentVelocity != 0)
         {
             if (dustParticles.isStopped)
             {
                 dustParticles.Play();
             }
+
+            if (walkSource == null || !walkSource.isPlaying){
+                walkSource = SoundManager.instance.PlaySingle(walkSound);
+            }
         }
-        else if (dustParticles.isPlaying)
+        else
         {
-            dustParticles.Stop();
+            if (dustParticles.isPlaying)
+                dustParticles.Stop();
+
+            if (walkSource != null)
+            {
+                walkSource.Stop();
+                walkSource = null;
+            }
         }
     }
 

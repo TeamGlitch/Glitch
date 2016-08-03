@@ -126,7 +126,7 @@ public class SoundManager : MonoBehaviour
     }
 
     //Used to play single sound clips.
-    public void PlaySingle(AudioClip clip)
+    public AudioSource PlaySingle(AudioClip clip)
     {
         if (allowNewSounds){
 
@@ -142,7 +142,11 @@ public class SoundManager : MonoBehaviour
             efxSources[currentAudioSource].clip = clip;
             efxSources[currentAudioSource].Play();
 
+            return efxSources[currentAudioSource];
+
         }
+
+        return null;
 
     }
 
