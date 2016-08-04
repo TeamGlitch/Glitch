@@ -220,7 +220,7 @@ public class OptionsMenuScript : MonoBehaviour {
     }
 
     public void SaveChangesOnAudio(){
-        SoundManager.instance.SaveConfiguration();
+        Configuration.SaveConfiguration();
     }
 
     public void CreditsMenu()
