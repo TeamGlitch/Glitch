@@ -10,6 +10,7 @@ public class RootScript : MonoBehaviour {
 
     private bool top;
     private bool right;
+    private bool stop = false;
 
     void Start()
     {
@@ -47,10 +48,30 @@ public class RootScript : MonoBehaviour {
                 if (!right)
                 {
                     right = true;
+                    stop = true;
+                    // Is in origin
+                    if (toLeft)
+                    {
+                        Invoke("Reactivate", 4.0f);
+                    }
+                    else
+                    {
+                        Invoke("Reactivate", 2.0f);
+                    }
                 }
                 else
                 {
                     right = false;
+                    stop = true;
+                    // Is in origin
+                    if (!toLeft)
+                    {
+                        Invoke("Reactivate", 4.0f);
+                    }
+                    else
+                    {
+                        Invoke("Reactivate", 2.0f);
+                    }
                 }
             }
             else
@@ -62,6 +83,11 @@ public class RootScript : MonoBehaviour {
                     {
                         enabled = false;
                     }
+                    else
+                    {
+                        stop = true;
+                        Invoke("Reactivate", 2.0f);
+                    }
                 }
                 else
                 {
@@ -70,47 +96,60 @@ public class RootScript : MonoBehaviour {
                     {
                         enabled = false;
                     }
+                    else
+                    {
+                        stop = true;
+                        Invoke("Reactivate", 2.0f);
+                    }
                 }
             }
         }
     }
 
 	void Update () {
-        if (horizontal)
+        if (!stop)
         {
-            if (toLeft)
+            if (horizontal)
             {
-                if (!right)
+                if (toLeft)
                 {
-                    transform.Translate(world.lag * 10, 0.0f, 0.0f);
+                    if (!right)
+                    {
+                        transform.Translate(world.lag * 10, 0.0f, 0.0f);
+                    }
+                    else
+                    {
+                        transform.Translate(-world.lag * 50, 0.0f, 0.0f);
+                    }
                 }
                 else
                 {
-                    transform.Translate(-world.lag * 30, 0.0f, 0.0f);
+                    if (!right)
+                    {
+                        transform.Translate(world.lag * 50, 0.0f, 0.0f);
+                    }
+                    else
+                    {
+                        transform.Translate(-world.lag * 10, 0.0f, 0.0f);
+                    }
                 }
             }
             else
             {
-                if (!right)
+                if (down)
                 {
-                    transform.Translate(world.lag * 30, 0.0f, 0.0f);
+                    transform.Translate(0.0f, -world.lag * 30, 0.0f);
                 }
                 else
                 {
-                    transform.Translate(-world.lag * 10, 0.0f, 0.0f);
+                    transform.Translate(0.0f, world.lag * 10, 0.0f);
                 }
-            }
-        }
-        else
-        {
-            if (down)
-            {
-                transform.Translate(0.0f, -world.lag * 20, 0.0f);
-            }
-            else
-            {
-                transform.Translate(0.0f, world.lag * 10, 0.0f);
             }
         }
 	}
+
+    public void Reactivate()
+    {
+        stop = false;
+    }
 }
