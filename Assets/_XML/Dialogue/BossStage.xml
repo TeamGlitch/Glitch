@@ -33,7 +33,7 @@
   <Set lang="Spanish">
     <Scene id="1">
       <T>[face=Bug][playermove=false]Cuidado, Glitch!</T>
-      <T>¡Ahí está la heroína arquera! Y parece que se ha despertado con el pie izquierdo.</T>
+      <T>¡Ahí está la heroína arquera! Y parece que se ha levantado con el pie izquierdo.</T>
       <T>[face=Archer]Vuestro camino termina aquí. ¡Abandonad vuestros delirios de heroísmo, error del sistema!</T>
       <T>[face=Glitch]¿¡Que!? Bug, ¿lo has oido? ¡Atrévete a repetir eso!</T>
       <T>[face=Bug]¡Trata de glitchearla a través de las ramas!</T>

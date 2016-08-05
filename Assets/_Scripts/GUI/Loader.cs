@@ -4,10 +4,12 @@ using UnityEngine.UI;
 using InControl;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using System.Xml;
 
 public class Loader : MonoBehaviour {
 
     public static Loader instance = null;       //Singleton instance
+    public TextAsset XMLAsset;
 
     private static AsyncOperation async;        //Async operation
     private static string actualScene;          //Current scene
@@ -31,11 +33,7 @@ public class Loader : MonoBehaviour {
 
     private float nextLine = 0;             //When the next line will be written
 
-    private string[] phrases = { "Loading enemies hostility", "Ensuring ragequit situations", "Rendering stereotypical hacker binary patterns",
-                               "Sharpening enemies weapons", "Coordinating AI stupidity", "Leaking memory", "Compiling innecesary break commands",
-                               "Making noise for no reason", "Retrieving nostalgia", "Making bad design decisions", "Pretending actual bugs are intended bugs",
-                               "Loading loading screens", "Initializing recursive recursive recursive functions functions functions", 
-                               "Making up false loading operations", "Looking at GitHub to see who made a code mistake"};
+    private string[] phrases;
 
     void Awake()
     {
@@ -143,6 +141,23 @@ public class Loader : MonoBehaviour {
                 }
             
             }
+        }
+
+    }
+
+    public void loadPhrases()
+    {
+        XmlDocument xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(XMLAsset.text);
+
+        XmlNode scene = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.lang + "\"]");
+        
+        phrases = new string[scene.ChildNodes.Count];
+
+        //We add the lines to the message list 
+        for (int i = 0; i < scene.ChildNodes.Count; i++)
+        {
+            phrases[i] = scene.ChildNodes[i].InnerText;
         }
 
     }

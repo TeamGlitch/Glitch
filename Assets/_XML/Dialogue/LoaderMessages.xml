@@ -1,0 +1,38 @@
+﻿<!--?xml version=”1.0” encoding=”UTF-8”?-->
+<!--?xml version=”1.0” encoding=”UTF-8”?-->
+<Dialogue>
+  <Set lang="English">
+    <T>Loading enemies hostility</T>
+    <T>Ensuring ragequit situations</T>
+    <T>Rendering stereotypical hacker binary patterns</T>
+    <T>Sharpening enemies weapons</T>
+    <T>Coordinating AI stupidity</T>
+    <T>Leaking memory</T>
+    <T>Compiling innecesary break commands</T>
+    <T>Making noise for no reason</T>
+    <T>Retrieving nostalgia</T>
+    <T>Making bad design decisions</T>
+    <T>Pretending actual bugs are intended bugs</T>
+    <T>Loading loading screens</T>
+    <T>Initializing recursive recursive recursive functions functions functions</T>
+    <T>Making up false loading operations</T>
+    <T>Looking at GitHub to see who made a code mistake</T>
+  </Set>
+  <Set lang="Spanish">
+    <T>Cargando hostilidad enemiga</T>
+    <T>Asegurando situaciones de ragequit</T>
+    <T>Renderizando patrones binarios estereotípicos de hackeo</T>
+    <T>Afilando armas de los enemigos</T>
+    <T>Coordinando estupidez de la IA</T>
+    <T>Fugando memoria</T>
+    <T>Compilando comandos de break innecesarios</T>
+    <T>Haciendo ruido porque sí</T>
+    <T>Obteniendo nostalgia</T>
+    <T>Haciendo malas decisiones de diseño</T>
+    <T>Pretendiendo que bugs reales son intencionados</T>
+    <T>Cargando pantalla de carga</T>
+    <T>Inicializando funciones funciones funciones recursivas recursivas recursivas</T>
+    <T>Inventándose operaciones de carga</T>
+    <T>Buscando en GitHub quién cometió un error de código</T>
+  </Set> 
+</Dialogue>

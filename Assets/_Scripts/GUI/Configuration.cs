@@ -75,6 +75,8 @@ public class Configuration : MonoBehaviour {
             return false;
         lang = node.InnerText;
 
+        Loader.instance.loadPhrases();
+
         node = xmlDoc.SelectSingleNode("/confg/music");
         if (node == null)
             return false;
