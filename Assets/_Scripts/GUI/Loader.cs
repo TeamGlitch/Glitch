@@ -34,6 +34,8 @@ public class Loader : MonoBehaviour {
     private float nextLine = 0;             //When the next line will be written
 
     private string[] phrases;
+    private string Tloading = "";
+    private string TpressAnyButton = "";
 
     void Awake()
     {
@@ -93,18 +95,18 @@ public class Loader : MonoBehaviour {
                 {
                     //On 90%
                     loaded = true;
-                    percent.text = "Press any button to continue";
+                    percent.text = TpressAnyButton;
                 }
                 //Lower than 90%
                 else
                 {
                     int percnt = (int)((100 * async.progress) + (10 * (async.progress / 0.9f)));
-                    percent.text = "Now Loading: " + percnt + "%";
+                    percent.text = Tloading + ": " + percnt + "%";
 
-                    if (Time.time > nextLine)
+                    if (Time.unscaledTime > nextLine)
                     {
                         text.text += "\n" + phrases[Random.Range(0, phrases.Length)] + ".";
-                        nextLine = Time.time + Random.Range(0.5f, 2.0f);
+                        nextLine = Time.unscaledTime + Random.Range(0.5f, 2.0f);
                     }
                 }
 
@@ -150,16 +152,18 @@ public class Loader : MonoBehaviour {
         XmlDocument xmlDoc = new XmlDocument();
         xmlDoc.LoadXml(XMLAsset.text);
 
-        XmlNode scene = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.lang + "\"]");
-        
-        phrases = new string[scene.ChildNodes.Count];
+        XmlNodeList texts = xmlDoc.SelectNodes("/Dialogue/Set[@lang = \"" + Configuration.lang + "\"]/T");
+
+        phrases = new string[texts.Count];
 
         //We add the lines to the message list 
-        for (int i = 0; i < scene.ChildNodes.Count; i++)
+        for (int i = 0; i < texts.Count; i++)
         {
-            phrases[i] = scene.ChildNodes[i].InnerText;
+            phrases[i] = texts[i].InnerText;
         }
 
+        Tloading = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.lang + "\"]/I[@id=\"loading\"]").InnerText;
+        TpressAnyButton = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.lang + "\"]/I[@id=\"continue\"]").InnerText;
     }
 
     //Loads a given scene.
@@ -236,7 +240,7 @@ public class Loader : MonoBehaviour {
 
         if (interfaceLoad){
             loadingUI.SetActive(true);
-            percent.text = "Now Loading: 0%";
+            percent.text = Tloading + ": 0%";
         }
 
     }

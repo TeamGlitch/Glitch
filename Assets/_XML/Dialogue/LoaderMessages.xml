@@ -2,6 +2,8 @@
 <!--?xml version=”1.0” encoding=”UTF-8”?-->
 <Dialogue>
   <Set lang="English">
+    <I id="loading">Now Loading</I>
+    <I id="continue">Press any button to continue</I>
     <T>Loading enemies hostility</T>
     <T>Ensuring ragequit situations</T>
     <T>Rendering stereotypical hacker binary patterns</T>
@@ -19,6 +21,8 @@
     <T>Looking at GitHub to see who made a code mistake</T>
   </Set>
   <Set lang="Spanish">
+    <I id="loading">Cargando</I>
+    <I id="continue">Pulsa cualquier botón para continuar</I>
     <T>Cargando hostilidad enemiga</T>
     <T>Asegurando situaciones de ragequit</T>
     <T>Renderizando patrones binarios estereotípicos de hackeo</T>
