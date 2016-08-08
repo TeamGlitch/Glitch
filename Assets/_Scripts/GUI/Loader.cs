@@ -33,7 +33,7 @@ public class Loader : MonoBehaviour {
 
     private float nextLine = 0;             //When the next line will be written
 
-    private string[] phrases;
+    private string[] phrases = {"Phases not loaded."};
     private string Tloading = "";
     private string TpressAnyButton = "";
 

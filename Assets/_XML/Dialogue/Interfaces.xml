@@ -1,0 +1,153 @@
+﻿<!--?xml version=”1.0” encoding=”UTF-8”?-->
+<!--?xml version=”1.0” encoding=”UTF-8”?-->
+<Dialogue>
+  <Set lang="English">
+    <Group id="Main_Menu">
+      <UI id="Menu">
+        <I id="Continue">Continue</I>
+        <I id="LevelSelect">Level Select</I>
+        <I id="Options">Options</I>
+        <I id="Quit">Quit</I>
+        <I id="Copyright">© 2016 Team Glitch
+  v 1.0.0-alpha</I>
+      </UI>
+      <UI id="LevelSelectionMenu">
+        <I id="Choose">CHOOSE LEVEL</I>
+        <I id="Level1">Level 1</I>
+        <I id="Level2">Level 2 - NOT YET</I>
+        <I id="Level3">Level 3 - NOT YET</I>
+        <I id="Boss">Boss</I>
+        <I id="Back">Back</I>
+      </UI>
+      <UI id="QuitMenu">
+        <I id="Sure">Are you sure 
+  you want to quit?</I>
+        <I id="No">No</I>
+        <I id="Yes">Yes</I>
+      </UI>
+    </Group>
+    <Group id="Options">
+      <UI id="OptionsMenu">
+        <I id="Title">OPTIONS</I>
+        <I id="Controls">Controls</I>
+        <I id="Graphics">Graphics</I>
+        <I id="Audio">Audio</I>
+        <I id="Credits">Credits</I>
+        <I id="Back">Back</I>
+      </UI>
+      <UI id="CreditsMenu">
+        <I id="Title">CREDITS</I>
+        <I id="Credits">Project Manager
+  Raul Ramos Macias
+
+  Art Department
+  Lead Artist: Ion Ander Carrillo Valverde
+  Artists: Xabier Iruretagoyena Ajuria
+
+  Programming Department
+  Lead Programmer:   Cristian Fernández Suárez
+  Programmers: Raul Ramos Macias, Oriol Romero Herrando
+
+  Game designer
+  Oriol Romero Herrando</I>
+        <I id="Back">Back</I>
+      </UI>
+      <UI id="GraphicsMenu">
+        <I id="Title">GRAPHICS</I>
+        <I id="QualityTag">Quality level</I>
+        <I id="ResolutionTag">Resolution</I>
+        <I id="FullscreenTag">Fullscreen</I>
+        <I id="Back">Back</I>
+      </UI>
+      <UI id="AudioMenu">
+        <I id="Title">AUDIO</I>
+        <I id="MusicVolumeTag">Music volume</I>
+        <I id="SFXVolumeTag">SFX volume</I>
+        <I id="StereoPanTag">Stereo pan</I>
+        <I id="SpeakersModeTag">Speakers mode</I>
+        <I id="Back">Back</I>
+      </UI>
+      <UI id="HelpMenu">
+        <I id="Title">HELP</I>
+        <I id="GamepadButton">Gamepad</I>
+        <I id="KeyboardButton">Keyboard</I>
+        <I id="Back">Back</I>
+      </UI>
+    </Group>
+  </Set>
+  
+  <Set lang="Spanish">
+    <Group id="Main_Menu">
+      <UI id="Menu">
+        <I id="Continue">Continuar</I>
+        <I id="LevelSelect">Seleccionar nivel</I>
+        <I id="Options">Opciones</I>
+        <I id="Quit">Salir</I>
+        <I id="Copyright">© 2016 Team Glitch
+  v 1.0.0-alpha</I>
+      </UI>
+      <UI id="LevelSelectionMenu">
+        <I id="Choose">SELECCIONAR NIVEL</I>
+        <I id="Level1">Nivel 1</I>
+        <I id="Level2">Nivel 2 - NO DISPONIBLE</I>
+        <I id="Level3">Nivel 3 - NO DISPONIBLE</I>
+        <I id="Boss">Jefe</I>
+        <I id="Back">Volver</I>
+      </UI>
+      <UI id="QuitMenu">
+        <I id="Sure">¿Seguro que 
+  quieres salir?</I>
+        <I id="No">No</I>
+        <I id="Yes">Si</I>
+      </UI>
+    </Group>
+    <Group id="Options">
+      <UI id="OptionsMenu">
+        <I id="Title">OPCIONES</I>
+        <I id="Controls">Controles</I>
+        <I id="Graphics">Gráficos</I>
+        <I id="Audio">Audio</I>
+        <I id="Credits">Créditos</I>
+        <I id="Back">Volver</I>
+      </UI>
+      <UI id="CreditsMenu">
+        <I id="Title">CRÉDITOS</I>
+        <I id="Credits">Director de proyecto
+  Raul Ramos Macias
+
+  Departamento de arte
+  Jefe de arte: Ion Ander Carrillo Valverde
+  Artista: Xabier Iruretagoyena Ajuria
+
+  Departamento de programación
+  Jefe de programación: Cristian Fernández Suárez
+  Programadores: Raul Ramos Macias, Oriol Romero Herrando
+
+  Diseñador de juego:
+  Oriol Romero Herrando</I>
+        <I id="Back">Volver</I>
+      </UI>
+      <UI id="GraphicsMenu">
+        <I id="Title">GRÁFICOS</I>
+        <I id="QualityTag">Nivel de calidad</I>
+        <I id="ResolutionTag">Resolución</I>
+        <I id="FullscreenTag">Pantalla completa</I>
+        <I id="Back">Volver</I>
+      </UI>
+      <UI id="AudioMenu">
+        <I id="Title">AUDIO</I>
+        <I id="MusicVolumeTag">Volumen de la música</I>
+        <I id="SFXVolumeTag">Volumen de los efectos</I>
+        <I id="StereoPanTag">Pan de estéreo</I>
+        <I id="SpeakersModeTag">Modo de los altavoces</I>
+        <I id="Back">Volver</I>
+      </UI>
+      <UI id="HelpMenu">
+        <I id="Title">AYUDA</I>
+        <I id="GamepadButton">Mando</I>
+        <I id="KeyboardButton">Teclado</I>
+        <I id="Back">Volver</I>
+      </UI>
+    </Group>
+  </Set>
+</Dialogue>
