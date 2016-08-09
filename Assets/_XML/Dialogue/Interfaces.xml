@@ -45,7 +45,8 @@
   Artists: Xabier Iruretagoyena Ajuria
 
   Programming Department
-  Lead Programmer:   Cristian Fernández Suárez
+  Lead Programmer: 
+  Cristian Fernández Suárez
   Programmers: Raul Ramos Macias, Oriol Romero Herrando
 
   Game designer
@@ -72,6 +73,15 @@
         <I id="GamepadButton">Gamepad</I>
         <I id="KeyboardButton">Keyboard</I>
         <I id="Back">Back</I>
+      </UI>
+    </Group>
+    <Group id="Pause">
+      <UI id="PauseMenu">
+        <I id="Pause">Pause</I>
+        <I id="Resume">Resume</I>
+        <I id="Restart">Restart</I>
+        <I id="Options">Options</I>
+        <I id="Menu">Return to main menu</I>
       </UI>
     </Group>
   </Set>
@@ -147,6 +157,15 @@
         <I id="GamepadButton">Mando</I>
         <I id="KeyboardButton">Teclado</I>
         <I id="Back">Volver</I>
+      </UI>
+    </Group>
+    <Group id="Pause">
+      <UI id="PauseMenu">
+        <I id="Pause">Pausa</I>
+        <I id="Resume">Reanudar</I>
+        <I id="Restart">Reiniciar nivel</I>
+        <I id="Options">Opciones</I>
+        <I id="Menu">Volver al menú principal</I>
       </UI>
     </Group>
   </Set>

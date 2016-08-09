@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using InControl;
+using System.Xml;
 
 public class PauseScript : MonoBehaviour {
 
@@ -10,6 +11,60 @@ public class PauseScript : MonoBehaviour {
 	public Button resumeButton;
 	public Button restartButton;
 	public Button menuButton;
+
+    public TextAsset XMLAsset;
+
+    void Start()
+    {
+        SetTexts();
+    }
+
+    public void SetTexts()
+    {
+        XmlDocument xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(XMLAsset.text);
+
+        XmlNodeList texts = xmlDoc.SelectNodes("/Dialogue/Set[@lang = \"" + Configuration.lang + "\"]/Group[@id = \"Pause\"]/UI");
+
+        string menuName;
+        Transform menu, element;
+        Text elementText;
+        for (int i = 0; i < texts.Count; i++)
+        {
+            menuName = texts[i].Attributes["id"].Value;
+            menu = transform.FindChild(menuName);
+
+            if (menu != null)
+            {
+                for (int z = 0; z < texts[i].ChildNodes.Count; z++)
+                {
+                    element = menu.FindChild(texts[i].ChildNodes[z].Attributes["id"].Value);
+                    if (element != null)
+                    {
+                        elementText = element.GetComponent<Text>();
+                        if (elementText != null)
+                        {
+                            elementText.text = texts[i].ChildNodes[z].InnerText;
+                        }
+                        else
+                        {
+                            print(texts[i].ChildNodes[z].Attributes["id"].Value + " on " + texts[i].Attributes["id"].Value + " doesn't have a Text.");
+                        }
+                    }
+                    else
+                    {
+                        print(texts[i].ChildNodes[z].Attributes["id"].Value + " not found on " + texts[i].Attributes["id"].Value + ".");
+                    }
+                } // ENDFOR
+            }
+            else
+            {
+                print("Menu " + texts[i].Attributes["id"].Value + " not found.");
+            }
+        }
+
+
+    }
 
 	public void resumePress()
 	{
