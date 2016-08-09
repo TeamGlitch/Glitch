@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class BossArcherIA : MonoBehaviour
 {
@@ -126,6 +127,16 @@ public class BossArcherIA : MonoBehaviour
     private bool canShoot = true;
     public Player playerScript;
 
+    public Transform HUDLives;
+    private Image heart1;
+    private Image heart2;
+    private Image heart3;
+    private Image heart4;
+    private Image heart5;
+
+    public Sprite heartFull;
+    public Sprite heartEmpty;
+
     #endregion
 
     #region Init & Update
@@ -161,6 +172,12 @@ public class BossArcherIA : MonoBehaviour
         playerScript.PlayerReviveEvent += GlitchRevives;
 
         upArrow.gameObject.SetActive(false);
+
+        heart1 = HUDLives.FindChild("Live1").GetComponent<Image>();
+        heart2 = HUDLives.FindChild("Live2").GetComponent<Image>();
+        heart3 = HUDLives.FindChild("Live3").GetComponent<Image>();
+        heart4 = HUDLives.FindChild("Live4").GetComponent<Image>();
+        heart5 = HUDLives.FindChild("Live5").GetComponent<Image>();
     }
 
     // Update is called once per frame
@@ -454,6 +471,7 @@ public class BossArcherIA : MonoBehaviour
             --lives;
             if (lives == 0)
             {
+                heart5.sprite = heartEmpty;
                 SoundManager.instance.PlaySingle(scream);
                 animator.SetTrigger("LastHitted");
                 camera.ZoomOut();
@@ -463,6 +481,7 @@ public class BossArcherIA : MonoBehaviour
             }
             else if (lives == 1)
             {
+                heart4.sprite = heartEmpty;
                 holesActivated = true;
                 camera.ZoomArcherIn();
                 timeInPreShoot = 0f;
@@ -472,6 +491,7 @@ public class BossArcherIA : MonoBehaviour
             }
             else if (lives == 2)
             {
+                heart3.sprite = heartEmpty;
                 holesActivated = true;
                 camera.ZoomArcherIn();
                 animator.SetTrigger("Hitted");
@@ -479,6 +499,7 @@ public class BossArcherIA : MonoBehaviour
             }
             else if (lives == 3)
             {
+                heart2.sprite = heartEmpty;
                 holesActivated = true;
                 camera.ZoomArcherIn();
                 timeInPreShoot = 1f;
@@ -489,6 +510,7 @@ public class BossArcherIA : MonoBehaviour
             }
             else if (lives == 4)
             {
+                heart1.sprite = heartEmpty;
                 holesActivated = true;
                 camera.ZoomArcherIn();
                 animator.SetTrigger("Hitted");
