@@ -65,6 +65,7 @@ public class DeadMenuScript : MonoBehaviour {
         for (int i = 0; i < texts.Count; i++)
         {
             menuName = texts[i].Attributes["id"].Value;
+            menu = transform.parent.FindChild(menuName);
 
             if (menu != null)
             {

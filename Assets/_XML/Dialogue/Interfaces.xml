@@ -91,6 +91,7 @@
     </Group>
     <Group id="GameOver">
       <UI id="Dead Menu">
+        <I id="Restart Game">Restart Level</I>
         <I id="Main Menu">Main Menu</I>
         <I id="Continue">Continue</I>
       </UI>
@@ -188,6 +189,7 @@
       <UI id="Dead Menu">
         <I id="Restart Game">Reiniciar nivel</I>
         <I id="Main Menu">Menú principal</I>
+        <I id="Continue">Continua</I>
       </UI>
     </Group>
   </Set>
