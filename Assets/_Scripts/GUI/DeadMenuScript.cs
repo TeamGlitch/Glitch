@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Xml;
 
 public class DeadMenuScript : MonoBehaviour {
 
@@ -28,6 +29,9 @@ public class DeadMenuScript : MonoBehaviour {
     public AdvanceBarScript glitchBar;
     public AdvanceBarEnemies enemyBar;
 
+    public TextAsset XMLAsset;
+    private string continueText;
+
 	// Use this for initialization
 	void Awake () {
 
@@ -42,6 +46,59 @@ public class DeadMenuScript : MonoBehaviour {
 		gameObject.SetActive(false);
 		playerPowers.SetActive (false);
 	}
+
+    void Start()
+    {
+        SetTexts();
+    }
+
+    public void SetTexts()
+    {
+        XmlDocument xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(XMLAsset.text);
+
+        XmlNodeList texts = xmlDoc.SelectNodes("/Dialogue/Set[@lang = \"" + Configuration.lang + "\"]/Group[@id = \"GameOver\"]/UI");
+
+        string menuName;
+        Transform menu, element;
+        Text elementText;
+        for (int i = 0; i < texts.Count; i++)
+        {
+            menuName = texts[i].Attributes["id"].Value;
+
+            if (menu != null)
+            {
+                for (int z = 0; z < texts[i].ChildNodes.Count; z++)
+                {
+                    element = menu.FindChild(texts[i].ChildNodes[z].Attributes["id"].Value);
+                    if (element != null)
+                    {
+                        elementText = element.GetComponent<Text>();
+                        if (elementText != null)
+                        {
+                            elementText.text = texts[i].ChildNodes[z].InnerText;
+                        }
+                        else
+                        {
+                            print(texts[i].ChildNodes[z].Attributes["id"].Value + " on " + texts[i].Attributes["id"].Value + " doesn't have a Text.");
+                        }
+                    }
+                    else
+                    {
+                        print(texts[i].ChildNodes[z].Attributes["id"].Value + " not found on " + texts[i].Attributes["id"].Value + ".");
+                    }
+                } // ENDFOR
+            }
+            else
+            {
+                print("Menu " + texts[i].Attributes["id"].Value + " not found.");
+            }
+        }
+
+        continueText = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.lang + "\"]/Group[@id = \"GameOver\"]/UI[@id = \"Dead Menu\"]/I[@id = \"Continue\"]").InnerText;
+
+
+    }
 
 	// Update is called once per frame
 	void Update () {
@@ -65,7 +122,7 @@ public class DeadMenuScript : MonoBehaviour {
                 int fibonacciValue = fib(timesDead + 1);
                 fibonacciValue *= 10;
 
-                continueButton.gameObject.GetComponent<Text>().text = "Continue (    x " + fibonacciValue + " )";
+                continueButton.gameObject.GetComponent<Text>().text = continueText + " (    x " + fibonacciValue + " )";
 
                 Vector3 nPosition = respawnObject.rectTransform.anchoredPosition;
                 int digits = (int) Mathf.Floor(Mathf.Log10(fibonacciValue) + 1);

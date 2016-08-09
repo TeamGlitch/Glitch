@@ -89,6 +89,12 @@
         <I id="LevelCompleteText">The heroes have completed the level!</I>
       </UI>
     </Group>
+    <Group id="GameOver">
+      <UI id="Dead Menu">
+        <I id="Main Menu">Main Menu</I>
+        <I id="Continue">Continue</I>
+      </UI>
+    </Group>
   </Set>
   
   <Set lang="Spanish">
@@ -176,6 +182,12 @@
     <Group id="LevelComplete">
       <UI id="LevelComplete">
         <I id="LevelCompleteText">¡Los héroes han completado el nivel!</I>
+      </UI>
+    </Group>
+    <Group id="GameOver">
+      <UI id="Dead Menu">
+        <I id="Restart Game">Reiniciar nivel</I>
+        <I id="Main Menu">Menú principal</I>
       </UI>
     </Group>
   </Set>
