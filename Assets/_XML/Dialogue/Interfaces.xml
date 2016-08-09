@@ -84,6 +84,11 @@
         <I id="Menu">Return to main menu</I>
       </UI>
     </Group>
+    <Group id="LevelComplete">
+      <UI id="LevelComplete">
+        <I id="LevelCompleteText">The heroes have completed the level!</I>
+      </UI>
+    </Group>
   </Set>
   
   <Set lang="Spanish">
@@ -166,6 +171,11 @@
         <I id="Restart">Reiniciar nivel</I>
         <I id="Options">Opciones</I>
         <I id="Menu">Volver al menú principal</I>
+      </UI>
+    </Group>
+    <Group id="LevelComplete">
+      <UI id="LevelComplete">
+        <I id="LevelCompleteText">¡Los héroes han completado el nivel!</I>
       </UI>
     </Group>
   </Set>

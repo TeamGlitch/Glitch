@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Xml;
 
 public class AdvanceBarEnemies : MonoBehaviour {
 
@@ -30,14 +31,23 @@ public class AdvanceBarEnemies : MonoBehaviour {
     public Text levelCompleteText;
 
     public AudioClip powerDownSound;
-
-
+    public TextAsset XMLAsset;
 
     void Start()
     {
         slider.maxValue = maxTime;
         slider.minValue = 0.0f;
         state = endtimeState.NOT_MOVING;
+    }
+
+    public void SetTexts()
+    {
+        XmlDocument xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(XMLAsset.text);
+
+        XmlNode texts = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.lang + "\"]/Group[@id = \"LevelComplete\"]/UI[@id = \"LevelComplete\"]/I[@id = \"LevelCompleteText\"]");
+        levelCompleteText.text = texts.InnerText;
+
     }
 
     public void Pause (bool pause)
@@ -88,6 +98,7 @@ public class AdvanceBarEnemies : MonoBehaviour {
                     percent = 1;
                     state = endtimeState.SHOWING_MESSAGE;
                     levelCompleteText.enabled = true;
+                    SetTexts();
                     stateChange = Time.time;
                 }
 
