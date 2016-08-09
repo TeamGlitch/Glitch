@@ -77,7 +77,7 @@ public class MenuScript : MonoBehaviour {
         for (int i = 0; i < texts.Count; i++)
         {
             menuName = texts[i].Attributes["id"].Value;
-            menu = transform.root.FindChild(menuName);
+            menu = transform.parent.FindChild(menuName);
 
             if (menu != null)
             {
@@ -98,7 +98,7 @@ public class MenuScript : MonoBehaviour {
                     }
                     else
                     {
-                        print(texts[i].ChildNodes[z].Attributes["id"].Value + " not found on" + texts[i].Attributes["id"].Value + ".");
+                        print(texts[i].ChildNodes[z].Attributes["id"].Value + " not found on " + texts[i].Attributes["id"].Value + ".");
                     }
                 } // ENDFOR
             }

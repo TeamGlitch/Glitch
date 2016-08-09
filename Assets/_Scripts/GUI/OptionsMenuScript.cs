@@ -36,6 +36,7 @@ public class OptionsMenuScript : MonoBehaviour {
     public AudioClip confirmSound;
 
     public TextAsset XMLAsset;
+    public Transform menusContainer;
 
 	void Start () {
         optionsMenu.SetActive(false);
@@ -68,7 +69,7 @@ public class OptionsMenuScript : MonoBehaviour {
         for (int i = 0; i < texts.Count; i++)
         {
             menuName = texts[i].Attributes["id"].Value;
-            menu = transform.root.FindChild(menuName);
+            menu = menusContainer.FindChild(menuName);
 
             if (menu != null)
             {
@@ -89,7 +90,7 @@ public class OptionsMenuScript : MonoBehaviour {
                     }
                     else
                     {
-                        print(texts[i].ChildNodes[z].Attributes["id"].Value + " not found on" + texts[i].Attributes["id"].Value + ".");
+                        print(texts[i].ChildNodes[z].Attributes["id"].Value + " not found on " + texts[i].Attributes["id"].Value + ".");
                     }
                 } // ENDFOR
             }
