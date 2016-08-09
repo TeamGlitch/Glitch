@@ -173,11 +173,11 @@ public class BossArcherIA : MonoBehaviour
 
         upArrow.gameObject.SetActive(false);
 
-        heart1 = HUDLives.FindChild("Live1").GetComponent<Image>();
-        heart2 = HUDLives.FindChild("Live2").GetComponent<Image>();
-        heart3 = HUDLives.FindChild("Live3").GetComponent<Image>();
-        heart4 = HUDLives.FindChild("Live4").GetComponent<Image>();
-        heart5 = HUDLives.FindChild("Live5").GetComponent<Image>();
+        heart1 = HUDLives.FindChild("Heart1").GetComponent<Image>();
+        heart2 = HUDLives.FindChild("Heart2").GetComponent<Image>();
+        heart3 = HUDLives.FindChild("Heart3").GetComponent<Image>();
+        heart4 = HUDLives.FindChild("Heart4").GetComponent<Image>();
+        heart5 = HUDLives.FindChild("Heart5").GetComponent<Image>();
     }
 
     // Update is called once per frame
@@ -471,7 +471,7 @@ public class BossArcherIA : MonoBehaviour
             --lives;
             if (lives == 0)
             {
-                heart5.sprite = heartEmpty;
+                heart1.sprite = heartEmpty;
                 SoundManager.instance.PlaySingle(scream);
                 animator.SetTrigger("LastHitted");
                 camera.ZoomOut();
@@ -481,7 +481,7 @@ public class BossArcherIA : MonoBehaviour
             }
             else if (lives == 1)
             {
-                heart4.sprite = heartEmpty;
+                heart2.sprite = heartEmpty;
                 holesActivated = true;
                 camera.ZoomArcherIn();
                 timeInPreShoot = 0f;
@@ -499,7 +499,7 @@ public class BossArcherIA : MonoBehaviour
             }
             else if (lives == 3)
             {
-                heart2.sprite = heartEmpty;
+                heart4.sprite = heartEmpty;
                 holesActivated = true;
                 camera.ZoomArcherIn();
                 timeInPreShoot = 1f;
@@ -510,7 +510,7 @@ public class BossArcherIA : MonoBehaviour
             }
             else if (lives == 4)
             {
-                heart1.sprite = heartEmpty;
+                heart5.sprite = heartEmpty;
                 holesActivated = true;
                 camera.ZoomArcherIn();
                 animator.SetTrigger("Hitted");
