@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Xml;
 
-public class OptionsMenuScript : MonoBehaviour {
+public class OptionsMenuScript : MonoBehaviour, LanguageListener {
 
     public GameObject optionsMenu;
     public Button ControlsButton;
@@ -20,6 +20,7 @@ public class OptionsMenuScript : MonoBehaviour {
     public Dropdown qualityLevel;
     public Dropdown resolutions;
     public Toggle fullscreen;
+    public Dropdown language;
 
     public GameObject audioMenu;
     public Slider musicSlider;
@@ -45,7 +46,13 @@ public class OptionsMenuScript : MonoBehaviour {
         audioMenu.SetActive(false);
         creditsMenu.SetActive(false);
         SetTexts();
+        Configuration.addLanguageListener(this);
 	}
+
+    void OnDestroy()
+    {
+        Configuration.removeLanguageListener(this);
+    }
 
     public void Enable(){
         optionsMenu.SetActive(true);
@@ -61,7 +68,7 @@ public class OptionsMenuScript : MonoBehaviour {
         XmlDocument xmlDoc = new XmlDocument();
         xmlDoc.LoadXml(XMLAsset.text);
 
-        XmlNodeList texts = xmlDoc.SelectNodes("/Dialogue/Set[@lang = \"" + Configuration.lang + "\"]/Group[@id = \"Options\"]/UI");
+        XmlNodeList texts = xmlDoc.SelectNodes("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"Options\"]/UI");
 
         string menuName;
         Transform menu, element;
@@ -207,6 +214,10 @@ public class OptionsMenuScript : MonoBehaviour {
 
         resolutions.Select();
 
+        if (Configuration.getLanguage() == "Spanish") language.value = 1;
+        else language.value = 0;
+        //TODO: HERE FOR MORE LANGS
+
     }
 
 
@@ -219,6 +230,24 @@ public class OptionsMenuScript : MonoBehaviour {
     public void ChangeQuality()
     {
         QualitySettings.SetQualityLevel(qualityLevel.value);
+    }
+
+    public void ChangeLanguage()
+    {
+        string newLang;
+
+        switch (language.value)
+        {
+            case 1: newLang = "Spanish"; break;
+            default: newLang = "English"; break;
+            //TODO: HERE FOR MORE LANGS
+        }
+
+        if (newLang != Configuration.getLanguage()){
+            Configuration.setLanguage(newLang);
+            Configuration.SaveConfiguration();
+        }
+
     }
 
     public void AudioPress()

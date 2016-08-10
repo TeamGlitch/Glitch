@@ -2,11 +2,19 @@
 using System.Collections;
 using System.Xml;
 using System.Globalization;
+using System.Collections.Generic;
+
+public interface LanguageListener
+{
+    void SetTexts();
+}
 
 public class Configuration : MonoBehaviour {
 
-    public static string lang = "English";
     private static bool configurationLoaded = false;
+
+    private static string lang = "English";
+    private static List<LanguageListener> languageListeners = new List<LanguageListener>();
 
     public static void LoadConfiguration()
     {
@@ -73,9 +81,7 @@ public class Configuration : MonoBehaviour {
             && node.InnerText != "Spanish"
             && node.InnerText != "Catalan")
             return false;
-        lang = node.InnerText;
-
-        Loader.instance.loadPhrases();
+        setLanguage(node.InnerText);
 
         node = xmlDoc.SelectSingleNode("/confg/music");
         if (node == null)
@@ -118,4 +124,44 @@ public class Configuration : MonoBehaviour {
         return true;
 
     }
+
+
+    //LANGUAGE
+    public static string getLanguage()
+    {
+        return lang;
+    }
+
+    public static void setLanguage(string newLang)
+    {
+        lang = newLang;
+        warnLanguageListeners();
+    }
+
+    public static void addLanguageListener(LanguageListener listener){
+        languageListeners.Add(listener);
+    }
+
+    public static void removeLanguageListener(LanguageListener listener)
+    {
+        for(int i = languageListeners.Count - 1; i >= 0; i--)
+        {
+            if (languageListeners[i] == listener)
+            {
+                languageListeners.RemoveAt(i);
+            }
+        }
+    }
+
+    private static void warnLanguageListeners()
+    {
+        for (int i = languageListeners.Count - 1; i >= 0; i--)
+        {
+            languageListeners[i].SetTexts();
+        }
+    }
+
+
+
+
 }
