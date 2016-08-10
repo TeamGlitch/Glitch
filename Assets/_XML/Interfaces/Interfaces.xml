@@ -2,6 +2,10 @@
 <!--?xml version=”1.0” encoding=”UTF-8”?-->
 <Dialogue>
   <Set lang="English">
+    <Languages>
+      <L>English</L>
+      <L>Spanish</L>
+    </Languages>
     <Group id="Main_Menu">
       <UI id="Menu">
         <I id="Continue">Continue</I>
@@ -100,6 +104,10 @@
   </Set>
   
   <Set lang="Spanish">
+    <Languages>
+      <L>Inglés</L>
+      <L>Español</L>
+    </Languages>
     <Group id="Main_Menu">
       <UI id="Menu">
         <I id="Continue">Continuar</I>

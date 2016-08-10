@@ -107,6 +107,24 @@ public class OptionsMenuScript : MonoBehaviour, LanguageListener {
             }
         }
 
+        //Lang config
+
+        language.options.Clear();
+
+        xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(XMLAsset.text);
+
+        texts = xmlDoc.SelectNodes("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Languages/L");
+        for (int i = 0; i < texts.Count; i++)
+        {
+            Dropdown.OptionData entry = new Dropdown.OptionData();
+            entry.text = texts[i].InnerText;
+            language.options.Add(entry);
+        }
+
+        if (Configuration.getLanguage() == "Spanish") language.value = 1;
+        else language.value = 0;
+        //TODO: HERE FOR MORE LANGS
 
     }
 
@@ -213,10 +231,6 @@ public class OptionsMenuScript : MonoBehaviour, LanguageListener {
             fullscreen.isOn = false;
 
         resolutions.Select();
-
-        if (Configuration.getLanguage() == "Spanish") language.value = 1;
-        else language.value = 0;
-        //TODO: HERE FOR MORE LANGS
 
     }
 
