@@ -28,7 +28,7 @@ public class IntroScript : MonoBehaviour {
 
 	void Start(){
 
-        SoundManager.instance.LoadConfiguration();
+        Configuration.LoadConfiguration();
 
 		GetComponent<Renderer>().material.mainTexture = movie as MovieTexture;
 

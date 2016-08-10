@@ -35,12 +35,16 @@ public class OptionsMenuScript : MonoBehaviour {
     public AudioClip selectSound;
     public AudioClip confirmSound;
 
+    public TextAsset XMLAsset;
+    public Transform menusContainer;
+
 	void Start () {
         optionsMenu.SetActive(false);
         helpMenu.SetActive(false);
         graphicsMenu.SetActive(false);
         audioMenu.SetActive(false);
         creditsMenu.SetActive(false);
+        SetTexts();
 	}
 
     public void Enable(){
@@ -50,6 +54,53 @@ public class OptionsMenuScript : MonoBehaviour {
 
     public void Disable(){
         optionsMenu.SetActive(false);
+    }
+
+    public void SetTexts()
+    {
+        XmlDocument xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(XMLAsset.text);
+
+        XmlNodeList texts = xmlDoc.SelectNodes("/Dialogue/Set[@lang = \"" + Configuration.lang + "\"]/Group[@id = \"Options\"]/UI");
+
+        string menuName;
+        Transform menu, element;
+        Text elementText;
+        for (int i = 0; i < texts.Count; i++)
+        {
+            menuName = texts[i].Attributes["id"].Value;
+            menu = menusContainer.FindChild(menuName);
+
+            if (menu != null)
+            {
+                for (int z = 0; z < texts[i].ChildNodes.Count; z++)
+                {
+                    element = menu.FindChild(texts[i].ChildNodes[z].Attributes["id"].Value);
+                    if (element != null)
+                    {
+                        elementText = element.GetComponent<Text>();
+                        if (elementText != null)
+                        {
+                            elementText.text = texts[i].ChildNodes[z].InnerText;
+                        }
+                        else
+                        {
+                            print(texts[i].ChildNodes[z].Attributes["id"].Value + " on " + texts[i].Attributes["id"].Value + " doesn't have a Text.");
+                        }
+                    }
+                    else
+                    {
+                        print(texts[i].ChildNodes[z].Attributes["id"].Value + " not found on " + texts[i].Attributes["id"].Value + ".");
+                    }
+                } // ENDFOR
+            }
+            else
+            {
+                print("Menu " + texts[i].Attributes["id"].Value + " not found.");
+            }
+        }
+
+
     }
 
     public void ReturnToOptions()
@@ -220,7 +271,7 @@ public class OptionsMenuScript : MonoBehaviour {
     }
 
     public void SaveChangesOnAudio(){
-        SoundManager.instance.SaveConfiguration();
+        Configuration.SaveConfiguration();
     }
 
     public void CreditsMenu()

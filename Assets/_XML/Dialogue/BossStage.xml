@@ -1,31 +1,42 @@
 ﻿<!--?xml version=”1.0” encoding=”UTF-8”?-->
 <!--?xml version=”1.0” encoding=”UTF-8”?-->
-<Dialogue lang="English">
-	<Scene id="0">
-		<T>[face=Glitch]Hello! You can go to the next message with A.</T>
-		<T>I can also skip it automatically.[wait=1.5][skip]</T>
-		<T>[]And you can't skip this text! Go on! Try it![wait=2]&#xA;See?[wait=0.5] Told ya.</T>
-		<T>[playermove=false][noskip]You can make the player stop moving...[wait=2]</T>
-		<T>[playermove=true][noskip]...Or allow you to, so the message goes while playing.</T>
-		<T>I can talk [wait=1][speed=0]really fast [wait=1][speed=0.5]or really slow.</T>
-		<T>I can also add...[wait=2]uh...[wait=2]Oh![wait=0.5] Right![wait=0.5] Pauses!</T>
-		<T>I can also [end]end the message abruptly anytime.</T>
-		<T>[end]Or just show it all from the start.</T>
-		<T>[face=Bug]There's also a tag for changing the showing face, including pitch!</T>
-		<T>[face=Glitch]And you don't have to make any sprite references! It is automatically readed with a resource.loadAll().</T>
-		<T>[face=Bug]But don't worry! If it's called once, it is stored for fast future use, so you there's no performance drop!</T>
-		<T>[face=None]If you put "none" on the face tag, this is what happens. Ideal for narration!</T>
-		<T>[face=Glitch][bga=0.35]You can also change the background transparency!</T>
-		<T>[bga=1][align=right]You can also change...</T>
-		<T>[align=center]...the text align...</T>
-		<T>[align=left]...with tags!</T>
-		<T>So yeah, have fun.</T>
-	</Scene>
-	<Scene id="1">
-		<T>[face=Bug][playermove=false]Hey watchout, Glitch!</T>
-		<T>There is the archer hero, and she seems to be pretty angry...</T>
-		<T>[face=Archer]Your path ends here. You aren't a hero, system error!!</T>
-		<T>[face=Glitch]What!? Bug, did you hear that? I dare you to say it again!</T>
-		<T>[face=Bug]Try to glitch her through the roots!</T>
-	</Scene>
+<Dialogue >
+  <Set lang="English">
+	  <Scene id="0">
+		  <T>[face=Glitch]Hello! You can go to the next message with A.</T>
+		  <T>I can also skip it automatically.[wait=1.5][skip]</T>
+		  <T>[]And you can't skip this text! Go on! Try it![wait=2]&#xA;See?[wait=0.5] Told ya.</T>
+		  <T>[playermove=false][noskip]You can make the player stop moving...[wait=2]</T>
+		  <T>[playermove=true][noskip]...Or allow you to, so the message goes while playing.</T>
+		  <T>I can talk [wait=1][speed=0]really fast [wait=1][speed=0.5]or really slow.</T>
+		  <T>I can also add...[wait=2]uh...[wait=2]Oh![wait=0.5] Right![wait=0.5] Pauses!</T>
+		  <T>I can also [end]end the message abruptly anytime.</T>
+		  <T>[end]Or just show it all from the start.</T>
+		  <T>[face=Bug]There's also a tag for changing the showing face, including pitch!</T>
+		  <T>[face=Glitch]And you don't have to make any sprite references! It is automatically readed with a resource.loadAll().</T>
+		  <T>[face=Bug]But don't worry! If it's called once, it is stored for fast future use, so you there's no performance drop!</T>
+		  <T>[face=None]If you put "none" on the face tag, this is what happens. Ideal for narration!</T>
+		  <T>[face=Glitch][bga=0.35]You can also change the background transparency!</T>
+		  <T>[bga=1][align=right]You can also change...</T>
+		  <T>[align=center]...the text align...</T>
+		  <T>[align=left]...with tags!</T>
+		  <T>So yeah, have fun.</T>
+	  </Scene>
+	  <Scene id="1">
+		  <T>[face=Bug][playermove=false]Hey watchout, Glitch!</T>
+		  <T>There is the archer hero, and she seems to be pretty angry...</T>
+		  <T>[face=Archer]Your path ends here. You aren't a hero, system error!!</T>
+		  <T>[face=Glitch]What!? Bug, did you hear that? I dare you to say it again!</T>
+		  <T>[face=Bug]Try to glitch her through the roots!</T>
+	  </Scene>
+  </Set>
+  <Set lang="Spanish">
+    <Scene id="1">
+      <T>[face=Bug][playermove=false]Cuidado, Glitch!</T>
+      <T>¡Ahí está la heroína arquera! Y parece que se ha levantado con el pie izquierdo.</T>
+      <T>[face=Archer]Vuestro camino termina aquí. ¡Abandonad vuestros delirios de heroísmo, error del sistema!</T>
+      <T>[face=Glitch]¿¡Que!? Bug, ¿lo has oido? ¡Atrévete a repetir eso!</T>
+      <T>[face=Bug]¡Trata de glitchearla a través de las ramas!</T>
+    </Scene>
+  </Set> 
 </Dialogue>
