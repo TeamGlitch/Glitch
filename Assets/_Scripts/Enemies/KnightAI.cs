@@ -70,6 +70,9 @@ public class KnightAI : MonoBehaviour {
 	private ParticleSystem particleSystem;
 	private int tiltCounter;
 
+    public AudioClip walkingSound;
+    private AudioSource walkingSoundSource = null;
+
     void Start()
     {
         playerPos = player.GetComponent<Transform>();
@@ -222,6 +225,13 @@ public class KnightAI : MonoBehaviour {
             animator.SetFloat("Speed", speed*speedConstant);
             animator.SetInteger("State", (int)states);
             animator.SetBool("Attack", isInAttack);
+
+            if (states != enemy_states.PATROL && walkingSoundSource != null)
+            {
+                walkingSoundSource.Stop();
+                walkingSoundSource = null;
+            }
+
             switch (states)
             {
                 case enemy_states.WAIT:
@@ -248,6 +258,19 @@ public class KnightAI : MonoBehaviour {
                     // Patrolling logic
 
                     transform.Translate(Vector3.forward * speed * world.lag);
+
+                    if(Camera.current != null)
+                    { 
+                        Vector3 positionOnScreen = Camera.current.WorldToViewportPoint(transform.position);
+
+                        if (positionOnScreen.x > 0 &&  positionOnScreen.x < 1 &&
+                            positionOnScreen.y > 0 && positionOnScreen.y < 1 &&
+                            (walkingSoundSource == null || !walkingSoundSource.isPlaying))
+                        {
+                            walkingSoundSource = SoundManager.instance.PlaySingle(walkingSound);
+                        }
+                    }
+
                     break;
 
                 // Enemy chases Glitch until reach him, reach a limit point or lose sight of Glitch
