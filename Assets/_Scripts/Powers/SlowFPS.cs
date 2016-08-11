@@ -66,7 +66,7 @@ public class SlowFPS : MonoBehaviour
             }
         }
 
-        // If power is enable
+        // If power is active
         if (powerActive)
         {
             //We increase the time the FPS have been active and decrease the time remaining
@@ -100,6 +100,7 @@ public class SlowFPS : MonoBehaviour
                 else if (Time.time >= timeLastUpdate + timeBetweenUpdates)
                 {
                     world.requestUpdate((Time.time - timeLastUpdate) * slowDown);
+                    ScoreManager.instance.SFPSUsed(Time.time - timeLastUpdate);
                 }
 
             }

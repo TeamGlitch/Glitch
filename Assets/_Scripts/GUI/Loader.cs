@@ -176,7 +176,10 @@ public class Loader : MonoBehaviour {
         if (!loading && actualScene != levelName){
 
             if (level)
+            {
                 lastLevel = actualScene;
+                ScoreManager.instance.RestartValues();
+            }
 
             sceneLoading(levelName, useInterface, isAutomatic, allowed);
         }
@@ -185,6 +188,7 @@ public class Loader : MonoBehaviour {
     public static void ReloadScene(bool useInterface = true, bool isAutomatic = false, bool allowed = true)
     {
         if (!loading){
+            ScoreManager.instance.RestartValues();
             sceneLoading(actualScene, useInterface, isAutomatic, allowed);
         }
     }

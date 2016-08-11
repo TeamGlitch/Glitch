@@ -44,6 +44,7 @@ public class CheckPoint : MonoBehaviour
             growEnd = growStart + 1.7f;
             cylinderRenderer.gameObject.SetActive(true);
             SoundManager.instance.PlaySingle(checkpointSound);
+            ScoreManager.instance.CheckpointUsed();
         }
 
     }

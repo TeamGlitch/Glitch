@@ -84,6 +84,7 @@ public class KnightAI : MonoBehaviour {
 		spriteRenderer = transform.GetComponent<SpriteRenderer>();
 		particleSystem = transform.GetComponent<ParticleSystem>();
 		tiltCounter = 0;
+        ScoreManager.instance.EnemyAdded();
     }
 
     void OnCollisionEnter(Collision coll)
@@ -467,6 +468,7 @@ public class KnightAI : MonoBehaviour {
                 fieldOfView.enabled = false;
                 isInAttack = false;
                 InvokeRepeating("TiltModel", 0f, 0.1f);
+                ScoreManager.instance.EnemyDefeated();
             }
             else
             {

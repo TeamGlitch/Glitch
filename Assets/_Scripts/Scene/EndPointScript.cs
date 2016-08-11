@@ -10,10 +10,15 @@ public class EndPointScript : MonoBehaviour {
 
 	private float endGame = -1;
 
+    void Start()
+    {
+        enabled = false;
+    }
+
     // Script is disabled until OnTriggerEnter detects the player
 	void OnTriggerEnter(Collider coll){
 
-		if(coll.gameObject.CompareTag("Player")){
+		if(!enabled && coll.gameObject.CompareTag("Player")){
             titlesGameObject.SetActive(true);
             title.text = "Level 1... complete?";
 			title.color = Color.red;

@@ -55,7 +55,7 @@ public class ArcherAI : MonoBehaviour {
     private float rotationTime = 0.0f;
     private float searchRotationTime = 1.0f;
     private bool returning = false;
-    private float meleeDamage = 1.0f;
+    private int meleeDamage = 1;
     private Vector3 origin;
     private Animator animator;
     private float timePerKick = 0.0f;
@@ -143,6 +143,7 @@ public class ArcherAI : MonoBehaviour {
         spriteRenderer = transform.GetComponent<SpriteRenderer>();
         archerModel = transform.FindChild("arquera_animclip");
         particleSystem = transform.GetComponent<ParticleSystem>();
+        ScoreManager.instance.EnemyAdded();
     }
 
     void Update()
@@ -438,6 +439,7 @@ public class ArcherAI : MonoBehaviour {
         InvokeRepeating("TiltModel", 0f, 0.1f);
         // To impulse player from enemy
         player.ReactToAttack(transform.position.x);
+        ScoreManager.instance.EnemyDefeated();
     }
 
     public void TiltModel()

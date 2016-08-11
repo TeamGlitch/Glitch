@@ -12,7 +12,8 @@ public class AdvanceBarEnemies : MonoBehaviour {
         MOVING,
         POWER_DOWNING,
         SHOWING_MESSAGE,
-        DEATH
+        DEATH,
+        LEVEL_COMPLETE
     };
 
     private endtimeState state;
@@ -32,6 +33,8 @@ public class AdvanceBarEnemies : MonoBehaviour {
 
     public AudioClip powerDownSound;
     public TextAsset XMLAsset;
+
+    public EndPointScript endPoint;
 
     void Start()
     {
@@ -66,6 +69,13 @@ public class AdvanceBarEnemies : MonoBehaviour {
 
     void Update()
     {
+        if (state != endtimeState.LEVEL_COMPLETE && endPoint.enabled)
+        {
+            ScoreManager.instance.SetTimes(maxTime, time);
+            ScoreManager.instance.SetRemaniningLives(player.lives);
+            state = endtimeState.LEVEL_COMPLETE;
+        }
+
         switch(state){
 
             case endtimeState.MOVING:

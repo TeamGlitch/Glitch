@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     private ObjectPool glitchPartPool;          //Fragments pool
 
     // Properties
-    public float lives;                         // Actual lives
+    public int lives;                           // Actual lives
     public int items = 0;                       // Items collected
 
     // State
@@ -186,6 +186,7 @@ public class Player : MonoBehaviour
         {
             bigCollUI.gameObject.SetActive(true);
             bigCollUI.AddItem(collect.orderNum);
+            ScoreManager.instance.AddCollectionable();
         }
     }
 
@@ -196,12 +197,14 @@ public class Player : MonoBehaviour
     }
 
     //Decrement lives and update the GUI
-    public void DecrementLives(float damage)
+    public void DecrementLives(int damage)
     {
         if (PlayerDeadEvent != null)
         {
             PlayerDeadEvent();
         }
+
+        ScoreManager.instance.PlayerKilled(transform.position);
 
         if ((lives % 1 == 0) || ((lives - damage) > Mathf.FloorToInt(lives)))
         {
@@ -293,5 +296,7 @@ public class Player : MonoBehaviour
         lastLife = false;
 
         deadMenuScript.gameObject.SetActive(false);
+
+        ScoreManager.instance.RetryDone();
     }
 }
