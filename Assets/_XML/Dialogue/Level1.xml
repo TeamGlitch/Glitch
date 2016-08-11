@@ -46,7 +46,13 @@
       <T>But be careful, it doesn't last forever! Keep an eye on the bar under your lives. It indicates how much time left you have.</T>
       <T>The bar will start filling itself once the power is deactivated, so don't worry about that.</T>
 	  </Scene>
+    <EndMessage>
+      <Title>Level 1...Complete?</Title>
+      <Subtitle>Time for a boss!</Subtitle>
+    </EndMessage>
   </Set>
+  
+  
   <Set lang="Spanish">
     <Scene id="1">
       <T>[face=None][playermove=false]¡Bienvenido al reino alcachofa!</T>
@@ -72,5 +78,9 @@
       <T>¡Pero cuidado, que no dura para siempre! Fíjate en la barra bajo tus vidas. Te indica cuánto tiempo te queda.</T>
       <T>No te preocupes, la barra se irá rellenando sola cuando mientras el poder esté inactivo.</T>
     </Scene>
+    <EndMessage>
+      <Title>Nivel 1...¿Completado?</Title>
+      <Subtitle>¡A por el jefe!</Subtitle>
+    </EndMessage>
   </Set>
 </Dialogue>
