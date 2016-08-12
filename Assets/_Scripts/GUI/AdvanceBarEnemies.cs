@@ -71,6 +71,7 @@ public class AdvanceBarEnemies : MonoBehaviour {
     {
         if (state != endtimeState.LEVEL_COMPLETE && endPoint.enabled)
         {
+            ScoreManager.instance.SetBasePoints(player.items);
             ScoreManager.instance.SetTimes(maxTime, time);
             ScoreManager.instance.SetRemaniningLives(player.lives);
             state = endtimeState.LEVEL_COMPLETE;

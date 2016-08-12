@@ -167,7 +167,7 @@ public class Loader : MonoBehaviour {
     }
 
     //Loads a given scene.
-    //Level = The scene we're exiting was a level
+    //Level = The scene we're GOING TO is a level
     //Use interface = If active, the loading screen will be visible.
     //Is automatic = If inactive, the player will need to push any button to continue after it has finished loading to go to the next scene.
     //Allowed = If inactive, the next scene will load but an outside allowToFinish() call will be needed to go to the next scene.
@@ -177,7 +177,7 @@ public class Loader : MonoBehaviour {
 
             if (level)
             {
-                lastLevel = actualScene;
+                lastLevel = levelName;
                 ScoreManager.instance.RestartValues();
             }
 

@@ -85,7 +85,7 @@ public class PauseScript : MonoBehaviour {
 	public void menuPress()
 	{
 		Time.timeScale = 1.0f;
-        Loader.LoadScene("menu", true, false, true, true);
+        Loader.LoadScene("menu", false, false, true, true);
     }
 
     public void optionPress(){

@@ -164,7 +164,7 @@ public class DeadMenuScript : MonoBehaviour {
 
 	public void MenuPress()
 	{
-        Loader.LoadScene("menu", true, false, true, true);
+        Loader.LoadScene("menu", false, false, true, true);
 	}
 
     public void ContinuePress(){

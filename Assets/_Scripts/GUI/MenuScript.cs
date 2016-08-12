@@ -125,11 +125,11 @@ public class MenuScript : MonoBehaviour {
 
         if (Loader.getLastLevel() == "None")
         {
-            Loader.LoadScene("Level1", false);
+            Loader.LoadScene("Level1", true);
         }
         else
         {
-            Loader.LoadScene(Loader.getLastLevel(), false);
+            Loader.LoadScene(Loader.getLastLevel(), true);
         }
         
     }
@@ -154,7 +154,7 @@ public class MenuScript : MonoBehaviour {
         loadingText.gameObject.SetActive(true);
         SoundManager.instance.musicSource.Stop();
         onMainScreen = false;
-        Loader.LoadScene("Level1", false);
+        Loader.LoadScene("Level1", true);
     }
 
     public void LevelBossPress()
@@ -168,7 +168,7 @@ public class MenuScript : MonoBehaviour {
         loadingText.gameObject.SetActive(true);
         SoundManager.instance.musicSource.Stop();
         onMainScreen = false;
-        Loader.LoadScene("Boss Stage", false);
+        Loader.LoadScene("Boss Stage", true);
     }
 
     public void OptionsPress(){
