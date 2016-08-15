@@ -5,7 +5,7 @@ using System.Xml;
 
 public class PauseScript : MonoBehaviour {
 
-	public GameObject playerPowers;
+	public Player playerPowers;
 
 	public GameObject pauseMenu;
 	public Button resumeButton;
@@ -70,7 +70,7 @@ public class PauseScript : MonoBehaviour {
 	{
 		if (pauseMenu.activeInHierarchy)
 		{
-			playerPowers.SetActive (true);
+			playerPowers.enabled = true;
 			Time.timeScale = 1.0f;
             gameObject.SetActive(false);
 		}
@@ -110,17 +110,17 @@ public class PauseScript : MonoBehaviour {
 
     public void Pause()
     {
-        playerPowers.SetActive(true);
+        playerPowers.enabled = false;
         Time.timeScale = 0.0f;
         resumeButton.Select();
     }
 
     public bool Unpause()
     {
-        if (pauseMenu.active)
+        if (pauseMenu.activeSelf)
         {
             Time.timeScale = 1.0f;
-            playerPowers.SetActive(true);
+            playerPowers.enabled = true;
             return true;
         }
         

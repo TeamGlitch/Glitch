@@ -33,6 +33,7 @@ public class BossDialoguePoint : MonoBehaviour {
             {
                 readyForBattle = true;
                 used = false;
+                player.allowMovement = false;
             }
         }
 

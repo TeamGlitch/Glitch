@@ -34,8 +34,7 @@ public class Debris : MonoBehaviour {
             switch (mode)
             {
                 case debris_state.FALLING:
-                    yPos -= world.lag;
-                    transform.Translate(0.0f, yPos, 0.0f);
+                    transform.Translate(0.0f, -world.lag*30, 0.0f);
                     break;
             }
         }
