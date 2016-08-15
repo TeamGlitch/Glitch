@@ -168,7 +168,7 @@ public class MenuScript : MonoBehaviour {
         loadingText.gameObject.SetActive(true);
         SoundManager.instance.musicSource.Stop();
         onMainScreen = false;
-        Loader.LoadScene("Boss Stage", false);
+        Loader.LoadScene("BossStage", false);
     }
 
     public void OptionsPress(){

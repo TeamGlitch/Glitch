@@ -16,14 +16,12 @@ public class Debris : MonoBehaviour {
     private BoxCollider collider;
     private int rand;
     private Animator anim;
-    private float yPos;
     private Vector3 initPos;
 
     void Start()
     {
         collider = GetComponent<BoxCollider>();
         initPos = transform.localPosition;
-        yPos = initPos.y;
         anim = GetComponent<Animator>();
     }
 
@@ -51,11 +49,10 @@ public class Debris : MonoBehaviour {
 
     public void Restart()
     {
+        mode = debris_state.WAITING;
         collider.enabled = true;
-        yPos = initPos.y;
         anim.SetInteger("State", 0);
         transform.localPosition = initPos;
-        mode = debris_state.WAITING;
     }
 
     public void Fall()
