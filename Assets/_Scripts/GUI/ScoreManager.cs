@@ -57,7 +57,6 @@ public class ScoreManager : MonoBehaviour {
 
     public void RestartValues()
     {
-        print("ressetting");
 
         times_retry = 0;
         colectionables_taken = 0;
