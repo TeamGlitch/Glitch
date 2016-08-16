@@ -175,7 +175,7 @@ public class MenuScript : MonoBehaviour, LanguageListener {
         loadingText.gameObject.SetActive(true);
         SoundManager.instance.musicSource.Stop();
         onMainScreen = false;
-        Loader.LoadScene("Boss Stage", true);
+        Loader.LoadScene("BossStage", false);
     }
 
     public void OptionsPress(){

@@ -24,8 +24,10 @@ public class BossStageCamera : MonoBehaviour {
     public GameObject colliders;
     public Transform startPoint;
     public Player player;
+    public PlayerController playerCon;
     public camera_state mode = camera_state.WAITING;
 
+    private bool inZoom = false;
     private float zoomTime = 0;
     private Vector3 initialPosition;
     private Vector3 archerPosition;
@@ -78,6 +80,7 @@ public class BossStageCamera : MonoBehaviour {
 
                 if (zoomTime > maxZoomTime)
                 {
+                    playerCon.allowMovement = true;
                     mode = camera_state.WAITING;
                     zoomTime = 0.0f;
                 }
