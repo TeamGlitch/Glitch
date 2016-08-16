@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using InControl;
 using System.Xml;
 
-public class PauseScript : MonoBehaviour {
+public class PauseScript : MonoBehaviour, LanguageListener {
 
 	public GameObject playerPowers;
 
@@ -17,6 +17,12 @@ public class PauseScript : MonoBehaviour {
     void Start()
     {
         SetTexts();
+        Configuration.addLanguageListener(this);
+    }
+
+    void OnDestroy()
+    {
+        Configuration.removeLanguageListener(this);
     }
 
     public void SetTexts()
@@ -24,7 +30,7 @@ public class PauseScript : MonoBehaviour {
         XmlDocument xmlDoc = new XmlDocument();
         xmlDoc.LoadXml(XMLAsset.text);
 
-        XmlNodeList texts = xmlDoc.SelectNodes("/Dialogue/Set[@lang = \"" + Configuration.lang + "\"]/Group[@id = \"Pause\"]/UI");
+        XmlNodeList texts = xmlDoc.SelectNodes("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"Pause\"]/UI");
 
         string menuName;
         Transform menu, element;

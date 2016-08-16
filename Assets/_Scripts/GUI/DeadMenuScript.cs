@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Xml;
 
-public class DeadMenuScript : MonoBehaviour {
+public class DeadMenuScript : MonoBehaviour, LanguageListener {
 
 	private Canvas deadMenu;
 	private Button restartButton;
@@ -50,6 +50,11 @@ public class DeadMenuScript : MonoBehaviour {
     void Start()
     {
         SetTexts();
+        Configuration.addLanguageListener(this);
+    }
+    void OnDestroy()
+    {
+        Configuration.removeLanguageListener(this);
     }
 
     public void SetTexts()
@@ -57,7 +62,7 @@ public class DeadMenuScript : MonoBehaviour {
         XmlDocument xmlDoc = new XmlDocument();
         xmlDoc.LoadXml(XMLAsset.text);
 
-        XmlNodeList texts = xmlDoc.SelectNodes("/Dialogue/Set[@lang = \"" + Configuration.lang + "\"]/Group[@id = \"GameOver\"]/UI");
+        XmlNodeList texts = xmlDoc.SelectNodes("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"GameOver\"]/UI");
 
         string menuName;
         Transform menu, element;
@@ -96,7 +101,7 @@ public class DeadMenuScript : MonoBehaviour {
             }
         }
 
-        continueText = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.lang + "\"]/Group[@id = \"GameOver\"]/UI[@id = \"Dead Menu\"]/I[@id = \"Continue\"]").InnerText;
+        continueText = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"GameOver\"]/UI[@id = \"Dead Menu\"]/I[@id = \"Continue\"]").InnerText;
 
 
     }

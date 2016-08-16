@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Xml;
 
-public class AdvanceBarEnemies : MonoBehaviour {
+public class AdvanceBarEnemies : MonoBehaviour, LanguageListener {
 
     public enum endtimeState
     {
@@ -41,6 +41,12 @@ public class AdvanceBarEnemies : MonoBehaviour {
         slider.maxValue = maxTime;
         slider.minValue = 0.0f;
         state = endtimeState.NOT_MOVING;
+        Configuration.addLanguageListener(this);
+    }
+
+    void OnDestroy()
+    {
+        Configuration.removeLanguageListener(this);
     }
 
     public void SetTexts()
@@ -48,7 +54,7 @@ public class AdvanceBarEnemies : MonoBehaviour {
         XmlDocument xmlDoc = new XmlDocument();
         xmlDoc.LoadXml(XMLAsset.text);
 
-        XmlNode texts = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.lang + "\"]/Group[@id = \"LevelComplete\"]/UI[@id = \"LevelComplete\"]/I[@id = \"LevelCompleteText\"]");
+        XmlNode texts = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"LevelComplete\"]/UI[@id = \"LevelComplete\"]/I[@id = \"LevelCompleteText\"]");
         levelCompleteText.text = texts.InnerText;
 
     }

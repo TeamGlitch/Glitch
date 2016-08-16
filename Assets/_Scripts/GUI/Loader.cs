@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using System.Xml;
 
-public class Loader : MonoBehaviour {
+public class Loader : MonoBehaviour, LanguageListener {
 
     public static Loader instance = null;       //Singleton instance
     public TextAsset XMLAsset;
@@ -55,7 +55,14 @@ public class Loader : MonoBehaviour {
             Destroy(gameObject);
         }
 
+        Configuration.addLanguageListener(this);
+
 	}
+
+    void OnDestroy()
+    {
+        Configuration.removeLanguageListener(this);
+    }
 
     void Update(){
 
@@ -147,12 +154,12 @@ public class Loader : MonoBehaviour {
 
     }
 
-    public void loadPhrases()
+    public void SetTexts()
     {
         XmlDocument xmlDoc = new XmlDocument();
         xmlDoc.LoadXml(XMLAsset.text);
 
-        XmlNodeList texts = xmlDoc.SelectNodes("/Dialogue/Set[@lang = \"" + Configuration.lang + "\"]/T");
+        XmlNodeList texts = xmlDoc.SelectNodes("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/T");
 
         phrases = new string[texts.Count];
 
@@ -162,8 +169,8 @@ public class Loader : MonoBehaviour {
             phrases[i] = texts[i].InnerText;
         }
 
-        Tloading = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.lang + "\"]/I[@id=\"loading\"]").InnerText;
-        TpressAnyButton = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.lang + "\"]/I[@id=\"continue\"]").InnerText;
+        Tloading = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/I[@id=\"loading\"]").InnerText;
+        TpressAnyButton = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/I[@id=\"continue\"]").InnerText;
     }
 
     //Loads a given scene.
