@@ -12,6 +12,7 @@ public class Debris : MonoBehaviour {
     public debris_state mode = debris_state.WAITING;
     public AudioClip impact;
     public World world;
+    public BossArcherIA boss;
 
     private BoxCollider collider;
     private int rand;
