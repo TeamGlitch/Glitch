@@ -24,19 +24,37 @@
 	  </Scene>
 	  <Scene id="1">
 		  <T>[face=Bug][playermove=false]Hey watchout, Glitch!</T>
-		  <T>There is the archer hero, and she seems to be pretty angry...</T>
+		  <T>There is the archer, and she seems to be pretty angry...</T>
 		  <T>[face=Archer]Your path ends here. You aren't a hero, system error!!</T>
 		  <T>[face=Glitch]What!? Bug, did you hear that? I dare you to say it again!</T>
 		  <T>[face=Bug]Try to glitch her through the roots!</T>
 	  </Scene>
+    <Scene id="2">
+		  <T>[face=Bug][playermove=false]Glitch her now!!</T>
+	  </Scene>
+    <Scene id="3">
+		  <T>[face=Archer][playermove=false]Co..ngtras.. congrats. You deffffbff.. DEFEAT me. ¡¡But you wwiiii.. iillll faaallll with me!!</T>
+      <T>[face=Glitch]I'm sorry archer, but this time i'll be the hero.</T>
+      <T>[face=Bug]¡Glitch! Let's get out of here before the tree ends with us.</T>
+      <T>[face=Glitch]Maybe we'll see in another game, archer. Let's go, Bug!</T>
+	  </Scene>
   </Set>
   <Set lang="Spanish">
     <Scene id="1">
-      <T>[face=Bug][playermove=false]Cuidado, Glitch!</T>
-      <T>¡Ahí está la heroína arquera! Y parece que se ha levantado con el pie izquierdo.</T>
-      <T>[face=Archer]Vuestro camino termina aquí. ¡Abandonad vuestros delirios de heroísmo, error del sistema!</T>
-      <T>[face=Glitch]¿¡Que!? Bug, ¿lo has oido? ¡Atrévete a repetir eso!</T>
+      <T>[face=Bug][playermove=false]¡Cuidado, Glitch!</T>
+      <T>¡Ahí está la arquera! Y parece que se ha levantado con el pie izquierdo...</T>
+      <T>[face=Archer]Vuestro camino termina aquí. ¡Abandona tus delirios de heroísmo, error del sistema!</T>
+      <T>[face=Glitch]¿¡Que!? Bug, ¿la has oido? ¡Atrévete a repetir eso!</T>
       <T>[face=Bug]¡Trata de glitchearla a través de las ramas!</T>
+    </Scene>
+    <Scene id="2">
+      <T>[face=Bug][playermove=false]Glitcheala ahora!!</T>
+    </Scene>
+    <Scene id="3">
+      <T>[face=Archer][playermove=false]En..enhorbus.. enhorabuena. Me has vvvbvvb.. VENCIDO. ¡¡Pero caerrrrrrr.. ás connnmigggo aqui!!</T>
+      <T>[face=Glitch]Lo siento Arquera, pero esta vez yo seré el héroe.</T>
+      <T>[face=Bug]¡Glitch! Vamonos de aqui antes de que el arbol acabe con nosotros.</T>
+      <T>[face=Glitch]Quizas nos veamos en otra partida, arquera. ¡Vamonos Bug!</T>
     </Scene>
   </Set> 
 </Dialogue>
