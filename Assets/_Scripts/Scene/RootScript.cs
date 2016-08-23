@@ -39,9 +39,9 @@ public class RootScript : MonoBehaviour {
         }
     }
 
-    void OnCollisionEnter(Collision coll)
+    void OnTriggerEnter(Collider coll)
     {
-        if (!coll.collider.CompareTag("Player"))
+        if (!coll.CompareTag("Player"))
         {
             if (horizontal)
             {
@@ -107,42 +107,45 @@ public class RootScript : MonoBehaviour {
     }
 
 	void Update () {
-        if (!stop)
+        if (world.doUpdate)
         {
-            if (horizontal)
+            if (!stop)
             {
-                if (toLeft)
+                if (horizontal)
                 {
-                    if (!right)
+                    if (toLeft)
                     {
-                        transform.Translate(world.lag * 10, 0.0f, 0.0f);
+                        if (!right)
+                        {
+                            transform.Translate(world.lag * 10, 0.0f, 0.0f);
+                        }
+                        else
+                        {
+                            transform.Translate(-world.lag * 50, 0.0f, 0.0f);
+                        }
                     }
                     else
                     {
-                        transform.Translate(-world.lag * 50, 0.0f, 0.0f);
+                        if (!right)
+                        {
+                            transform.Translate(world.lag * 50, 0.0f, 0.0f);
+                        }
+                        else
+                        {
+                            transform.Translate(-world.lag * 10, 0.0f, 0.0f);
+                        }
                     }
                 }
                 else
                 {
-                    if (!right)
+                    if (down)
                     {
-                        transform.Translate(world.lag * 50, 0.0f, 0.0f);
+                        transform.Translate(0.0f, -world.lag * 30, 0.0f);
                     }
                     else
                     {
-                        transform.Translate(-world.lag * 10, 0.0f, 0.0f);
+                        transform.Translate(0.0f, world.lag * 10, 0.0f);
                     }
-                }
-            }
-            else
-            {
-                if (down)
-                {
-                    transform.Translate(0.0f, -world.lag * 30, 0.0f);
-                }
-                else
-                {
-                    transform.Translate(0.0f, world.lag * 10, 0.0f);
                 }
             }
         }
