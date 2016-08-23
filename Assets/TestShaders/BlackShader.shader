@@ -55,7 +55,7 @@
 				if(percentage < 0.05)
 				{
 					float blackValue = (0.05 - percentage) / 0.05;
-					blackValue /= 3;
+					blackValue /= 2.5;
 					col -= fixed4(blackValue, blackValue, blackValue, blackValue);
 				}
 
