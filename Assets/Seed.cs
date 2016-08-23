@@ -8,7 +8,7 @@ public class Seed : MonoBehaviour {
 
     private Vector3 initPos;
 
-	void Start ()
+	void Awake ()
     {
         initPos = transform.position;
 	}
