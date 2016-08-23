@@ -20,6 +20,11 @@ public class ScoreScene : MonoBehaviour {
         HEARTS_REMOVE_2,
         HEARTS_REMOVE_3,
         HEARTS_REMOVED,
+        ITEM_SHOW,
+        ITEM_REMOVE_1,
+        ITEM_REMOVE_2,
+        ITEM_REMOVE_3,
+        ITEMS_REMOVED,
         SCORE_SHOWING,
         GLITCH_WALKING,
         LOADING_LEVEL
@@ -39,6 +44,12 @@ public class ScoreScene : MonoBehaviour {
     public Image thirdHeart;
     private Sprite emptyHeart;
     public Text heartText;
+
+    public Image firstItem;
+    public Image secondItem;
+    public Image thirdItem;
+    private Sprite fullItem;
+    public Text itemText;
 
     //BUTTON REFERENCES
     public Button continueButton;
@@ -72,6 +83,12 @@ public class ScoreScene : MonoBehaviour {
         secondHeart.enabled = false;
         thirdHeart.enabled = false;
         heartText.text = "";
+
+        firstItem.enabled = false;
+        secondItem.enabled = false;
+        thirdItem.enabled = false;
+        itemText.text = "";
+
 
         state = scoreState.START;
         continueButton.Select();
@@ -245,7 +262,101 @@ public class ScoreScene : MonoBehaviour {
                 break;
 
             case scoreState.HEARTS_REMOVE_3:
-                timeOut(1.0f, scoreState.HEARTS_REMOVED);
+                timeOut(0.7f, scoreState.HEARTS_REMOVED);
+                break;
+
+            case scoreState.HEARTS_REMOVED:
+                if (timeOut(0.0f, scoreState.ITEM_SHOW))
+                {
+                    firstItem.enabled = true;
+                    secondItem.enabled = true;
+                    thirdItem.enabled = true;
+
+                    emptyHeart = thirdItem.sprite;
+                    fullItem = firstItem.sprite;
+
+                    if (ScoreManager.instance.getColectionablesTaken() < 1)
+                        firstItem.sprite = emptyHeart;
+                    if (ScoreManager.instance.getColectionablesTaken() < 2)
+                        secondItem.sprite = emptyHeart;
+                    if (ScoreManager.instance.getColectionablesTaken() > 2)
+                        thirdItem.sprite = fullItem;
+
+                    itemText.text = "x 1.0";
+                    itemText.fontSize = 15;
+                }
+
+                break;
+
+            case scoreState.ITEM_SHOW:
+                if (timeOut(0.7f, scoreState.ITEM_REMOVE_1))
+                {
+                    ScoreManager.instance.calculatePoints();
+
+                    if (ScoreManager.instance.getColectionablesTaken() > 0)
+                    {
+                        itemText.text = "x 1.5";
+                        itemText.fontSize = 20;
+
+                        if (ScoreManager.instance.getColectionablesTaken() == 3)
+                            thirdItem.sprite = emptyHeart;
+                        else if (ScoreManager.instance.getColectionablesTaken() == 2)
+                            secondItem.sprite = emptyHeart;
+                        else if (ScoreManager.instance.getColectionablesTaken() == 1)
+                            firstItem.sprite = emptyHeart;
+                    }
+                    else
+                    {
+                        state = scoreState.ITEMS_REMOVED;
+                    }
+                }
+                break;
+
+            case scoreState.ITEM_REMOVE_1:
+                if (timeOut(0.7f, scoreState.ITEM_REMOVE_2))
+                {
+                    if (ScoreManager.instance.getColectionablesTaken() > 1)
+                    {
+                        itemText.text = "x 2.5";
+                        itemText.fontSize = 27;
+
+                        if (ScoreManager.instance.getColectionablesTaken() == 3)
+                            secondItem.sprite = emptyHeart;
+                        else if (ScoreManager.instance.getColectionablesTaken() == 2)
+                            firstItem.sprite = emptyHeart;
+                    }
+                    else
+                    {
+                        state = scoreState.ITEMS_REMOVED;
+                    }
+                }
+                break;
+
+            case scoreState.ITEM_REMOVE_2:
+                if (timeOut(0.7f, scoreState.ITEM_REMOVE_3))
+                {
+                    if (ScoreManager.instance.getColectionablesTaken() > 2)
+                    {
+                        itemText.text = "x 4.0";
+                        itemText.fontSize = 40;
+                        firstItem.sprite = emptyHeart;
+                    }
+                    else
+                    {
+                        state = scoreState.ITEMS_REMOVED;
+                    }
+                }
+                break;
+
+            case scoreState.ITEM_REMOVE_3:
+                timeOut(0.7f, scoreState.ITEMS_REMOVED);
+                break;
+
+            case scoreState.ITEMS_REMOVED:
+                if (timeOut(0.0f, scoreState.ITEMS_REMOVED))
+                {
+                }
+
                 break;
 
             //case scoreState.SCORE_SHOWING:

@@ -338,9 +338,9 @@ public class ScoreManager : MonoBehaviour {
         base_points = 80;
         total_time = 600;
         time_spent = 435;
-        remaining_lives = 2;
+        remaining_lives = 3;
         times_retry = 1;
-        colectionables_taken = 2;
+        colectionables_taken = 3;
         num_enemies = 7;
         enemies_defeated = 7;
         checkpoint_used = false;
