@@ -49,6 +49,23 @@ public class Configuration : MonoBehaviour {
 
         AudioConfiguration config = AudioSettings.GetConfiguration();
 
+        int speakersMode = 0;
+
+        if (AudioSettings.speakerMode == AudioSpeakerMode.Mono)
+            speakersMode = 0;
+        else if (AudioSettings.speakerMode == AudioSpeakerMode.Stereo)
+            speakersMode = 1;
+        else if (AudioSettings.speakerMode == AudioSpeakerMode.Quad)
+            speakersMode = 2;
+        else if (AudioSettings.speakerMode == AudioSpeakerMode.Surround)
+            speakersMode = 3;
+        else if (AudioSettings.speakerMode == AudioSpeakerMode.Mode5point1)
+            speakersMode = 4;
+        else if (AudioSettings.speakerMode == AudioSpeakerMode.Mode7point1)
+            speakersMode = 5;
+        else if (AudioSettings.speakerMode == AudioSpeakerMode.Prologic)
+            speakersMode = 6;
+
         System.IO.File.WriteAllLines("config.xml", new string[] {
             "<!--?xml version=”1.0” encoding=”UTF-8”?-->",
             "<!--?xml version=”1.0” encoding=”UTF-8”?-->",
@@ -57,7 +74,7 @@ public class Configuration : MonoBehaviour {
             "<music>" + SoundManager.instance.musicSource.volume + "</music>",
             "<sfx>" + SoundManager.instance.efxSources[0].volume + "</sfx>",
             "<pan>" + SoundManager.instance.musicSource.panStereo + "</pan>",
-            "<mode>" + config.speakerMode + "</mode>",
+            "<mode>" + speakersMode + "</mode>",
             "</confg>"
             });
     }
