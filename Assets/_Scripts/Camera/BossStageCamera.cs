@@ -94,6 +94,7 @@ public class BossStageCamera : MonoBehaviour {
                 {
                     mode = camera_state.WAITING;
                     zoomTime = 0.0f;
+                    player.isInZoom = false;
                 }
                 break;
 
@@ -130,6 +131,7 @@ public class BossStageCamera : MonoBehaviour {
                 {
                     mode = camera_state.WAITING;
                     zoomTime = 0.0f;
+                    player.isInZoom = false;
                 }
                 break;
         }
@@ -146,6 +148,7 @@ public class BossStageCamera : MonoBehaviour {
     {
         mode = camera_state.ZOOM_OUT;
         colliders.SetActive(false);
+        player.isInZoom = true;
     }
 
     public void ZoomArcherIn()
@@ -153,6 +156,7 @@ public class BossStageCamera : MonoBehaviour {
         archerPosition = archer.transform.position;
         playerRigid.isKinematic = true;
         playerCollider.isTrigger = true;
+        player.isInZoom = true;
         mode = camera_state.ZOOM_IN_ARCHER;
     }
 

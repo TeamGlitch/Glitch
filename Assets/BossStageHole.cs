@@ -11,7 +11,7 @@ public class BossStageHole : MonoBehaviour
 
     void OnTriggerStay(Collider coll)
     {
-        if (coll.CompareTag("Player") && boss.holesActivated)
+        if (coll.CompareTag("Player") && boss.holesActives)
         {
             if (player.playerMovingType == PlayerController.moving_type.GOING_LEFT)
             {

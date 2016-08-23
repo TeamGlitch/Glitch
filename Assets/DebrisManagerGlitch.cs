@@ -6,10 +6,12 @@ public class DebrisManagerGlitch : MonoBehaviour {
     public Debris[] debris;
     public CameraShake shake;
     public AudioClip fall;
+    public BossArcherIA boss;
 
     private int rand1;
     private int rand2;
     private int rand3;
+    private float rand;
 
     public void Fall()
     {
@@ -34,7 +36,15 @@ public class DebrisManagerGlitch : MonoBehaviour {
         shake.shakeIt = true;
 
         SoundManager.instance.PlaySingle(fall);
-        Invoke("Fall", 10.0f);
+        if (boss.lives == 0) 
+        {
+            rand = Random.Range(2.0f, 6.0f);
+            Invoke("Fall", rand);
+        }
+        else
+        {
+            Invoke("Fall", 10.0f);
+        }
     }
 
     public void ArcherDead()

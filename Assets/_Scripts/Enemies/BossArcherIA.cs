@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using InControl;
 
 public class BossArcherIA : MonoBehaviour
 {
@@ -53,14 +54,15 @@ public class BossArcherIA : MonoBehaviour
     public AudioClip scream;
     public DebrisManagerGlitch glitchDebris;        // Debris in "z" of Glitch
     public float horizontalVelocity = 10.0f;
-    public Door door;
     public bool start = false;
     public float timeInPreShoot = 2.0f;
     public float timeInPostShoot = 2.0f;
-    public bool holesActivated = false;
+    public bool holesActives = false;
     private float timeSinceStateChanged;
     [SerializeField]
     private bool movingRight = true;
+    public GameObject glitchCollider;
+    public GameObject glitchDialogue;
 
     [SerializeField]
     private bossArcherIA bossState;
@@ -183,6 +185,7 @@ public class BossArcherIA : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (slowFPSactivated && (bossState == bossArcherIA.JUMPING || bossState == bossArcherIA.FALLING_JUMP))
         {
             animator.speed = 0.5f;
@@ -477,12 +480,13 @@ public class BossArcherIA : MonoBehaviour
                 camera.ZoomOut();
                 glitchDebris.ArcherDead();
                 bossState = bossArcherIA.DEAD;
-                door.OpenDoor();
+                glitchDialogue.SetActive(true);
+                glitchCollider.SetActive(true);
             }
             else if (lives == 1)
             {
                 heart2.sprite = heartEmpty;
-                holesActivated = true;
+                holesActives = true;
                 camera.ZoomArcherIn();
                 timeInPreShoot = 0f;
                 timeInPostShoot = 0f;
@@ -492,7 +496,7 @@ public class BossArcherIA : MonoBehaviour
             else if (lives == 2)
             {
                 heart3.sprite = heartEmpty;
-                holesActivated = true;
+                holesActives = true;
                 camera.ZoomArcherIn();
                 animator.SetTrigger("Hitted");
                 bossState = bossArcherIA.HITTED;
@@ -500,7 +504,7 @@ public class BossArcherIA : MonoBehaviour
             else if (lives == 3)
             {
                 heart4.sprite = heartEmpty;
-                holesActivated = true;
+                holesActives = true;
                 camera.ZoomArcherIn();
                 timeInPreShoot = 1f;
                 timeInPostShoot = 1f;
@@ -511,7 +515,7 @@ public class BossArcherIA : MonoBehaviour
             else if (lives == 4)
             {
                 heart5.sprite = heartEmpty;
-                holesActivated = true;
+                holesActives = true;
                 camera.ZoomArcherIn();
                 animator.SetTrigger("Hitted");
                 bossState = bossArcherIA.HITTED;
@@ -528,7 +532,7 @@ public class BossArcherIA : MonoBehaviour
             currentSpecialSpeed = 3f;
 
         camera.ZoomArcherOut();
-        holesActivated = false;
+        holesActives = false;
         int random;
         switch (bossPos)
         {

@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
     public int items = 0;                       // Items collected
 
     // State
+    public bool isInZoom = false;                                   // Variable from bossStage, if stage is in zoom he can't die
     private bool moveToCheckpoint = false;                          // If it's moving to the last checkpoint
     private Vector3 speedToCheckpoint = new Vector3(0, 0, 0);       // Speed vector to the checkpoint
     private float stopMoving;                                       // When to stop moving
@@ -87,7 +88,10 @@ public class Player : MonoBehaviour
         //If there's a collision with some lethal thing in scene
         if (coll.gameObject.CompareTag("Death"))
         {
-            DecrementLives(1);
+            if (!isInZoom && !moveToCheckpoint)
+            {
+                DecrementLives(1);
+            }
         }
     }
 
@@ -96,7 +100,10 @@ public class Player : MonoBehaviour
         //If there's a collision with some lethal thing in scene
         if (coll.gameObject.CompareTag("Death"))
         {
-            DecrementLives(1);
+            if (!isInZoom && !moveToCheckpoint)
+            {
+                DecrementLives(1);
+            }
         }
     }
 
