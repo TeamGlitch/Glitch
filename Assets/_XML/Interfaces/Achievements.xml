@@ -1,0 +1,65 @@
+﻿<!--?xml version=”1.0” encoding=”UTF-8”?-->
+<!--?xml version=”1.0” encoding=”UTF-8”?-->
+<Dialogue>
+  <Set lang="English">
+    <Achievement id="Pacifist">
+      <Name>Pacifist</Name>
+      <Descr>Don't kill anyone</Descr>
+    </Achievement>
+    <Achievement id="Genocide">
+      <Name>Genocide</Name>
+      <Descr>Kill everyone</Descr>
+    </Achievement>
+    <Achievement id="Permadeath">
+      <Name>Permadeath</Name>
+      <Descr>Don't use any checkpoint</Descr>
+    </Achievement>
+    <Achievement id="GodMode">
+      <Name>God Mode</Name>
+      <Descr>Don't lose a single life</Descr>
+    </Achievement>
+    <Achievement id="Combo">
+      <Name>Combo</Name>
+      <Descr>Kill two enemies in less than 5 seconds</Descr>
+    </Achievement>
+    <Achievement id="Jinxed">
+      <Name>Jinxed</Name>
+      <Descr>Die twice in the same spot</Descr>
+    </Achievement>
+    <Achievement id="Lag">
+      <Name>LAAAAAGGGG</Name>
+      <Descr>Use slow-FPS for more than 20 seconds</Descr>
+    </Achievement>
+  </Set>
+  
+  <Set lang="Spanish">
+    <Achievement id="Pacifist">
+      <Name>Pacifista</Name>
+      <Descr>No mates a nadie</Descr>
+    </Achievement>
+    <Achievement id="Genocide">
+      <Name>Genocida</Name>
+      <Descr>Mata a todo el mundo</Descr>
+    </Achievement>
+    <Achievement id="Permadeath">
+      <Name>Permadeath</Name>
+      <Descr>No uses ningún punto de control</Descr>
+    </Achievement>
+    <Achievement id="GodMode">
+      <Name>Modo dios</Name>
+      <Descr>No pierdas ni una vida</Descr>
+    </Achievement>
+    <Achievement id="Combo">
+      <Name>Combo</Name>
+      <Descr>Mata dos enemigos en menos de 5 segundos</Descr>
+    </Achievement>
+    <Achievement id="Jinxed">
+      <Name>Gafe</Name>
+      <Descr>Muere dos veces en el mismo sitio</Descr>
+    </Achievement>
+    <Achievement id="Lag">
+      <Name>LAAAAAGGGG</Name>
+      <Descr>Usa el bajón de FPS durante más de 20 segundos</Descr>
+    </Achievement>
+  </Set>
+</Dialogue>
