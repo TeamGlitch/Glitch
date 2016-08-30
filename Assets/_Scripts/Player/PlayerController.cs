@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
 	public float maxJumpTime = 0.25f;			// Max time a jump can be extended
     public float jumpForce = 700.0f;				// Base jump speed
     private float timePreparingJump = 0.0f;
+    public float maxTimeSticked = 2.0f;
 
     public float maxSpeedInAir = 20.0f;
     public float decreaseSpeedWhenIdle = 1.0f;
@@ -85,6 +86,7 @@ public class PlayerController : MonoBehaviour
     private float timeSinceChangeMoving;
     private bool moveToRight = true;
     private bool playerIsMoving = false;
+    private bool playerJumpingInSticked = false;
 
 	private bool previouslySticked = false;
 
@@ -289,9 +291,13 @@ public class PlayerController : MonoBehaviour
 
 			case player_state.STICKED:
 				previouslySticked = true;
-				if (InputManager.ActiveDevice.Action1.WasPressed) {
+                timeSinceChangeMoving += Time.deltaTime;
 
-					rigidBody.useGravity = true;
+                if (InputManager.ActiveDevice.Action1.IsPressed && !playerJumpingInSticked) {
+
+                    playerJumpingInSticked = true;
+
+                    rigidBody.useGravity = true;
 					rigidBody.AddForce(new Vector3(0.0f, jumpForce, 0.0f));
 					rigidBody.velocity = new Vector3 (4f, -directionStickObject.x * rigidBody.velocity.y, 0.0f);
 					
@@ -302,7 +308,23 @@ public class PlayerController : MonoBehaviour
 
 					state = player_state.JUMPING;
 				}
-				break;
+                else if(timeSinceChangeMoving > maxTimeSticked)
+                {
+                    rigidBody.useGravity = true;
+                    playerJumpingInSticked = false;
+
+                    velocityWhenChangedState = 0f;
+                    timeToChangeDependingVelocity = 1f;
+                    timeSinceChangeMoving = 0.0f;
+                    playerMovingType = moving_type.STOPING;
+
+                    state = player_state.JUMPING;
+                }
+                else if(playerJumpingInSticked && !InputManager.ActiveDevice.Action1.IsPressed)
+                {
+                    playerJumpingInSticked = false;
+                }
+                break;
         }
 
         //If a player-induced jump is checked but the jump key is not longer
@@ -556,11 +578,17 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
-	public void getSticked(Vector3 directionStick){
+	public void GetSticked(Vector3 directionStick){
 		state = player_state.STICKED;
-		rigidBody.useGravity = false;
+        timeSinceChangeMoving = 0.0f;
+        rigidBody.useGravity = false;
 		rigidBody.velocity = new Vector3(0, 0, 0);
-		directionStickObject = directionStick;
+        if (InputManager.ActiveDevice.Action1.IsPressed)
+            playerJumpingInSticked = true;
+        else
+            playerJumpingInSticked = false;
+
+        directionStickObject = directionStick;
 	}
 
     private bool IsGrounded()
