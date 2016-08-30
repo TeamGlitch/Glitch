@@ -33,10 +33,10 @@
 		  <T>[face=Bug][playermove=false]Glitch her now!!</T>
 	  </Scene>
     <Scene id="3">
-		  <T>[face=Archer][playermove=false]Co..ngtras.. congrats. You deffffbff.. DEFEAT me. ¡¡But you wwiiii.. iillll faaallll with me!!</T>
-      <T>[face=Glitch]I'm sorry archer, but this time i'll be the hero.</T>
-      <T>[face=Bug]Glitch!! Let's get out of here before the tree ends with us.</T>
-      <T>[face=Glitch]Maybe we'll see in another game, archer. Let's go, Bug!</T>
+		  <T>[face=Archer][playermove=false]Co..ngtrat.. congratulations. You deffffbff.. DEFEATED me. ¡¡But you sssh.. all faaallll with me!!</T>
+      <T>[face=Glitch]I'm sorry archer, but this time I'll be the hero.</T>
+      <T>[face=Bug]Glitch!! Let's get out of here, the tree is collapsing!</T>
+      <T>[face=Glitch]Maybe we'll meet again in another game, archer. Let's go, Bug!</T>
 	  </Scene>
   </Set>
   <Set lang="Spanish">
@@ -51,10 +51,10 @@
       <T>[face=Bug][playermove=false]Glitcheala ahora!!</T>
     </Scene>
     <Scene id="3">
-      <T>[face=Archer][playermove=false]En..enhorbus.. enhorabuena. Me has vvvbvvb.. VENCIDO. ¡¡Pero caerrrrrrr.. ás connnmigggo aqui!!</T>
-      <T>[face=Glitch]Lo siento Arquera, pero esta vez yo seré el héroe.</T>
-      <T>[face=Bug]¡Glitch! Vamonos de aqui antes de que el arbol acabe con nosotros.</T>
-      <T>[face=Glitch]Quizas nos veamos en otra partida, arquera. ¡Vamonos Bug!</T>
+      <T>[face=Archer][playermove=false]En..enhorbus.. enhorabuena. Me has vvvbvvb.. VENCIDO. ¡¡Pero caerrrrrrr.. ás aquí connnmigggo !!</T>
+      <T>[face=Glitch]Lo siento arquera, pero esta vez yo seré el héroe.</T>
+      <T>[face=Bug]¡Glitch! Vámonos de aquí antes de que el arbol acabe con nosotros!</T>
+      <T>[face=Glitch]Quizás nos veamos en otra partida, arquera. ¡Vámonos Bug!</T>
     </Scene>
   </Set> 
 </Dialogue>
