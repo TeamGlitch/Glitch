@@ -3,8 +3,9 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Xml;
+using InControl;
 
-public class ScoreScene : MonoBehaviour {
+public class ScoreScene : MonoBehaviour, LanguageListener {
 
     public enum scoreState
     {
@@ -38,14 +39,22 @@ public class ScoreScene : MonoBehaviour {
     public TextAsset XMLInterface;
     public TextAsset XMLAchievements;
 
+    private bool skip;
+
     //UI REFERENCES
     public Text finalPoints;
+    private float goalPoints = 0;
+    private float actualPoints = 0;
 
     public Text pointsMultiplier;
     public Text pointsValue;
 
     public Text timeMultiplier;
     public Text timeValue;
+    public RectTransform sandMask;
+    private float maxTotal;
+    public RectTransform corruptionMask;
+    private float maxConsumed;
 
     public Image firstHeart;
     public Image secondHeart;
@@ -90,8 +99,21 @@ public class ScoreScene : MonoBehaviour {
         pointsMultiplier.text = "";
         pointsValue.text = "";
 
+        //Time
+
         timeMultiplier.text = "";
         timeValue.text = "";
+
+        maxTotal = sandMask.offsetMax.y;
+        maxConsumed = corruptionMask.offsetMax.y;
+
+        float percentSpent = ScoreManager.instance.getTimeSpent() / ScoreManager.instance.getTotalTime();
+        float percentLeft = 1 - percentSpent;
+
+        sandMask.offsetMax = new Vector2(sandMask.offsetMax.x, maxTotal * percentLeft);
+        corruptionMask.offsetMax = new Vector2(corruptionMask.offsetMax.x, maxConsumed - (maxConsumed * percentSpent));
+
+        //-Time
 
         firstHeart.enabled = false;
         secondHeart.enabled = false;
@@ -107,15 +129,80 @@ public class ScoreScene : MonoBehaviour {
         medals = new List<RectTransform>();
 
         state = scoreState.START;
-        continueButton.Select();
 
+        SetTexts();
+        Configuration.addLanguageListener(this);
+
+        continueButton.gameObject.SetActive(false);
+        retryButton.gameObject.SetActive(false);
+        menuButton.gameObject.SetActive(false);
 
         timeLastState = Time.time;
 
 	}
-	
+
+    void OnDestroy()
+    {
+        Configuration.removeLanguageListener(this);
+    }
+
+    public void SetTexts()
+    {
+        XmlDocument xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(XMLInterface.text);
+
+        continueButton.gameObject.GetComponent<Text>().text = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"Score\"]/UI[@id = \"Score\"]/I[@id = \"Continue\"]").InnerText;
+        retryButton.gameObject.GetComponent<Text>().text = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"Score\"]/UI[@id = \"Score\"]/I[@id = \"Retry\"]").InnerText;
+        menuButton.gameObject.GetComponent<Text>().text = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"Score\"]/UI[@id = \"Score\"]/I[@id = \"Return\"]").InnerText;
+    }
+
 	// Update is called once per frame
 	void Update () {
+
+        if (InputManager.ActiveDevice.AnyButton.WasPressed && 
+            state != scoreState.SCORE_SHOWING && 
+            state != scoreState.GLITCH_WALKING && 
+            state != scoreState.LOADING_LEVEL)
+        {
+            skip = true;
+            print("skippea");
+        }
+        else
+        {
+            skip = false;
+        }
+
+        if (actualPoints < goalPoints)
+        {
+            float increase = (goalPoints - actualPoints) * Time.deltaTime;
+
+            if (increase < 200 * Time.deltaTime)
+                increase = 200 * Time.deltaTime;
+
+            actualPoints += increase;
+
+            if (actualPoints > goalPoints)
+                actualPoints = goalPoints;
+
+            finalPoints.text = string.Format("{0:#,###0.#}", Mathf.Round(actualPoints));
+        }
+        else if (actualPoints > goalPoints)
+        {
+            float decrease = (actualPoints - goalPoints) * Time.deltaTime;
+
+            if (decrease < 200 * Time.deltaTime)
+                decrease = 200 * Time.deltaTime;
+
+            actualPoints -= decrease;
+
+            if (actualPoints < goalPoints)
+                actualPoints = goalPoints;
+
+            finalPoints.text = string.Format("{0:#,###0.#}", Mathf.Round(actualPoints));
+        }
+
+        do
+        {
 
         switch(state)
         {
@@ -138,6 +225,7 @@ public class ScoreScene : MonoBehaviour {
                     pointsValue.text = "0";
                     desiredValue = ScoreManager.instance.getPoints();
                     actualValue = 0;
+                    goalPoints = desiredValue;
                 }
                 break;
 
@@ -155,7 +243,6 @@ public class ScoreScene : MonoBehaviour {
                     }
 
                     pointsValue.text = (int)actualValue + "";
-                    finalPoints.text = pointsValue.text;
 
                 }
                 else
@@ -184,6 +271,7 @@ public class ScoreScene : MonoBehaviour {
                     timeValue.text = "x 0";
                     desiredValue = ScoreManager.instance.calculatePoints();
                     actualValue = 0;
+                    goalPoints = ScoreManager.instance.getPoints();
                 }
                 break;
 
@@ -201,6 +289,15 @@ public class ScoreScene : MonoBehaviour {
                     }
 
                     timeValue.text = "x " + roundToTwo(actualValue);
+
+                    float percentSpent = ScoreManager.instance.getTimeSpent() / ScoreManager.instance.getTotalTime();
+                    float percentLeft = 1 - percentSpent;
+                    percentSpent += ((actualValue / desiredValue) * percentLeft);
+                    percentLeft = 1 - percentSpent;
+
+                    sandMask.offsetMax = new Vector2(sandMask.offsetMax.x, maxTotal * percentLeft);
+                    corruptionMask.offsetMax = new Vector2(corruptionMask.offsetMax.x, maxConsumed - (maxConsumed * percentSpent));
+
                 }
                 else
                 {
@@ -231,6 +328,7 @@ public class ScoreScene : MonoBehaviour {
                 if (timeOut(0.7f, scoreState.HEARTS_REMOVE_1))
                 {
                     ScoreManager.instance.calculatePoints();
+                    goalPoints = ScoreManager.instance.getPoints();
 
                     if (ScoreManager.instance.getRemainingLives() == 3)
                         thirdHeart.sprite = emptyHeart;
@@ -308,6 +406,7 @@ public class ScoreScene : MonoBehaviour {
                 if (timeOut(0.7f, scoreState.ITEM_REMOVE_1))
                 {
                     ScoreManager.instance.calculatePoints();
+                    goalPoints = ScoreManager.instance.getPoints();
 
                     if (ScoreManager.instance.getColectionablesTaken() > 0)
                     {
@@ -372,8 +471,9 @@ public class ScoreScene : MonoBehaviour {
                 if (timeOut(0.0f, scoreState.MEDALS_SHOW))
                 {
                     float multiplier = 0;
+                    float medalNumber = 1;
 
-                    while (multiplier == 0 && ScoreManager.instance.phase != ScoreManager.pointsCalculationPhases.LAG)
+                    while (multiplier == 0 && ScoreManager.instance.phase != ScoreManager.pointsCalculationPhases.PENALTY)
                     {
                         multiplier = ScoreManager.instance.calculatePoints();
                     }
@@ -382,30 +482,102 @@ public class ScoreScene : MonoBehaviour {
                     if (multiplier != 0)
                     {
                         state = scoreState.MEDAL_UP;
+                        goalPoints = ScoreManager.instance.getPoints();
 
-                        GameObject newMedal = Object.Instantiate<GameObject>(AchievementMedal);
-                        medals.Add(newMedal.GetComponent<RectTransform>());
-
-                        newMedal.SetActive(true);
-                        newMedal.transform.SetParent(MedalPanel.transform);
-
-                        //Set the last button to this && viceversa
-                        if (medals.Count > 1)
+                        if (ScoreManager.instance.phase == ScoreManager.pointsCalculationPhases.PENALTY)
                         {
-                            Button lastMedalButton = medals[medals.Count - 2].gameObject.GetComponent<Button>();
-                            Button thisMedalButton = medals[medals.Count - 1].gameObject.GetComponent<Button>();
-
-                            Navigation navigator = lastMedalButton.navigation;
-                            navigator.selectOnRight = thisMedalButton;
-                            lastMedalButton.navigation = navigator;
-
-                            navigator = thisMedalButton.navigation;
-                            navigator.selectOnLeft = lastMedalButton;
-                            thisMedalButton.navigation = navigator;
+                            medalNumber = ScoreManager.instance.getTimesRetry();
                         }
 
+
+                        Sprite[] sprites = Resources.LoadAll<Sprite>("Sprites/GUI/medallas");
+                        XmlDocument xmlDoc = new XmlDocument();
+                        xmlDoc.LoadXml(XMLAchievements.text);
+                        string title, descr;
+                        Medal medal;
                         float size = MedalPanel.GetComponent<RectTransform>().rect.height * 0.90f;
-                        medals[medals.Count - 1].sizeDelta = new Vector2(size, size);
+
+                        for (int i = 0; i < medalNumber; i++)
+                        { 
+                            //Declaration
+                            GameObject newMedal = Object.Instantiate<GameObject>(AchievementMedal);
+                            medals.Add(newMedal.GetComponent<RectTransform>());
+
+                            newMedal.SetActive(true);
+                            newMedal.transform.SetParent(MedalPanel.transform);
+
+                            //Connections
+                            if (medals.Count > 1)
+                            {
+                                Button lastMedalButton = medals[medals.Count - 2].gameObject.GetComponent<Button>();
+                                Button thisMedalButton = medals[medals.Count - 1].gameObject.GetComponent<Button>();
+
+                                Navigation navigator = lastMedalButton.navigation;
+                                navigator.selectOnRight = thisMedalButton;
+                                lastMedalButton.navigation = navigator;
+
+                                navigator = thisMedalButton.navigation;
+                                navigator.selectOnLeft = lastMedalButton;
+                                thisMedalButton.navigation = navigator;
+                            }
+                            
+                            //Content
+                            medal = newMedal.GetComponent<Medal>();
+                            
+                            switch (ScoreManager.instance.phase)
+                            {
+                                case ScoreManager.pointsCalculationPhases.PACIFIST:
+                                    title = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Pacifist\"]/Name").InnerText;
+                                    descr = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Pacifist\"]/Descr").InnerText;
+                                    medal.setImageAndText(sprites[1], title, descr, "x" + roundToTwo(multiplier));
+                                    break;
+
+                                case ScoreManager.pointsCalculationPhases.GENOCIDE:
+                                    title = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Genocide\"]/Name").InnerText;
+                                    descr = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Genocide\"]/Descr").InnerText;
+                                    medal.setImageAndText(sprites[2], title, descr, "x" + roundToTwo(multiplier));
+                                    break;
+
+                                case ScoreManager.pointsCalculationPhases.PERMADEATH:
+                                    title = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Permadeath\"]/Name").InnerText;
+                                    descr = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Permadeath\"]/Descr").InnerText;
+                                    medal.setImageAndText(sprites[3], title, descr, "x" + roundToTwo(multiplier));
+                                    break;
+
+                                case ScoreManager.pointsCalculationPhases.GODMODE:
+                                    title = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"GodMode\"]/Name").InnerText;
+                                    descr = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"GodMode\"]/Descr").InnerText;
+                                    medal.setImageAndText(sprites[4], title, descr, "x" + roundToTwo(multiplier));
+                                    break;
+
+                                case ScoreManager.pointsCalculationPhases.COMBO:
+                                    title = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Combo\"]/Name").InnerText;
+                                    descr = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Combo\"]/Descr").InnerText;
+                                    medal.setImageAndText(sprites[5], title, descr, "x" + roundToTwo(multiplier));
+                                    break;
+
+                                case ScoreManager.pointsCalculationPhases.JINXED:
+                                    title = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Jinxed\"]/Name").InnerText;
+                                    descr = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Jinxed\"]/Descr").InnerText;
+                                    medal.setImageAndText(sprites[6], title, descr, "x" + roundToTwo(multiplier));
+                                    break;
+
+                                case ScoreManager.pointsCalculationPhases.LAG:
+                                    title = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Lag\"]/Name").InnerText;
+                                    descr = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Lag\"]/Descr").InnerText;
+                                    medal.setImageAndText(sprites[7], title, descr, "x" + roundToTwo(multiplier));
+                                    break;
+
+                                case ScoreManager.pointsCalculationPhases.PENALTY:
+                                    title = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Penalty\"]/Name").InnerText;
+                                    descr = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Penalty\"]/Descr").InnerText;
+                                    medal.setImageAndText(sprites[16], title, descr, "/2");
+                                    break;
+                            }
+
+                            //Size
+                            medals[medals.Count - 1].sizeDelta = new Vector2(size, size);
+                        }
 
                         for (int i = 0; i < medals.Count; i++)
                         {
@@ -417,62 +589,10 @@ public class ScoreScene : MonoBehaviour {
                             else
                                 medals[i].anchoredPosition = new Vector2(posX, -20);
                         }
-
-                        Medal medal = newMedal.GetComponent<Medal>();
-                        Sprite[] sprites = Resources.LoadAll<Sprite>("Sprites/GUI/medallas");
-                        XmlDocument xmlDoc = new XmlDocument();
-                        xmlDoc.LoadXml(XMLAchievements.text);
-
-                        string title, descr;
-
-                        switch (ScoreManager.instance.phase)
-                        {
-                            case ScoreManager.pointsCalculationPhases.PACIFIST:
-                                title = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Pacifist\"]/Name").InnerText;
-                                descr = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Pacifist\"]/Descr").InnerText;
-                                medal.setImageAndText(sprites[1], title, descr, roundToTwo(multiplier));
-                                break;
-
-                            case ScoreManager.pointsCalculationPhases.GENOCIDE:
-                                title = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Genocide\"]/Name").InnerText;
-                                descr = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Genocide\"]/Descr").InnerText;
-                                medal.setImageAndText(sprites[2], title, descr, roundToTwo(multiplier));
-                                break;
-
-                            case ScoreManager.pointsCalculationPhases.PERMADEATH:
-                                title = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Permadeath\"]/Name").InnerText;
-                                descr = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Permadeath\"]/Descr").InnerText;
-                                medal.setImageAndText(sprites[3], title, descr, roundToTwo(multiplier));
-                                break;
-
-                            case ScoreManager.pointsCalculationPhases.GODMODE:
-                                title = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"GodMode\"]/Name").InnerText;
-                                descr = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"GodMode\"]/Descr").InnerText;
-                                medal.setImageAndText(sprites[4], title, descr, roundToTwo(multiplier));
-                                break;
-
-                            case ScoreManager.pointsCalculationPhases.COMBO:
-                                title = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Combo\"]/Name").InnerText;
-                                descr = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Combo\"]/Descr").InnerText;
-                                medal.setImageAndText(sprites[5], title, descr, roundToTwo(multiplier));
-                                break;
-
-                            case ScoreManager.pointsCalculationPhases.JINXED:
-                                title = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Jinxed\"]/Name").InnerText;
-                                descr = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Jinxed\"]/Descr").InnerText;
-                                medal.setImageAndText(sprites[6], title, descr, roundToTwo(multiplier));
-                                break;
-
-                            case ScoreManager.pointsCalculationPhases.LAG:
-                                title = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Lag\"]/Name").InnerText;
-                                descr = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Lag\"]/Descr").InnerText;
-                                medal.setImageAndText(sprites[7], title, descr, roundToTwo(multiplier));
-                                break;
-                        }
                     }
 
                     //If there's no more medals to calculate
-                    else if (ScoreManager.instance.phase == ScoreManager.pointsCalculationPhases.LAG)
+                    else if (ScoreManager.instance.phase == ScoreManager.pointsCalculationPhases.PENALTY)
                     {
                         if (medals.Count > 0)
                         {
@@ -545,7 +665,18 @@ public class ScoreScene : MonoBehaviour {
             case scoreState.MEDALS_SHOW:
                 if (timeOut(0.7f, scoreState.SCORE_SHOWING))
                 {
-                    
+                    ScoreManager.instance.calculatePoints();
+                    continueButton.gameObject.SetActive(true);
+                    retryButton.gameObject.SetActive(true);
+                    menuButton.gameObject.SetActive(true);
+                    continueButton.Select();
+                    if (skip)
+                    {
+                        actualPoints = goalPoints;
+                        finalPoints.text = string.Format("{0:#,###0.#}", Mathf.Round(actualPoints));
+                    }
+
+                    skip = false;
                 }
                 break;
 
@@ -555,13 +686,13 @@ public class ScoreScene : MonoBehaviour {
 
             case scoreState.GLITCH_WALKING:
                 Vector3 position = characterRT.position;
-                position.x += 2.5f;
+                position.x += 375f * Time.deltaTime;
                 characterRT.position = position;
 
                 if (position.x > Screen.width)
                 {
                     state = scoreState.LOADING_LEVEL;
-                    ReturnToMenu();
+                    NextLevel();
                 }
                 break;
 
@@ -569,10 +700,12 @@ public class ScoreScene : MonoBehaviour {
             //    break;
         }
 
+        } while (skip);
+
 	}
 
     private bool timeOut(float time, scoreState newState){
-        if (Time.time > timeLastState + time)
+        if (skip || Time.time > timeLastState + time)
         {
             timeLastState = Time.time;
             state = newState;
@@ -581,7 +714,7 @@ public class ScoreScene : MonoBehaviour {
         return false;
     }
 
-    public void ReturnToMenu()
+    public void NextLevel()
     {
         if (Loader.getLastScene() == "Level1")
             Loader.LoadScene("Boss Stage", true);

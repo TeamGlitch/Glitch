@@ -40,11 +40,11 @@ public class Medal : MonoBehaviour, ISelectHandler, IDeselectHandler{
         explanation.SetActive(false);
     }
 
-    public void setImageAndText(Sprite sprite, string title, string text, float multiplier)
+    public void setImageAndText(Sprite sprite, string title, string text, string multiplier)
     {
         transform.GetChild(1).gameObject.GetComponent<Image>().sprite = sprite;
         explanation.transform.GetChild(0).gameObject.GetComponent<Text>().text = "<color=#FF0000FF>" + title + "</color>\n" + text;
-        transform.GetChild(4).gameObject.GetComponent<Text>().text = "x" + multiplier;
+        transform.GetChild(4).gameObject.GetComponent<Text>().text = multiplier;
     }
 
 }

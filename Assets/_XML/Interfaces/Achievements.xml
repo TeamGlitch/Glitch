@@ -30,6 +30,10 @@
       <Name>LAAAAAGGGG</Name>
       <Descr>Use slow-FPS for more than 20 seconds</Descr>
     </Achievement>
+    <Achievement id="Penalty">
+      <Name>Penalty</Name>
+      <Descr>Penalty for Game Over</Descr>
+    </Achievement>
   </Set>
   
   <Set lang="Spanish">
@@ -60,6 +64,10 @@
     <Achievement id="Lag">
       <Name>LAAAAAGGGG</Name>
       <Descr>Usa el bajón de FPS durante más de 20 segundos</Descr>
+    </Achievement>
+    <Achievement id="Penalty">
+      <Name>Penalización</Name>
+      <Descr>Penalización por Game Over</Descr>
     </Achievement>
   </Set>
 </Dialogue>

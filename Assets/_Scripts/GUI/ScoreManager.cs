@@ -65,7 +65,7 @@ public class ScoreManager : MonoBehaviour {
             instance = this;
             DontDestroyOnLoad(gameObject);
             RestartValues();
-            testValues();
+            //testValues();
         }
         //If instance already exists:
         else if (instance != this)
@@ -337,10 +337,10 @@ public class ScoreManager : MonoBehaviour {
     {
         base_points = 80;
         total_time = 600;
-        time_spent = 435;
-        remaining_lives = 3;
-        times_retry = 1;
-        colectionables_taken = 3;
+        time_spent = 135;
+        remaining_lives = 1;
+        times_retry = 10;
+        colectionables_taken = 1;
         num_enemies = 7;
         enemies_defeated = 7;
         checkpoint_used = false;

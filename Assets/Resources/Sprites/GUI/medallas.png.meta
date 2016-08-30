@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 7700a4135e9ea8c4485cb54cb13cdfce
-timeCreated: 1472492091
+timeCreated: 1472519110
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -20,6 +20,7 @@ TextureImporter:
     21300026: medallas_13
     21300028: medallas_14
     21300030: medallas_15
+    21300032: medallas_16
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -70,7 +71,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 32
+        y: 64
         width: 33
         height: 32
       alignment: 0
@@ -88,7 +89,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 33
-        y: 32
+        y: 64
         width: 33
         height: 32
       alignment: 0
@@ -107,7 +108,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 66
-        y: 32
+        y: 64
         width: 33
         height: 32
       alignment: 0
@@ -124,7 +125,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 99
-        y: 32
+        y: 64
         width: 33
         height: 32
       alignment: 0
@@ -143,7 +144,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 132
-        y: 32
+        y: 64
         width: 33
         height: 32
       alignment: 0
@@ -161,7 +162,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 165
-        y: 32
+        y: 64
         width: 33
         height: 32
       alignment: 0
@@ -180,7 +181,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 198
-        y: 32
+        y: 64
         width: 33
         height: 32
       alignment: 0
@@ -197,7 +198,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 231
-        y: 32
+        y: 64
         width: 33
         height: 32
       alignment: 0
@@ -218,7 +219,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 32
         width: 33
         height: 32
       alignment: 0
@@ -235,7 +236,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 33
-        y: 0
+        y: 32
         width: 33
         height: 32
       alignment: 0
@@ -252,7 +253,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 66
-        y: 0
+        y: 32
         width: 33
         height: 32
       alignment: 0
@@ -271,7 +272,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 99
-        y: 0
+        y: 32
         width: 33
         height: 32
       alignment: 0
@@ -297,7 +298,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 132
-        y: 0
+        y: 32
         width: 33
         height: 32
       alignment: 0
@@ -321,7 +322,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 165
-        y: 0
+        y: 32
         width: 33
         height: 32
       alignment: 0
@@ -348,7 +349,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 198
-        y: 0
+        y: 32
         width: 33
         height: 32
       alignment: 0
@@ -373,7 +374,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 231
-        y: 0
+        y: 32
         width: 33
         height: 32
       alignment: 0
@@ -386,6 +387,24 @@ TextureImporter:
         - {x: 16.5, y: -2}
         - {x: 16.5, y: 3}
         - {x: 5.5, y: 16}
+    - name: medallas_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 33
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -14.5, y: 16}
+        - {x: -16.5, y: 12}
+        - {x: -16.5, y: -16}
+        - {x: 11.5, y: -16}
+        - {x: 16.5, y: -14}
+        - {x: 16.5, y: 15}
+        - {x: 14.5, y: 16}
     outline: []
   spritePackingTag: 
   userData: 

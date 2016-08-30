@@ -101,6 +101,13 @@
         <I id="Continue">Continue</I>
       </UI>
     </Group>
+    <Group id="Score">
+      <UI id="Score">
+        <I id="Continue">Continue</I>
+        <I id="Retry">Retry</I>
+        <I id="Return">Return to main menu</I>
+      </UI>
+    </Group>
   </Set>
   
   <Set lang="Spanish">
@@ -200,6 +207,13 @@
         <I id="Restart Game">Reiniciar nivel</I>
         <I id="Main Menu">Menú principal</I>
         <I id="Continue">Continua</I>
+      </UI>
+    </Group>
+    <Group id="Score">
+      <UI id="Score">
+        <I id="Continue">Continuar</I>
+        <I id="Retry">Reintentar</I>
+        <I id="Return">Volver al menú principal</I>
       </UI>
     </Group>
   </Set>
