@@ -7,6 +7,9 @@ using InControl;
 
 public class ScoreScene : MonoBehaviour, LanguageListener {
 
+    //TODO: HOURGLASS PARTICLES
+    //TODO: SOUND
+
     public enum scoreState
     {
         START,
@@ -165,7 +168,6 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
             state != scoreState.LOADING_LEVEL)
         {
             skip = true;
-            print("skippea");
         }
         else
         {
@@ -571,7 +573,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                                 case ScoreManager.pointsCalculationPhases.PENALTY:
                                     title = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Penalty\"]/Name").InnerText;
                                     descr = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Achievement[@id = \"Penalty\"]/Descr").InnerText;
-                                    medal.setImageAndText(sprites[16], title, descr, "/2");
+                                    medal.setImageAndText(sprites[16], title, descr, "<color=#FF0000FF>/2</color>");
                                     break;
                             }
 
