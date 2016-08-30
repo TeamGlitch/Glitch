@@ -110,6 +110,7 @@ public class BossArcherIA : MonoBehaviour
     public float endZPosWhenDead = 6f - 5.06f;
     public float startXPosWhenDead;
     public float endXPosWhenDead;
+    [SerializeField]
     private bool fallingDead = false;
 
     public World world;
@@ -138,6 +139,9 @@ public class BossArcherIA : MonoBehaviour
 
     public Sprite heartFull;
     public Sprite heartEmpty;
+
+    public delegate void BossDeadDelegate();
+    public event BossDeadDelegate BossDeadEvent;
 
     #endregion
 
@@ -482,6 +486,8 @@ public class BossArcherIA : MonoBehaviour
                 bossState = bossArcherIA.DEAD;
                 glitchDialogue.SetActive(true);
                 glitchCollider.SetActive(true);
+                if (BossDeadEvent != null)
+                    BossDeadEvent();
             }
             else if (lives == 1)
             {
@@ -634,9 +640,13 @@ public class BossArcherIA : MonoBehaviour
         Vector3 auxPos = transform.position + new Vector3(-2f, -2.2f, 0f);
         rigidbody.useGravity = true;
         startXPosWhenDead = endXPosWhenDead = transform.position.x;
-        if (transform.position.x >= 16f)
+        if (transform.position.x >= -1.0f)
         {
             endXPosWhenDead = startXPosWhenDead + 2f;
+        }
+        else if (transform.position.x <= -16f)
+        {
+            endXPosWhenDead = startXPosWhenDead - 2f;
         }
         startZPosWhenDead = transform.position.z;
         timeFalling = 0.0f;
@@ -945,7 +955,8 @@ public class BossArcherIA : MonoBehaviour
     {
         upArrow.gameObject.SetActive(false);
         upArrow.canMove = false;
-        bossState = bossArcherIA.POSTSHOOT;
+        if(bossState != bossArcherIA.DEAD)
+            bossState = bossArcherIA.POSTSHOOT;
         timeSinceStateChanged = 0.0f;
         animator.speed = 1f;
         int random;
@@ -1004,7 +1015,7 @@ public class BossArcherIA : MonoBehaviour
                     break;
             }
         }
-        else if (lives == 1)
+        else if (lives <= 1)
         {
             random = Random.Range(1, 6);
             switch (random)

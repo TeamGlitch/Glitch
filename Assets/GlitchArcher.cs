@@ -14,6 +14,9 @@ public class GlitchArcher : MonoBehaviour {
     private BoxCollider boxCollider;
     private float random;
 
+    public delegate void BossGlitchedDelegate();
+    public event BossGlitchedDelegate BossGlitchedEvent;
+
     void Start()
     {
         previousShader = archerRenderer.material.shader;
@@ -31,6 +34,8 @@ public class GlitchArcher : MonoBehaviour {
                 boxCollider.enabled = false;
                 door.OpenDoor();
                 endDialogue.SetActive(true);
+                if (BossGlitchedEvent != null)
+                    BossGlitchedEvent();
             }
         }
         else

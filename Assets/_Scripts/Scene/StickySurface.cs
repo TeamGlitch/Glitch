@@ -9,7 +9,7 @@ public class StickySurface : MonoBehaviour {
 	{
 		if (other.CompareTag("Player"))
 		{
-			other.gameObject.GetComponent<PlayerController>().getSticked(directionStick);
+			other.gameObject.GetComponent<PlayerController>().GetSticked(directionStick);
 		}
 	}
 }
