@@ -4,7 +4,25 @@ using System.Collections.Generic;
 
 public class ScoreManager : MonoBehaviour {
 
+    public enum pointsCalculationPhases
+    {
+        NONE,
+        BASE,
+        TIME,
+        LIFE,
+        COLLECTIBLES,
+        PACIFIST,
+        GENOCIDE,
+        PERMADEATH,
+        GODMODE,
+        COMBO,
+        JINXED,
+        LAG,
+        PENALTY
+    };
+
     public static ScoreManager instance = null;
+    public pointsCalculationPhases phase = pointsCalculationPhases.NONE;
 
     //General values:
     private int base_points;
@@ -32,8 +50,10 @@ public class ScoreManager : MonoBehaviour {
 
     private float time_SFPS_used;
 
-    //Final
+    //Calculation
+    private float points;
     private float finalPoints;
+    private string outputText;
 
     void Awake()
     {
@@ -45,6 +65,7 @@ public class ScoreManager : MonoBehaviour {
             instance = this;
             DontDestroyOnLoad(gameObject);
             RestartValues();
+            //testValues();
         }
         //If instance already exists:
         else if (instance != this)
@@ -52,7 +73,6 @@ public class ScoreManager : MonoBehaviour {
             //Destroy this, this enforces our singleton pattern so there can only be one instance
             Destroy(gameObject);
         }
-
     }
 
     public void RestartValues()
@@ -154,95 +174,153 @@ public class ScoreManager : MonoBehaviour {
         time_SFPS_used += timeUsed;
     }
 
-    public string calculatePoints()
+    public float calculatePoints()
     {
-        string text;
+        float multiplier = 0;
 
-        float points = base_points * 100;
-        text = "Puntos base: " + base_points + " puntos x 100 = " + points;
-        
-        float percentTimeLeft = (total_time - time_spent) / total_time; //0->1
-        float timeExtra = roundToTwo(1.0f + (percentTimeLeft * 9.0f));
-        points = points * timeExtra;
-        text += "\nTiempo: " + (percentTimeLeft * 100) + "% restante. x" + timeExtra + " = " + points;
-
-        float livesLeftPoints = roundToTwo((remaining_lives * 0.25f) + 0.75f);
-        points = points * livesLeftPoints;
-        text += "\nVidas: " + remaining_lives + " de 3. x" + livesLeftPoints + " = " + points;
-
-        float colectPoints;
-        switch (colectionables_taken)
+        switch (phase)
         {
-            case 1: colectPoints = 1.5f; break;
-            case 2: colectPoints = 2.5f; break;
-            case 3: colectPoints = 4f; break;
-            default: colectPoints = 1; break;
+            case pointsCalculationPhases.NONE:
+                points = base_points * 10;
+                outputText = "Puntos base: " + base_points + " puntos x 10 = " + points;
+                
+                phase = pointsCalculationPhases.BASE;
+                multiplier = 10;
+                break;
+
+            case pointsCalculationPhases.BASE:
+                float percentTimeLeft = (total_time - time_spent) / total_time; //0->1
+                float timeExtra = roundToTwo(1.0f + (percentTimeLeft * 9.0f));
+                points = points * timeExtra;
+                outputText += "\nTiempo: " + (percentTimeLeft * 100) + "% restante. x" + timeExtra + " = " + points;
+
+                phase = pointsCalculationPhases.TIME;
+                multiplier = timeExtra;
+                break;
+
+            case pointsCalculationPhases.TIME:
+                float livesLeftPoints = roundToTwo((remaining_lives * 0.25f) + 0.75f);
+                points = points * livesLeftPoints;
+                outputText += "\nVidas: " + remaining_lives + " de 3. x" + livesLeftPoints + " = " + points;
+               
+                phase = pointsCalculationPhases.LIFE;
+                multiplier = livesLeftPoints;
+                break;
+
+            case pointsCalculationPhases.LIFE:
+                float colectPoints;
+                switch (colectionables_taken)
+                {
+                    case 1: colectPoints = 1.5f; break;
+                    case 2: colectPoints = 2.5f; break;
+                    case 3: colectPoints = 4f; break;
+                    default: colectPoints = 1; break;
+                }
+                points = points * colectPoints;
+                outputText += "\nColeccionables: " + colectionables_taken + " de 3. x" + colectPoints + " = " + points;
+                
+                phase = pointsCalculationPhases.COLLECTIBLES;
+                multiplier = colectPoints;
+                break;
+
+            case pointsCalculationPhases.COLLECTIBLES:
+                //PACIFIST
+                if (enemies_defeated == 0)
+                {
+                    points = points * 3.0f;
+                    outputText += "\nPacifista. x3 = " + points;
+                    multiplier = 3.0f;
+                }
+                phase = pointsCalculationPhases.PACIFIST;
+                break;
+
+            case pointsCalculationPhases.PACIFIST:
+                //GENOCIDE
+                if (enemies_defeated == num_enemies)
+                {
+                    points = points * 4.0f;
+                    outputText += "\nGenocida. x4 = " + points;
+                    multiplier = 4.0f;
+                }
+                phase = pointsCalculationPhases.GENOCIDE;
+                break;
+
+            case pointsCalculationPhases.GENOCIDE:
+                //PERMADEATH
+                if (!checkpoint_used)
+                {
+                    points = points * 10.0f;
+                    outputText += "\nPermadeath. x10 = " + points;
+                    multiplier = 10.0f;
+                }
+                phase = pointsCalculationPhases.PERMADEATH;
+                break;
+
+            case pointsCalculationPhases.PERMADEATH:
+                //GODMODE
+                if (death_positions.Count == 0)
+                {
+                    points = points * 15.0f;
+                    outputText += "\nGodMode. x15 = " + points;
+                    multiplier = 15.0f;
+                }
+                phase = pointsCalculationPhases.GODMODE;
+                break;
+
+            case pointsCalculationPhases.GODMODE:
+                //COMBO
+                if (combo_done)
+                {
+                    points = points * 1.25f;
+                    outputText += "\nCombo. x1.2 = " + points;
+                    multiplier = 1.25f;
+                }
+                phase = pointsCalculationPhases.COMBO;
+                break;
+
+            case pointsCalculationPhases.COMBO:
+                //JINXED
+                if (jinxed)
+                {
+                    points = points * 1.12f;
+                    outputText += "\nJinxed. x1.12 = " + points;
+                    multiplier = 1.12f;
+                }
+                phase = pointsCalculationPhases.JINXED;
+                break;
+
+            case pointsCalculationPhases.JINXED:
+                //LAAGGG
+                if (time_SFPS_used >= 20f)
+                {
+                    points = points * 1.15f;
+                    outputText += "\nLAAGGGGGG. x1.15 = " + points;
+                    multiplier = 1.15f;
+                }
+                phase = pointsCalculationPhases.LAG;
+                break;
+
+            case pointsCalculationPhases.LAG:
+                if (times_retry > 0)
+                {
+                    points = points / (2 * times_retry);
+                    outputText += "\nRetry penalty: / " + (2 * times_retry) + " = " + points;
+                    multiplier = (2 * times_retry);
+                }
+                phase = pointsCalculationPhases.PENALTY;
+                break;
+
+            case pointsCalculationPhases.PENALTY:
+                outputText += "\nFINAL POINTS: " + points;
+                finalPoints = points;
+                phase = pointsCalculationPhases.NONE;
+                break;
+
+            default:
+                break;
         }
-        points = points * colectPoints;
-        text += "\nColeccionables: " + colectionables_taken + " de 3. x" + colectPoints + " = " + points;
 
-        print(enemies_defeated + " / " + num_enemies);
-
-        //PACIFIST
-        if (enemies_defeated == 0)
-        {
-            points = points * 3.0f;
-            text += "\nPacifista. x3 = " + points;
-        }
-
-        //GENOCIDE
-        if (enemies_defeated == num_enemies)
-        {
-            points = points * 4.0f;
-            text += "\nGenocida. x4 = " + points;
-        }
-
-        //PERMADEATH
-        if (!checkpoint_used)
-        {
-            points = points * 10.0f;
-            text += "\nPermadeath. x10 = " + points;
-        }
-
-        //GODMODE
-        if(death_positions.Count == 0)
-        {
-            points = points * 15.0f;
-            text += "\nGodMode. x15 = " + points;
-        }
-
-        //COMBO
-        if (combo_done)
-        {
-            points = points * 1.2f;
-            text += "\nJinxed. x1.2 = " + points;
-        }
-
-        //JINXED
-        if (jinxed)
-        {
-            points = points * 1.25f;
-            text += "\nJinxed. x1.25 = " + points;
-        }
-
-        //LAAGGG
-        if (time_SFPS_used >= 20f)
-        {
-            points = points * 1.25f;
-            text += "\nLAAGGGGGG. x1.25 = " + points;
-        }
-
-        if (times_retry > 0)
-        {
-            points = points / (2 * times_retry);
-            text += "\nRetry penalty: / " + (2 * times_retry) + " = " + points;
-        }
-        
-
-
-        text += "\nFINAL POINTS: " + points;
-        finalPoints = points;
-        return text;
+        return multiplier;
     }
 
     public float getFinalPoints()
@@ -254,5 +332,30 @@ public class ScoreManager : MonoBehaviour {
     {
         return Mathf.Floor(num * 100) / 100;
     }
+
+    private void testValues()
+    {
+        base_points = 80;
+        total_time = 600;
+        time_spent = 135;
+        remaining_lives = 1;
+        times_retry = 10;
+        colectionables_taken = 1;
+        num_enemies = 7;
+        enemies_defeated = 7;
+        checkpoint_used = false;
+        time_last_enemy_kill = 200;
+        combo_done = true;
+        jinxed = true;
+        time_SFPS_used = 2000;
+    }
+
+    public float getPoints() { return points; }
+    public int getBasePoints() { return base_points; }
+    public float getTotalTime() { return total_time; }
+    public float getTimeSpent() { return time_spent; }
+    public int getRemainingLives() { return remaining_lives; }
+    public int getTimesRetry() { return times_retry; }
+    public int getColectionablesTaken() { return colectionables_taken; }
 
 }
