@@ -17,7 +17,7 @@ public class Seed : MonoBehaviour {
     {
 	    if (world.doUpdate)
         {
-            transform.Translate(0.0f, world.lag*20, 0.0f);
+            transform.Translate(0.0f, world.lag*10, 0.0f);
         }
 	}
 

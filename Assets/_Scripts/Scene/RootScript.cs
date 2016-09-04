@@ -8,12 +8,14 @@ public class RootScript : MonoBehaviour {
     public bool down = true;
     public bool toLeft = false;
 
+    private Animator anim;
     private bool top;
     private bool right;
     private bool stop = false;
 
     void Start()
     {
+        anim = GetComponent<Animator>();
         if (horizontal)
         {
             if (toLeft)
@@ -117,22 +119,26 @@ public class RootScript : MonoBehaviour {
                     {
                         if (!right)
                         {
-                            transform.Translate(world.lag * 10, 0.0f, 0.0f);
+                            anim.SetBool("Extend", false);
+                            //transform.Translate(world.lag * 10, 0.0f, 0.0f);
                         }
                         else
                         {
-                            transform.Translate(-world.lag * 50, 0.0f, 0.0f);
+                            anim.SetBool("Extend", true);
+                           //transform.Translate(-world.lag * 50, 0.0f, 0.0f);
                         }
                     }
                     else
                     {
                         if (!right)
                         {
-                            transform.Translate(world.lag * 50, 0.0f, 0.0f);
+                            anim.SetBool("Extend", true);
+                            //transform.Translate(world.lag * 50, 0.0f, 0.0f);
                         }
                         else
                         {
-                            transform.Translate(-world.lag * 10, 0.0f, 0.0f);
+                            anim.SetBool("Extend", false);
+                            //transform.Translate(-world.lag * 10, 0.0f, 0.0f);
                         }
                     }
                 }
@@ -140,11 +146,13 @@ public class RootScript : MonoBehaviour {
                 {
                     if (down)
                     {
-                        transform.Translate(0.0f, -world.lag * 30, 0.0f);
+                        anim.SetBool("Extend", true);
+                        //transform.Translate(0.0f, -world.lag * 30, 0.0f);
                     }
                     else
                     {
-                        transform.Translate(0.0f, world.lag * 10, 0.0f);
+                        anim.SetBool("Extend", false);
+                        //transform.Translate(0.0f, world.lag * 10, 0.0f);
                     }
                 }
             }
