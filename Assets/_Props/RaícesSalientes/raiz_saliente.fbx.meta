@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: e7d27d6f48a50c04b9b7927a3c78b239
-timeCreated: 1472232707
+guid: 57a899ef514850b4ba84fc03e0bdbf83
+timeCreated: 1473076090
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -22,8 +22,10 @@ ModelImporter:
     4300000: pCylinder2
     4300002: pCylinder4
     4300004: pCylinder5
-    7400000: extender
-    7400002: init
+    7400000: salir
+    7400002: meterse
+    7400004: init
+    7400006: init
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -47,10 +49,46 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: extender
+      name: salir
       takeName: salir
       firstFrame: 1
-      lastFrame: 20
+      lastFrame: 27
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: pCylinder2
+        weight: 1
+      - path: pCylinder4
+        weight: 1
+      - path: pCylinder5
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: meterse
+      takeName: meterse
+      firstFrame: 30
+      lastFrame: 50
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -86,14 +124,14 @@ ModelImporter:
       name: init
       takeName: salir
       firstFrame: 1
-      lastFrame: 1
+      lastFrame: 2
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -117,7 +155,7 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 1
+      additiveReferencePoseFrame: 27
     isReadable: 1
   meshes:
     lODScreenPercentages: []
