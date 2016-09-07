@@ -1,17 +1,54 @@
 fileFormatVersion: 2
-guid: b56963a6c780cbe4faccf5ffe67c9740
-timeCreated: 1472419325
+guid: 4c466197b6ebac048994ca5f5424a509
+timeCreated: 1473072498
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: colllider_evel_preboss1
-    100002: //RootNode
-    400000: colllider_evel_preboss1
-    400002: //RootNode
-    2300000: colllider_evel_preboss1
-    3300000: colllider_evel_preboss1
-    4300000: colllider_evel_preboss1
+    100000: group2
+    100002: joint1
+    100004: joint2
+    100006: joint3
+    100008: joint4
+    100010: joint5
+    100012: joint6
+    100014: joint7
+    100016: joint8
+    100018: pCylinder241
+    100020: pCylinder242
+    100022: pCylinder243
+    100024: pCylinder244
+    100026: pSphere1
+    100028: //RootNode
+    100030: roca_rompepuertas
+    400000: group2
+    400002: joint1
+    400004: joint2
+    400006: joint3
+    400008: joint4
+    400010: joint5
+    400012: joint6
+    400014: joint7
+    400016: joint8
+    400018: pCylinder241
+    400020: pCylinder242
+    400022: pCylinder243
+    400024: pCylinder244
+    400026: pSphere1
+    400028: //RootNode
+    400030: roca_rompepuertas
+    4300000: pCylinder243
+    4300002: pCylinder241
+    4300004: pSphere1
+    4300006: pCylinder242
+    4300008: pCylinder244
+    7400000: caer_arrollar
+    9500000: //RootNode
+    13700000: pCylinder241
+    13700002: pCylinder242
+    13700004: pCylinder243
+    13700006: pCylinder244
+    13700008: pSphere1
   materials:
     importMaterials: 1
     materialName: 0
@@ -70,7 +107,7 @@ ModelImporter:
     rootMotionBoneName: 
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

@@ -1,17 +1,29 @@
 fileFormatVersion: 2
-guid: 3ebe20aa1be54254cb59a4d3d0261945
-timeCreated: 1473162123
+guid: 341f0192687d3d54a8d8230ca640ec47
+timeCreated: 1473163896
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: colllider_evel_preboss_levelpreboss_estructura_collider
-    100002: //RootNode
-    400000: colllider_evel_preboss_levelpreboss_estructura_collider
-    400002: //RootNode
-    2300000: colllider_evel_preboss_levelpreboss_estructura_collider
-    3300000: colllider_evel_preboss_levelpreboss_estructura_collider
-    4300000: colllider_evel_preboss_levelpreboss_estructura_collider
+    100000: pCylinder246
+    100002: pCylinder247
+    100004: raices
+    100006: raices_bajan_tic_tac
+    100008: //RootNode
+    400000: pCylinder246
+    400002: pCylinder247
+    400004: raices
+    400006: raices_bajan_tic_tac
+    400008: //RootNode
+    2300000: pCylinder246
+    2300002: pCylinder247
+    3300000: pCylinder246
+    3300002: pCylinder247
+    4300000: pCylinder246
+    4300002: pCylinder247
+    7400000: bajar
+    7400002: recogerse
+    9500000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -70,7 +82,7 @@ ModelImporter:
     rootMotionBoneName: 
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

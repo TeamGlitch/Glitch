@@ -46,8 +46,9 @@ public class PlayerController : MonoBehaviour
 	private float zPosition = 0.0f;				// Position on the z axis. Unvariable
 	public float maxJumpTime = 0.25f;			// Max time a jump can be extended
     public float jumpForce = 700.0f;				// Base jump speed
+    public float stickedJumpForce = 1000.0f;         // Force in jump from sticked surface
     private float timePreparingJump = 0.0f;
-    public float maxTimeSticked = 2.0f;
+    public float maxTimeSticked = 0.5f;
 
     public float maxSpeedInAir = 20.0f;
     public float decreaseSpeedWhenIdle = 1.0f;
@@ -298,7 +299,7 @@ public class PlayerController : MonoBehaviour
                     playerJumpingInSticked = true;
 
                     rigidBody.useGravity = true;
-					rigidBody.AddForce(new Vector3(0.0f, jumpForce, 0.0f));
+					rigidBody.AddForce(new Vector3(0.0f, stickedJumpForce, 0.0f));
 					rigidBody.velocity = new Vector3 (4f, -directionStickObject.x * rigidBody.velocity.y, 0.0f);
 					
 					velocityWhenChangedState = -directionStickObject.x * 20f;

@@ -1,29 +1,29 @@
 fileFormatVersion: 2
-guid: e7d27d6f48a50c04b9b7927a3c78b239
-timeCreated: 1472232707
+guid: 7b4aac01e3f82b945ac603b70d22cdfa
+timeCreated: 1473275852
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: pCylinder2
-    100002: pCylinder4
-    100004: pCylinder5
-    100006: //RootNode
-    400000: pCylinder2
-    400002: pCylinder4
-    400004: pCylinder5
-    400006: //RootNode
-    2300000: pCylinder2
-    2300002: pCylinder4
-    2300004: pCylinder5
-    3300000: pCylinder2
-    3300002: pCylinder4
-    3300004: pCylinder5
-    4300000: pCylinder2
-    4300002: pCylinder4
-    4300004: pCylinder5
-    7400000: salir
+    100000: polySurface9
+    100002: pPlane1
+    100004: puerta_raices
+    100006: puerta_raices2
+    100008: puerta_raices3
+    100010: //RootNode
+    400000: polySurface9
+    400002: pPlane1
+    400004: puerta_raices
+    400006: puerta_raices2
+    400008: puerta_raices3
+    400010: //RootNode
+    4300000: pPlane1
+    4300002: polySurface9
+    7400000: abrir
+    7400002: cerrar
     9500000: //RootNode
+    13700000: polySurface9
+    13700002: pPlane1
   materials:
     importMaterials: 1
     materialName: 0
