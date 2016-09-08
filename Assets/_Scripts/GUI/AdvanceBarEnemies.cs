@@ -78,7 +78,7 @@ public class AdvanceBarEnemies : MonoBehaviour, LanguageListener {
         if (state != endtimeState.LEVEL_COMPLETE && endPoint.enabled)
         {
             ScoreManager.instance.SetBasePoints(player.items);
-            ScoreManager.instance.SetTimes(maxTime, time);
+            ScoreManager.instance.SetTimes(maxTime, slider.value);
             ScoreManager.instance.SetRemaniningLives(player.lives);
             state = endtimeState.LEVEL_COMPLETE;
         }
