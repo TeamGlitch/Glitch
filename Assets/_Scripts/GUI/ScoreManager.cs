@@ -187,6 +187,75 @@ public class ScoreManager : MonoBehaviour {
 
     }
 
+    public bool newHiscore(string level, HiscoreEntry entry)
+    {
+
+        int i;
+        for (i = 0; i < hscores.Count; i++)
+        {
+            if (hscores[i].name == level)
+                break;
+        }
+
+        //If it's a new level
+        if (i == hscores.Count)
+        {
+            HiscoreList newHSList = new HiscoreList();
+            newHSList.name = level;
+            newHSList.list[0] = entry;
+
+            hscores.Add(newHSList);
+            createHiscoresFile();
+            return true;
+        }
+        //If it's not
+        else
+        {
+            bool found = false;
+            HiscoreEntry temporal = null;
+
+            for (int z = 0; z < hscores[i].list.Length; z++)
+            {
+                //If the position hasn't been found
+                if (!found)
+                {
+                    //If this position is unnasigned
+                    if (hscores[i].list[z] == null || hscores[i].list[z].name == "" || hscores[i].list[z].points == -1)
+                    {
+                        hscores[i].list[z] = entry;
+                        found = true;
+                        break;
+                    }
+                    //If this possition is assigned and worse
+                    else if (entry.points > hscores[i].list[z].points)
+                    {
+                        temporal = hscores[i].list[z];
+                        hscores[i].list[z] = entry;
+                        found = true;
+                    }
+                }
+                //If has been found, move this position to the right
+                else
+                {
+                    
+                    HiscoreEntry tp2 = hscores[i].list[z];
+                    hscores[i].list[z] = temporal;
+                    temporal = tp2;
+                }
+            }
+
+            if (found)
+            {
+                createHiscoresFile();
+                return true;
+            }
+            else
+                return false;
+
+        }
+
+    }
+
     public void RestartValues()
     {
 
