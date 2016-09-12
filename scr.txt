@@ -1,0 +1,8 @@
+<SCORES>
+	<Level id="Level1">
+		<Entry>
+			<Name>Player</Name>
+			<Score>10000</Score>
+		</Entry>
+	</Level>
+</SCORES>

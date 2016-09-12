@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 
 public class ScoreManager : MonoBehaviour {
 
@@ -20,6 +21,18 @@ public class ScoreManager : MonoBehaviour {
         LAG,
         PENALTY
     };
+
+    public class HiscoreEntry
+    {
+        public string name = "";
+        public int points = -1;
+    }
+
+    public class HiscoreList
+    {
+        public string name;
+        public HiscoreEntry[] list = new HiscoreEntry[10];
+    }
 
     public static ScoreManager instance = null;
     public pointsCalculationPhases phase = pointsCalculationPhases.NONE;
@@ -55,6 +68,9 @@ public class ScoreManager : MonoBehaviour {
     private float finalPoints;
     private string outputText;
 
+    //Hiscores
+    private List<HiscoreList> hscores = new List<HiscoreList>();
+
     void Awake()
     {
         death_positions = new List<Vector3>();
@@ -66,6 +82,14 @@ public class ScoreManager : MonoBehaviour {
             DontDestroyOnLoad(gameObject);
             RestartValues();
             //testValues();
+
+            if (!loadHiscores())
+            {
+                print("No valid highscore file detected. Creating new one.");
+                hscores.Clear();
+                createHiscoresFile();
+            }
+            
         }
         //If instance already exists:
         else if (instance != this)
@@ -73,6 +97,94 @@ public class ScoreManager : MonoBehaviour {
             //Destroy this, this enforces our singleton pattern so there can only be one instance
             Destroy(gameObject);
         }
+    }
+
+    private bool loadHiscores()
+    {
+        if (!System.IO.File.Exists("scr.txt"))
+            return false;
+
+        XmlDocument xmlDoc = new XmlDocument();
+        xmlDoc = new XmlDocument();
+
+        string txt = System.IO.File.ReadAllText("scr.txt");
+        xmlDoc.LoadXml(txt);
+
+        XmlNodeList nodes = xmlDoc.SelectNodes("SCORES/Level");
+        if (nodes == null)
+            return false;
+
+        for (int i = 0; i < nodes.Count; i++)
+        {
+
+            XmlAttribute id = nodes[i].Attributes["id"];
+            if (id == null || id.Value == null || id.Value == "")
+                return false;
+
+            HiscoreList list = new HiscoreList();
+            list.name = id.Value;
+
+            if (nodes[i].ChildNodes.Count > 10)
+                return false;
+
+            for (int entry = 0; entry < nodes[i].ChildNodes.Count; entry++)
+            {
+                if (nodes[i].ChildNodes[entry].Name != "Entry")
+                    return false;
+
+                if (nodes[i].ChildNodes[entry].ChildNodes.Count != 2)
+                    return false;
+
+                if (nodes[i].ChildNodes[entry].ChildNodes[0].Name != "Name"
+                    || nodes[i].ChildNodes[entry].ChildNodes[1].Name != "Score")
+                    return false;
+
+                HiscoreEntry hsentry = new HiscoreEntry();
+                hsentry.name = nodes[i].ChildNodes[entry].ChildNodes[0].InnerText;
+
+                int result;
+                if (int.TryParse(nodes[i].ChildNodes[entry].ChildNodes[1].InnerText, out result))
+                {
+                    hsentry.points = result;
+                }
+                else return false;
+
+                list.list[entry] = hsentry;
+
+            }
+        }
+        
+        return true;
+    }
+
+    public void createHiscoresFile()
+    {
+        List<string> text = new List<string>();
+        text.Add("<SCORES>");
+
+        for(int i = 0; i < hscores.Count; i++)
+        {
+            text.Add("<Level id=" + hscores[i].name + ">");
+            
+            for(int z = 0; z < hscores[i].list.Length; z++)
+            {
+                if (hscores[i].list[z] != null && hscores[i].list[z].name != "" && hscores[i].list[z].points != -1)
+                {
+                    text.Add("<Entry>");
+                    text.Add("<Name>" + hscores[i].list[z].name + "</Name>");
+                    text.Add("<Score>" + hscores[i].list[z].points + "</Score>");
+                    text.Add("</Entry>");
+                }
+                else break;
+            }
+
+            text.Add("</Level>");
+        }
+
+        text.Add("</SCORES>");
+
+        System.IO.File.WriteAllLines("scr.txt", text.ToArray());
+
     }
 
     public void RestartValues()
