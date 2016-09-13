@@ -10,7 +10,8 @@ public enum keyPressValue
     L,
     R,
     A,
-    B
+    B,
+    N
 }
 
 public class KeyPress
@@ -35,51 +36,74 @@ public class Debugger : MonoBehaviour {
         float valueX = InputManager.ActiveDevice.LeftStickX.Value;
         float valueY = InputManager.ActiveDevice.LeftStickY.Value;
 
-        KeyPress keypress = null;
+        keyPressValue keypress = keyPressValue.N;
 
         if (InputManager.ActiveDevice.Action3.WasPressed)
-            keypress = new KeyPress(keyPressValue.A, Time.time);
+            keypress = keyPressValue.A;
         else if (InputManager.ActiveDevice.Action2.WasPressed)
-            keypress = new KeyPress(keyPressValue.B, Time.time);
+            keypress = keyPressValue.B;
         else if (valueY < 0.2 && valueY > -0.2)
         {
             if (valueX >= 0.9)
-                keypress = new KeyPress(keyPressValue.R, Time.time);
+                keypress = keyPressValue.R;
             else if (valueX <= -0.9)
-                keypress = new KeyPress(keyPressValue.L, Time.time);
+                keypress = keyPressValue.L;
         }
         else if (valueX < 0.2 && valueX > -0.2)
         {
             if (valueY >= 0.9)
-                keypress = new KeyPress(keyPressValue.U, Time.time);
+                keypress = keyPressValue.U;
             else if (valueY <= -0.9)
-                keypress = new KeyPress(keyPressValue.D, Time.time);
+                keypress = keyPressValue.D;
         }
 
-        if (keypress != null && (presses.Count == 0 || keypress.value != presses[presses.Count - 1].value))
+        if (presses.Count == 0 || keypress != presses[presses.Count - 1].value)
         {
-            presses.Add(keypress);
-        }
+            presses.Add(new KeyPress(keypress, Time.time));
 
-
-        string pressText = "";
-        for (int i = presses.Count - 1; i >= 0; i--)
-        {
-            if (Time.time > presses[i].time + 10.0f)
+            string pressText = "";
+            for (int i = presses.Count - 1; i >= 0; i--)
             {
-                presses.RemoveAt(i);
+                if (Time.time > presses[i].time + 10.0f)
+                {
+                    presses.RemoveAt(i);
+                }
+                else
+                {
+                    pressText = presses[i].value + pressText;
+                }
             }
-            else
-            {
-                pressText = presses[i].value + pressText;
-            }
+
+            checkCheats(pressText);
         }
+	}
 
-        print(pressText);
-
-        if (pressText.Contains("UDLRLRBA"))
+    private void checkCheats(string pressText)
+    {
+        if (compareCheat(pressText, "UUDDLRLRBA"))
         {
             print("kaching");
         }
-	}
+    }
+
+    private bool compareCheat(string input, string cheat)
+    {
+        string converter = cheat;
+
+        int i = 1;
+        while(i < converter.Length)
+        {
+            converter = converter.Insert(i, "N");
+            i += 2;
+        }
+
+        if (input.Contains(converter))
+        {
+            presses.Clear();
+            return true;
+        }
+        else
+            return false;
+
+    }
 }
