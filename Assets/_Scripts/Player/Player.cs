@@ -17,6 +17,8 @@ public class Player : MonoBehaviour
     //Internal references
     private BoxCollider trigger;
 
+    public bool godmode = false;
+
     // Player element
     public PlayerController playerController;	//Reference to the player controller
     private SpriteRenderer sprite;
@@ -224,8 +226,13 @@ public class Player : MonoBehaviour
 
         if (lives <= 0)
         {
-            lives = 0;
-            lastLife = true;
+            if (!godmode)
+            {
+                lives = 0;
+                lastLife = true;
+            }
+            else
+                lives = 3;
         }
 
         //If it is the last life, activate the dead menu

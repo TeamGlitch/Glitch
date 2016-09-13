@@ -82,7 +82,25 @@ public class Debugger : MonoBehaviour {
     {
         if (compareCheat(pressText, "UUDDLRLRBA"))
         {
-            print("kaching");
+            GameObject go = GameObject.Find("Player");
+            if (go != null)
+            {
+                Player pl = go.GetComponent<Player>();
+                if (pl != null)
+                {
+                    if(pl.godmode)
+                    {
+                        pl.godmode = false;
+                        print("GODMODE DEACTIVATED");
+                    }
+                    else
+                    {
+                        pl.godmode = true;
+                        print("GODMODE ACTIVATED");
+                    }
+
+                }
+            }
         }
     }
 
