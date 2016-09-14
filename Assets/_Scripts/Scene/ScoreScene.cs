@@ -263,7 +263,8 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
             case scoreState.TIME_SHOW_MULTIPLIER_1:
                 if (timeOut(0.5f, scoreState.TIME_SHOW_MULTIPLIER_2))
                 {
-                    timeMultiplier.text = (ScoreManager.instance.getTotalTime() - ScoreManager.instance.getTimeSpent()).ToString() + timeMultiplier.text;
+                    float rest = ScoreManager.instance.getTotalTime() - ScoreManager.instance.getTimeSpent();
+                    timeMultiplier.text = roundToTwo(rest).ToString() + timeMultiplier.text;
                 }
                 break;
 
