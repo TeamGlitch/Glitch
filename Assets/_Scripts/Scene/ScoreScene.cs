@@ -34,6 +34,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
         MEDAL_UP,
         MEDAL_DOWN,
         MEDALS_SHOW,
+        NEW_RECORD,
         SCORE_SHOWING,
         GLITCH_WALKING,
         LOADING_LEVEL
@@ -46,8 +47,8 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
 
     //UI REFERENCES
     public Text finalPoints;
-    private float goalPoints = 0;
-    private float actualPoints = 0;
+    private int goalPoints = 0;
+    private int actualPoints = 0;
 
     public Text pointsMultiplier;
     public Text pointsValue;
@@ -74,6 +75,9 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
     public GameObject MedalPanel;
     public GameObject AchievementMedal;
     private List<RectTransform> medals;
+
+    public Text newHiscore;
+    public InputField nameInput;
 
     //BUTTON REFERENCES
     public Button continueButton;
@@ -157,13 +161,16 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
         continueButton.gameObject.GetComponent<Text>().text = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"Score\"]/UI[@id = \"Score\"]/I[@id = \"Continue\"]").InnerText;
         retryButton.gameObject.GetComponent<Text>().text = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"Score\"]/UI[@id = \"Score\"]/I[@id = \"Retry\"]").InnerText;
         menuButton.gameObject.GetComponent<Text>().text = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"Score\"]/UI[@id = \"Score\"]/I[@id = \"Return\"]").InnerText;
+        newHiscore.text = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"Score\"]/UI[@id = \"Score\"]/I[@id = \"NewHiscore\"]").InnerText;
+        nameInput.transform.GetChild(0).GetComponent<Text>().text = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"Score\"]/UI[@id = \"Score\"]/I[@id = \"YourName\"]").InnerText;
     }
 
 	// Update is called once per frame
 	void Update () {
 
-        if (InputManager.ActiveDevice.AnyButton.WasPressed && 
-            state != scoreState.SCORE_SHOWING && 
+        if (InputManager.ActiveDevice.AnyButton.WasPressed &&
+            state != scoreState.NEW_RECORD &&
+            state != scoreState.SCORE_SHOWING &&
             state != scoreState.GLITCH_WALKING && 
             state != scoreState.LOADING_LEVEL)
         {
@@ -181,7 +188,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
             if (increase < 200 * Time.deltaTime)
                 increase = 200 * Time.deltaTime;
 
-            actualPoints += increase;
+            actualPoints += (int)increase;
 
             if (actualPoints > goalPoints)
                 actualPoints = goalPoints;
@@ -195,7 +202,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
             if (decrease < 200 * Time.deltaTime)
                 decrease = 200 * Time.deltaTime;
 
-            actualPoints -= decrease;
+            actualPoints -= (int)decrease;
 
             if (actualPoints < goalPoints)
                 actualPoints = goalPoints;
@@ -227,7 +234,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                     pointsValue.text = "0";
                     desiredValue = ScoreManager.instance.getPoints();
                     actualValue = 0;
-                    goalPoints = desiredValue;
+                    goalPoints = (int)desiredValue;
                 }
                 break;
 
@@ -273,7 +280,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                     timeValue.text = "x 0";
                     desiredValue = ScoreManager.instance.calculatePoints();
                     actualValue = 0;
-                    goalPoints = ScoreManager.instance.getPoints();
+                    goalPoints = (int)ScoreManager.instance.getPoints();
                 }
                 break;
 
@@ -330,7 +337,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                 if (timeOut(0.7f, scoreState.HEARTS_REMOVE_1))
                 {
                     ScoreManager.instance.calculatePoints();
-                    goalPoints = ScoreManager.instance.getPoints();
+                    goalPoints = (int)ScoreManager.instance.getPoints();
 
                     if (ScoreManager.instance.getRemainingLives() == 3)
                         thirdHeart.sprite = emptyHeart;
@@ -408,7 +415,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                 if (timeOut(0.7f, scoreState.ITEM_REMOVE_1))
                 {
                     ScoreManager.instance.calculatePoints();
-                    goalPoints = ScoreManager.instance.getPoints();
+                    goalPoints = (int)ScoreManager.instance.getPoints();
 
                     if (ScoreManager.instance.getColectionablesTaken() > 0)
                     {
@@ -484,7 +491,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                     if (multiplier != 0)
                     {
                         state = scoreState.MEDAL_UP;
-                        goalPoints = ScoreManager.instance.getPoints();
+                        goalPoints = (int)ScoreManager.instance.getPoints();
 
                         if (ScoreManager.instance.phase == ScoreManager.pointsCalculationPhases.PENALTY)
                         {
@@ -668,10 +675,19 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                 if (timeOut(0.7f, scoreState.SCORE_SHOWING))
                 {
                     ScoreManager.instance.calculatePoints();
-                    continueButton.gameObject.SetActive(true);
-                    retryButton.gameObject.SetActive(true);
-                    menuButton.gameObject.SetActive(true);
-                    continueButton.Select();
+
+                    //If it's a new record
+                    if (ScoreManager.instance.CheckHiscore(Loader.getLastLevel(), goalPoints))
+                    {
+                        newHiscore.transform.parent.gameObject.SetActive(true);
+                        nameInput.Select();
+                        state = scoreState.NEW_RECORD;
+                    }
+                    else
+                    {
+                        HighlightMenu();
+                    }
+
                     if (skip)
                     {
                         actualPoints = goalPoints;
@@ -714,6 +730,29 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
             return true;
         }
         return false;
+    }
+
+    private void HighlightMenu()
+    {
+        continueButton.gameObject.SetActive(true);
+        retryButton.gameObject.SetActive(true);
+        menuButton.gameObject.SetActive(true);
+        continueButton.Select();
+    }
+
+    public void EndHighScoreNameInsertion()
+    {
+        if (nameInput.text != "")
+        {
+            ScoreManager.HiscoreEntry entry = new ScoreManager.HiscoreEntry();
+            entry.name = nameInput.text;
+            entry.points = goalPoints;
+            ScoreManager.instance.NewHiscore(Loader.getLastLevel(), entry);
+        }
+
+        newHiscore.transform.parent.gameObject.SetActive(false);
+        HighlightMenu();
+        state = scoreState.SCORE_SHOWING;
     }
 
     public void NextLevel()

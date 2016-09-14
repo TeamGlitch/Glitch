@@ -106,6 +106,8 @@
         <I id="Continue">Continue</I>
         <I id="Retry">Retry</I>
         <I id="Return">Return to main menu</I>
+        <I id="NewHiscore">NEW HI-SCORE!!</I>
+        <I id="YourName">Your name</I>
       </UI>
     </Group>
   </Set>
@@ -214,6 +216,8 @@
         <I id="Continue">Continuar</I>
         <I id="Retry">Reintentar</I>
         <I id="Return">Volver al menú principal</I>
+        <I id="NewHiscore">NUEVO RECORD!!</I>
+        <I id="YourName">Tu nombre</I>
       </UI>
     </Group>
   </Set>

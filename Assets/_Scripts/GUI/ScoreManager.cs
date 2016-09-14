@@ -164,7 +164,7 @@ public class ScoreManager : MonoBehaviour {
 
         for(int i = 0; i < hscores.Count; i++)
         {
-            text.Add("<Level id=" + hscores[i].name + ">");
+            text.Add("<Level id=\"" + hscores[i].name + "\">");
             
             for(int z = 0; z < hscores[i].list.Length; z++)
             {
@@ -187,7 +187,39 @@ public class ScoreManager : MonoBehaviour {
 
     }
 
-    public bool newHiscore(string level, HiscoreEntry entry)
+
+    //Checks if a given score is a new hiscore
+    public bool CheckHiscore(string level, int points)
+    {
+        int i;
+        for (i = 0; i < hscores.Count; i++)
+        {
+            if (hscores[i].name == level)
+                break;
+        }
+
+        //If it's a new level
+        if (i == hscores.Count)
+            return true;
+        //If it's not
+        else
+        {
+            for (int z = 0; z < hscores[i].list.Length; z++)
+            {
+                //If this position is unnasigned
+                if (hscores[i].list[z] == null || hscores[i].list[z].name == "" || hscores[i].list[z].points == -1)
+                    return true;
+                //If this possition is assigned and worse
+                else if (points > hscores[i].list[z].points)
+                    return true;
+            }
+        }
+
+        return false;
+
+    }
+
+    public bool NewHiscore(string level, HiscoreEntry entry)
     {
 
         int i;
@@ -237,7 +269,6 @@ public class ScoreManager : MonoBehaviour {
                 //If has been found, move this position to the right
                 else
                 {
-                    
                     HiscoreEntry tp2 = hscores[i].list[z];
                     hscores[i].list[z] = temporal;
                     temporal = tp2;
@@ -337,7 +368,6 @@ public class ScoreManager : MonoBehaviour {
         {
             for (int i = 0; i < death_positions.Count; i++)
             {
-                print(Vector3.Distance(death_positions[i], deathPosition));
                 if (Vector3.Distance(death_positions[i], deathPosition) <= 15.0f)
                 {
                     jinxed = true;
