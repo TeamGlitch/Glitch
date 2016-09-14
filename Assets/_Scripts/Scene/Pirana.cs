@@ -63,9 +63,6 @@ public class Pirana : MonoBehaviour {
 
 				transform.position = newPos;
 
-				//Decorative rotation
-				transform.Rotate(Vector3.Lerp(new Vector3(20f,10f,20f), new Vector3(1.3f, 1.2f, 1.3f), timePassed * 1.5f));
-
 			}
 			//If we're not jumping but the time to jump has come
 			else if (Time.time > nextJump) {

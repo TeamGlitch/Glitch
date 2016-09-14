@@ -184,6 +184,8 @@ public class BossArcherIA : MonoBehaviour
         heart3 = HUDLives.FindChild("Heart3").GetComponent<Image>();
         heart4 = HUDLives.FindChild("Heart4").GetComponent<Image>();
         heart5 = HUDLives.FindChild("Heart5").GetComponent<Image>();
+
+        transform.FindChild("GlitchCollider").GetComponent<GlitchArcher>().BossGlitchedEvent += GlitchArcher;
     }
 
     // Update is called once per frame
@@ -676,6 +678,11 @@ public class BossArcherIA : MonoBehaviour
     public void GlitchRevives()
     {
         canShoot = true;
+    }
+
+    public void GlitchArcher()
+    {
+        animator.SetTrigger("LastGlitched");
     }
 
     #endregion

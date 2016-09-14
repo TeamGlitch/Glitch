@@ -11,10 +11,13 @@ public class CollectibleScript : MonoBehaviour {
 
 	void OnTriggerEnter(Collider collider)
 	{
-        player.IncreaseItem(this);
-        gameObject.SetActive(false);
-        SoundManager.instance.PlaySingle(itemSound);
-	}
+        if(collider.CompareTag("Player"))
+        {
+            player.IncreaseItem(this);
+            gameObject.SetActive(false);
+            SoundManager.instance.PlaySingle(itemSound);
+        }
+    }
 
     public void Parable()
     {
