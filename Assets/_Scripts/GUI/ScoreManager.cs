@@ -152,6 +152,9 @@ public class ScoreManager : MonoBehaviour {
                 list.list[entry] = hsentry;
 
             }
+
+            hscores.Add(list);
+
         }
         
         return true;
@@ -568,5 +571,6 @@ public class ScoreManager : MonoBehaviour {
     public int getRemainingLives() { return remaining_lives; }
     public int getTimesRetry() { return times_retry; }
     public int getColectionablesTaken() { return colectionables_taken; }
+    public List<HiscoreList> getHighScores() { return hscores; }
 
 }
