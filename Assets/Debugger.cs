@@ -32,6 +32,61 @@ public class Debugger : MonoBehaviour {
 
     public GameObject HUD;
 
+
+    #if UNITY_EDITOR
+    private Transform[] points;
+
+    void Awake()
+    {
+        GameObject world = GameObject.Find("World");
+        
+        if(world != null)
+        {
+            EnableNextPart[] nextParts = world.transform.GetComponentsInChildren<EnableNextPart>();
+
+            int maxNum = 0;
+            for(int i = 0; i < nextParts.Length; i++)
+            {
+                Transform partTransform = nextParts[i].gameObject.transform;
+                string name = nextParts[i].gameObject.name;
+
+                name = name.Replace("StartNextPart","");
+
+                int value;
+                if (int.TryParse(name, out value))
+                {
+                    if (value > maxNum)
+                        maxNum = value;
+                }
+            }
+
+            points = new Transform[maxNum];
+            for(int i = 0; i < nextParts.Length; i++)
+            {
+                Transform partTransform = nextParts[i].gameObject.transform;
+                string name = nextParts[i].gameObject.name;
+
+                name = name.Replace("StartNextPart", "");
+
+                int value;
+                if (int.TryParse(name, out value))
+                {
+                    value--;
+                    if (points[value] == null || partTransform.position.x < points[value].position.x)
+                    {
+                        points[value] = partTransform;
+                    }
+                }
+            }
+        }
+        else
+        {
+            print("there is no World GameObject!");
+        }
+
+    }
+    #endif
+
 	// Update is called once per frame
 	void Update () {
 
@@ -51,12 +106,11 @@ public class Debugger : MonoBehaviour {
 
         if(value != -1)
         {
-            GameObject point = GameObject.Find("StartNextPart" + value);
             GameObject go = GameObject.Find("Player");
 
-            if (point != null && go != null)
+            if (go != null)
             {
-                Vector3 position = point.transform.position;
+                Vector3 position = points[value].position;
                 go.transform.position = new Vector3(position.x, position.y, go.transform.position.z);
             }
         }
