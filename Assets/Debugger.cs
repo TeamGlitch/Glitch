@@ -31,9 +31,38 @@ public class Debugger : MonoBehaviour {
     private List<KeyPress> presses = new List<KeyPress>();
 
     public GameObject HUD;
-	
+
 	// Update is called once per frame
 	void Update () {
+
+        #if UNITY_EDITOR
+
+        int value = -1;
+
+        if (Input.GetKeyDown(KeyCode.Keypad1)) value = 1;
+        else if (Input.GetKeyDown(KeyCode.Keypad2)) value = 2;
+        else if (Input.GetKeyDown(KeyCode.Keypad3)) value = 3;
+        else if (Input.GetKeyDown(KeyCode.Keypad4)) value = 4;
+        else if (Input.GetKeyDown(KeyCode.Keypad5)) value = 5;
+        else if (Input.GetKeyDown(KeyCode.Keypad6)) value = 6;
+        else if (Input.GetKeyDown(KeyCode.Keypad7)) value = 7;
+        else if (Input.GetKeyDown(KeyCode.Keypad8)) value = 8;
+        else if (Input.GetKeyDown(KeyCode.Keypad9)) value = 9;
+
+        if(value != -1)
+        {
+            GameObject point = GameObject.Find("StartNextPart" + value);
+            GameObject go = GameObject.Find("Player");
+
+            if (point != null && go != null)
+            {
+                Vector3 position = point.transform.position;
+                go.transform.position = new Vector3(position.x, position.y, go.transform.position.z);
+            }
+        }
+
+        #endif
+
 
         float valueX = InputManager.ActiveDevice.LeftStickX.Value;
         float valueY = InputManager.ActiveDevice.LeftStickY.Value;
