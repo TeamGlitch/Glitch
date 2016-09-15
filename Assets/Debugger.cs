@@ -29,6 +29,8 @@ public class KeyPress
 public class Debugger : MonoBehaviour {
 
     private List<KeyPress> presses = new List<KeyPress>();
+
+    public GameObject HUD;
 	
 	// Update is called once per frame
 	void Update () {
@@ -60,26 +62,25 @@ public class Debugger : MonoBehaviour {
         if (presses.Count == 0 || keypress != presses[presses.Count - 1].value)
         {
             presses.Add(new KeyPress(keypress, Time.time));
-
-            string pressText = "";
-            for (int i = presses.Count - 1; i >= 0; i--)
-            {
-                if (Time.time > presses[i].time + 10.0f)
-                {
-                    presses.RemoveAt(i);
-                }
-                else
-                {
-                    pressText = presses[i].value + pressText;
-                }
-            }
-
-            checkCheats(pressText);
+            checkCheats();
         }
 	}
 
-    private void checkCheats(string pressText)
+    private void checkCheats()
     {
+        string pressText = "";
+        for (int i = presses.Count - 1; i >= 0; i--)
+        {
+            if (Time.time > presses[i].time + 10.0f)
+            {
+                presses.RemoveAt(i);
+            }
+            else
+            {
+                pressText = presses[i].value + pressText;
+            }
+        }
+
         if (compareCheat(pressText, "UUDDLRLRBA"))
         {
             GameObject go = GameObject.Find("Player");
@@ -101,6 +102,14 @@ public class Debugger : MonoBehaviour {
 
                 }
             }
+        }
+        else if (compareCheat(pressText, "URDLURDLB"))
+        {
+            Canvas hud = HUD.GetComponent<Canvas>();
+            if (hud.isActiveAndEnabled)
+                hud.enabled = false;
+            else
+                hud.enabled = true;
         }
     }
 
