@@ -99,6 +99,8 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
     public AudioClip medalSound;
     public AudioClip penaltySound;
     public AudioClip newRecordSound;
+    public AudioClip acceptSound;
+    public AudioClip refuseSound;
 
 	// Use this for initialization
 	void Start () {
@@ -807,7 +809,10 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
             entry.name = nameInput.text;
             entry.points = goalPoints;
             ScoreManager.instance.NewHiscore(Loader.getLastLevel(), entry);
+            SoundManager.instance.PlaySingle(acceptSound);
         }
+        else
+            SoundManager.instance.PlaySingle(refuseSound);
 
         newHiscore.transform.parent.gameObject.SetActive(false);
         HighlightMenu();
