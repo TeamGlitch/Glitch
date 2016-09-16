@@ -92,6 +92,14 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
     private float desiredValue;
     private float actualValue;
 
+    private AudioSource countingSource;
+    public AudioClip attributeSound;
+    public AudioClip countingSound;
+    public AudioClip[] extraSound = new AudioClip[3];
+    public AudioClip medalSound;
+    public AudioClip penaltySound;
+    public AudioClip newRecordSound;
+
 	// Use this for initialization
 	void Start () {
 
@@ -218,6 +226,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
             case scoreState.START:
                 if(timeOut(0.5f, scoreState.POINTS_SHOW_MULTIPLIER_1)){
                     pointsMultiplier.text = ScoreManager.instance.getBasePoints().ToString();
+                    SoundManager.instance.PlaySingle(attributeSound);
                 }
                 break;
 
@@ -225,6 +234,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                 if (timeOut(0.5f, scoreState.POINTS_SHOW_MULTIPLIER_2))
                 {
                     pointsMultiplier.text = ScoreManager.instance.getBasePoints().ToString() + " <color=#FFC300FF>x " + ScoreManager.instance.calculatePoints() + "</color>";
+                    SoundManager.instance.PlaySingle(attributeSound);
                 }
                 break;
 
@@ -239,6 +249,8 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                 break;
 
             case scoreState.POINTS_INCREASING:
+
+                playCountingSound();
 
                 if (actualValue < desiredValue)
                 {
@@ -264,6 +276,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                 if (timeOut(0.5f, scoreState.TIME_SHOW_MULTIPLIER_1))
                 {
                     timeMultiplier.text = " <color=#FFC300FF>/ " + ScoreManager.instance.getTotalTime() + "</color>";
+                    SoundManager.instance.PlaySingle(attributeSound);
                 }
                 break;
 
@@ -271,6 +284,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                 if (timeOut(0.5f, scoreState.TIME_SHOW_MULTIPLIER_2))
                 {
                     timeMultiplier.text = (ScoreManager.instance.getTotalTime() - ScoreManager.instance.getTimeSpent()).ToString() + timeMultiplier.text;
+                    SoundManager.instance.PlaySingle(attributeSound);
                 }
                 break;
 
@@ -285,6 +299,8 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                 break;
 
             case scoreState.TIME_INCREASING:
+
+                playCountingSound();
 
                 if (actualValue < desiredValue)
                 {
@@ -321,6 +337,8 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                     secondHeart.enabled = true;
                     thirdHeart.enabled = true;
 
+                    SoundManager.instance.PlaySingle(attributeSound);
+
                     if (ScoreManager.instance.getRemainingLives() < 2)
                     {
                         secondHeart.sprite = thirdHeart.sprite;
@@ -340,11 +358,20 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                     goalPoints = (int)ScoreManager.instance.getPoints();
 
                     if (ScoreManager.instance.getRemainingLives() == 3)
+                    {
                         thirdHeart.sprite = emptyHeart;
+                        SoundManager.instance.PlaySingle(extraSound[0]);
+                    }
                     else if (ScoreManager.instance.getRemainingLives() == 2)
+                    {
                         secondHeart.sprite = thirdHeart.sprite;
+                        SoundManager.instance.PlaySingle(extraSound[0]);
+                    }
                     else
+                    {
                         firstHeart.sprite = thirdHeart.sprite;
+                        SoundManager.instance.PlaySingle(extraSound[0]);
+                    }
 
                     heartText.text = "x 1.0";
                     heartText.fontSize = 20;
@@ -359,6 +386,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                         heartText.text = "x 1.25";
                         heartText.fontSize = 27;
                         state = scoreState.HEARTS_REMOVE_2;
+                        SoundManager.instance.PlaySingle(extraSound[1]);
                     }
                     else if (ScoreManager.instance.getRemainingLives() == 2)
                     {
@@ -366,6 +394,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                         heartText.text = "x 1.25";
                         heartText.fontSize = 27;
                         state = scoreState.HEARTS_REMOVE_2;
+                        SoundManager.instance.PlaySingle(extraSound[1]);
                     }
                     
                 }
@@ -380,6 +409,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                         heartText.text = "x 1.50";
                         heartText.fontSize = 40;
                         state = scoreState.HEARTS_REMOVE_3;
+                        SoundManager.instance.PlaySingle(extraSound[2]);
                     }
                 }
                 break;
@@ -397,6 +427,8 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
 
                     emptyHeart = thirdItem.sprite;
                     fullItem = firstItem.sprite;
+
+                    SoundManager.instance.PlaySingle(attributeSound);
 
                     if (ScoreManager.instance.getColectionablesTaken() < 1)
                         firstItem.sprite = emptyHeart;
@@ -422,6 +454,8 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                         itemText.text = "x 1.5";
                         itemText.fontSize = 20;
 
+                        SoundManager.instance.PlaySingle(extraSound[0]);
+
                         if (ScoreManager.instance.getColectionablesTaken() == 3)
                             thirdItem.sprite = emptyHeart;
                         else if (ScoreManager.instance.getColectionablesTaken() == 2)
@@ -444,6 +478,8 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                         itemText.text = "x 2.5";
                         itemText.fontSize = 27;
 
+                        SoundManager.instance.PlaySingle(extraSound[1]);
+
                         if (ScoreManager.instance.getColectionablesTaken() == 3)
                             secondItem.sprite = emptyHeart;
                         else if (ScoreManager.instance.getColectionablesTaken() == 2)
@@ -461,6 +497,8 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                 {
                     if (ScoreManager.instance.getColectionablesTaken() > 2)
                     {
+                        SoundManager.instance.PlaySingle(extraSound[2]);
+
                         itemText.text = "x 4.0";
                         itemText.fontSize = 40;
                         firstItem.sprite = emptyHeart;
@@ -497,7 +535,6 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                         {
                             medalNumber = ScoreManager.instance.getTimesRetry();
                         }
-
 
                         Sprite[] sprites = Resources.LoadAll<Sprite>("Sprites/GUI/medallas");
                         XmlDocument xmlDoc = new XmlDocument();
@@ -583,6 +620,11 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                                     medal.setImageAndText(sprites[16], title, descr, "<color=#FF0000FF>/2</color>");
                                     break;
                             }
+
+                            if (ScoreManager.instance.phase == ScoreManager.pointsCalculationPhases.PENALTY)
+                                SoundManager.instance.PlaySingle(penaltySound);
+                            else
+                                SoundManager.instance.PlaySingle(medalSound);
 
                             //Size
                             medals[medals.Count - 1].sizeDelta = new Vector2(size, size);
@@ -682,6 +724,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                         newHiscore.transform.parent.gameObject.SetActive(true);
                         nameInput.Select();
                         state = scoreState.NEW_RECORD;
+                        SoundManager.instance.PlaySingle(newRecordSound);
                     }
                     else
                     {
@@ -721,6 +764,22 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
         } while (skip);
 
 	}
+
+    private void playCountingSound()
+    {
+        if (countingSource != null)
+        {
+            if (!countingSource.isPlaying || countingSource.time > countingSource.clip.length * 0.5)
+            {
+                countingSource.Stop();
+                countingSource.Play();
+            }
+        }
+        else
+        {
+            countingSource = SoundManager.instance.PlaySingle(countingSound);
+        }
+    }
 
     private bool timeOut(float time, scoreState newState){
         if (skip || Time.time > timeLastState + time)
