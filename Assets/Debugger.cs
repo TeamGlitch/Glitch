@@ -29,6 +29,7 @@ public class KeyPress
 public class Debugger : MonoBehaviour {
 
     private List<KeyPress> presses = new List<KeyPress>();
+    public AudioClip godModeSound;
 	
 	// Update is called once per frame
 	void Update () {
@@ -96,6 +97,7 @@ public class Debugger : MonoBehaviour {
                     else
                     {
                         pl.godmode = true;
+                        SoundManager.instance.PlaySingle(godModeSound);
                         print("GODMODE ACTIVATED");
                     }
 
