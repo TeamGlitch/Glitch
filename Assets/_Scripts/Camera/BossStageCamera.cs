@@ -19,47 +19,50 @@ public class BossStageCamera : MonoBehaviour {
     };
 
     public Transform archer;
-    public Camera camera;
     public CameraShake shake;
     public GameObject colliders;
     public Transform startPoint;
     public Player player;
     public PlayerController playerCon;
+    public RectTransform topLeft;
+    public RectTransform bossLives;
     public camera_state mode = camera_state.WAITING;
 
+    private Camera camera;
     private bool inZoom = false;
     private float zoomTime = 0;
     private Vector3 initialPosition;
     private Vector3 archerPosition;
     private Rigidbody playerRigid;
     private BoxCollider playerCollider;
+    private float newYPosition;
+    private float height;
 
     void Start()
     {
+        camera = GetComponent<Camera>();
         initialPosition = camera.transform.position;
         playerRigid = player.GetComponent<Rigidbody>();
         playerCollider = player.GetComponent<BoxCollider>();
-
+        
         float targetaspect = 16.0f / 9.0f;
         float windowaspect = (float)Screen.width / (float)Screen.height;
         float scaleheight = windowaspect / targetaspect;
+        Rect rect = camera.rect;
 
         if (scaleheight < 1.0f)
         {
-            Rect rect = camera.rect;
 
             rect.width = 1.0f;
             rect.height = scaleheight;
             rect.x = 0;
-            rect.y = (1.0f - scaleheight) / 2.0f;
+            rect.y = ((1.0f - scaleheight) / 2.0f)*scaleheight;
 
             camera.rect = rect;
         }
         else
         {
             float scalewidth = 1.0f / scaleheight;
-
-            Rect rect = camera.rect;
 
             rect.width = scalewidth;
             rect.height = 1.0f;
@@ -68,6 +71,15 @@ public class BossStageCamera : MonoBehaviour {
 
             camera.rect = rect;
         }
+
+        height = Screen.currentResolution.height;
+        print(height);
+        print(Screen.height);
+        print(camera.pixelHeight);
+        int pix = camera.pixelHeight;
+        newYPosition = ((pix - height)*scaleheight);
+        topLeft.anchoredPosition = new Vector2(topLeft.anchoredPosition.x, newYPosition);
+        bossLives.anchoredPosition = new Vector2(bossLives.anchoredPosition.x, newYPosition);
     }
 
     void Update()
