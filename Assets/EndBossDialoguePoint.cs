@@ -7,6 +7,8 @@ public class EndBossDialoguePoint : MonoBehaviour {
     public DialogueScript dialogueScript;
     public PlayerController player;
     public int sceneNum;
+    public delegate void BossGlitchDelegate();
+    public event BossGlitchDelegate BossGlitchEvent;
 
     private bool used = false;
 
@@ -19,6 +21,7 @@ public class EndBossDialoguePoint : MonoBehaviour {
                 camera.FinalZoomArcherOut();
                 enabled = false;
                 used = false;
+                BossGlitchEvent();
             }
         }
     }
