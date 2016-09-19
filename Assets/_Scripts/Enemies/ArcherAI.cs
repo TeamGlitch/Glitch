@@ -144,6 +144,8 @@ public class ArcherAI : MonoBehaviour {
         archerModel = transform.FindChild("arquera_animclip");
         particleSystem = transform.GetComponent<ParticleSystem>();
         ScoreManager.instance.EnemyAdded();
+
+        player.PlayerDeadEvent += TurnTrigger;
     }
 
     void Update()
