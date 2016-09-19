@@ -158,6 +158,11 @@ public class Player : MonoBehaviour
         playerController.state = PlayerController.player_state.JUMPING;
         transform.position = lastCheckPoint.gameObject.transform.position;
         slowFPSScript.RestartCooldowns();
+
+        if (PlayerDeadEvent != null)
+        {
+            PlayerDeadEvent();
+        }
     }
 
     public void healCompletely()
