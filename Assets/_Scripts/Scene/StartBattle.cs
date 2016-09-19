@@ -10,6 +10,6 @@ public class StartBattle : MonoBehaviour {
     {
         boss.start = true;
         GetComponent<Collider>().enabled = false;
-        camera.ZoomIn();
+        camera.ZoomInBattle();
     }
 }
