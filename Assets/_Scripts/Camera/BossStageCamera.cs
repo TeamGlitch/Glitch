@@ -56,6 +56,7 @@ public class BossStageCamera : MonoBehaviour {
     private Rigidbody playerRig;
     private float archerElevation = -5;
     private float archerXoffset = 0;
+    private float pix;
 
     void Start()
     {
@@ -72,7 +73,7 @@ public class BossStageCamera : MonoBehaviour {
         camera.fieldOfView = glitchZoom;
         camera.transform.position = new Vector3(cameraInitPoint.position.x, cameraInitPoint.position.y, camera.transform.position.z);
         
-        // Adjusting screen and UI
+        // Adjusting screen
         float targetaspect = 16.0f / 9.0f;
         float windowaspect = (float)Screen.width / (float)Screen.height;
         float scaleheight = windowaspect / targetaspect;
@@ -84,9 +85,16 @@ public class BossStageCamera : MonoBehaviour {
             rect.width = 1.0f;
             rect.height = scaleheight;
             rect.x = 0;
-            rect.y = ((1.0f - scaleheight) / 2.0f)*scaleheight;
+            rect.y = (1.0f - scaleheight)/2.0f;
 
             camera.rect = rect;
+
+            // Adjusting UI
+            height = Screen.currentResolution.height;
+            pix = camera.pixelHeight;
+            newYPosition = ((pix - height) / 2.0f);
+            topLeft.anchoredPosition = new Vector2(topLeft.anchoredPosition.x, newYPosition);
+            bossLives.anchoredPosition = new Vector2(bossLives.anchoredPosition.x, newYPosition);
         }
         else
         {
@@ -98,16 +106,14 @@ public class BossStageCamera : MonoBehaviour {
             rect.y = 0;
 
             camera.rect = rect;
+
+            height = Screen.currentResolution.width;
+            pix = camera.pixelWidth;
+            newYPosition = ((pix - height) / 2.0f);
+            topLeft.anchoredPosition = new Vector2(newYPosition, topLeft.anchoredPosition.y);
+            bossLives.anchoredPosition = new Vector2(newYPosition, bossLives.anchoredPosition.y);
         }
 
-        height = Screen.currentResolution.height;
-        print(height);
-        print(Screen.height);
-        print(camera.pixelHeight);
-        int pix = camera.pixelHeight;
-        newYPosition = ((pix - height)*scaleheight);
-        topLeft.anchoredPosition = new Vector2(topLeft.anchoredPosition.x, newYPosition);
-        bossLives.anchoredPosition = new Vector2(bossLives.anchoredPosition.x, newYPosition);
     }
 
     void Update()
