@@ -6,15 +6,19 @@ using System.Xml;
 public class EndPointScript : MonoBehaviour {
 
     public GameObject titlesGameObject;
+    public GameObject player;
     public Text title;
     public Text subtitle;
-
     public TextAsset XMLAsset;
 
+    private Rigidbody playerRig;
+    private BoxCollider playerCol;
 	private float endGame = -1;
 
     void Start()
     {
+        playerRig = player.GetComponent<Rigidbody>();
+        playerCol = player.GetComponent<BoxCollider>();
         enabled = false;
     }
 
@@ -34,6 +38,8 @@ public class EndPointScript : MonoBehaviour {
 			coll.transform.gameObject.GetComponent<PlayerController>().allowMovement = false;
 			endGame = Time.time + 3.0f;
             enabled = true;
+            playerCol.isTrigger = true;
+            playerRig.isKinematic = true; 
 		}
 	}
 
