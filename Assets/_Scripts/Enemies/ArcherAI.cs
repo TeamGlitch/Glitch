@@ -42,6 +42,7 @@ public class ArcherAI : MonoBehaviour {
 	public AudioClip hitSound;
     public AudioClip bowSound;
     public AudioClip explosionSound;
+    public Renderer render;                // To know if is visible
 
     private static GameObject item1;
     private static GameObject item2;
@@ -165,7 +166,7 @@ public class ArcherAI : MonoBehaviour {
                     // Shooting logic
 
                     // If player deaths archer waits, else if is possible shoots
-                    if (player.playerController.state == PlayerController.player_state.DEATH)
+                    if ((player.playerController.state == PlayerController.player_state.DEATH) || (!render.isVisible))
                     {
                         animator.SetBool("Shoot", false);
                         states = enemy_states.WAIT;
