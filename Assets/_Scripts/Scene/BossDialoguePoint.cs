@@ -20,6 +20,7 @@ public class BossDialoguePoint : MonoBehaviour {
     {
 		if((coll.gameObject.CompareTag("Player")) && !used)
 		{
+            camera.ZoomArcherIn();
 			dialogueScript.callScene(sceneNum);
 			used = true;
 		}
@@ -48,7 +49,8 @@ public class BossDialoguePoint : MonoBehaviour {
 
     void ZoomCamera()
     {
-        camera.ZoomIn();
+        camera.ZoomInBattle();
+        player.allowMovement = true;
         roots.isActivable = true;
         gameObject.SetActive(false);
     }

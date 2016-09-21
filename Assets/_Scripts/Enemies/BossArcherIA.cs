@@ -140,6 +140,8 @@ public class BossArcherIA : MonoBehaviour
     public Sprite heartFull;
     public Sprite heartEmpty;
 
+    public EndBossDialoguePoint endBoss;
+
     public delegate void BossDeadDelegate();
     public event BossDeadDelegate BossDeadEvent;
 
@@ -185,7 +187,9 @@ public class BossArcherIA : MonoBehaviour
         heart4 = HUDLives.FindChild("Heart4").GetComponent<Image>();
         heart5 = HUDLives.FindChild("Heart5").GetComponent<Image>();
 
-        transform.FindChild("GlitchCollider").GetComponent<GlitchArcher>().BossGlitchedEvent += GlitchArcher;
+        //transform.FindChild("GlitchCollider").GetComponent<GlitchArcher>().BossGlitchedEvent += GlitchArcher;
+
+        endBoss.BossGlitchEvent += GlitchArcher;
     }
 
     // Update is called once per frame
