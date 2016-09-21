@@ -719,8 +719,8 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
 
     public void NextLevel()
     {
-        if (Loader.getLastScene() == "Level1")
-            Loader.LoadScene("Boss Stage", true);
+        if (Loader.getLastLevel() == "Level1")
+            Loader.LoadScene("BossStage", true);
     }
 
     public void ContinuePress()
