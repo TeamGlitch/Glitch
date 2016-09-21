@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using InControl;
 using System.Xml;
 
@@ -23,6 +24,15 @@ public class MenuScript : MonoBehaviour, LanguageListener {
     public Button exitText;
     public Button firstExitButton;
 
+    public Canvas highscoreMenu;
+    public Text highscoreLevelName;
+    public Text highscoreNames;
+    public Text highscorePoints;
+    public Button highscoreReturnButton;
+    public Text highscoreLeft;
+    public Text highscoreRight;
+    private int actualHighscore = -1;
+
     //SOUND//
     public AudioClip backSound;
     public AudioClip selectSound;
@@ -34,11 +44,14 @@ public class MenuScript : MonoBehaviour, LanguageListener {
 
     public TextAsset XMLAsset;
 
+    private bool leftPadRested = true;
+
 	void Start () 
     {
 
 		quitMenu.enabled = false;
 		levelSelectionMenu.enabled = false;
+        highscoreMenu.enabled = false;
 		startText.Select ();
 
 		//Play the menu music and check this time as the last active
@@ -69,6 +82,25 @@ public class MenuScript : MonoBehaviour, LanguageListener {
                 Loader.LoadScene("Intro", false, false, true, true);
 			}
 		}
+        else if (highscoreMenu.enabled)
+        {
+            if (InputManager.ActiveDevice.LeftStick.X < -0.5f && highscoreLeft.enabled == true && leftPadRested)
+            {
+                actualHighscore--;
+                readHighscoreList();
+                leftPadRested = false;
+            }
+            else if (InputManager.ActiveDevice.LeftStick.X > 0.5f && highscoreRight.enabled == true && leftPadRested)
+            {
+                actualHighscore++;
+                readHighscoreList();
+                leftPadRested = false;
+            }
+            else if (!leftPadRested && InputManager.ActiveDevice.LeftStick.X > -0.5f && InputManager.ActiveDevice.LeftStick.X < 0.5f)
+            {
+                leftPadRested = true;
+            }
+        }
 	}
 
     public void SetTexts()
@@ -178,6 +210,75 @@ public class MenuScript : MonoBehaviour, LanguageListener {
         Loader.LoadScene("BossStage", true);
     }
 
+    public void HighscorePress()
+    {
+        SoundManager.instance.PlaySingle(confirmSound);
+
+        highscoreMenu.enabled = true;
+
+        startText.enabled = false;
+        levelSelectText.enabled = false;
+        exitText.enabled = false;
+        OptionsText.enabled = false;
+
+        onMainScreen = false;
+
+        actualHighscore = 0;
+        readHighscoreList();
+        highscoreReturnButton.Select();
+    }
+
+    private void readHighscoreList()
+    {
+        List<ScoreManager.HiscoreList> hs = ScoreManager.instance.getHighScores();
+
+        if (hs.Count == 0)
+        {
+            highscoreLevelName.text = "No highscores";
+
+            highscoreNames.text = "";
+            for (int i = 0; i < 12; i++)
+                highscoreNames.text += "------------\n";
+
+            highscorePoints.text = "";
+            for (int i = 0; i < 12; i++)
+                highscorePoints.text += "------------\n";
+
+            highscoreLeft.enabled = false;
+            highscoreRight.enabled = false;
+        }
+        else
+        {
+            highscoreLevelName.text = hs[actualHighscore].name;
+
+            highscoreNames.text = "";
+            highscorePoints.text = "";
+            for (int i = 0; i < 10; i++)
+            {
+                if (hs[actualHighscore].list[i] == null)
+                {
+                    highscoreNames.text += "------------\n";
+                    highscorePoints.text += "------------\n";
+                }
+                else
+                {
+                    highscoreNames.text += hs[actualHighscore].list[i].name + "\n";
+                    highscorePoints.text += hs[actualHighscore].list[i].points + "\n";
+                }
+            }
+
+            if (actualHighscore == 0)
+                highscoreLeft.enabled = false;
+            else
+                highscoreLeft.enabled = true;
+
+            if (actualHighscore == hs.Count - 1)
+                highscoreRight.enabled = false;
+            else
+                highscoreRight.enabled = true;
+        }
+    }
+
     public void OptionsPress(){
 
         SoundManager.instance.PlaySingle(confirmSound);
@@ -212,7 +313,11 @@ public class MenuScript : MonoBehaviour, LanguageListener {
         SoundManager.instance.PlaySingle(backSound);
         quitMenu.enabled = false;
 		levelSelectionMenu.enabled = false;
+        highscoreMenu.enabled = false;
         options.Disable();
+
+        actualHighscore = -1;
+
 
 		startText.enabled = true;
 		levelSelectText.enabled = true;
@@ -245,6 +350,4 @@ public class MenuScript : MonoBehaviour, LanguageListener {
     {
         MakeSelectSound(null);
     }
-
-
 }

@@ -10,6 +10,7 @@
       <UI id="Menu">
         <I id="Continue">Continue</I>
         <I id="LevelSelect">Level Select</I>
+        <I id="Hiscores">High Scores</I>
         <I id="Options">Options</I>
         <I id="Quit">Quit</I>
         <I id="Copyright">© 2016 Team Glitch
@@ -28,6 +29,10 @@
   you want to quit?</I>
         <I id="No">No</I>
         <I id="Yes">Yes</I>
+      </UI>
+      <UI id="HighScore">
+        <I id="Title">High Scores</I>
+        <I id="Back">Back</I>
       </UI>
     </Group>
     <Group id="Options">
@@ -106,6 +111,8 @@
         <I id="Continue">Continue</I>
         <I id="Retry">Retry</I>
         <I id="Return">Return to main menu</I>
+        <I id="NewHiscore">NEW HI-SCORE!!</I>
+        <I id="YourName">Your name</I>
       </UI>
     </Group>
   </Set>
@@ -119,6 +126,7 @@
       <UI id="Menu">
         <I id="Continue">Continuar</I>
         <I id="LevelSelect">Seleccionar nivel</I>
+        <I id="Hiscores">Records</I>
         <I id="Options">Opciones</I>
         <I id="Quit">Salir</I>
         <I id="Copyright">© 2016 Team Glitch
@@ -130,6 +138,10 @@
         <I id="Level2">Nivel 2 - NO DISPONIBLE</I>
         <I id="Level3">Nivel 3 - NO DISPONIBLE</I>
         <I id="Boss">Jefe</I>
+        <I id="Back">Volver</I>
+      </UI>
+      <UI id="HighScore">
+        <I id="Title">Records</I>
         <I id="Back">Volver</I>
       </UI>
       <UI id="QuitMenu">
@@ -214,6 +226,8 @@
         <I id="Continue">Continuar</I>
         <I id="Retry">Reintentar</I>
         <I id="Return">Volver al menú principal</I>
+        <I id="NewHiscore">NUEVO RECORD!!</I>
+        <I id="YourName">Tu nombre</I>
       </UI>
     </Group>
   </Set>

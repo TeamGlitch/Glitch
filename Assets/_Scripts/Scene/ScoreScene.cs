@@ -34,6 +34,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
         MEDAL_UP,
         MEDAL_DOWN,
         MEDALS_SHOW,
+        NEW_RECORD,
         SCORE_SHOWING,
         GLITCH_WALKING,
         LOADING_LEVEL
@@ -46,8 +47,8 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
 
     //UI REFERENCES
     public Text finalPoints;
-    private float goalPoints = 0;
-    private float actualPoints = 0;
+    private int goalPoints = 0;
+    private int actualPoints = 0;
 
     public Text pointsMultiplier;
     public Text pointsValue;
@@ -75,6 +76,9 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
     public GameObject AchievementMedal;
     private List<RectTransform> medals;
 
+    public Text newHiscore;
+    public InputField nameInput;
+
     //BUTTON REFERENCES
     public Button continueButton;
     public Button retryButton;
@@ -87,6 +91,16 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
     private float timeLastState;
     private float desiredValue;
     private float actualValue;
+
+    private AudioSource countingSource;
+    public AudioClip attributeSound;
+    public AudioClip countingSound;
+    public AudioClip[] extraSound = new AudioClip[3];
+    public AudioClip medalSound;
+    public AudioClip penaltySound;
+    public AudioClip newRecordSound;
+    public AudioClip acceptSound;
+    public AudioClip refuseSound;
 
 	// Use this for initialization
 	void Start () {
@@ -157,13 +171,16 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
         continueButton.gameObject.GetComponent<Text>().text = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"Score\"]/UI[@id = \"Score\"]/I[@id = \"Continue\"]").InnerText;
         retryButton.gameObject.GetComponent<Text>().text = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"Score\"]/UI[@id = \"Score\"]/I[@id = \"Retry\"]").InnerText;
         menuButton.gameObject.GetComponent<Text>().text = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"Score\"]/UI[@id = \"Score\"]/I[@id = \"Return\"]").InnerText;
+        newHiscore.text = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"Score\"]/UI[@id = \"Score\"]/I[@id = \"NewHiscore\"]").InnerText;
+        nameInput.transform.GetChild(0).GetComponent<Text>().text = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"Score\"]/UI[@id = \"Score\"]/I[@id = \"YourName\"]").InnerText;
     }
 
 	// Update is called once per frame
 	void Update () {
 
-        if (InputManager.ActiveDevice.AnyButton.WasPressed && 
-            state != scoreState.SCORE_SHOWING && 
+        if (InputManager.ActiveDevice.AnyButton.WasPressed &&
+            state != scoreState.NEW_RECORD &&
+            state != scoreState.SCORE_SHOWING &&
             state != scoreState.GLITCH_WALKING && 
             state != scoreState.LOADING_LEVEL)
         {
@@ -181,7 +198,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
             if (increase < 200 * Time.deltaTime)
                 increase = 200 * Time.deltaTime;
 
-            actualPoints += increase;
+            actualPoints += (int)increase;
 
             if (actualPoints > goalPoints)
                 actualPoints = goalPoints;
@@ -195,7 +212,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
             if (decrease < 200 * Time.deltaTime)
                 decrease = 200 * Time.deltaTime;
 
-            actualPoints -= decrease;
+            actualPoints -= (int)decrease;
 
             if (actualPoints < goalPoints)
                 actualPoints = goalPoints;
@@ -211,6 +228,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
             case scoreState.START:
                 if(timeOut(0.5f, scoreState.POINTS_SHOW_MULTIPLIER_1)){
                     pointsMultiplier.text = ScoreManager.instance.getBasePoints().ToString();
+                    SoundManager.instance.PlaySingle(attributeSound);
                 }
                 break;
 
@@ -218,6 +236,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                 if (timeOut(0.5f, scoreState.POINTS_SHOW_MULTIPLIER_2))
                 {
                     pointsMultiplier.text = ScoreManager.instance.getBasePoints().ToString() + " <color=#FFC300FF>x " + ScoreManager.instance.calculatePoints() + "</color>";
+                    SoundManager.instance.PlaySingle(attributeSound);
                 }
                 break;
 
@@ -227,11 +246,13 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                     pointsValue.text = "0";
                     desiredValue = ScoreManager.instance.getPoints();
                     actualValue = 0;
-                    goalPoints = desiredValue;
+                    goalPoints = (int)desiredValue;
                 }
                 break;
 
             case scoreState.POINTS_INCREASING:
+
+                playCountingSound();
 
                 if (actualValue < desiredValue)
                 {
@@ -257,6 +278,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                 if (timeOut(0.5f, scoreState.TIME_SHOW_MULTIPLIER_1))
                 {
                     timeMultiplier.text = " <color=#FFC300FF>/ " + ScoreManager.instance.getTotalTime() + "</color>";
+                    SoundManager.instance.PlaySingle(attributeSound);
                 }
                 break;
 
@@ -264,7 +286,8 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                 if (timeOut(0.5f, scoreState.TIME_SHOW_MULTIPLIER_2))
                 {
                     float rest = ScoreManager.instance.getTotalTime() - ScoreManager.instance.getTimeSpent();
-                    timeMultiplier.text = roundToTwo(rest).ToString() + timeMultiplier.text;
+                    timeMultiplier.text = (ScoreManager.instance.getTotalTime() - ScoreManager.instance.getTimeSpent()).ToString() + timeMultiplier.text;
+                    SoundManager.instance.PlaySingle(attributeSound);
                 }
                 break;
 
@@ -274,11 +297,13 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                     timeValue.text = "x 0";
                     desiredValue = ScoreManager.instance.calculatePoints();
                     actualValue = 0;
-                    goalPoints = ScoreManager.instance.getPoints();
+                    goalPoints = (int)ScoreManager.instance.getPoints();
                 }
                 break;
 
             case scoreState.TIME_INCREASING:
+
+                playCountingSound();
 
                 if (actualValue < desiredValue)
                 {
@@ -315,6 +340,8 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                     secondHeart.enabled = true;
                     thirdHeart.enabled = true;
 
+                    SoundManager.instance.PlaySingle(attributeSound);
+
                     if (ScoreManager.instance.getRemainingLives() < 2)
                     {
                         secondHeart.sprite = thirdHeart.sprite;
@@ -331,14 +358,23 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                 if (timeOut(0.7f, scoreState.HEARTS_REMOVE_1))
                 {
                     ScoreManager.instance.calculatePoints();
-                    goalPoints = ScoreManager.instance.getPoints();
+                    goalPoints = (int)ScoreManager.instance.getPoints();
 
                     if (ScoreManager.instance.getRemainingLives() == 3)
+                    {
                         thirdHeart.sprite = emptyHeart;
+                        SoundManager.instance.PlaySingle(extraSound[0]);
+                    }
                     else if (ScoreManager.instance.getRemainingLives() == 2)
+                    {
                         secondHeart.sprite = thirdHeart.sprite;
+                        SoundManager.instance.PlaySingle(extraSound[0]);
+                    }
                     else
+                    {
                         firstHeart.sprite = thirdHeart.sprite;
+                        SoundManager.instance.PlaySingle(extraSound[0]);
+                    }
 
                     heartText.text = "x 1.0";
                     heartText.fontSize = 20;
@@ -353,6 +389,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                         heartText.text = "x 1.25";
                         heartText.fontSize = 27;
                         state = scoreState.HEARTS_REMOVE_2;
+                        SoundManager.instance.PlaySingle(extraSound[1]);
                     }
                     else if (ScoreManager.instance.getRemainingLives() == 2)
                     {
@@ -360,6 +397,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                         heartText.text = "x 1.25";
                         heartText.fontSize = 27;
                         state = scoreState.HEARTS_REMOVE_2;
+                        SoundManager.instance.PlaySingle(extraSound[1]);
                     }
                     
                 }
@@ -374,6 +412,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                         heartText.text = "x 1.50";
                         heartText.fontSize = 40;
                         state = scoreState.HEARTS_REMOVE_3;
+                        SoundManager.instance.PlaySingle(extraSound[2]);
                     }
                 }
                 break;
@@ -392,6 +431,8 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                     emptyHeart = thirdItem.sprite;
                     fullItem = firstItem.sprite;
 
+                    SoundManager.instance.PlaySingle(attributeSound);
+
                     if (ScoreManager.instance.getColectionablesTaken() < 1)
                         firstItem.sprite = emptyHeart;
                     if (ScoreManager.instance.getColectionablesTaken() < 2)
@@ -409,12 +450,14 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                 if (timeOut(0.7f, scoreState.ITEM_REMOVE_1))
                 {
                     ScoreManager.instance.calculatePoints();
-                    goalPoints = ScoreManager.instance.getPoints();
+                    goalPoints = (int)ScoreManager.instance.getPoints();
 
                     if (ScoreManager.instance.getColectionablesTaken() > 0)
                     {
                         itemText.text = "x 1.5";
                         itemText.fontSize = 20;
+
+                        SoundManager.instance.PlaySingle(extraSound[0]);
 
                         if (ScoreManager.instance.getColectionablesTaken() == 3)
                             thirdItem.sprite = emptyHeart;
@@ -438,6 +481,8 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                         itemText.text = "x 2.5";
                         itemText.fontSize = 27;
 
+                        SoundManager.instance.PlaySingle(extraSound[1]);
+
                         if (ScoreManager.instance.getColectionablesTaken() == 3)
                             secondItem.sprite = emptyHeart;
                         else if (ScoreManager.instance.getColectionablesTaken() == 2)
@@ -455,6 +500,8 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                 {
                     if (ScoreManager.instance.getColectionablesTaken() > 2)
                     {
+                        SoundManager.instance.PlaySingle(extraSound[2]);
+
                         itemText.text = "x 4.0";
                         itemText.fontSize = 40;
                         firstItem.sprite = emptyHeart;
@@ -485,13 +532,12 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                     if (multiplier != 0)
                     {
                         state = scoreState.MEDAL_UP;
-                        goalPoints = ScoreManager.instance.getPoints();
+                        goalPoints = (int)ScoreManager.instance.getPoints();
 
                         if (ScoreManager.instance.phase == ScoreManager.pointsCalculationPhases.PENALTY)
                         {
                             medalNumber = ScoreManager.instance.getTimesRetry();
                         }
-
 
                         Sprite[] sprites = Resources.LoadAll<Sprite>("Sprites/GUI/medallas");
                         XmlDocument xmlDoc = new XmlDocument();
@@ -577,6 +623,11 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                                     medal.setImageAndText(sprites[16], title, descr, "<color=#FF0000FF>/2</color>");
                                     break;
                             }
+
+                            if (ScoreManager.instance.phase == ScoreManager.pointsCalculationPhases.PENALTY)
+                                SoundManager.instance.PlaySingle(penaltySound);
+                            else
+                                SoundManager.instance.PlaySingle(medalSound);
 
                             //Size
                             medals[medals.Count - 1].sizeDelta = new Vector2(size, size);
@@ -669,10 +720,20 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                 if (timeOut(0.7f, scoreState.SCORE_SHOWING))
                 {
                     ScoreManager.instance.calculatePoints();
-                    continueButton.gameObject.SetActive(true);
-                    retryButton.gameObject.SetActive(true);
-                    menuButton.gameObject.SetActive(true);
-                    continueButton.Select();
+
+                    //If it's a new record
+                    if (ScoreManager.instance.CheckHiscore(Loader.getLastLevel(), goalPoints))
+                    {
+                        newHiscore.transform.parent.gameObject.SetActive(true);
+                        nameInput.Select();
+                        state = scoreState.NEW_RECORD;
+                        SoundManager.instance.PlaySingle(newRecordSound);
+                    }
+                    else
+                    {
+                        HighlightMenu();
+                    }
+
                     if (skip)
                     {
                         actualPoints = goalPoints;
@@ -707,6 +768,22 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
 
 	}
 
+    private void playCountingSound()
+    {
+        if (countingSource != null)
+        {
+            if (!countingSource.isPlaying || countingSource.time > countingSource.clip.length * 0.5)
+            {
+                countingSource.Stop();
+                countingSource.Play();
+            }
+        }
+        else
+        {
+            countingSource = SoundManager.instance.PlaySingle(countingSound);
+        }
+    }
+
     private bool timeOut(float time, scoreState newState){
         if (skip || Time.time > timeLastState + time)
         {
@@ -715,6 +792,32 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
             return true;
         }
         return false;
+    }
+
+    private void HighlightMenu()
+    {
+        continueButton.gameObject.SetActive(true);
+        retryButton.gameObject.SetActive(true);
+        menuButton.gameObject.SetActive(true);
+        continueButton.Select();
+    }
+
+    public void EndHighScoreNameInsertion()
+    {
+        if (nameInput.text != "")
+        {
+            ScoreManager.HiscoreEntry entry = new ScoreManager.HiscoreEntry();
+            entry.name = nameInput.text;
+            entry.points = goalPoints;
+            ScoreManager.instance.NewHiscore(Loader.getLastLevel(), entry);
+            SoundManager.instance.PlaySingle(acceptSound);
+        }
+        else
+            SoundManager.instance.PlaySingle(refuseSound);
+
+        newHiscore.transform.parent.gameObject.SetActive(false);
+        HighlightMenu();
+        state = scoreState.SCORE_SHOWING;
     }
 
     public void NextLevel()
