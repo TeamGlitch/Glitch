@@ -288,6 +288,10 @@ public class PlayerController : MonoBehaviour
 
             case player_state.DEATH:
                 rigidBody.velocity = Vector3.zero;
+
+                if (walkSource != null && walkSource.isPlaying)
+                    walkSource.Stop();
+
                 break;
 
 			case player_state.STICKED:

@@ -42,6 +42,7 @@ public class KnightAI : MonoBehaviour {
     public enemy_states states = enemy_states.PATROL;
     public World world;
     public AudioClip hitSound;
+    public AudioClip toPixelSound;
     public AudioClip explosionSound;
     public GameObject item;
 
@@ -539,7 +540,7 @@ public class KnightAI : MonoBehaviour {
 		transform.rotation = new Quaternion(0f,0f,0f,0f);
 		spriteRenderer.enabled = true;
         particleSystem.Play();
-        SoundManager.instance.PlaySingle(explosionSound);
+        SoundManager.instance.PlaySingle(toPixelSound);
         
         Invoke("SpriteToDead", 1.0f);
 	}

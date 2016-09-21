@@ -41,6 +41,7 @@ public class ArcherAI : MonoBehaviour {
     public BoxCollider headCollider;
 	public AudioClip hitSound;
     public AudioClip bowSound;
+    public AudioClip toPixelSound;
     public AudioClip explosionSound;
 
     private static GameObject item1;
@@ -471,7 +472,7 @@ public class ArcherAI : MonoBehaviour {
         transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
         spriteRenderer.enabled = true;
         particleSystem.Play();
-        SoundManager.instance.PlaySingle(explosionSound);
+        SoundManager.instance.PlaySingle(toPixelSound);
         Invoke("SpriteToDead", 1.0f);
     }
 
