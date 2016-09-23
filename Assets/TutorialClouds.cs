@@ -4,13 +4,16 @@ using UnityEngine.UI;
 
 public class TutorialClouds : MonoBehaviour {
 
-    //public RawImage backLayer;
+    public RawImage backLayer;
     public RawImage frontLayer;
 	public Color[] colors;
 
 	private int actualColor = 0;
 	private float colorStart;
 	private bool colorChanging;
+
+    private bool extending = true;
+    private float timeExtendingStarted = 0;
 
 	void Start(){
 		actualColor = 0;
@@ -21,16 +24,53 @@ public class TutorialClouds : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+
 		Rect rect = frontLayer.uvRect;
-		rect.x += 0.2f * Time.deltaTime;
+
+        float percent = (Time.time - timeExtendingStarted) / 15.0f;
+
+
+        if (extending)
+        {
+            if (percent > 1)
+            {
+                percent = 1;
+                timeExtendingStarted = Time.time;
+                extending = false;
+            }
+
+            float value = (1.5227f * Mathf.Pow(percent, 3)) - (2.284f * Mathf.Pow(percent, 2)) + (0.2113f * percent) + 1;
+            rect.height = value;
+            rect.width = value;
+
+        }
+        else
+        {
+
+            if (percent > 1)
+            {
+                percent = 1;
+                timeExtendingStarted = Time.time;
+                extending = true;
+            }
+
+            percent = 1 - percent;
+            float value = (1.5227f * Mathf.Pow(percent, 3)) - (2.284f * Mathf.Pow(percent, 2)) + (0.2113f * percent) + 1;
+            rect.height = value;
+            rect.width = value;
+        }
+		rect.x += 0.1f * Time.deltaTime;
 		frontLayer.uvRect = rect;
+
+        rect = backLayer.uvRect;
+        rect.x -= 0.05f * Time.deltaTime;
+        backLayer.uvRect = rect;
 
 		float end;
 		if (colorChanging)
 		{
 			end = colorStart + 2.0f;
-			float percent = 1 - ((end - Time.time) / 2.0f);
+			percent = 1 - ((end - Time.time) / 2.0f);
 
 			int nextColor = actualColor + 1;
 			if (nextColor == colors.Length)
