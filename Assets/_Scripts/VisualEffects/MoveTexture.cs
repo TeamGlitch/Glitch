@@ -14,7 +14,7 @@ public class MoveTexture : MonoBehaviour {
         if(world.doUpdate)
         {
             float offset = world.lag * scrollSpeed;
-            rend.material.SetTextureOffset("_MainTex", new Vector2(rend.material.GetTextureOffset("_MainTex").x + offset, 0));
+            rend.material.SetTextureOffset("_MainTex", new Vector2(rend.material.GetTextureOffset("_MainTex").x + offset, rend.material.GetTextureOffset("_MainTex").y + offset/2f));
         }
     }
 }
