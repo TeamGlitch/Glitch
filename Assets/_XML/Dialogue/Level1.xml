@@ -46,6 +46,9 @@
       <T>But be careful, it doesn't last forever! Keep an eye on the bar under your lives. It indicates how much time left you have.</T>
       <T>The bar will start filling itself once the power is deactivated, so don't worry about that.</T>
 	  </Scene>
+    <Scene id="5">
+      <T>[face=None][playermove=false]Wow, now you will have to glitch some enemies! Remember, stomp their heads to glitch them!</T>
+    </Scene>
     <EndMessage>
       <Title>Level 1...Complete?</Title>
       <Subtitle>Time for a boss!</Subtitle>
@@ -77,6 +80,9 @@
       <T>Puedes desactivarlo cuando quieras pulsando [controller=B][keyboard=CTRL] de nuevo.</T>
       <T>¡Pero cuidado, que no dura para siempre! Fíjate en la barra bajo tus vidas. Te indica cuánto tiempo te queda.</T>
       <T>No te preocupes, la barra se irá rellenando sola cuando mientras el poder esté inactivo.</T>
+    </Scene>
+    <Scene id="5">
+      <T>[face=None][playermove=false]Wow, ahora tendras que glitchear algunos enemigos! Recuerda, saltales encima para glitchearlos!</T>
     </Scene>
     <EndMessage>
       <Title>Nivel 1...¿Completado?</Title>
