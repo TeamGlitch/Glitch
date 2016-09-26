@@ -90,6 +90,12 @@
       <T>The bar will start filling itself once the power is deactivated, so don't worry about that.</T>
       <T>[tutorialArrow=-1]Let's try it in this smashy-crushy things!</T>
 	  </Scene>
+    <Scene id="13">
+		  <T>[face=Bug][playermove=false]Well, I expected more opposition on our way to the "true game" portal.</T>
+	  </Scene>
+    <Scene id="14">
+		  <T>[face=Bug][playermove=false]And I should probably just shut up. Yup, that will probably help.</T>
+	  </Scene>
     <EndMessage>
       <Title>Level 1...Complete?</Title>
       <Subtitle>Time for a boss!</Subtitle>

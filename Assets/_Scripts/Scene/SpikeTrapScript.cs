@@ -111,9 +111,14 @@ public class SpikeTrapScript : MonoBehaviour
 	{
 		if (other.CompareTag ("Player") && state == spikeTrapState.RESTING)
 		{
-			timeToJump = Time.time + timeTrapWaitsInActivation;
-			currentLerpTime = 0.0f;
-			state = spikeTrapState.WAITING;
+            startJump();
 		}
 	}
+
+    public void startJump()
+    {
+        timeToJump = Time.time + timeTrapWaitsInActivation;
+        currentLerpTime = 0.0f;
+        state = spikeTrapState.WAITING;
+    }
 }

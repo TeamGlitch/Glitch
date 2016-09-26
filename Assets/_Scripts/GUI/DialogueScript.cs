@@ -29,7 +29,7 @@ public class DialogueScript : MonoBehaviour {
 	private XmlDocument xmlDoc;
 
 	//State
-	private dialogueBoxState state;
+	public dialogueBoxState state;
 
 	//External References
 	public PlayerController player;						//The player reference

@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: 99b2d378acb7cd94dbc4fb741f590377
-timeCreated: 1457852552
+guid: 94093c0ac00d1a444a6ddd5e98940e48
+timeCreated: 1474899256
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: bird1
-    100002: //RootNode
+    100000: //RootNode
+    100002: bird1
     100004: group1
     100006: joint1
     100008: joint2
@@ -24,8 +24,8 @@ ModelImporter:
     100032: nurbsCircle5
     100034: nurbsCircle6
     100036: nurbsCircle7
-    400000: bird1
-    400002: //RootNode
+    400000: //RootNode
+    400002: bird1
     400004: group1
     400006: joint1
     400008: joint2
@@ -44,7 +44,8 @@ ModelImporter:
     400034: nurbsCircle6
     400036: nurbsCircle7
     4300000: bird1
-    7400000: fly
+    7400000: aletear
+    7400002: recogerse
     9500000: //RootNode
     13700000: bird1
   materials:
@@ -67,73 +68,7 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations:
-    - serializedVersion: 16
-      name: fly
-      takeName: fly
-      firstFrame: 1
-      lastFrame: 13
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 1
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask:
-      - path: 
-        weight: 1
-      - path: bird1
-        weight: 1
-      - path: group1
-        weight: 1
-      - path: joint1
-        weight: 1
-      - path: joint1/joint2
-        weight: 1
-      - path: joint1/joint2/joint3
-        weight: 1
-      - path: joint1/joint2/joint3/joint4
-        weight: 1
-      - path: joint1/joint2/joint3/joint4/joint5
-        weight: 1
-      - path: joint1/joint6
-        weight: 1
-      - path: joint1/joint6/joint7
-        weight: 1
-      - path: joint1/joint6/joint7/joint8
-        weight: 1
-      - path: joint1/joint6/joint7/joint8/joint9
-        weight: 1
-      - path: nurbsCircle1
-        weight: 1
-      - path: nurbsCircle1/nurbsCircle2
-        weight: 1
-      - path: nurbsCircle1/nurbsCircle2/nurbsCircle3
-        weight: 1
-      - path: nurbsCircle1/nurbsCircle2/nurbsCircle3/nurbsCircle4
-        weight: 1
-      - path: nurbsCircle1/nurbsCircle5
-        weight: 1
-      - path: nurbsCircle1/nurbsCircle5/nurbsCircle6
-        weight: 1
-      - path: nurbsCircle1/nurbsCircle5/nurbsCircle6/nurbsCircle7
-        weight: 1
-      maskType: 0
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 1
+    clipAnimations: []
     isReadable: 1
   meshes:
     lODScreenPercentages: []
