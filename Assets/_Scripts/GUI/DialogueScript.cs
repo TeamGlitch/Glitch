@@ -27,6 +27,9 @@ public class DialogueScript : MonoBehaviour {
 	//Level Dialogue XML
 	public TextAsset XMLAsset;
 	private XmlDocument xmlDoc;
+    
+    //Resolution
+    private float currentResolution;
 
 	//State
 	public dialogueBoxState state;
@@ -109,10 +112,15 @@ public class DialogueScript : MonoBehaviour {
 		dialogueBox.SetActive(false);
 		continueButtonController.SetActive(false);
         continueButtonKeyboard.SetActive(false);
+
+        correctToResolution();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+        if (state != dialogueBoxState.OFF && Camera.current != null && Camera.current.aspect != currentResolution)
+                correctToResolution();
 
 		switch (state) {
 
@@ -142,6 +150,8 @@ public class DialogueScript : MonoBehaviour {
 				autoJump = false;
 				waitBetweenLetters = defaultWaitBetweenLetters;
 				skipable = true;
+
+                dialogueBoxText.text = "";
 
 				state = dialogueBoxState.WRITTING;
 
@@ -488,4 +498,17 @@ public class DialogueScript : MonoBehaviour {
         if(advanceBarEnemies != null)
             advanceBarEnemies.Pause(true);
 	}
+
+    private void correctToResolution()
+    {
+        if (Camera.current != null)
+        {
+            float multiplier = (37f - 33f) / ((16f / 9f) - (5f / 4f));
+            float extra = 33 - ((5f / 4f) * multiplier);
+
+            currentResolution = Camera.current.aspect;
+
+            dialogueBoxText.fontSize = (int)((currentResolution * multiplier) + extra);
+        }
+    }
 }
