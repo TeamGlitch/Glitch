@@ -79,6 +79,9 @@ public class DialogueScript : MonoBehaviour {
 	private float nextAnimationStep = 0f;							//When to go to the next sprite
 	private float faceAnimationSpeed = 0.35f;						//Time between sprites
 
+    //Tutorial arrows
+    public GameObject[] tutoArrows;
+
 	// Use this for initialization
 	void Start () {
 
@@ -402,6 +405,23 @@ public class DialogueScript : MonoBehaviour {
 				nextLetterTime = 0;
 				letterIndex = messageToPrint.Length - 1;
 			}
+            //Show tutorial arrows
+            if (tag == "tutorialArrow")
+            {
+                int arrowValue = int.Parse(value);
+                if (arrowValue == -1)
+                {
+                    for (int i = 0; i < tutoArrows.Length; i++)
+                    {
+                        tutoArrows[i].SetActive(false);
+                    }
+                }
+                else if (arrowValue >= 0 && arrowValue < tutoArrows.Length)
+                {
+                    tutoArrows[arrowValue].SetActive(true);
+                    tutoArrows[arrowValue].GetComponent<Image>().enabled = true;
+                }
+            }
 		}
 	}
 
