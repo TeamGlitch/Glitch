@@ -9,6 +9,8 @@ public class CollectibleScript : MonoBehaviour {
     public bool isFalling = false;
     public BoxCollider collider;
 
+    private Animator animator;
+
 	void OnTriggerEnter(Collider collider)
 	{
         if(collider.CompareTag("Player"))
@@ -16,6 +18,27 @@ public class CollectibleScript : MonoBehaviour {
             player.IncreaseItem(this);
             gameObject.SetActive(false);
             SoundManager.instance.PlaySingle(itemSound);
+        }
+    }
+
+    void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+
+    void Update()
+    {
+        if (Camera.current != null)
+        {
+            Vector3 position = Camera.current.WorldToViewportPoint(transform.position);
+            if (position.x > -0.5f && position.x < 1.5f &&
+                position.y > -0.5f && position.y < 1.5f)
+            {
+                if (!animator.enabled)
+                    animator.enabled = true;
+            }
+            else if (animator.enabled)
+                animator.enabled = false;
         }
     }
 

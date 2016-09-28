@@ -1,0 +1,191 @@
+﻿<!--?xml version=”1.0” encoding=”UTF-8”?-->
+<!--?xml version=”1.0” encoding=”UTF-8”?-->
+<Dialogue >
+  <Set lang="English">
+	  <Scene id="1000">
+		  <T>[face=Glitch]Hello! You can go to the next message with [controller=A][keyboard=W].</T>
+		  <T>I can also skip it automatically.[wait=1.5][skip]</T>
+		  <T>[]And you can't skip this text! Go on! Try it![wait=2]&#xA;See?[wait=0.5] Told ya.</T>
+		  <T>[playermove=false][noskip]You can make the player stop moving...[wait=2]</T>
+		  <T>[playermove=true][noskip]...Or allow you to, so the message goes while playing.</T>
+		  <T>I can talk [wait=1][speed=0]really fast [wait=1][speed=0.5]or really slow.</T>
+		  <T>I can also add...[wait=2]uh...[wait=2]Oh![wait=0.5] Right![wait=0.5] Pauses!</T>
+		  <T>I can also [end]end the message abruptly anytime.</T>
+		  <T>[end]Or just show it all from the start.</T>
+		  <T>[face=Bug]There's also a tag for changing the showing face, including pitch!</T>
+		  <T>[face=Glitch]And you don't have to make any sprite references! It is automatically readed with a resource.loadAll().</T>
+		  <T>[face=Bug]But don't worry! If it's called once, it is stored for fast future use, so you there's no performance drop!</T>
+		  <T>[face=None]If you put "none" on the face tag, this is what happens. Ideal for narration!</T>
+		  <T>[face=Glitch][bga=0.35]You can also change the background transparency!</T>
+		  <T>[bga=1][align=right]You can also change...</T>
+		  <T>[align=center]...the text align...</T>
+		  <T>[align=left]...with tags!</T>
+		  <T>So yeah, have fun.</T>
+	  </Scene>
+    <Scene id="0">
+      <T>[playermove=false][face=Bug]Welcome to the Glitch World!</T>
+      <T>[face=Glitch][speed=0.05]Uh...[wait=0.5][speed=0.02]I know where we are, Bug.[wait=0.2] This is where I was born.[wait=0.2] We were trying to get into the actual game, remember?</T>
+      <T>[face=Bug][speed=0.05]Oh...[wait=0.35]yeah,[wait=0.15] yeah,[wait=0.15][speed=0.02] this is just tutorial etiquette.</T>
+      <T>Just remember you can move [controller=tilting the left stick][keyboard=pressing A and D].</T>
+    </Scene>
+	  <Scene id="1">
+      <T>[playermove=false][face=Bug][bga=0.5]Those little things in front of us are glitch fragments.[wait=0.2] They're everywhere.[wait=0.2] Pick them, they will increase your score!</T>
+      <T>[tutorialArrow=0]You can see how many of them you have in here.</T>
+      <T>[face=Glitch][tutorialArrow=-1]And what about that strange hexagon?</T>
+      <T>[face=Bug]Those are special glitch fragments.</T>
+      <T>They're a bit trickier to get, but they're worthy.[wait=0.2] Your final score will increase greatly!</T>
+    </Scene>
+    <Scene id="2">
+      <T>[playermove=false][face=Bug][bga=1]You can jump pressing [controller=A][keyboard=W].[wait=0.3] The longer you press,[wait=0.2] the higher the jump!</T>
+    </Scene>
+	  <Scene id="3">
+      <T>[playermove=false][face=Bug][tutorialArrow=3]You may have noticed that we're moving on this slide.[wait=0.2] This indicates our position on the level.</T>
+      <T>[tutorialArrow=-1][tutorialArrow=2]This are the heroes.[wait=0.2] They're trying to rescue the princess too.</T>
+      <T>If they complete the level before us,[wait=0.1] we will get a Game Over!</T>
+      <T>[tutorialArrow=-1]We're in the Glitch World and here time goes slower,[wait=0.1] so don't worry.[wait=0.2] We have plenty of it.</T>
+	  </Scene>
+    <Scene id="4">
+      <T>[playermove=false][face=Bug]Oh![wait=0.4] A door![wait=0.4] We probably need a key![wait=0.4] We should go back and...[wait=0.2]</T>
+      <T>[face=Glitch]Or we could press the [controller=X button][keyboard=space bar] to use our teleport.</T>
+      <T>I will teleport [controller=in the direction the left stick was pointing at when the button was pressed][keyboard=in the direction of the movement keys you were pressing when it activated].</T>
+      <T>It ignores any collisions, so I can use it to go through walls, enemies and other solid objects.</T>
+      <T>[face=Bug][speed=0.07]...Yeah, we could do that too.</T>
+      <T>[speed=0][seed=0]Party pooper.[wait=0.5][skip]</T>
+    </Scene>
+    <Scene id="5">
+      <T>[playermove=false][face=Bug]You can use the teleport while jumping, too.[wait=0.2] So it's kind of a double jump!</T>
+	  </Scene>
+    <Scene id="6">
+      <T>[playermove=false][face=Bug][speed=0.07]Uh...[wait=1][speed=0.03]Glitch?[wait=1][speed=0.02] What are you doing?</T>
+      <T>[face=Glitch]I just felt a sudden urge for getting in here to see what would happen.</T>
+      <T>[face=Bug]I...[wait=1]uh...[wait=1]Okay...</T>
+      <T>[face=Glitch]Don't judge me.</T>
+      <T>[face=Bug]Oh...[wait=1][speed=0.04]no...[wait=1][speed=0.07]no...</T>
+      <T>[face=Glitch]I can feel you judging me!</T>
+      <T>[face=Bug]W-[wait=1]We should move on!</T>
+    </Scene>
+    <Scene id="7">
+      <T>[playermove=false][face=Bug]Remember that teleportation can go on any direction,[wait=0.2] including diagonal and downward if you're jumping.</T>
+	  </Scene>
+    <Scene id="8">
+		  <T>[face=Bug][playermove=false]Do you see the exclamation over you head?[wait=0.2] And the distortion in front of you?</T>
+      <T>If there's an exclamation over you head,[wait=0.2] it means that you can bug something on the level pressing [controller=Y][keyboard=shift].</T>
+		  <T>Using this power near this kind of distortions will create platforms!</T>
+	  </Scene>
+    <Scene id="9">
+		  <T>[face=Bug][playermove=false][bga=0.5]This is a checkpoint.</T>
+      <T>[tutorialArrow=4]If you lose a life you will return here.[wait=0.2] It will also heal you completely upon fist activation.</T>
+      <T>[tutorialArrow=-1][tutorialArrow=0]If you lose all three lives you will have to spend glitch fragments if you want to return to the last checkpoint.</T>
+		  <T>[tutorialArrow=-1]But don't worry,[wait=0.15] you won't lose lives in the Glitch World,[wait=0.15] so keep practicing here until you're confident.</T>
+	  </Scene>
+    <Scene id="10">
+		  <T>[face=Bug][playermove=false][bga=1]If you see those green particles,[wait=0.15] that means this wall is climbable.</T>
+      <T>Just jump to it and,[wait=0.15] when you're stuck,[wait=0.15] keep pressing the jump button,[wait=0.15] no direction needed.</T>
+	  </Scene>
+    <Scene id="11">
+		  <T>[face=Bug][playermove=false]Those are bouncy artichokes![wait=0.6] If you press jump at the right time,[wait=0.2] you can get really high!</T>
+	  </Scene>
+    <Scene id="12">
+		  <T>[face=Bug][playermove=false]If you press [controller=B][keyboard=CTRL] you will make the game's FPS drop,[wait=0.2] slowing it down.[wait=0.4] It will make traps easier to avoid!</T>
+      <T>You can deactivate it whenever you want by pressing [controller=B][keyboard=CTRL] again.</T>
+      <T>[tutorialArrow=1]But be careful,[wait=0.2] it doesn't last forever![wait=0.4] This bar shows how many time left you have.</T>
+      <T>The bar will start filling itself once the power is deactivated,[wait=0.2] so don't worry about that.</T>
+      <T>[tutorialArrow=-1]Let's try it in this crushy-thingies!</T>
+	  </Scene>
+    <Scene id="13">
+		  <T>[face=Bug][playermove=false]Well, I expected more opposition on our way to the "true game" portal.</T>
+	  </Scene>
+    <Scene id="14">
+		  <T>[face=Bug][playermove=false]And I should probably just shut up.[wait=0.4] Yup,[wait=0.2] that will probably help.</T>
+	  </Scene>
+    <EndMessage>
+      <Title>Level 1...Complete?</Title>
+      <Subtitle>Time for a boss!</Subtitle>
+    </EndMessage>
+  </Set>
+  
+  
+  <Set lang="Spanish">
+    <Scene id="0">
+      <T>[playermove=false][face=Bug]¡Bienvenido al Mundo Glitch!</T>
+      <T>[face=Glitch][speed=0.05]Eh...[wait=0.5][speed=0.02]Ya sé donde estamos, Bug.[wait=0.2] He nacido aquí.[wait=0.2] Estábamos intentando meternos en el verdadero juego ¿Recuerdas?</T>
+      <T>[face=Bug][speed=0.05]¡Ah...![wait=0.35] Sí,[wait=0.15] sí,[wait=0.15][speed=0.02] era sólo una formalidad de tutorial.</T>
+      <T>Al grano.[wait=0.2] Recuerda que puedes moverte [controller=inclinando el stick izquierdo][keyboard=pulsando A y D].</T>
+    </Scene>
+	  <Scene id="1">
+      <T>[playermove=false][face=Bug][bga=0.5]Esas pequeñas cosas delante de nosotros son fragmentos de glitch.[wait=0.2] Están por todas partes.</T>
+      <T>¡Recógelos, incrementarán tu puntuación!</T>
+      <T>[tutorialArrow=0]Puedes ver cuántos tienes aquí.</T>
+      <T>[face=Glitch][tutorialArrow=-1]¿Y qué hay de ese extraño hexágono?</T>
+      <T>[face=Bug]Esos son fragmentos especiales de glitch</T>
+      <T>Son mas díficiles de alcanzar, pero merecen la pena.[wait=0.2] ¡Tu puntuación final se disparará!</T>
+    </Scene>
+    <Scene id="2">
+      <T>[playermove=false][face=Bug][bga=1]Puedes saltar pulsando [controller=A][keyboard=W]. ¡Cuanto más tiempo lo mantengas pulsado, más alto llegarás!</T>
+    </Scene>
+	  <Scene id="3">
+      <T>[playermove=false][face=Bug][tutorialArrow=3]Puede que te hayas fijado en que nos estamos moviendo en esta barra.[wait=0.2] Ésta es nuestra posición en el nivel.</T>
+      <T>[tutorialArrow=-1][tutorialArrow=2]Estos son los héroes.[wait=0.2] También están intentando salvara a la princesa.</T>
+      <T>Si acaban el nivel antes que nosotros...[wait=0.2]¡Será Game Over!</T>
+      <T>[tutorialArrow=-1]Pero no te preocupes por ahora,[wait=0.1] en el Mundo Glitch el tiempo va mas despacio.[wait=0.2] Tenemos de sobra.</T>
+	  </Scene>
+    <Scene id="4">
+      <T>[playermove=false][face=Bug]¡Oh![wait=0.4] ¡Una puerta![wait=0.4] ¡Quizá haga falta una llave![wait=0.4] Deberíamos volver y...[wait=0.2]</T>
+      <T>[face=Glitch]O podríamos pulsar [controller=el botón X][keyboard=la barra espaciadora] para usar nuestro teletransporte.</T>
+      <T>Me teletransportaré [controller=en la dirección a la que apuntaba el joystick izquierdo][keyboard=en la dirección de las teclas de movimiento] cuando fue activado.</T>
+      <T>Ignora toda colisión, asi que puedo usarlo para atravesar paredes, enemigos y otros objetos sólidos.</T>
+      <T>[face=Bug][speed=0.07]...Sí, también podríamos hacer eso.</T>
+      <T>[speed=0][seed=0]Aguafiestas.[wait=0.5][skip]</T>
+    </Scene>
+    <Scene id="5">
+      <T>[playermove=false][face=Bug]También puedes teletransportarte mientras saltas.[wait=0.2] ¡Es como un doble salto!</T>
+	  </Scene>
+    <Scene id="6">
+      <T>[playermove=false][face=Bug][speed=0.07]Uh...[wait=1][speed=0.03]¿Glitch?[wait=1][speed=0.02] ¿Qué haces?</T>
+      <T>[face=Glitch]De pronto me ha dado por meterme aquí a ver que pasaba.</T>
+      <T>[face=Bug]Yo...[wait=1]uhm...[wait=1]Vale...</T>
+      <T>[face=Glitch]No me juzges.</T>
+      <T>[face=Bug]Oh...[wait=1][speed=0.04]no...[wait=1][speed=0.07]no...</T>
+      <T>[face=Glitch]¡Noto como me juzgas!</T>
+      <T>[face=Bug]¡D-[wait=1]deberíamos ir tirando!</T>
+    </Scene>
+    <Scene id="7">
+      <T>[playermove=false][face=Bug]Recuerda que puedes teletransportarte en cualquier dirección,[wait=0.2] incluyendo en diagonal o hacia abajo si saltas.</T>
+	  </Scene>
+    <Scene id="8">
+		  <T>[face=Bug][playermove=false]¿Ves la exclamación sobre tu cabeza?[wait=0.2] ¿Y la distorsión frente a ti?</T>
+      <T>Si hay una exclamación sobre tu cabeza significa que puedes bugear algo en el nivel pulsando [controller=Y][keyboard=shift].</T>
+		  <T>Si usas este poder en este tipo de distorsiones...[wait=0.2]¡Crearás plataformas!</T>
+	  </Scene>
+    <Scene id="9">
+		  <T>[face=Bug][playermove=false][bga=0.5]Esto es un punto de control.</T>
+      <T>[tutorialArrow=4]Si pierdes una vida volverás aquí.[wait=0.2] También te curará por cumpleto la primera vez que pases por él.</T>
+      <T>[tutorialArrow=-1][tutorialArrow=0]Si pierdes las tres vidas tendrás que gastar fragmentos de glitch para volver al último punto de control.</T>
+		  <T>[tutorialArrow=-1]No te preocupes por ahora,[wait=0.15] no puedes perder vidas en el Mundo Glitch,[wait=0.15] asi que practica hasta que estés contento.</T>
+	  </Scene>
+    <Scene id="10">
+		  <T>[face=Bug][playermove=false][bga=1]Si ves esas partículas verdes significa que esa pared es trepable.</T>
+      <T>Salta sobre ella y,[wait=0.15] cuando estés pegado,[wait=0.15] sigue pulsando el botón de saltar,[wait=0.15] sin ir a ninguna dirección.</T>
+	  </Scene>
+    <Scene id="11">
+		  <T>[face=Bug][playermove=false]¡Alcachofas rebotantes![wait=0.6] ¡Si pulsas el botón de salto en el momento preciso puedes llegar muy alto!</T>
+	  </Scene>
+    <Scene id="12">
+		  <T>[face=Bug][playermove=false]Si pulsas [controller=B][keyboard=CTRL] harás que los FPS del juego bajen, ralentizándolo.[wait=0.4] ¡Esquivar trampas estará chupado!</T>
+      <T>Puedes desactivarlo cuando quieras pulsando [controller=B][keyboard=CTRL] de nuevo.</T>
+      <T>[tutorialArrow=1]¡Pero cuidado,[wait=0.2] que no dura para siempre![wait=0.4] Esta barra te indica cuánto tiempo te queda.</T>
+      <T>No te preocupes,[wait=0.2] la barra se irá rellenando sola cuando mientras el poder esté inactivo.</T>
+      <T>[tutorialArrow=-1]¡Vamos a probarlo con esos cachivaches aplastadores!</T>
+	  </Scene>
+    <Scene id="13">
+		  <T>[face=Bug][playermove=false]Eh, pues este camino tiene poca resistencia para ser el que lleva al portal del "Auténtico juego".</T>
+	  </Scene>
+    <Scene id="14">
+		  <T>[face=Bug][playermove=false]Y debería cerrar el pico de una vez.[wait=0.4] Sep,[wait=0.2] va a ser lo mejor.</T>
+	  </Scene>
+    <EndMessage>
+      <Title>Level 1...Complete?</Title>
+      <Subtitle>Time for a boss!</Subtitle>
+    </EndMessage>
+  </Set>
+</Dialogue>

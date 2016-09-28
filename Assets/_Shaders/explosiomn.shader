@@ -3,6 +3,7 @@
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+		_TimeLeft ("Time Left", Range(0.0, 5.0)) = 0
     }
     SubShader
     {
@@ -35,6 +36,7 @@
  
             sampler2D _MainTex;
             float4 _MainTex_ST;
+			float _TimeLeft;
            
             v2f vert (appdata v)
             {
@@ -50,10 +52,7 @@
             void geom(triangle v2f input[3], inout TriangleStream<v2f> OutputStream)
             {
 
-				float time = 5.0;
-				time -= _Time[2];
-				if(time < 0)
-					time = 0;
+				float time = _TimeLeft;
 
                 v2f test = (v2f)0;
 				float3 normal = (input[0].normal + input[1].normal + input[2].normal)/3.0;

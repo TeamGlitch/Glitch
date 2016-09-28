@@ -27,9 +27,12 @@ public class DialogueScript : MonoBehaviour {
 	//Level Dialogue XML
 	public TextAsset XMLAsset;
 	private XmlDocument xmlDoc;
+    
+    //Resolution
+    private float currentResolution;
 
 	//State
-	private dialogueBoxState state;
+	public dialogueBoxState state;
 
 	//External References
 	public PlayerController player;						//The player reference
@@ -79,6 +82,9 @@ public class DialogueScript : MonoBehaviour {
 	private float nextAnimationStep = 0f;							//When to go to the next sprite
 	private float faceAnimationSpeed = 0.35f;						//Time between sprites
 
+    //Tutorial arrows
+    public GameObject[] tutoArrows;
+
 	// Use this for initialization
 	void Start () {
 
@@ -106,10 +112,15 @@ public class DialogueScript : MonoBehaviour {
 		dialogueBox.SetActive(false);
 		continueButtonController.SetActive(false);
         continueButtonKeyboard.SetActive(false);
+
+        correctToResolution();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+        if (state != dialogueBoxState.OFF && Camera.current != null && Camera.current.aspect != currentResolution)
+                correctToResolution();
 
 		switch (state) {
 
@@ -139,6 +150,8 @@ public class DialogueScript : MonoBehaviour {
 				autoJump = false;
 				waitBetweenLetters = defaultWaitBetweenLetters;
 				skipable = true;
+
+                dialogueBoxText.text = "";
 
 				state = dialogueBoxState.WRITTING;
 
@@ -402,6 +415,23 @@ public class DialogueScript : MonoBehaviour {
 				nextLetterTime = 0;
 				letterIndex = messageToPrint.Length - 1;
 			}
+            //Show tutorial arrows
+            if (tag == "tutorialArrow")
+            {
+                int arrowValue = int.Parse(value);
+                if (arrowValue == -1)
+                {
+                    for (int i = 0; i < tutoArrows.Length; i++)
+                    {
+                        tutoArrows[i].SetActive(false);
+                    }
+                }
+                else if (arrowValue >= 0 && arrowValue < tutoArrows.Length)
+                {
+                    tutoArrows[arrowValue].SetActive(true);
+                    tutoArrows[arrowValue].GetComponent<Image>().enabled = true;
+                }
+            }
 		}
 	}
 
@@ -468,4 +498,17 @@ public class DialogueScript : MonoBehaviour {
         if(advanceBarEnemies != null)
             advanceBarEnemies.Pause(true);
 	}
+
+    private void correctToResolution()
+    {
+        if (Camera.current != null)
+        {
+            float multiplier = (37f - 33f) / ((16f / 9f) - (5f / 4f));
+            float extra = 33 - ((5f / 4f) * multiplier);
+
+            currentResolution = Camera.current.aspect;
+
+            dialogueBoxText.fontSize = (int)((currentResolution * multiplier) + extra);
+        }
+    }
 }

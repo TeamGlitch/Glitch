@@ -36,10 +36,27 @@ public class GlitchWorldNoiseController : MonoBehaviour {
         if (actualQuality != QualitySettings.GetQualityLevel())
             qualityChanges();
 
+        if (Camera.current != null && Camera.current == Camera.main)
+        {
+            //float ratioValue = (-0.0028f * Camera.current.transform.position.z) + 0.0089f;
+            float ratioValue = (-0.0028f * Camera.current.transform.position.z) + 0.0111f;
+
+            ratioValue *= 100f;
+            ratioValue = Mathf.Floor(ratioValue);
+            ratioValue /= 100f;
+
+            if (ratioValue < 0.05f)
+                ratioValue = 0.05f;
+
+            if (occlusion.m_Radius != ratioValue)
+                occlusion.m_Radius = ratioValue;
+
+        }
+
         switch(phase)
         {
             case noisephase.GROW:
-                if (noiseAndGrain.intensityMultiplier < 1.5f)
+                if (noiseAndGrain.intensityMultiplier < 1.25f)
                     noiseAndGrain.intensityMultiplier += 0.5f * Time.deltaTime;
                 else
                 {
