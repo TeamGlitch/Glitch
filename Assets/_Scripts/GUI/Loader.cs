@@ -86,7 +86,10 @@ public class Loader : MonoBehaviour, LanguageListener {
                     else if (allowLoadingToFinish) {
 
                         //If it's automatic or it isn't but the player is pressing a button
-                        if (automaticLoad || (!automaticLoad && (InputManager.ActiveDevice.AnyButton.WasPressed) && !async.allowSceneActivation))
+                        if (automaticLoad ||
+                            (!automaticLoad
+                            && ((InputManager.ActiveDevice.Name == "Keyboard/Mouse" && Input.anyKey) || (InputManager.ActiveDevice.Name != "Keyboard/Mouse" && InputManager.ActiveDevice.AnyButton.WasPressed))
+                            && !async.allowSceneActivation))
                         {
                             //Allow to load
                             async.allowSceneActivation = true;

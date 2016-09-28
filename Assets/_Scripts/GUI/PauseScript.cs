@@ -2,10 +2,14 @@
 using UnityEngine.UI;
 using InControl;
 using System.Xml;
+using UnityEngine.EventSystems;
 
 public class PauseScript : MonoBehaviour, LanguageListener {
 
 	public Player playerPowers;
+
+    public AudioClip selectSound;
+    public AudioClip confirmSound;
 
 	public GameObject pauseMenu;
 	public Button resumeButton;
@@ -23,6 +27,11 @@ public class PauseScript : MonoBehaviour, LanguageListener {
     void OnDestroy()
     {
         Configuration.removeLanguageListener(this);
+    }
+
+    public void MakeSelectSound()
+    {
+        SoundManager.instance.PlaySingle(selectSound);
     }
 
     public void SetTexts()
@@ -76,6 +85,7 @@ public class PauseScript : MonoBehaviour, LanguageListener {
 	{
 		if (pauseMenu.activeInHierarchy)
 		{
+            SoundManager.instance.PlaySingle(confirmSound);
 			playerPowers.enabled = true;
 			Time.timeScale = 1.0f;
             gameObject.SetActive(false);
@@ -84,16 +94,19 @@ public class PauseScript : MonoBehaviour, LanguageListener {
 
 	public void restartPress()
 	{
+        SoundManager.instance.PlaySingle(confirmSound);
         Loader.ReloadScene();
 	}
 
 	public void menuPress()
 	{
+        SoundManager.instance.PlaySingle(confirmSound);
         Loader.LoadScene("menu", false, false, true, true);
     }
 
     public void optionPress(){
 
+        SoundManager.instance.PlaySingle(confirmSound);
         pauseMenu.SetActive(false);
         resumeButton.enabled = false;
         restartButton.enabled = false;
@@ -103,6 +116,7 @@ public class PauseScript : MonoBehaviour, LanguageListener {
 
     public void returnToMenu(){
 
+        SoundManager.instance.PlaySingle(confirmSound);
         pauseMenu.SetActive(true);
         resumeButton.enabled = true;
         restartButton.enabled = true;
