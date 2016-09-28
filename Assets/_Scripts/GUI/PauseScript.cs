@@ -84,13 +84,11 @@ public class PauseScript : MonoBehaviour, LanguageListener {
 
 	public void restartPress()
 	{
-		Time.timeScale = 1.0f;
         Loader.ReloadScene();
 	}
 
 	public void menuPress()
 	{
-		Time.timeScale = 1.0f;
         Loader.LoadScene("menu", false, false, true, true);
     }
 
@@ -118,6 +116,8 @@ public class PauseScript : MonoBehaviour, LanguageListener {
     {
         playerPowers.enabled = false;
         Time.timeScale = 0.0f;
+        for (int i = 0; i < SoundManager.instance.efxSources.Length; i++)
+            SoundManager.instance.efxSources[i].Pause();
         resumeButton.Select();
     }
 
@@ -127,6 +127,8 @@ public class PauseScript : MonoBehaviour, LanguageListener {
         {
             Time.timeScale = 1.0f;
             playerPowers.enabled = true;
+            for (int i = 0; i < SoundManager.instance.efxSources.Length; i++)
+                SoundManager.instance.efxSources[i].UnPause();
             return true;
         }
         

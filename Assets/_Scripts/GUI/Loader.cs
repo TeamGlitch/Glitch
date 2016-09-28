@@ -86,10 +86,11 @@ public class Loader : MonoBehaviour, LanguageListener {
                     else if (allowLoadingToFinish) {
 
                         //If it's automatic or it isn't but the player is pressing a button
-                        if (automaticLoad || (!automaticLoad && InputManager.ActiveDevice.AnyButton.WasPressed))
+                        if (automaticLoad || (!automaticLoad && (InputManager.ActiveDevice.AnyButton.WasPressed) && !async.allowSceneActivation))
                         {
                             //Allow to load
                             async.allowSceneActivation = true;
+                            SoundManager.instance.Restart();
                             SoundManager.instance.setAllowNewSounds(true);
                             SoundManager.instance.PlaySingle(confirmSound);
                         }
@@ -135,7 +136,8 @@ public class Loader : MonoBehaviour, LanguageListener {
                         {
                             //If it's automatic
                             async.allowSceneActivation = true;
-                            SoundManager.instance.MuteAll();
+                            SoundManager.instance.Restart();
+                            Time.timeScale = 1.0f;
                             loading = false;
                         }
 
@@ -216,7 +218,7 @@ public class Loader : MonoBehaviour, LanguageListener {
         {
             interfaceLoad = true;
             Time.timeScale = 0.0f;
-            SoundManager.instance.MuteAll();
+            SoundManager.instance.Restart();
             SoundManager.instance.setAllowNewSounds(false);
         }
         else
@@ -253,7 +255,6 @@ public class Loader : MonoBehaviour, LanguageListener {
             loadingUI.SetActive(true);
             percent.text = Tloading + ": 0%";
         }
-
     }
 
     public static void allowToFinish(){
