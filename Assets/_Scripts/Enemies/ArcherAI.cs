@@ -147,7 +147,7 @@ public class ArcherAI : MonoBehaviour {
         particleSystem = transform.GetComponent<ParticleSystem>();
         ScoreManager.instance.EnemyAdded();
 
-        player.PlayerDeadEvent += TurnTrigger;
+        player.PlayerReviveEvent += TurnTrigger;
     }
 
     void Update()
