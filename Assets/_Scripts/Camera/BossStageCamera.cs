@@ -78,13 +78,13 @@ public class BossStageCamera : MonoBehaviour {
         float windowaspect = (float)Screen.width / (float)Screen.height;
         float scaleheight = windowaspect / targetaspect;
         Rect rect = camera.rect;
-
+        
         if (scaleheight < 1.0f)
         {
 
             rect.width = 1.0f;
             rect.height = scaleheight;
-            rect.x = 0;
+            rect.x = 0.0f;
             rect.y = (1.0f - scaleheight)/2.0f;
 
             camera.rect = rect;
@@ -96,24 +96,7 @@ public class BossStageCamera : MonoBehaviour {
             topLeft.anchoredPosition = new Vector2(topLeft.anchoredPosition.x, newYPosition);
             bossLives.anchoredPosition = new Vector2(bossLives.anchoredPosition.x, newYPosition);
         }
-        else
-        {
-            float scalewidth = 1.0f / scaleheight;
-
-            rect.width = scalewidth;
-            rect.height = 1.0f;
-            rect.x = (1.0f - scalewidth) / 2.0f;
-            rect.y = 0;
-
-            camera.rect = rect;
-
-            height = Screen.currentResolution.width;
-            pix = camera.pixelWidth;
-            newYPosition = ((pix - height) / 2.0f);
-            topLeft.anchoredPosition = new Vector2(newYPosition, topLeft.anchoredPosition.y);
-            bossLives.anchoredPosition = new Vector2(newYPosition, bossLives.anchoredPosition.y);
-        }
-
+        
     }
 
     void Update()
