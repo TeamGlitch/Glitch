@@ -1,0 +1,158 @@
+fileFormatVersion: 2
+guid: 08b4a51934efa5e4bbee6a6de2110522
+timeCreated: 1474730116
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: Pincho001
+    100004: Pincho002
+    100006: Pincho003
+    100008: Pincho004
+    100010: Pincho005
+    100012: Pincho006
+    100014: Pincho007
+    100016: Pincho008
+    100018: Pincho009
+    100020: Pincho010
+    100022: Pincho011
+    100024: Pincho012
+    100026: Pincho013
+    100028: Pincho014
+    100030: Pincho015
+    100032: Pincho017
+    100034: Pincho2
+    400000: //RootNode
+    400002: Pincho001
+    400004: Pincho002
+    400006: Pincho003
+    400008: Pincho004
+    400010: Pincho005
+    400012: Pincho006
+    400014: Pincho007
+    400016: Pincho008
+    400018: Pincho009
+    400020: Pincho010
+    400022: Pincho011
+    400024: Pincho012
+    400026: Pincho013
+    400028: Pincho014
+    400030: Pincho015
+    400032: Pincho017
+    400034: Pincho2
+    2300000: Pincho001
+    2300002: Pincho002
+    2300004: Pincho003
+    2300006: Pincho004
+    2300008: Pincho005
+    2300010: Pincho006
+    2300012: Pincho007
+    2300014: Pincho008
+    2300016: Pincho009
+    2300018: Pincho010
+    2300020: Pincho011
+    2300022: Pincho012
+    2300024: Pincho013
+    2300026: Pincho014
+    2300028: Pincho015
+    2300030: Pincho017
+    2300032: Pincho2
+    3300000: Pincho001
+    3300002: Pincho002
+    3300004: Pincho003
+    3300006: Pincho004
+    3300008: Pincho005
+    3300010: Pincho006
+    3300012: Pincho007
+    3300014: Pincho008
+    3300016: Pincho009
+    3300018: Pincho010
+    3300020: Pincho011
+    3300022: Pincho012
+    3300024: Pincho013
+    3300026: Pincho014
+    3300028: Pincho015
+    3300030: Pincho017
+    3300032: Pincho2
+    4300000: Pincho001
+    4300002: Pincho002
+    4300004: Pincho003
+    4300006: Pincho004
+    4300008: Pincho005
+    4300010: Pincho006
+    4300012: Pincho007
+    4300014: Pincho008
+    4300016: Pincho009
+    4300018: Pincho010
+    4300020: Pincho011
+    4300022: Pincho012
+    4300024: Pincho013
+    4300026: Pincho014
+    4300028: Pincho015
+    4300030: Pincho017
+    4300032: Pincho2
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -3,8 +3,14 @@ using System.Collections;
 
 public class FallingBridgeParts : MonoBehaviour {
 
+    public AudioClip glitch;
     public Rigidbody[] rigidbodyBridgeParts;
     private Rigidbody myRigidbody;
+
+    public float timeToFall = 0.25f;
+
+    public Renderer[] bridgeRenders;
+    public Shader distorsionShader;
 
     void Start()
     {
@@ -13,7 +19,20 @@ public class FallingBridgeParts : MonoBehaviour {
 
     public void OnTriggerEnter(Collider collider)
     {
-        for(int i=0; i < rigidbodyBridgeParts.Length; ++i)
+        if (collider.CompareTag("Player"))
+        {
+            SoundManager.instance.PlaySingle(glitch);
+            for (int i = 0; i < bridgeRenders.Length; ++i)
+            {
+                bridgeRenders[i].material.shader = distorsionShader;
+            }
+            Invoke("Fall", timeToFall);
+        }
+    }
+
+    public void Fall()
+    {
+        for (int i = 0; i < rigidbodyBridgeParts.Length; ++i)
         {
             rigidbodyBridgeParts[i].isKinematic = false;
         }
