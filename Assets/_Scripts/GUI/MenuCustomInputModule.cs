@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine.Serialization;
-
+using InControl;
 
 //CHANGES OVER THE ORIGINAL INPUT MODULE WITH COMMENTED "CHANGED" TAG 
 
@@ -31,15 +31,6 @@ namespace UnityEngine.EventSystems
         {
             get { return InputMode.Mouse; }
         }
-
-        [SerializeField]
-        private string m_HorizontalAxis = "Horizontal";
-
-        /// <summary>
-        /// Name of the vertical axis for movement (if axis events are used).
-        /// </summary>
-        [SerializeField]
-        private string m_VerticalAxis = "Vertical";
 
         /// <summary>
         /// Name of the submit button.
@@ -88,24 +79,6 @@ namespace UnityEngine.EventSystems
             set { m_RepeatDelay = value; }
         }
 
-        /// <summary>
-        /// Name of the horizontal axis for movement (if axis events are used).
-        /// </summary>
-        public string horizontalAxis
-        {
-            get { return m_HorizontalAxis; }
-            set { m_HorizontalAxis = value; }
-        }
-
-        /// <summary>
-        /// Name of the vertical axis for movement (if axis events are used).
-        /// </summary>
-        public string verticalAxis
-        {
-            get { return m_VerticalAxis; }
-            set { m_VerticalAxis = value; }
-        }
-
         public string submitButton
         {
             get { return m_SubmitButton; }
@@ -140,8 +113,10 @@ namespace UnityEngine.EventSystems
             var shouldActivate = m_ForceModuleActive;
             Input.GetButtonDown(m_SubmitButton);
             shouldActivate |= Input.GetButtonDown(m_CancelButton);
-            shouldActivate |= !Mathf.Approximately(Input.GetAxisRaw(m_HorizontalAxis), 0.0f);
-            shouldActivate |= !Mathf.Approximately(Input.GetAxisRaw(m_VerticalAxis), 0.0f);
+            shouldActivate |= !Mathf.Approximately(InputManager.ActiveDevice.DPadX, 0.0f);
+            shouldActivate |= !Mathf.Approximately(InputManager.ActiveDevice.DPadY, 0.0f);
+            shouldActivate |= !Mathf.Approximately(InputManager.ActiveDevice.LeftStickX, 0.0f);
+            shouldActivate |= !Mathf.Approximately(InputManager.ActiveDevice.LeftStickY, 0.0f);
             shouldActivate |= (m_MousePosition - m_LastMousePosition).sqrMagnitude > 0.0f;
             shouldActivate |= Input.GetMouseButtonDown(0);
             return shouldActivate;
@@ -203,17 +178,26 @@ namespace UnityEngine.EventSystems
         private Vector2 GetRawMoveVector()
         {
             Vector2 move = Vector2.zero;
-            move.x = Input.GetAxisRaw(m_HorizontalAxis);
-            move.y = Input.GetAxisRaw(m_VerticalAxis);
 
-            if (Input.GetButtonDown(m_HorizontalAxis))
+            if (!Mathf.Approximately(InputManager.ActiveDevice.DPadX, 0.0f) || !Mathf.Approximately(InputManager.ActiveDevice.DPadY, 0.0f))
+            {
+                move.x = InputManager.ActiveDevice.DPadX;
+                move.y = InputManager.ActiveDevice.DPadY;
+            }
+            else if (!Mathf.Approximately(InputManager.ActiveDevice.LeftStickX, 0.0f) || !Mathf.Approximately(InputManager.ActiveDevice.LeftStickY, 0.0f))
+            {
+                move.x = InputManager.ActiveDevice.LeftStickX;
+                move.y = InputManager.ActiveDevice.LeftStickY;
+            }
+
+            if (DpadXWasPressed() || LeftStickWasMovedX())
             {
                 if (move.x < 0)
                     move.x = -1f;
                 if (move.x > 0)
                     move.x = 1f;
             }
-            if (Input.GetButtonDown(m_VerticalAxis))
+            if (DpadYWasPressed() || LeftStickWasMovedY())
             {
                 if (move.y < 0)
                     move.y = -1f;
@@ -221,6 +205,36 @@ namespace UnityEngine.EventSystems
                     move.y = 1f;
             }
             return move;
+        }
+
+        private bool DpadWasPressed()
+        {
+            return DpadYWasPressed() || DpadXWasPressed();
+        }
+
+        private bool DpadXWasPressed()
+        {
+            return InputManager.ActiveDevice.DPadLeft.WasPressed || InputManager.ActiveDevice.DPadRight.WasPressed;
+        }
+
+        private bool DpadYWasPressed()
+        {
+            return InputManager.ActiveDevice.DPadDown.WasPressed || InputManager.ActiveDevice.DPadUp.WasPressed;
+        }
+
+        private bool LeftStickWasMoved()
+        {
+            return LeftStickWasMovedY() || LeftStickWasMovedX();
+        }
+
+        private bool LeftStickWasMovedX()
+        { 
+            return (Mathf.Approximately(InputManager.ActiveDevice.LeftStickX.LastValue, 0) && (InputManager.ActiveDevice.LeftStickX.Value > 0.5f || InputManager.ActiveDevice.LeftStickX.Value < -0.5f));
+        }
+
+        private bool LeftStickWasMovedY()
+        {
+            return (Mathf.Approximately(InputManager.ActiveDevice.LeftStickY.LastValue, 0) && (InputManager.ActiveDevice.LeftStickY.Value > 0.5f || InputManager.ActiveDevice.LeftStickY.Value < -0.5f));
         }
 
         /// <summary>
@@ -238,7 +252,9 @@ namespace UnityEngine.EventSystems
             }
 
             // If user pressed key again, always allow event
-            bool allow = Input.GetButtonDown(m_HorizontalAxis) || Input.GetButtonDown(m_VerticalAxis);
+            bool allow = DpadWasPressed() || LeftStickWasMoved();
+            //bool allow = InputManager.ActiveDevice.DPadX != 0 || InputManager.ActiveDevice.DPadY != 0;
+            
             bool similarDir = (Vector2.Dot(movement, m_LastMoveVector) > 0);
             if (!allow)
             {

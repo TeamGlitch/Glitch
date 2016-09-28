@@ -130,20 +130,15 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void MuteAll()
+    public void Restart()
     {
-        if (musicSource.isPlaying)
-            musicSource.Stop();
-
+        musicSource.Stop();
+        musicSource.time = 0f;
 
         for (int i = 0; i < efxSources.Length; i++)
         {
-            if (efxSources[i].isPlaying)
-            {
-                efxSources[i].Stop();
-            }
-
-
+            efxSources[i].Stop();
+            efxSources[i].time = 0f;
         }
 
     }
