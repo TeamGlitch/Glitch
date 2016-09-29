@@ -62,6 +62,42 @@ public class MenuScript : MonoBehaviour, LanguageListener {
         SetTexts();
 
         Configuration.addLanguageListener(this);
+
+
+        //TODO: Repeated with PauseScript Start with minor differences
+        ColorBlock cb;
+        Color darkBrown;
+        Color lightBrown;
+        Color white;
+
+        ColorUtility.TryParseHtmlString("#9F9F9FFF", out darkBrown);
+        ColorUtility.TryParseHtmlString("#C8C8C8FF", out lightBrown);
+        ColorUtility.TryParseHtmlString("#FFFFFFFF", out white);
+
+        Toggle[] toggles = transform.parent.GetComponentsInChildren<Toggle>();
+        for (int i = 0; i < toggles.Length; i++)
+        {
+            cb = toggles[i].colors;
+            cb.normalColor = darkBrown;
+            cb.highlightedColor = white;
+            toggles[i].colors = cb;
+        }
+
+        Dropdown[] dropdowns = transform.parent.GetComponentsInChildren<Dropdown>();
+        for (int i = 0; i < dropdowns.Length; i++)
+        {
+            cb = dropdowns[i].colors;
+            cb.normalColor = darkBrown;
+            cb.highlightedColor = white;
+            dropdowns[i].colors = cb;
+
+            Toggle toggle = dropdowns[i].transform.GetChild(2).GetChild(0).GetChild(0).GetChild(0).GetComponent<Toggle>();
+            cb = toggle.colors;
+            cb.normalColor = darkBrown;
+            cb.highlightedColor = lightBrown;
+            toggle.colors = cb;
+        }
+
 	}
 
     void OnDestroy()

@@ -119,8 +119,13 @@ public class DialogueScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (state != dialogueBoxState.OFF && Camera.current != null && Camera.current.aspect != currentResolution)
+        if (state != dialogueBoxState.OFF)
+        {
+            if(Camera.current != null && Camera.current.aspect != currentResolution)
                 correctToResolution();
+            if (audio.volume != SoundManager.instance.getSoundVolume())
+                audio.volume = SoundManager.instance.getSoundVolume();
+        }
 
 		switch (state) {
 

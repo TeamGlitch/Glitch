@@ -84,6 +84,11 @@ public class SoundManager : MonoBehaviour
             efxSources[i].volume = volume;
     }
 
+    public float getSoundVolume()
+    {
+        return efxSources[0].volume;
+    }
+
     public void setPan(float pan)
     {
         if (pan < -1)
