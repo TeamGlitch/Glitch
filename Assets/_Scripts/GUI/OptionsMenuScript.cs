@@ -41,9 +41,9 @@ public class OptionsMenuScript : MonoBehaviour, LanguageListener {
 
     //Credits
     private bool onCredits = false;
-    private float onCreditsAcumulated = 0;
+    private float timeBegin;
     public Text credits;
-    public Slider creditsSlider;
+    public RectTransform creditsT;
 
 	void Start () {
         optionsMenu.SetActive(false);
@@ -57,18 +57,28 @@ public class OptionsMenuScript : MonoBehaviour, LanguageListener {
 
     void Update()
     {
+
         if (onCredits)
         {
-            onCreditsAcumulated += Time.deltaTime;
-            if (onCreditsAcumulated < creditsSlider.maxValue)
-                creditsSlider.value = onCreditsAcumulated;
-            else if (onCreditsAcumulated > creditsSlider.maxValue + 4f)
+            float maxMov = 836.3f;
+            float maxTime = 20f;
+
+            float actualTime = Time.time - timeBegin;
+            Vector3 position = creditsT.anchoredPosition;
+
+            if (actualTime < 4f)
+                position.y = 0;
+            else if (actualTime - 4 < maxTime)
+                position.y = ((actualTime - 4) / maxTime) * maxMov;
+            else if (actualTime - 4 > maxTime + 4)
             {
-                creditsSlider.value = 0;
-                onCreditsAcumulated = 0;
+                position.y = 0;
+                timeBegin = Time.time;
             }
             else
-                creditsSlider.value = creditsSlider.maxValue;
+                position.y = maxMov;
+
+            creditsT.anchoredPosition = position;
         }
     }
 
@@ -347,7 +357,7 @@ public class OptionsMenuScript : MonoBehaviour, LanguageListener {
         creditsMenu.SetActive(true);
         optionsMenu.SetActive(false);
         onCredits = true;
-        onCreditsAcumulated = 0;
+        timeBegin = Time.time;
 
         firstCreditsButton.Select();
     }
