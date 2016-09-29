@@ -39,6 +39,12 @@ public class OptionsMenuScript : MonoBehaviour, LanguageListener {
     public TextAsset XMLAsset;
     public Transform menusContainer;
 
+    //Credits
+    private bool onCredits = false;
+    private float onCreditsAcumulated = 0;
+    public Text credits;
+    public Slider creditsSlider;
+
 	void Start () {
         optionsMenu.SetActive(false);
         helpMenu.SetActive(false);
@@ -48,6 +54,23 @@ public class OptionsMenuScript : MonoBehaviour, LanguageListener {
         SetTexts();
         Configuration.addLanguageListener(this);
 	}
+
+    void Update()
+    {
+        if (onCredits)
+        {
+            onCreditsAcumulated += Time.deltaTime;
+            if (onCreditsAcumulated < creditsSlider.maxValue)
+                creditsSlider.value = onCreditsAcumulated;
+            else if (onCreditsAcumulated > creditsSlider.maxValue + 4f)
+            {
+                creditsSlider.value = 0;
+                onCreditsAcumulated = 0;
+            }
+            else
+                creditsSlider.value = creditsSlider.maxValue;
+        }
+    }
 
     void OnDestroy()
     {
@@ -137,6 +160,7 @@ public class OptionsMenuScript : MonoBehaviour, LanguageListener {
         graphicsMenu.SetActive(false);
         audioMenu.SetActive(false);
         creditsMenu.SetActive(false);
+        onCredits = false;
 
         ControlsButton.Select();
     }
@@ -322,6 +346,8 @@ public class OptionsMenuScript : MonoBehaviour, LanguageListener {
         SoundManager.instance.PlaySingle(confirmSound);
         creditsMenu.SetActive(true);
         optionsMenu.SetActive(false);
+        onCredits = true;
+        onCreditsAcumulated = 0;
 
         firstCreditsButton.Select();
     }

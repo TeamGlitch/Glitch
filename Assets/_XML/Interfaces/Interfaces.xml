@@ -46,20 +46,6 @@
       </UI>
       <UI id="CreditsMenu">
         <I id="Title">CREDITS</I>
-        <I id="Credits">Project Manager
-  Raul Ramos Macias
-
-  Art Department
-  Lead Artist: Ion Ander Carrillo Valverde
-  Artists: Xabier Iruretagoyena Ajuria
-
-  Programming Department
-  Lead Programmer: 
-  Cristian Fernández Suárez
-  Programmers: Raul Ramos Macias, Oriol Romero Herrando
-
-  Game designer
-  Oriol Romero Herrando</I>
         <I id="Back">Back</I>
       </UI>
       <UI id="GraphicsMenu">
