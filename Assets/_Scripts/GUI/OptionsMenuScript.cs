@@ -57,13 +57,12 @@ public class OptionsMenuScript : MonoBehaviour, LanguageListener {
 
     void Update()
     {
-
         if (onCredits)
         {
             float maxMov = 836.3f;
             float maxTime = 20f;
 
-            float actualTime = Time.time - timeBegin;
+            float actualTime = Time.unscaledTime - timeBegin;
             Vector3 position = creditsT.anchoredPosition;
 
             if (actualTime < 4f)
@@ -73,7 +72,7 @@ public class OptionsMenuScript : MonoBehaviour, LanguageListener {
             else if (actualTime - 4 > maxTime + 4)
             {
                 position.y = 0;
-                timeBegin = Time.time;
+                timeBegin = Time.unscaledTime;
             }
             else
                 position.y = maxMov;
@@ -139,6 +138,8 @@ public class OptionsMenuScript : MonoBehaviour, LanguageListener {
                 print("Menu " + texts[i].Attributes["id"].Value + " not found.");
             }
         }
+
+        credits.text = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"Credits\"]/UI[@id = \"Credits\"]").InnerText;
 
         //Lang config
 
@@ -357,7 +358,7 @@ public class OptionsMenuScript : MonoBehaviour, LanguageListener {
         creditsMenu.SetActive(true);
         optionsMenu.SetActive(false);
         onCredits = true;
-        timeBegin = Time.time;
+        timeBegin = Time.unscaledTime;
 
         firstCreditsButton.Select();
     }
