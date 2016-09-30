@@ -18,8 +18,8 @@
       </UI>
       <UI id="LevelSelectionMenu">
         <I id="Choose">CHOOSE LEVEL</I>
+        <I id="Tutorial">Tutorial</I>
         <I id="Level1">Level 1</I>
-        <I id="Level2">Level 2 - NOT YET</I>
         <I id="Level3">Level 3 - NOT YET</I>
         <I id="Boss">Boss</I>
         <I id="Back">Back</I>
@@ -148,8 +148,8 @@ increpare's Bfxr]]></UI>
       </UI>
       <UI id="LevelSelectionMenu">
         <I id="Choose">SELECCIONAR NIVEL</I>
+        <I id="Tutorial">Tutorial</I>
         <I id="Level1">Nivel 1</I>
-        <I id="Level2">Nivel 2 - NO DISPONIBLE</I>
         <I id="Level3">Nivel 3 - NO DISPONIBLE</I>
         <I id="Boss">Jefe</I>
         <I id="Back">Volver</I>

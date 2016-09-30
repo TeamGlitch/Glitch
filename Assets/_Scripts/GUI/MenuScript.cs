@@ -15,7 +15,7 @@ public class MenuScript : MonoBehaviour, LanguageListener {
 
     public Canvas levelSelectionMenu;
     public Button levelSelectText;
-    public Button firstLevelSelectButton;
+    public Button tutorialLevelSelectButton;
 
     private OptionsMenuScript options;
     public Button OptionsText;
@@ -213,12 +213,12 @@ public class MenuScript : MonoBehaviour, LanguageListener {
 	{
         SoundManager.instance.PlaySingle(confirmSound);
         levelSelectionMenu.enabled = true;
-        firstLevelSelectButton.Select();
+        tutorialLevelSelectButton.Select();
 
 		onMainScreen = false;
 	}
 
-    public void Level1Press()
+    private void levelLoad()
     {
         SoundManager.instance.PlaySingle(confirmSound);
         levelSelectionMenu.enabled = false;
@@ -229,20 +229,23 @@ public class MenuScript : MonoBehaviour, LanguageListener {
         loadingText.gameObject.SetActive(true);
         SoundManager.instance.musicSource.Stop();
         onMainScreen = false;
+    }
+
+    public void LevelTutorialPress()
+    {
+        levelLoad();
+        Loader.LoadScene("Tutorial", true);
+    }
+
+    public void Level1Press()
+    {
+        levelLoad();
         Loader.LoadScene("Level1", true);
     }
 
     public void LevelBossPress()
     {
-        SoundManager.instance.PlaySingle(confirmSound);
-        levelSelectionMenu.enabled = false;
-        startText.gameObject.SetActive(false);
-        levelSelectText.gameObject.SetActive(false);
-        exitText.gameObject.SetActive(false);
-        OptionsText.gameObject.SetActive(false);
-        loadingText.gameObject.SetActive(true);
-        SoundManager.instance.musicSource.Stop();
-        onMainScreen = false;
+        levelLoad();
         Loader.LoadScene("BossStage", true);
     }
 
