@@ -167,7 +167,10 @@ public class TutorialClouds : MonoBehaviour {
                     {
                         case 2:
                             distorsion = distortionEffect.RUN_AND_COLLAPSE;
-                            effectEnd = Time.time + Random.Range(3.2f, 4.7f);
+                            rect = wavyDistortion.uvRect;
+                            rect.height = 0.35f;
+                            wavyDistortion.uvRect = rect;
+                            effectEnd = Time.time + Random.Range(2.0f, 3.0f);
                             break;
                         case 1:
                             distorsion = distortionEffect.FLICKER;
@@ -390,8 +393,8 @@ public class TutorialClouds : MonoBehaviour {
                     percent = (Time.time - effectBegin) / (effectEnd - effectBegin);
 
                     rect = plainDistortion.uvRect;
-                    rect.y += 8.5f * (1 - percent) * Time.deltaTime;
-                    rect.height += 4.5f * percent * Time.deltaTime;
+                    rect.y += 2.2f * (1 - percent) * Time.deltaTime;
+                    rect.height += 2.25f * percent * Time.deltaTime;
                     plainDistortion.uvRect = rect;
 
                     if (percent < 0.85f || (percent > 0.90f && percent < 0.95f))
