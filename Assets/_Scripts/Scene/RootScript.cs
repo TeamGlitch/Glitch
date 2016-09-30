@@ -4,7 +4,9 @@ using System.Collections;
 public class RootScript : MonoBehaviour {
 
     public GameObject root;
-    public float waitingTime;
+    public float waitUntilExtend;
+    public float waitUntilShrink;
+    public bool continousMoving;
 
     private Animator anim;
     private bool stop = false;
@@ -14,14 +16,28 @@ public class RootScript : MonoBehaviour {
         anim = root.GetComponent<Animator>();
     }
 
+    void Update()
+    {
+        if (continousMoving && !stop)
+        {
+            Invoke("Extend", waitUntilExtend);
+            stop = true;
+        }
+    }
+
     void OnTriggerEnter(Collider coll)
     {
-        if (!stop && coll.CompareTag("Player"))
+        if (!continousMoving && !stop && coll.CompareTag("Player"))
         {
-            anim.SetBool("Extend", true);
+            Invoke("Extend", waitUntilExtend);
             stop = true;
-            Invoke("Shrink", waitingTime);
         }
+    }
+
+    public void Extend()
+    {
+        anim.SetBool("Extend", true);
+        Invoke("Shrink", waitUntilShrink);
     }
 
     public void Shrink()
