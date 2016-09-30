@@ -98,9 +98,22 @@
     <Scene id="14">
 		  <T>[face=Bug][playermove=false]And I should probably just shut up.[wait=0.4] Yup,[wait=0.2] that will probably help.</T>
 	  </Scene>
+    <Scene id="15">
+      <T>[noskip][face=Bug][playermove=false][speed=0.07]Well...[wait=1.5]this is it.</T>
+      <T>Here's the portal.[wait=1]&#xA;If we go to the other side, we will be breaking the rules.</T>
+      <T>Everyone will be against us,[wait=0.5] and we don't know how our actions will affect that world.</T>
+      <T>[speed=0.05]With that being said...[wait=2][speed=0.07]&#xA;Are you sure you want to continue?</T>
+      <T>[face=Glitch][speed=0.17]......</T>
+      <T>[speed=0.17]I...[wait=2][speed=0.07]I don't want to be looked down on.</T>
+      <T>[speed=0.07]I don't want to feel like this game is not my home too.</T>
+      <T>[speed=0.07]I don't want to be just[speed=0.1]...[wait=1.5][speed=0.09]an error.</T>
+      <T>I must do this.[wait=1.5] I must rescue that princess and become a heroe.</T>
+      <T>[face=Bug][speed=0.17]....[wait=1.5][speed=0.05]So be it.</T>
+      <T>Step into the portal.[wait=1]&#xA;Let's show them who's boss.</T>
+    </Scene>
     <EndMessage>
-      <Title>Level 1...Complete?</Title>
-      <Subtitle>Time for a boss!</Subtitle>
+      <Title>Tutorial Complete</Title>
+      <Subtitle>It's time for a new adventure!</Subtitle>
     </EndMessage>
   </Set>
   
@@ -117,7 +130,7 @@
       <T>¡Recógelos, incrementarán tu puntuación!</T>
       <T>[tutorialArrow=0]Puedes ver cuántos tienes aquí.</T>
       <T>[face=Glitch][tutorialArrow=-1]¿Y qué hay de ese extraño hexágono?</T>
-      <T>[face=Bug]Esos son fragmentos especiales de glitch</T>
+      <T>[face=Bug]Esos son fragmentos especiales de glitch.</T>
       <T>Son mas díficiles de alcanzar, pero merecen la pena.[wait=0.2] ¡Tu puntuación final se disparará!</T>
     </Scene>
     <Scene id="2">
@@ -183,9 +196,22 @@
     <Scene id="14">
 		  <T>[face=Bug][playermove=false]Y debería cerrar el pico de una vez.[wait=0.4] Sep,[wait=0.2] va a ser lo mejor.</T>
 	  </Scene>
+    <Scene id="15">
+      <T>[noskip][face=Bug][playermove=false][speed=0.07]Y al fin...[wait=1.5]hemos llegado.</T>
+      <T>Este es el portal.[wait=1]&#xA;Si pasamos al otro lado, estaremos rompiendo las reglas.</T>
+      <T>Todo el mundo estará contra nosotros,[wait=0.5] y no sabemos como nuestras acciones podrían afectar a ese mundo.</T>
+      <T>[speed=0.05]Dicho esto...[wait=2][speed=0.07]&#xA;¿Estás seguro de que quieres continuar?</T>
+      <T>[face=Glitch][speed=0.17]......</T>
+      <T>[speed=0.17]Yo...[wait=2][speed=0.07]Quiero que me dejen de mirar por encima del hombro.</T>
+      <T>[speed=0.07]Quiero dejar de sentir que no tengo derecho a llamar a este juego mi hogar.</T>
+      <T>[speed=0.07]Quiero dejar de ser un simple[speed=0.1]...[wait=1.5][speed=0.09]error.</T>
+      <T>Tengo que hacer esto.[wait=1.5] Rescataré a la princesa y me convertiré en un héroe.</T>
+      <T>[face=Bug][speed=0.17]....[wait=1.5][speed=0.05]Así sea.</T>
+      <T>Adéntrate en el portal.[wait=1]&#xA;Enseñémosles quién manda.</T>
+    </Scene>
     <EndMessage>
-      <Title>Level 1...Complete?</Title>
-      <Subtitle>Time for a boss!</Subtitle>
+      <Title>Tutorial Completado</Title>
+      <Subtitle>¡Comienza una nueva aventura!</Subtitle>
     </EndMessage>
   </Set>
 </Dialogue>

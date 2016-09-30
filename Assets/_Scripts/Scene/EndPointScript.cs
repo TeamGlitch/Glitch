@@ -24,24 +24,27 @@ public class EndPointScript : MonoBehaviour {
 
     // Script is disabled until OnTriggerEnter detects the player
 	void OnTriggerEnter(Collider coll){
-
 		if(coll.gameObject.CompareTag("Player")){
-
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(XMLAsset.text);
-            titlesGameObject.SetActive(true);
-            XmlNode texts = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/EndMessage/Title");
-            title.text = texts.InnerText;
-			title.color = Color.red;
-            texts = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/EndMessage/Subtitle");
-            subtitle.text = texts.InnerText;
-			coll.transform.gameObject.GetComponent<PlayerController>().allowMovement = false;
-			endGame = Time.time + 3.0f;
-            enabled = true;
-            playerCol.isTrigger = true;
-            playerRig.isKinematic = true; 
+            EndLevel(coll.transform.gameObject.GetComponent<PlayerController>());
 		}
 	}
+
+    public void EndLevel(PlayerController playerController)
+    {
+        XmlDocument xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(XMLAsset.text);
+        titlesGameObject.SetActive(true);
+        XmlNode texts = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/EndMessage/Title");
+        title.text = texts.InnerText;
+        title.color = Color.red;
+        texts = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/EndMessage/Subtitle");
+        subtitle.text = texts.InnerText;
+        playerController.allowMovement = false;
+        endGame = Time.time + 3.0f;
+        enabled = true;
+        playerCol.isTrigger = true;
+        playerRig.isKinematic = true; 
+    }
 
 	void Update(){
 
