@@ -22,6 +22,8 @@ public class MainCamera : MonoBehaviour {
 	public Transform upRail;
 	public Transform downRail;
 
+    public bool move = true;
+
 	void OnEnable() {
 		CameraZones.SetActive(true);
 	}
@@ -29,7 +31,7 @@ public class MainCamera : MonoBehaviour {
 	void Update()
 	{
 
-        if ((Camera.current == Camera.main) && (playerPosition.position.x <= maxCamera.position.x) && (playerPosition.position.x >= minCamera.position.x)) 
+        if (move && (Camera.current == Camera.main) && (playerPosition.position.x <= maxCamera.position.x) && (playerPosition.position.x >= minCamera.position.x)) 
 		{
 
 			//Calculates the smooth depending on the ratio and the zoom

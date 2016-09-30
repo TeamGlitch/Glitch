@@ -13,6 +13,7 @@ public class TeleportBack : MonoBehaviour {
         {
             Vector3 newPosition = startpoint.transform.position;
             newPosition.z = player.transform.position.z;
+            newPosition.y += 20f;
             player.transform.position = newPosition;
             SoundManager.instance.PlaySingle(audio);
         }

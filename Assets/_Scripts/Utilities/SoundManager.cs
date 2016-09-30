@@ -11,13 +11,23 @@ public class SoundManager : MonoBehaviour
 
     private bool allowNewSounds = true;
 
+    private bool musicMuted = false;
+
+    private float fadeOutStarted = -1;
+    private float timeToFadeOut;
+    private float actualMusicVolume = 0;
+
     // Use this for initialization
     void Awake()
     {
         //Check if there is already an instance of SoundManager
         if (instance == null)
+        {
             //if not, set it to this.
             instance = this;
+            if (actualMusicVolume == 0)
+                actualMusicVolume = musicSource.volume;
+        }
         //If instance already exists:
         else if (instance != this)
         {
@@ -31,6 +41,25 @@ public class SoundManager : MonoBehaviour
         //Set SoundManager to DontDestroyOnLoad so that it won't be destroyed when reloading our scene.
         DontDestroyOnLoad(gameObject);
 
+    }
+
+    void Update()
+    {
+        if (fadeOutStarted != -1)
+        {
+            float percent = (Time.time - fadeOutStarted) / timeToFadeOut;
+
+            if (percent > 1f)
+            {
+                MuteMusic();
+                fadeOutStarted = -1;
+            }
+            else
+            {
+                musicSource.volume = (1 - percent) * actualMusicVolume;
+            }
+
+        }
     }
 
     //Used to play single sound clips.
@@ -65,7 +94,29 @@ public class SoundManager : MonoBehaviour
         else if (volume > 1)
             volume = 1;
 
-        musicSource.volume = volume;
+        actualMusicVolume = volume;
+
+        if (!musicMuted)
+            musicSource.volume = volume;
+    }
+
+
+    public void StartFadeOut(float longevity)
+    {
+        fadeOutStarted = Time.time;
+        timeToFadeOut = longevity;
+    }
+
+    public void MuteMusic()
+    {
+        musicMuted = true;
+        musicSource.volume = 0;
+    }
+
+    public void UnmuteMusic()
+    {
+        musicMuted = false;
+        musicSource.volume = actualMusicVolume;
     }
 
     public void ChangeMusicSpeed(float speed)
@@ -137,6 +188,7 @@ public class SoundManager : MonoBehaviour
 
     public void Restart()
     {
+        UnmuteMusic();
         musicSource.Stop();
         musicSource.time = 0f;
 
@@ -147,7 +199,7 @@ public class SoundManager : MonoBehaviour
         }
 
     }
-
+    
     public void setAllowNewSounds(bool value){
         allowNewSounds = value;
     }

@@ -26,7 +26,7 @@
       <T>[playermove=false][face=Bug]Welcome to the Glitch World!</T>
       <T>[face=Glitch][speed=0.05]Uh...[wait=0.5][speed=0.02]I know where we are, Bug.[wait=0.2] This is where I was born.[wait=0.2] We were trying to get into the actual game, remember?</T>
       <T>[face=Bug][speed=0.05]Oh...[wait=0.35]yeah,[wait=0.15] yeah,[wait=0.15][speed=0.02] this is just tutorial etiquette.</T>
-      <T>Just remember you can move [controller=tilting the left stick][keyboard=pressing A and D].</T>
+      <T>Just remember you can move [controller=tilting the left stick][keyboard=pressing A and D].[wait=0.4]&#xA;Let's proceed to the right!</T>
     </Scene>
 	  <Scene id="1">
       <T>[playermove=false][face=Bug][bga=0.5]Those little things in front of us are glitch fragments.[wait=0.2] They're everywhere.[wait=0.2] Pick them, they will increase your score!</T>
@@ -79,7 +79,7 @@
 		  <T>[tutorialArrow=-1]But don't worry,[wait=0.15] you won't lose lives in the Glitch World,[wait=0.15] so keep practicing here until you're confident.</T>
 	  </Scene>
     <Scene id="10">
-		  <T>[face=Bug][playermove=false][bga=1]If you see those green particles,[wait=0.15] that means this wall is climbable.</T>
+		  <T>[face=Bug][playermove=false][bga=1]If you see this cute green particles,[wait=0.15] that means this wall is climbable.</T>
       <T>Just jump to it and,[wait=0.15] when you're stuck,[wait=0.15] keep pressing the jump button,[wait=0.15] no direction needed.</T>
 	  </Scene>
     <Scene id="11">
@@ -96,11 +96,27 @@
 		  <T>[face=Bug][playermove=false]Well, I expected more opposition on our way to the "true game" portal.</T>
 	  </Scene>
     <Scene id="14">
-		  <T>[face=Bug][playermove=false]And I should probably just shut up.[wait=0.4] Yup,[wait=0.2] that will probably help.</T>
+		  <T>[face=Bug][playermove=false]And I should probably just shut up.[wait=0.4] Yup,[wait=0.2] that would probably help.</T>
+	  </Scene>
+    <Scene id="15">
+      <T>[noskip][face=Bug][playermove=false][speed=0.07]Well...[wait=1.5]this is it.</T>
+      <T>Here's the portal.[wait=1]&#xA;If we go to the other side, we will be breaking the rules.</T>
+      <T>Everyone will be against us,[wait=0.5] and we don't know how our actions will affect that world.</T>
+      <T>[speed=0.05]With that being said...[wait=2][speed=0.07]&#xA;Are you sure you want to continue?</T>
+      <T>[face=Glitch][speed=0.17]......</T>
+      <T>[speed=0.17]I...[wait=2][speed=0.07]I don't want to be looked down on.</T>
+      <T>[speed=0.07]I don't want to feel like this game is not my home too.</T>
+      <T>[speed=0.07]I don't want to be just[speed=0.1]...[wait=1.5][speed=0.09]an error.</T>
+      <T>I must do this.[wait=1.5] I must rescue that princess and become a heroe.</T>
+      <T>[face=Bug][speed=0.17]....[wait=1.5][speed=0.05]So be it.</T>
+      <T>Step into the portal.[wait=1]&#xA;Let's show them who's boss.</T>
+    </Scene>
+    <Scene id="16">
+		  <T>[noskip][face=Bug][playermove=false][speed=0.07]...This is going to be a looooong tutorial...</T>
 	  </Scene>
     <EndMessage>
-      <Title>Level 1...Complete?</Title>
-      <Subtitle>Time for a boss!</Subtitle>
+      <Title>Tutorial Complete</Title>
+      <Subtitle>It's time for a new adventure!</Subtitle>
     </EndMessage>
   </Set>
   
@@ -110,14 +126,14 @@
       <T>[playermove=false][face=Bug]¡Bienvenido al Mundo Glitch!</T>
       <T>[face=Glitch][speed=0.05]Eh...[wait=0.5][speed=0.02]Ya sé donde estamos, Bug.[wait=0.2] He nacido aquí.[wait=0.2] Estábamos intentando meternos en el verdadero juego ¿Recuerdas?</T>
       <T>[face=Bug][speed=0.05]¡Ah...![wait=0.35] Sí,[wait=0.15] sí,[wait=0.15][speed=0.02] era sólo una formalidad de tutorial.</T>
-      <T>Al grano.[wait=0.2] Recuerda que puedes moverte [controller=inclinando el stick izquierdo][keyboard=pulsando A y D].</T>
+      <T>Al grano.[wait=0.2] Recuerda que puedes moverte [controller=inclinando el stick izquierdo][keyboard=pulsando A y D].[wait=0.4]&#xA;¡Prosigamos por la derecha!</T>
     </Scene>
 	  <Scene id="1">
       <T>[playermove=false][face=Bug][bga=0.5]Esas pequeñas cosas delante de nosotros son fragmentos de glitch.[wait=0.2] Están por todas partes.</T>
       <T>¡Recógelos, incrementarán tu puntuación!</T>
       <T>[tutorialArrow=0]Puedes ver cuántos tienes aquí.</T>
       <T>[face=Glitch][tutorialArrow=-1]¿Y qué hay de ese extraño hexágono?</T>
-      <T>[face=Bug]Esos son fragmentos especiales de glitch</T>
+      <T>[face=Bug]Esos son fragmentos especiales de glitch.</T>
       <T>Son mas díficiles de alcanzar, pero merecen la pena.[wait=0.2] ¡Tu puntuación final se disparará!</T>
     </Scene>
     <Scene id="2">
@@ -164,7 +180,7 @@
 		  <T>[tutorialArrow=-1]No te preocupes por ahora,[wait=0.15] no puedes perder vidas en el Mundo Glitch,[wait=0.15] asi que practica hasta que estés contento.</T>
 	  </Scene>
     <Scene id="10">
-		  <T>[face=Bug][playermove=false][bga=1]Si ves esas partículas verdes significa que esa pared es trepable.</T>
+		  <T>[face=Bug][playermove=false][bga=1]Si ves esas partículas verdes tan monas, significa que esta pared es trepable.</T>
       <T>Salta sobre ella y,[wait=0.15] cuando estés pegado,[wait=0.15] sigue pulsando el botón de saltar,[wait=0.15] sin ir a ninguna dirección.</T>
 	  </Scene>
     <Scene id="11">
@@ -183,9 +199,25 @@
     <Scene id="14">
 		  <T>[face=Bug][playermove=false]Y debería cerrar el pico de una vez.[wait=0.4] Sep,[wait=0.2] va a ser lo mejor.</T>
 	  </Scene>
+    <Scene id="15">
+      <T>[noskip][face=Bug][playermove=false][speed=0.07]Y al fin...[wait=1.5]hemos llegado.</T>
+      <T>Este es el portal.[wait=1]&#xA;Si pasamos al otro lado, estaremos rompiendo las reglas.</T>
+      <T>Todo el mundo estará contra nosotros,[wait=0.5] y no sabemos como nuestras acciones podrían afectar a ese mundo.</T>
+      <T>[speed=0.05]Dicho esto...[wait=2][speed=0.07]&#xA;¿Estás seguro de que quieres continuar?</T>
+      <T>[face=Glitch][speed=0.17]......</T>
+      <T>[speed=0.17]Yo...[wait=2][speed=0.07]Quiero que me dejen de mirar por encima del hombro.</T>
+      <T>[speed=0.07]Quiero dejar de sentir que no tengo derecho a llamar a este juego mi hogar.</T>
+      <T>[speed=0.07]Quiero dejar de ser un simple[speed=0.1]...[wait=1.5][speed=0.09]error.</T>
+      <T>Tengo que hacer esto.[wait=1.5] Rescataré a la princesa y me convertiré en un héroe.</T>
+      <T>[face=Bug][speed=0.17]....[wait=1.5][speed=0.05]Así sea.</T>
+      <T>Adéntrate en el portal.[wait=1]&#xA;Enseñémosles quién manda.</T>
+    </Scene>
+    <Scene id="16">
+		  <T>[noskip][face=Bug][playermove=false][speed=0.07]...Qué laaaargo se va a hacer este tutorial...</T>
+	  </Scene>
     <EndMessage>
-      <Title>Level 1...Complete?</Title>
-      <Subtitle>Time for a boss!</Subtitle>
+      <Title>Tutorial Completado</Title>
+      <Subtitle>¡Comienza una nueva aventura!</Subtitle>
     </EndMessage>
   </Set>
 </Dialogue>
