@@ -1,0 +1,176 @@
+fileFormatVersion: 2
+guid: f9163af7373a7f646877a82707aa6104
+timeCreated: 1475245529
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: ClimbableParticle_0
+    21300002: ClimbableParticle_1
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: 1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: ClimbableParticle_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 500
+        width: 750
+        height: 500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 152, y: -131}
+        - {x: 166, y: -111}
+        - {x: 175, y: -89}
+        - {x: 182, y: -70}
+        - {x: 186, y: -48}
+        - {x: 188, y: -28}
+        - {x: 188, y: 14}
+        - {x: 187, y: 35}
+        - {x: 184, y: 63}
+        - {x: 179, y: 88}
+        - {x: 166, y: 118}
+        - {x: 151, y: 138}
+        - {x: 132, y: 156}
+        - {x: 121, y: 165}
+        - {x: 99, y: 178}
+        - {x: 86, y: 183}
+        - {x: 56, y: 189}
+        - {x: 39, y: 191}
+        - {x: 26, y: 192}
+        - {x: -33, y: 192}
+        - {x: -65, y: 189}
+        - {x: -94, y: 181}
+        - {x: -115, y: 170}
+        - {x: -133, y: 158}
+        - {x: -140, y: 152}
+        - {x: -156, y: 135}
+        - {x: -167, y: 119}
+        - {x: -175, y: 102}
+        - {x: -183, y: 83}
+        - {x: -189, y: 51}
+        - {x: -190, y: 26}
+        - {x: -190, y: -19}
+        - {x: -189, y: -35}
+        - {x: -186, y: -58}
+        - {x: -181, y: -83}
+        - {x: -166, y: -115}
+        - {x: -160, y: -124}
+        - {x: -139, y: -146}
+        - {x: -133, y: -151}
+        - {x: -117, y: -162}
+        - {x: -93, y: -173}
+        - {x: -74, y: -180}
+        - {x: -51, y: -183}
+        - {x: -28, y: -185}
+        - {x: 30, y: -185}
+        - {x: 57, y: -183}
+        - {x: 94, y: -174}
+        - {x: 121, y: -159}
+    - name: ClimbableParticle_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 750
+        height: 500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 201, y: -111}
+        - {x: 217, y: -108}
+        - {x: 231, y: -102}
+        - {x: 247, y: -96}
+        - {x: 266, y: -80}
+        - {x: 277, y: -59}
+        - {x: 280, y: -21}
+        - {x: 280, y: 15}
+        - {x: 278, y: 41}
+        - {x: 272, y: 61}
+        - {x: 265, y: 74}
+        - {x: 254, y: 84}
+        - {x: 228, y: 97}
+        - {x: 196, y: 106}
+        - {x: 162, y: 111}
+        - {x: 121, y: 116}
+        - {x: 97, y: 118}
+        - {x: 63, y: 120}
+        - {x: 32, y: 121}
+        - {x: -29, y: 121}
+        - {x: -78, y: 119}
+        - {x: -145, y: 114}
+        - {x: -166, y: 111}
+        - {x: -208, y: 102}
+        - {x: -235, y: 93}
+        - {x: -248, y: 85}
+        - {x: -265, y: 68}
+        - {x: -271, y: 58}
+        - {x: -275, y: 40}
+        - {x: -277, y: 7}
+        - {x: -277, y: -13}
+        - {x: -275, y: -38}
+        - {x: -273, y: -52}
+        - {x: -269, y: -67}
+        - {x: -262, y: -81}
+        - {x: -245, y: -95}
+        - {x: -223, y: -105}
+        - {x: -179, y: -116}
+        - {x: -138, y: -121}
+        - {x: -109, y: -124}
+        - {x: -82, y: -126}
+        - {x: -65, y: -127}
+        - {x: -40, y: -128}
+        - {x: 48, y: -128}
+        - {x: 86, y: -126}
+        - {x: 133, y: -122}
+        - {x: 170, y: -117}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
