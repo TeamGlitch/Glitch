@@ -3,6 +3,8 @@ using System.Collections;
 
 public class CeilingBreakable : MonoBehaviour {
 
+    public Rigidbody rigidRock;
+
     private Animator anim;
     private BoxCollider box;
 
@@ -14,11 +16,17 @@ public class CeilingBreakable : MonoBehaviour {
 
     void OnCollisionEnter(Collision coll)
     {
-        if (coll.collider.CompareTag("Death"))
+        if (coll.collider.CompareTag("DeathRock"))
         {
             box.enabled = false;
             anim.SetBool("Break", true);
+            Invoke("BrokenRoot", 1.0f);
         }
     }
-	
+
+    public void BrokenRoot()
+    {
+        rigidRock.useGravity = false;
+        rigidRock.isKinematic = true;
+    }
 }
