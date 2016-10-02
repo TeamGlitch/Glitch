@@ -645,15 +645,19 @@ public class BossArcherIA : MonoBehaviour
     {
         Vector3 auxPos = transform.position + new Vector3(-2f, -2.2f, 0f);
         rigidbody.useGravity = true;
-        startXPosWhenDead = endXPosWhenDead = transform.position.x;
-        if (transform.position.x >= -1.0f)
-        {
-            endXPosWhenDead = startXPosWhenDead + 2f;
-        }
-        else if (transform.position.x <= -16f)
-        {
-            endXPosWhenDead = startXPosWhenDead - 2f;
-        }
+
+        if (transform.position.x < -24f+9.21f)
+            endXPosWhenDead = -32f + 9.21f;
+        else if(transform.position.x < -7.5f + 9.21f)
+            endXPosWhenDead = -17f + 9.21f;
+        else if (transform.position.x < 8.5f + 9.21f)
+            endXPosWhenDead = -8f + 9.21f;
+        else
+            endXPosWhenDead = 13f + 9.21f;
+
+        Debug.Log(endXPosWhenDead);
+
+        startXPosWhenDead = transform.position.x;
         startZPosWhenDead = transform.position.z;
         timeFalling = 0.0f;
         transform.position = auxPos;
