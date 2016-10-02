@@ -16,7 +16,7 @@ public class CeilingBreakable : MonoBehaviour {
 
     void OnCollisionEnter(Collision coll)
     {
-        if (coll.collider.CompareTag("DeathRock"))
+        if (coll.collider.CompareTag("Death"))
         {
             box.enabled = false;
             anim.SetBool("Break", true);
