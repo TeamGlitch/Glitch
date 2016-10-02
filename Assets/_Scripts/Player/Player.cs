@@ -215,24 +215,24 @@ public class Player : MonoBehaviour
 
         ScoreManager.instance.PlayerKilled(transform.position);
 
-        if ((lives % 1 == 0) || ((lives - damage) > Mathf.FloorToInt(lives)))
-        {
-            lives -= damage;
-        }
-        else
-        {
-            lives = Mathf.FloorToInt(lives);
-        }
+        if (!godmode)
+        { 
 
-        if (lives <= 0)
-        {
-            if (!godmode)
+            if ((lives % 1 == 0) || ((lives - damage) > Mathf.FloorToInt(lives)))
+            {
+                lives -= damage;
+            }
+            else
+            {
+                lives = Mathf.FloorToInt(lives);
+            }
+
+            if (lives <= 0)
             {
                 lives = 0;
                 lastLife = true;
             }
-            else
-                lives = 3;
+
         }
 
         //If it is the last life, activate the dead menu

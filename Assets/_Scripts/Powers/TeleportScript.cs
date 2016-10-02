@@ -7,6 +7,7 @@ public class TeleportScript : MonoBehaviour
     public float teleportDistance = 2.0f;
     public AudioClip TeleportSound;
     public bool teleportUsed = false;
+    public bool allowTeleport = true;
 
     private Vector3 initialPos;
     private Vector3 endPos;
@@ -36,6 +37,9 @@ public class TeleportScript : MonoBehaviour
     //Checks if it can teleport to the given position
     public bool CheckTeleport(BoxCollider collider)
     {
+
+        if (!allowTeleport)
+            return false;
 
         distToGround = collider.bounds.extents.y;
         // We get the teleport direction

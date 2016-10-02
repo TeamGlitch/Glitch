@@ -18,8 +18,8 @@
       </UI>
       <UI id="LevelSelectionMenu">
         <I id="Choose">CHOOSE LEVEL</I>
+        <I id="Tutorial">Tutorial</I>
         <I id="Level1">Level 1</I>
-        <I id="Level2">Level 2 - NOT YET</I>
         <I id="Level3">Level 3 - NOT YET</I>
         <I id="Boss">Boss</I>
         <I id="Back">Back</I>
@@ -46,20 +46,6 @@
       </UI>
       <UI id="CreditsMenu">
         <I id="Title">CREDITS</I>
-        <I id="Credits">Project Manager
-  Raul Ramos Macias
-
-  Art Department
-  Lead Artist: Ion Ander Carrillo Valverde
-  Artists: Xabier Iruretagoyena Ajuria
-
-  Programming Department
-  Lead Programmer: 
-  Cristian Fernández Suárez
-  Programmers: Raul Ramos Macias, Oriol Romero Herrando
-
-  Game designer
-  Oriol Romero Herrando</I>
         <I id="Back">Back</I>
       </UI>
       <UI id="GraphicsMenu">
@@ -115,6 +101,34 @@
         <I id="YourName">Your name</I>
       </UI>
     </Group>
+    <Group id="Credits">
+      <UI id="Credits"><![CDATA[<color=#DABE41>Project Manager</color>
+Raul Ramos Macias
+
+<color=#DABE41>Lead game designer</color>
+Oriol Romero Herrando
+
+<color=#DABE41>Art Department</color>
+<color=#FFF9A8FF>Lead Artist:</color> Ion Ander Carrillo Valverde
+<color=#FFF9A8FF>Artist:</color> Xabier Iruretagoyena Ajuria
+
+<color=#DABE41>Programming Department</color>
+<color=#FFF9A8FF>Lead Programmer:</color> Cristian Fernández Suárez
+<color=#FFF9A8FF>Programmers:</color> Raul Ramos Macias, Oriol Romero Herrando
+
+<color=#DABE41>Music</color>
+Cecilia Tallo Criado
+Sara López Santamaría
+
+<color=#DABE41>Extra tracks</color>
+"Raising Spirits" - mozzasticks
+"Cheese on my Knees (8bit)" - Andersson187
+
+<color=#DABE41>Extra sounds</color>
+bone666138
+snv1985
+increpare's Bfxr]]></UI>
+    </Group>
   </Set>
   
   <Set lang="Spanish">
@@ -134,8 +148,8 @@
       </UI>
       <UI id="LevelSelectionMenu">
         <I id="Choose">SELECCIONAR NIVEL</I>
+        <I id="Tutorial">Tutorial</I>
         <I id="Level1">Nivel 1</I>
-        <I id="Level2">Nivel 2 - NO DISPONIBLE</I>
         <I id="Level3">Nivel 3 - NO DISPONIBLE</I>
         <I id="Boss">Jefe</I>
         <I id="Back">Volver</I>
@@ -162,19 +176,6 @@
       </UI>
       <UI id="CreditsMenu">
         <I id="Title">CRÉDITOS</I>
-        <I id="Credits">Director de proyecto
-  Raul Ramos Macias
-
-  Departamento de arte
-  Jefe de arte: Ion Ander Carrillo Valverde
-  Artista: Xabier Iruretagoyena Ajuria
-
-  Departamento de programación
-  Jefe de programación: Cristian Fernández Suárez
-  Programadores: Raul Ramos Macias, Oriol Romero Herrando
-
-  Diseñador de juego:
-  Oriol Romero Herrando</I>
         <I id="Back">Volver</I>
       </UI>
       <UI id="GraphicsMenu">
@@ -229,6 +230,34 @@
         <I id="NewHiscore">NUEVO RECORD!!</I>
         <I id="YourName">Tu nombre</I>
       </UI>
+    </Group>
+      <Group id="Credits">
+      <UI id="Credits"><![CDATA[<color=#DABE41>Jefe de Proyecto</color>
+Raul Ramos Macias
+
+<color=#DABE41>Jefe de diseño</color>
+Oriol Romero Herrando
+
+<color=#DABE41>Departamento de arte</color>
+<color=#FFF9A8FF>Jefe de arte:</color> Ion Ander Carrillo Valverde
+<color=#FFF9A8FF>Artista:</color> Xabier Iruretagoyena Ajuria
+
+<color=#DABE41>Departamento de programación</color>
+<color=#FFF9A8FF>Jefe de programación:</color> Cristian Fernández Suárez
+<color=#FFF9A8FF>Programadores:</color> Raul Ramos Macias, Oriol Romero Herrando
+
+<color=#DABE41>Música</color>
+Cecilia Tallo Criado
+Sara López Santamaría
+
+<color=#DABE41>Canciones extra</color>
+"Raising Spirits" - mozzasticks
+"Cheese on my Knees (8bit)" - Andersson187
+
+<color=#DABE41>Sonidos extra</color>
+bone666138
+snv1985
+increpare's Bfxr]]></UI>
     </Group>
   </Set>
 </Dialogue>

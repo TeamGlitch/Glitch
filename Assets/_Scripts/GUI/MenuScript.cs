@@ -15,7 +15,7 @@ public class MenuScript : MonoBehaviour, LanguageListener {
 
     public Canvas levelSelectionMenu;
     public Button levelSelectText;
-    public Button firstLevelSelectButton;
+    public Button tutorialLevelSelectButton;
 
     private OptionsMenuScript options;
     public Button OptionsText;
@@ -62,6 +62,42 @@ public class MenuScript : MonoBehaviour, LanguageListener {
         SetTexts();
 
         Configuration.addLanguageListener(this);
+
+
+        //TODO: Repeated with PauseScript Start with minor differences
+        ColorBlock cb;
+        Color darkBrown;
+        Color lightBrown;
+        Color white;
+
+        ColorUtility.TryParseHtmlString("#9F9F9FFF", out darkBrown);
+        ColorUtility.TryParseHtmlString("#C8C8C8FF", out lightBrown);
+        ColorUtility.TryParseHtmlString("#FFFFFFFF", out white);
+
+        Toggle[] toggles = transform.parent.GetComponentsInChildren<Toggle>();
+        for (int i = 0; i < toggles.Length; i++)
+        {
+            cb = toggles[i].colors;
+            cb.normalColor = darkBrown;
+            cb.highlightedColor = white;
+            toggles[i].colors = cb;
+        }
+
+        Dropdown[] dropdowns = transform.parent.GetComponentsInChildren<Dropdown>();
+        for (int i = 0; i < dropdowns.Length; i++)
+        {
+            cb = dropdowns[i].colors;
+            cb.normalColor = darkBrown;
+            cb.highlightedColor = white;
+            dropdowns[i].colors = cb;
+
+            Toggle toggle = dropdowns[i].transform.GetChild(2).GetChild(0).GetChild(0).GetChild(0).GetComponent<Toggle>();
+            cb = toggle.colors;
+            cb.normalColor = darkBrown;
+            cb.highlightedColor = lightBrown;
+            toggle.colors = cb;
+        }
+
 	}
 
     void OnDestroy()
@@ -177,12 +213,12 @@ public class MenuScript : MonoBehaviour, LanguageListener {
 	{
         SoundManager.instance.PlaySingle(confirmSound);
         levelSelectionMenu.enabled = true;
-        firstLevelSelectButton.Select();
+        tutorialLevelSelectButton.Select();
 
 		onMainScreen = false;
 	}
 
-    public void Level1Press()
+    private void levelLoad()
     {
         SoundManager.instance.PlaySingle(confirmSound);
         levelSelectionMenu.enabled = false;
@@ -193,20 +229,23 @@ public class MenuScript : MonoBehaviour, LanguageListener {
         loadingText.gameObject.SetActive(true);
         SoundManager.instance.musicSource.Stop();
         onMainScreen = false;
+    }
+
+    public void LevelTutorialPress()
+    {
+        levelLoad();
+        Loader.LoadScene("Tutorial", true);
+    }
+
+    public void Level1Press()
+    {
+        levelLoad();
         Loader.LoadScene("Level1", true);
     }
 
     public void LevelBossPress()
     {
-        SoundManager.instance.PlaySingle(confirmSound);
-        levelSelectionMenu.enabled = false;
-        startText.gameObject.SetActive(false);
-        levelSelectText.gameObject.SetActive(false);
-        exitText.gameObject.SetActive(false);
-        OptionsText.gameObject.SetActive(false);
-        loadingText.gameObject.SetActive(true);
-        SoundManager.instance.musicSource.Stop();
-        onMainScreen = false;
+        levelLoad();
         Loader.LoadScene("BossStage", true);
     }
 

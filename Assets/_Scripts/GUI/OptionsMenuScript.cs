@@ -39,6 +39,12 @@ public class OptionsMenuScript : MonoBehaviour, LanguageListener {
     public TextAsset XMLAsset;
     public Transform menusContainer;
 
+    //Credits
+    private bool onCredits = false;
+    private float timeBegin;
+    public Text credits;
+    public RectTransform creditsT;
+
 	void Start () {
         optionsMenu.SetActive(false);
         helpMenu.SetActive(false);
@@ -48,6 +54,32 @@ public class OptionsMenuScript : MonoBehaviour, LanguageListener {
         SetTexts();
         Configuration.addLanguageListener(this);
 	}
+
+    void Update()
+    {
+        if (onCredits)
+        {
+            float maxMov = 836.3f;
+            float maxTime = 20f;
+
+            float actualTime = Time.unscaledTime - timeBegin;
+            Vector3 position = creditsT.anchoredPosition;
+
+            if (actualTime < 4f)
+                position.y = 0;
+            else if (actualTime - 4 < maxTime)
+                position.y = ((actualTime - 4) / maxTime) * maxMov;
+            else if (actualTime - 4 > maxTime + 4)
+            {
+                position.y = 0;
+                timeBegin = Time.unscaledTime;
+            }
+            else
+                position.y = maxMov;
+
+            creditsT.anchoredPosition = position;
+        }
+    }
 
     void OnDestroy()
     {
@@ -107,6 +139,8 @@ public class OptionsMenuScript : MonoBehaviour, LanguageListener {
             }
         }
 
+        credits.text = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"Credits\"]/UI[@id = \"Credits\"]").InnerText;
+
         //Lang config
 
         language.options.Clear();
@@ -137,6 +171,7 @@ public class OptionsMenuScript : MonoBehaviour, LanguageListener {
         graphicsMenu.SetActive(false);
         audioMenu.SetActive(false);
         creditsMenu.SetActive(false);
+        onCredits = false;
 
         ControlsButton.Select();
     }
@@ -322,6 +357,8 @@ public class OptionsMenuScript : MonoBehaviour, LanguageListener {
         SoundManager.instance.PlaySingle(confirmSound);
         creditsMenu.SetActive(true);
         optionsMenu.SetActive(false);
+        onCredits = true;
+        timeBegin = Time.unscaledTime;
 
         firstCreditsButton.Select();
     }
