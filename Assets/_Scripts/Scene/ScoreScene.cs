@@ -286,7 +286,7 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
                 if (timeOut(0.5f, scoreState.TIME_SHOW_MULTIPLIER_2))
                 {
                     float rest = ScoreManager.instance.getTotalTime() - ScoreManager.instance.getTimeSpent();
-                    timeMultiplier.text = (ScoreManager.instance.getTotalTime() - ScoreManager.instance.getTimeSpent()).ToString() + timeMultiplier.text;
+                    timeMultiplier.text = roundToTwo(ScoreManager.instance.getTotalTime() - ScoreManager.instance.getTimeSpent()).ToString() + timeMultiplier.text;
                     SoundManager.instance.PlaySingle(attributeSound);
                 }
                 break;
@@ -799,7 +799,10 @@ public class ScoreScene : MonoBehaviour, LanguageListener {
         continueButton.gameObject.SetActive(true);
         retryButton.gameObject.SetActive(true);
         menuButton.gameObject.SetActive(true);
-        continueButton.Select();
+        if(medals.Count > 0)
+            medals[0].gameObject.GetComponent<Button>().Select();
+        else
+            continueButton.Select();
     }
 
     public void EndHighScoreNameInsertion()

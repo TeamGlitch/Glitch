@@ -14,7 +14,7 @@
         <I id="Options">Options</I>
         <I id="Quit">Quit</I>
         <I id="Copyright">© 2016 Team Glitch
-  v 1.0.0-alpha</I>
+  v 1.0.0-DEMO</I>
       </UI>
       <UI id="LevelSelectionMenu">
         <I id="Choose">CHOOSE LEVEL</I>
@@ -144,7 +144,7 @@ increpare's Bfxr]]></UI>
         <I id="Options">Opciones</I>
         <I id="Quit">Salir</I>
         <I id="Copyright">© 2016 Team Glitch
-  v 1.0.0-alpha</I>
+  v 1.0.0-DEMO</I>
       </UI>
       <UI id="LevelSelectionMenu">
         <I id="Choose">SELECCIONAR NIVEL</I>
