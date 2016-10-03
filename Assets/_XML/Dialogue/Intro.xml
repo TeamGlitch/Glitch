@@ -1,0 +1,42 @@
+﻿<!--?xml version=”1.0” encoding=”UTF-8”?-->
+<!--?xml version=”1.0” encoding=”UTF-8”?-->
+<Dialogue >
+  <Set lang="English">
+    <Main begin="0:00:00.42" end="0:00:04.84">Listen carefully, as I'm about to tell you the illustrious story of the Artichoke Kingdom.</Main>
+    <Main begin="0:00:05.25" end="0:00:08.72">The kingdom, lost among the northern mountains,</Main>
+    <Main begin="0:00:08.85" end="0:00:12.94">and its fertile land, were ruled by his king and his beloved daughter.</Main>
+    <Main begin="0:00:13.46" end="0:00:17.21">One day, a heinous dragon appeared in the skies</Main>
+    <Main begin="0:00:17.32" end="0:00:21.05">and abducted the pricess as she sauntered through her gardens.</Main>
+    <Main begin="0:00:21.24" end="0:00:26.35">The king, saddened by the incident, offered wealth and land to whoever</Main>
+    <Main begin="0:00:26.44" end="0:00:28.64">was brave enough to save her from this monster.</Main>
+    <Main begin="0:00:29.18" end="0:00:33.59">Many tried their luck, but everyone perished.</Main>
+    <Main begin="0:00:34.01" end="0:00:38.66">But then, the three strongest, most renowned heroes of the entire kingdom</Main>
+    <Main begin="0:00:38.77" end="0:00:42.83">arrived to palace, ready to accept such a difficult task.</Main>
+    <Main begin="0:00:42.97" end="0:00:44.10">The loyal knight.</Main>
+    <MainCorr begin="0:00:44.10" end="0:00:47.79">The agile archer.</MainCorr>
+    <MainCorr begin="0:00:47.79" end="0:00:48.91">The loyal knight.</MainCorr>
+    <MainCorr begin="0:00:48.91" end="0:00:52.54">The agile archer.</MainCorr>
+    <MainCorr begin="0:00:52.54" end="0:00:53.62">The loyal knight.</MainCorr>
+    <MainCorr begin="0:00:53.62" end="0:00:57.17">The agile archer.</MainCorr>
+    <Secund begin="0:00:46.98" end="0:00:53.85"><![CDATA[<color=#B100FF>This time...I will be the hero of this story!</color>]]></Secund>
+  </Set>
+  <Set lang="Spanish">
+    <Main begin="0:00:00.42" end="0:00:04.84">Preparaos, pues os voy a contar la célebre historia del reino alcachofa.</Main>
+    <Main begin="0:00:05.25" end="0:00:08.72">Este reino estaba perdido entre las montañas del norte,</Main>
+    <Main begin="0:00:08.85" end="0:00:12.94">y en él, un rey y su amada hija gobernaban una próspera tierra.</Main>
+    <Main begin="0:00:13.46" end="0:00:17.21">Hasta que un día, un malvado dragón apareció sobre el reino</Main>
+    <Main begin="0:00:17.32" end="0:00:21.05">y secuestró a la princesa, que paseaba por sus jardines.</Main>
+    <Main begin="0:00:21.24" end="0:00:26.35">El rey, consternado por el suceso, ofreció riqueza y tierras a aquellos valientes</Main>
+    <Main begin="0:00:26.44" end="0:00:28.64">que lograsen rescatarla de entre sus garras.</Main>
+    <Main begin="0:00:29.18" end="0:00:33.59">Muchos lo intentaron, pero todos perecieron en el intento.</Main>
+    <Main begin="0:00:34.01" end="0:00:38.66">Pero entonces, los tres héroes más fuertes y conocidos de todo el reino</Main>
+    <Main begin="0:00:38.77" end="0:00:42.83">aparecieron frente al castillo, en pos de aceptar tal ardua tarea.</Main>
+    <Main begin="0:00:42.97" end="0:00:44.10">El leal caballero.</Main>
+    <MainCorr begin="0:00:44.10" end="0:00:47.79">La ágil arquera.</MainCorr>
+    <MainCorr begin="0:00:47.79" end="0:00:48.91">El leal caballero.</MainCorr>
+    <MainCorr begin="0:00:48.91" end="0:00:52.54">La ágil arquera.</MainCorr>
+    <MainCorr begin="0:00:52.54" end="0:00:53.62">El leal caballero.</MainCorr>
+    <MainCorr begin="0:00:53.62" end="0:00:57.17">La ágil arquera.</MainCorr>
+    <Secund begin="0:00:46.98" end="0:00:53.85"><![CDATA[<color=#B100FF>Por una vez...¡Yo seré el héroe de esta historia!</color>]]></Secund>
+  </Set>
+</Dialogue>
