@@ -142,7 +142,7 @@
       <T>[tutorialArrow=0]Puedes ver cuántos tienes aquí.</T>
       <T>[face=Glitch][tutorialArrow=-1]¿Y qué hay de ese extraño hexágono?</T>
       <T>[face=Bug]Esos son fragmentos especiales de glitch.</T>
-      <T>Son mas díficiles de alcanzar, pero merecen la pena.[wait=0.2] ¡Tu puntuación final se disparará!</T>
+      <T>Son mas difíciles de alcanzar, pero merecen la pena.[wait=0.2] ¡Tu puntuación final se disparará!</T>
     </Scene>
     <Scene id="2">
       <T>[playermove=false][face=Bug][bga=1]Puedes saltar pulsando [controller=A][keyboard=W]. ¡Cuanto más tiempo lo mantengas pulsado, más alto llegarás!</T>
