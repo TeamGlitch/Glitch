@@ -24,6 +24,9 @@ public class MenuScript : MonoBehaviour, LanguageListener {
     public Button exitText;
     public Button firstExitButton;
 
+    public Canvas newGameMenu;
+    public Button firstNewGameButton;
+
     public Canvas highscoreMenu;
     public Text highscoreLevelName;
     public Text highscoreNames;
@@ -45,20 +48,28 @@ public class MenuScript : MonoBehaviour, LanguageListener {
     public TextAsset XMLAsset;
 
     private bool leftPadRested = true;
+    private bool firstGame = false;
 
-	void Start () 
+	void Start ()
     {
 
-		quitMenu.enabled = false;
-		levelSelectionMenu.enabled = false;
+        quitMenu.enabled = false;
+        newGameMenu.enabled = false;
+        levelSelectionMenu.enabled = false;
         highscoreMenu.enabled = false;
-		startText.Select ();
+        startText.Select();
 
-		//Play the menu music and check this time as the last active
-		lastTimeActive = Time.time;
-		SoundManager.instance.musicSource.Play();
+        if (Loader.getLastLevel() == "None")
+        {
+            startText.gameObject.name = "NewGame";
+            firstGame = true;
+        }
 
-        options =  GetComponent<OptionsMenuScript>();
+        //Play the menu music and check this time as the last active
+        lastTimeActive = Time.time;
+        SoundManager.instance.musicSource.Play();
+
+        options = GetComponent<OptionsMenuScript>();
         SetTexts();
 
         Configuration.addLanguageListener(this);
@@ -98,7 +109,7 @@ public class MenuScript : MonoBehaviour, LanguageListener {
             toggle.colors = cb;
         }
 
-	}
+    }
 
     void OnDestroy()
     {
@@ -194,16 +205,16 @@ public class MenuScript : MonoBehaviour, LanguageListener {
         levelSelectText.gameObject.SetActive(false);
         exitText.gameObject.SetActive(false);
         OptionsText.gameObject.SetActive(false);
-        loadingText.gameObject.SetActive(true);
-		SoundManager.instance.musicSource.Stop();
 		onMainScreen = false;
 
         if (Loader.getLastLevel() == "None")
         {
-            Loader.LoadScene("Level1", true);
+            newGameMenu.enabled = true;
+            firstNewGameButton.Select();
         }
         else
         {
+            SoundManager.instance.musicSource.Stop();
             Loader.LoadScene(Loader.getLastLevel(), true);
         }
         
@@ -351,6 +362,7 @@ public class MenuScript : MonoBehaviour, LanguageListener {
 	{
         SoundManager.instance.PlaySingle(backSound);
         quitMenu.enabled = false;
+        newGameMenu.enabled = false;
 		levelSelectionMenu.enabled = false;
         highscoreMenu.enabled = false;
         options.Disable();
@@ -388,5 +400,17 @@ public class MenuScript : MonoBehaviour, LanguageListener {
     public void MakeSelectSound()
     {
         MakeSelectSound(null);
+    }
+
+    public void NewGameTutorial()
+    {
+        SoundManager.instance.musicSource.Stop();
+        Loader.LoadScene("Tutorial", true);
+    }
+
+    public void NewGameNoTutorial()
+    {
+        SoundManager.instance.musicSource.Stop();
+        Loader.LoadScene("Level1", true);
     }
 }
