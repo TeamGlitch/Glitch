@@ -3,7 +3,6 @@ using System.Collections;
 
 public class RollerRock : MonoBehaviour {
 
-    public bool toLeft;
     public World world;
     public Animator anim;
 
@@ -43,14 +42,7 @@ public class RollerRock : MonoBehaviour {
         {
             if (move)
             {
-                if (toLeft)
-                {
-                    transform.Translate(-(speed * world.lag), 0.0f, 0.0f);
-                }
-                else
-                {
-                    transform.Translate(speed * world.lag, 0.0f, 0.0f);
-                }
+                transform.Translate(speed * world.lag, 0.0f, 0.0f);
             }
         }
 	}
