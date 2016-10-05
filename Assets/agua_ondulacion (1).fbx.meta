@@ -1,0 +1,194 @@
+fileFormatVersion: 2
+guid: 622a0b1045d2a0f45ab743f23f555edd
+timeCreated: 1475523618
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: caja_agua
+    100004: caja_agua1
+    100006: caja_agua2
+    100008: caja_agua3
+    100010: caja_agua4
+    100012: cajasagua
+    100014: cajasagua_parablend
+    100016: cajasagua_parablend1
+    400000: //RootNode
+    400002: caja_agua
+    400004: caja_agua1
+    400006: caja_agua2
+    400008: caja_agua3
+    400010: caja_agua4
+    400012: cajasagua
+    400014: cajasagua_parablend
+    400016: cajasagua_parablend1
+    4300000: caja_agua
+    4300002: caja_agua1
+    4300004: caja_agua2
+    4300006: caja_agua3
+    4300008: caja_agua4
+    7400000: ondulacion_intermitente
+    7400002: ondulacion_continua
+    9500000: //RootNode
+    13700000: caja_agua
+    13700002: caja_agua1
+    13700004: caja_agua2
+    13700006: caja_agua3
+    13700008: caja_agua4
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: ondulacion_intermitente
+      takeName: ondulacion_intermitente
+      firstFrame: 1
+      lastFrame: 120
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: cajasagua
+        weight: 1
+      - path: cajasagua/caja_agua
+        weight: 1
+      - path: cajasagua/caja_agua1
+        weight: 1
+      - path: cajasagua/caja_agua2
+        weight: 1
+      - path: cajasagua/caja_agua3
+        weight: 1
+      - path: cajasagua/caja_agua4
+        weight: 1
+      - path: cajasagua_parablend
+        weight: 1
+      - path: cajasagua_parablend1
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 1
+    - serializedVersion: 16
+      name: ondulacion_continua
+      takeName: ondulacion_continua
+      firstFrame: 121
+      lastFrame: 181
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: cajasagua
+        weight: 1
+      - path: cajasagua/caja_agua
+        weight: 1
+      - path: cajasagua/caja_agua1
+        weight: 1
+      - path: cajasagua/caja_agua2
+        weight: 1
+      - path: cajasagua/caja_agua3
+        weight: 1
+      - path: cajasagua/caja_agua4
+        weight: 1
+      - path: cajasagua_parablend
+        weight: 1
+      - path: cajasagua_parablend1
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 121
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
