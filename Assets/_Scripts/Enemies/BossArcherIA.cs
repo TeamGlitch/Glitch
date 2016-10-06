@@ -50,6 +50,7 @@ public class BossArcherIA : MonoBehaviour
     }
 
     public BossStageCamera camera;
+    public CameraShake shake;
     public AudioClip hit;
     public AudioClip scream;
     public DebrisManagerGlitch glitchDebris;        // Debris in "z" of Glitch
@@ -515,6 +516,7 @@ public class BossArcherIA : MonoBehaviour
             }
             else if (lives == 3)
             {
+                shake.enabled = true;
                 heart4.sprite = heartEmpty;
                 holesActives = true;
                 camera.ZoomArcherIn();
