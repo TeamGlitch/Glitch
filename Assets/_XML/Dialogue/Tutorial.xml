@@ -73,7 +73,7 @@
 	  </Scene>
     <Scene id="8">
 		  <T>[face=Bug][playermove=false]Do you see the exclamation over you head?[wait=0.2] And the distortion in front of you?</T>
-      <T>If there's an exclamation over you head,[wait=0.2] it means that you can bug something on the level pressing [controller=Y][keyboard=shift].</T>
+      <T>If there's an exclamation over you head,[wait=0.2] it means that you can bug something on the level pressing [controller=Y][keyboard=O].</T>
 		  <T>Using this power near this kind of distortions will create platforms!</T>
 	  </Scene>
     <Scene id="9">
@@ -90,8 +90,8 @@
 		  <T>[face=Bug][playermove=false]Those are bouncy artichokes![wait=0.6] If you press jump at the right time,[wait=0.2] you can get really high!</T>
 	  </Scene>
     <Scene id="12">
-		  <T>[face=Bug][playermove=false]If you press [controller=B][keyboard=CTRL] you will make the game's FPS drop,[wait=0.2] slowing it down.[wait=0.4] It will make traps easier to avoid!</T>
-      <T>You can deactivate it whenever you want by pressing [controller=B][keyboard=CTRL] again.</T>
+		  <T>[face=Bug][playermove=false]If you press [controller=B][keyboard=P] you will make the game's FPS drop,[wait=0.2] slowing it down.[wait=0.4] It will make traps easier to avoid!</T>
+      <T>You can deactivate it whenever you want by pressing [controller=B][keyboard=P] again.</T>
       <T>[tutorialArrow=1]But be careful,[wait=0.2] it doesn't last forever![wait=0.4] This bar shows how many time left you have.</T>
       <T>The bar will start filling itself once the power is deactivated,[wait=0.2] so don't worry about that.</T>
       <T>[tutorialArrow=-1]Let's try it in this crushy-thingies!</T>
@@ -178,7 +178,6 @@
 	  </Scene>
     <Scene id="8">
 		  <T>[face=Bug][playermove=false]¿Ves la exclamación sobre tu cabeza?[wait=0.2] ¿Y la distorsión frente a ti?</T>
-      <T>Si hay una exclamación sobre tu cabeza significa que puedes bugear algo en el nivel pulsando [controller=Y][keyboard=shift].</T>
 		  <T>Si usas este poder en este tipo de distorsiones...[wait=0.2]¡Crearás plataformas!</T>
 	  </Scene>
     <Scene id="9">
@@ -195,8 +194,8 @@
 		  <T>[face=Bug][playermove=false]¡Alcachofas rebotantes![wait=0.6] ¡Si pulsas el botón de salto en el momento preciso puedes llegar muy alto!</T>
 	  </Scene>
     <Scene id="12">
-		  <T>[face=Bug][playermove=false]Si pulsas [controller=B][keyboard=CTRL] harás que los FPS del juego bajen, ralentizándolo.[wait=0.4] ¡Esquivar trampas estará chupado!</T>
-      <T>Puedes desactivarlo cuando quieras pulsando [controller=B][keyboard=CTRL] de nuevo.</T>
+		  <T>[face=Bug][playermove=false]Si pulsas [controller=B][keyboard=P] harás que los FPS del juego bajen, ralentizándolo.[wait=0.4] ¡Esquivar trampas estará chupado!</T>
+      <T>Puedes desactivarlo cuando quieras pulsando [controller=B][keyboard=P] de nuevo.</T>
       <T>[tutorialArrow=1]¡Pero cuidado,[wait=0.2] que no dura para siempre![wait=0.4] Esta barra te indica cuánto tiempo te queda.</T>
       <T>No te preocupes,[wait=0.2] la barra se irá rellenando sola cuando mientras el poder esté inactivo.</T>
       <T>[tutorialArrow=-1]¡Vamos a probarlo con esos cachivaches aplastadores!</T>

@@ -21,7 +21,7 @@ v 1.0.0-DEMO</I>
         <I id="Choose">CHOOSE LEVEL</I>
         <I id="Tutorial">Tutorial</I>
         <I id="Level1">Level 1</I>
-        <I id="Level3">Level 3 - NOT YET</I>
+        <I id="Level2">Level 2 - NOT YET</I>
         <I id="Boss">Boss</I>
         <I id="Back">Back</I>
       </UI>
@@ -129,6 +129,7 @@ Cecilia Tallo Criado
 Sara López Santamaría
 
 <color=#DABE41>Extra tracks</color>
+"XP Sounds Attempt" - SomethingUnreal
 "Cheese on my Knees (8bit)" - Andersson187
 
 <color=#DABE41>Extra sounds</color>
@@ -159,7 +160,7 @@ v 1.0.0-DEMO</I>
         <I id="Choose">SELECCIONAR NIVEL</I>
         <I id="Tutorial">Tutorial</I>
         <I id="Level1">Nivel 1</I>
-        <I id="Level3">Nivel 3 - NO DISPONIBLE</I>
+        <I id="Level2">Nivel 2 - NO DISPONIBLE</I>
         <I id="Boss">Jefe</I>
         <I id="Back">Volver</I>
       </UI>
@@ -267,6 +268,7 @@ Cecilia Tallo Criado
 Sara López Santamaría
 
 <color=#DABE41>Canciones extra</color>
+"XP Sounds Attempt" - SomethingUnreal
 "Cheese on my Knees (8bit)" - Andersson187
 
 <color=#DABE41>Sonidos extra</color>
