@@ -8,13 +8,14 @@
     </Languages>
     <Group id="Main_Menu">
       <UI id="Menu">
+        <I id="NewGame">New Game</I>
         <I id="Continue">Continue</I>
         <I id="LevelSelect">Level Select</I>
         <I id="Hiscores">High Scores</I>
         <I id="Options">Options</I>
         <I id="Quit">Quit</I>
         <I id="Copyright">© 2016 Team Glitch
-  v 1.0.0-alpha</I>
+v 1.0.0-DEMO</I>
       </UI>
       <UI id="LevelSelectionMenu">
         <I id="Choose">CHOOSE LEVEL</I>
@@ -26,7 +27,14 @@
       </UI>
       <UI id="QuitMenu">
         <I id="Sure">Are you sure 
-  you want to quit?</I>
+you want to quit?</I>
+        <I id="No">No</I>
+        <I id="Yes">Yes</I>
+      </UI>
+      <UI id="NewGame">
+        <I id="Sure">Do you want to play the tutorial?
+<![CDATA[<color=#FF0000FF>(highly recommended)</color>]]>
+        </I>
         <I id="No">No</I>
         <I id="Yes">Yes</I>
       </UI>
@@ -121,10 +129,10 @@ Cecilia Tallo Criado
 Sara López Santamaría
 
 <color=#DABE41>Extra tracks</color>
-"Raising Spirits" - mozzasticks
 "Cheese on my Knees (8bit)" - Andersson187
 
 <color=#DABE41>Extra sounds</color>
+Thirsk
 bone666138
 snv1985
 increpare's Bfxr]]></UI>
@@ -138,13 +146,14 @@ increpare's Bfxr]]></UI>
     </Languages>
     <Group id="Main_Menu">
       <UI id="Menu">
+        <I id="NewGame">Nuevo Juego</I>
         <I id="Continue">Continuar</I>
         <I id="LevelSelect">Seleccionar nivel</I>
         <I id="Hiscores">Records</I>
         <I id="Options">Opciones</I>
         <I id="Quit">Salir</I>
         <I id="Copyright">© 2016 Team Glitch
-  v 1.0.0-alpha</I>
+v 1.0.0-DEMO</I>
       </UI>
       <UI id="LevelSelectionMenu">
         <I id="Choose">SELECCIONAR NIVEL</I>
@@ -160,7 +169,14 @@ increpare's Bfxr]]></UI>
       </UI>
       <UI id="QuitMenu">
         <I id="Sure">¿Seguro que 
-  quieres salir?</I>
+quieres salir?</I>
+        <I id="No">No</I>
+        <I id="Yes">Si</I>
+      </UI>
+      <UI id="NewGame">
+        <I id="Sure">Quieres jugar al tutorial?
+<![CDATA[<color=#FF0000FF>(Altamente recomendado)</color>]]>
+        </I>
         <I id="No">No</I>
         <I id="Yes">Si</I>
       </UI>
@@ -251,10 +267,10 @@ Cecilia Tallo Criado
 Sara López Santamaría
 
 <color=#DABE41>Canciones extra</color>
-"Raising Spirits" - mozzasticks
 "Cheese on my Knees (8bit)" - Andersson187
 
 <color=#DABE41>Sonidos extra</color>
+Thirsk
 bone666138
 snv1985
 increpare's Bfxr]]></UI>

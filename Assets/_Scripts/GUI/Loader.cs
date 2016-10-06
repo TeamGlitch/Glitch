@@ -189,7 +189,7 @@ public class Loader : MonoBehaviour, LanguageListener {
 
             if (level)
             {
-                lastLevel = levelName;
+                setLastLevel(levelName);
                 ScoreManager.instance.RestartValues();
             }
 
@@ -269,5 +269,12 @@ public class Loader : MonoBehaviour, LanguageListener {
     }
     public static string getLastLevel(){
         return lastLevel;
+    }
+
+    public static void setLastLevel(string level, bool configurationSave = true)
+    {
+        lastLevel = level;
+        if(configurationSave)
+            Configuration.SaveConfiguration();
     }
 }

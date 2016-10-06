@@ -36,6 +36,7 @@ public class Configuration : MonoBehaviour {
                 "<sfx>0.5</sfx>",
                 "<pan>0</pan>",
                 "<mode>1</mode>",
+                "<lastLevel>None</lastLevel>",
                 "</confg>"
                 });
 
@@ -75,6 +76,7 @@ public class Configuration : MonoBehaviour {
             "<sfx>" + SoundManager.instance.efxSources[0].volume + "</sfx>",
             "<pan>" + SoundManager.instance.musicSource.panStereo + "</pan>",
             "<mode>" + speakersMode + "</mode>",
+            "<lastLevel>" + Loader.getLastLevel() + "</lastLevel>",
             "</confg>"
             });
     }
@@ -137,6 +139,21 @@ public class Configuration : MonoBehaviour {
         if (valueI < 0 || valueI > 6)
             return false;
         SoundManager.instance.setMode(valueI);
+
+        node = xmlDoc.SelectSingleNode("/confg/lastLevel");
+        if (node == null)
+            return false;
+        string name = node.InnerText;
+        if (name == "None")
+            Loader.setLastLevel("None", false);
+        else if (
+            name == "Tutorial"
+            || name == "Level1"
+            || name == "LevelBoss"
+            || name == "BossStage")
+            Loader.setLastLevel(name, false);
+        else return false;
+
 
         return true;
 

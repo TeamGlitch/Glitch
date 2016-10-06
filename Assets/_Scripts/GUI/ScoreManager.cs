@@ -439,7 +439,7 @@ public class ScoreManager : MonoBehaviour {
 
             case pointsCalculationPhases.COLLECTIBLES:
                 //PACIFIST
-                if (enemies_defeated == 0)
+                if (num_enemies > 0 && enemies_defeated == 0)
                 {
                     points = points * 3.0f;
                     outputText += "\nPacifista. x3 = " + points;
@@ -450,7 +450,7 @@ public class ScoreManager : MonoBehaviour {
 
             case pointsCalculationPhases.PACIFIST:
                 //GENOCIDE
-                if (enemies_defeated == num_enemies)
+                if (num_enemies > 0 && enemies_defeated == num_enemies)
                 {
                     points = points * 4.0f;
                     outputText += "\nGenocida. x4 = " + points;
