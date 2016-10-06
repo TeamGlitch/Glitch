@@ -493,6 +493,7 @@ public class BossArcherIA : MonoBehaviour
                 bossState = bossArcherIA.DEAD;
                 glitchDialogue.SetActive(true);
                 glitchCollider.SetActive(true);
+                shake.enabled = false;
                 if (BossDeadEvent != null)
                     BossDeadEvent();
             }
@@ -656,8 +657,6 @@ public class BossArcherIA : MonoBehaviour
             endXPosWhenDead = -8f + 9.21f;
         else
             endXPosWhenDead = 13f + 9.21f;
-
-        Debug.Log(endXPosWhenDead);
 
         startXPosWhenDead = transform.position.x;
         startZPosWhenDead = transform.position.z;
