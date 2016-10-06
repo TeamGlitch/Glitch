@@ -1,0 +1,281 @@
+﻿<!--?xml version=”1.0” encoding=”UTF-8”?-->
+<!--?xml version=”1.0” encoding=”UTF-8”?-->
+<Dialogue>
+  <Set lang="English">
+    <Languages>
+      <L>English</L>
+      <L>Spanish</L>
+    </Languages>
+    <Group id="Main_Menu">
+      <UI id="Menu">
+        <I id="NewGame">New Game</I>
+        <I id="Continue">Continue</I>
+        <I id="LevelSelect">Level Select</I>
+        <I id="Hiscores">High Scores</I>
+        <I id="Options">Options</I>
+        <I id="Quit">Quit</I>
+        <I id="Copyright">© 2016 Team Glitch
+v 1.0.0-DEMO</I>
+      </UI>
+      <UI id="LevelSelectionMenu">
+        <I id="Choose">CHOOSE LEVEL</I>
+        <I id="Tutorial">Tutorial</I>
+        <I id="Level1">Level 1</I>
+        <I id="Level2">Level 2 - NOT YET</I>
+        <I id="Boss">Boss</I>
+        <I id="Back">Back</I>
+      </UI>
+      <UI id="QuitMenu">
+        <I id="Sure">Are you sure 
+you want to quit?</I>
+        <I id="No">No</I>
+        <I id="Yes">Yes</I>
+      </UI>
+      <UI id="NewGame">
+        <I id="Sure">Do you want to play the tutorial?
+<![CDATA[<color=#FF0000FF>(highly recommended)</color>]]>
+        </I>
+        <I id="No">No</I>
+        <I id="Yes">Yes</I>
+      </UI>
+      <UI id="HighScore">
+        <I id="Title">High Scores</I>
+        <I id="Back">Back</I>
+      </UI>
+    </Group>
+    <Group id="Options">
+      <UI id="OptionsMenu">
+        <I id="Title">OPTIONS</I>
+        <I id="Controls">Controls</I>
+        <I id="Graphics">Graphics &amp; Language</I>
+        <I id="Audio">Audio</I>
+        <I id="Credits">Credits</I>
+        <I id="Back">Back</I>
+      </UI>
+      <UI id="CreditsMenu">
+        <I id="Title">CREDITS</I>
+        <I id="Back">Back</I>
+      </UI>
+      <UI id="GraphicsMenu">
+        <I id="Title">GRAPHICS &amp; LANGUAGE</I>
+        <I id="QualityTag">Quality level</I>
+        <I id="ResolutionTag">Resolution</I>
+        <I id="FullscreenTag">Fullscreen</I>
+        <I id="LanguageTag">Language</I>
+        <I id="Back">Back</I>
+      </UI>
+      <UI id="AudioMenu">
+        <I id="Title">AUDIO</I>
+        <I id="MusicVolumeTag">Music volume</I>
+        <I id="SFXVolumeTag">SFX volume</I>
+        <I id="StereoPanTag">Stereo pan</I>
+        <I id="SpeakersModeTag">Speakers mode</I>
+        <I id="Back">Back</I>
+      </UI>
+      <UI id="HelpMenu">
+        <I id="Title">HELP</I>
+        <I id="GamepadButton">Gamepad</I>
+        <I id="KeyboardButton">Keyboard</I>
+        <I id="Back">Back</I>
+      </UI>
+    </Group>
+    <Group id="Pause">
+      <UI id="PauseMenu">
+        <I id="Pause">Pause</I>
+        <I id="Resume">Resume</I>
+        <I id="Restart">Restart</I>
+        <I id="Options">Options</I>
+        <I id="Menu">Return to main menu</I>
+      </UI>
+    </Group>
+    <Group id="LevelComplete">
+      <UI id="LevelComplete">
+        <I id="LevelCompleteText">The heroes have completed the level!</I>
+      </UI>
+    </Group>
+    <Group id="GameOver">
+      <UI id="Dead Menu">
+        <I id="Restart Game">Restart Level</I>
+        <I id="Main Menu">Main Menu</I>
+        <I id="Continue">Continue</I>
+      </UI>
+    </Group>
+    <Group id="Score">
+      <UI id="Score">
+        <I id="Continue">Continue</I>
+        <I id="Retry">Retry</I>
+        <I id="Return">Return to main menu</I>
+        <I id="NewHiscore">NEW HI-SCORE!!</I>
+        <I id="YourName">Your name</I>
+      </UI>
+    </Group>
+    <Group id="Credits">
+      <UI id="Credits"><![CDATA[<color=#DABE41>Project Manager</color>
+Raul Ramos Macias
+
+<color=#DABE41>Lead game designer</color>
+Oriol Romero Herrando
+
+<color=#DABE41>Art Department</color>
+<color=#FFF9A8FF>Lead Artist:</color> Ion Ander Carrillo Valverde
+<color=#FFF9A8FF>Artist:</color> Xabier Iruretagoyena Ajuria
+
+<color=#DABE41>Programming Department</color>
+<color=#FFF9A8FF>Lead Programmer:</color> Cristian Fernández Suárez
+<color=#FFF9A8FF>Programmers:</color> Raul Ramos Macias, Oriol Romero Herrando
+
+<color=#DABE41>Music</color>
+Cecilia Tallo Criado
+Sara López Santamaría
+
+<color=#DABE41>Extra tracks</color>
+"XP Sounds Attempt" - SomethingUnreal
+"Cheese on my Knees (8bit)" - Andersson187
+
+<color=#DABE41>Extra sounds</color>
+Thirsk
+bone666138
+snv1985
+increpare's Bfxr]]></UI>
+    </Group>
+  </Set>
+  
+  <Set lang="Spanish">
+    <Languages>
+      <L>Inglés</L>
+      <L>Español</L>
+    </Languages>
+    <Group id="Main_Menu">
+      <UI id="Menu">
+        <I id="NewGame">Nuevo Juego</I>
+        <I id="Continue">Continuar</I>
+        <I id="LevelSelect">Seleccionar nivel</I>
+        <I id="Hiscores">Records</I>
+        <I id="Options">Opciones</I>
+        <I id="Quit">Salir</I>
+        <I id="Copyright">© 2016 Team Glitch
+v 1.0.0-DEMO</I>
+      </UI>
+      <UI id="LevelSelectionMenu">
+        <I id="Choose">SELECCIONAR NIVEL</I>
+        <I id="Tutorial">Tutorial</I>
+        <I id="Level1">Nivel 1</I>
+        <I id="Level2">Nivel 2 - NO DISPONIBLE</I>
+        <I id="Boss">Jefe</I>
+        <I id="Back">Volver</I>
+      </UI>
+      <UI id="HighScore">
+        <I id="Title">Records</I>
+        <I id="Back">Volver</I>
+      </UI>
+      <UI id="QuitMenu">
+        <I id="Sure">¿Seguro que 
+quieres salir?</I>
+        <I id="No">No</I>
+        <I id="Yes">Si</I>
+      </UI>
+      <UI id="NewGame">
+        <I id="Sure">Quieres jugar al tutorial?
+<![CDATA[<color=#FF0000FF>(Altamente recomendado)</color>]]>
+        </I>
+        <I id="No">No</I>
+        <I id="Yes">Si</I>
+      </UI>
+    </Group>
+    <Group id="Options">
+      <UI id="OptionsMenu">
+        <I id="Title">OPCIONES</I>
+        <I id="Controls">Controles</I>
+        <I id="Graphics">Gráficos e Idioma</I>
+        <I id="Audio">Audio</I>
+        <I id="Credits">Créditos</I>
+        <I id="Back">Volver</I>
+      </UI>
+      <UI id="CreditsMenu">
+        <I id="Title">CRÉDITOS</I>
+        <I id="Back">Volver</I>
+      </UI>
+      <UI id="GraphicsMenu">
+        <I id="Title">GRÁFICOS E IDIOMA</I>
+        <I id="QualityTag">Nivel de calidad</I>
+        <I id="ResolutionTag">Resolución</I>
+        <I id="FullscreenTag">Pantalla completa</I>
+        <I id="LanguageTag">Idioma</I>
+        <I id="Back">Volver</I>
+      </UI>
+      <UI id="AudioMenu">
+        <I id="Title">AUDIO</I>
+        <I id="MusicVolumeTag">Volumen de la música</I>
+        <I id="SFXVolumeTag">Volumen de los efectos</I>
+        <I id="StereoPanTag">Pan de estéreo</I>
+        <I id="SpeakersModeTag">Modo de los altavoces</I>
+        <I id="Back">Volver</I>
+      </UI>
+      <UI id="HelpMenu">
+        <I id="Title">AYUDA</I>
+        <I id="GamepadButton">Mando</I>
+        <I id="KeyboardButton">Teclado</I>
+        <I id="Back">Volver</I>
+      </UI>
+    </Group>
+    <Group id="Pause">
+      <UI id="PauseMenu">
+        <I id="Pause">Pausa</I>
+        <I id="Resume">Reanudar</I>
+        <I id="Restart">Reiniciar nivel</I>
+        <I id="Options">Opciones</I>
+        <I id="Menu">Volver al menú principal</I>
+      </UI>
+    </Group>
+    <Group id="LevelComplete">
+      <UI id="LevelComplete">
+        <I id="LevelCompleteText">¡Los héroes han completado el nivel!</I>
+      </UI>
+    </Group>
+    <Group id="GameOver">
+      <UI id="Dead Menu">
+        <I id="Restart Game">Reiniciar nivel</I>
+        <I id="Main Menu">Menú principal</I>
+        <I id="Continue">Continua</I>
+      </UI>
+    </Group>
+    <Group id="Score">
+      <UI id="Score">
+        <I id="Continue">Continuar</I>
+        <I id="Retry">Reintentar</I>
+        <I id="Return">Volver al menú principal</I>
+        <I id="NewHiscore">NUEVO RECORD!!</I>
+        <I id="YourName">Tu nombre</I>
+      </UI>
+    </Group>
+      <Group id="Credits">
+      <UI id="Credits"><![CDATA[<color=#DABE41>Jefe de Proyecto</color>
+Raul Ramos Macias
+
+<color=#DABE41>Jefe de diseño</color>
+Oriol Romero Herrando
+
+<color=#DABE41>Departamento de arte</color>
+<color=#FFF9A8FF>Jefe de arte:</color> Ion Ander Carrillo Valverde
+<color=#FFF9A8FF>Artista:</color> Xabier Iruretagoyena Ajuria
+
+<color=#DABE41>Departamento de programación</color>
+<color=#FFF9A8FF>Jefe de programación:</color> Cristian Fernández Suárez
+<color=#FFF9A8FF>Programadores:</color> Raul Ramos Macias, Oriol Romero Herrando
+
+<color=#DABE41>Música</color>
+Cecilia Tallo Criado
+Sara López Santamaría
+
+<color=#DABE41>Canciones extra</color>
+"XP Sounds Attempt" - SomethingUnreal
+"Cheese on my Knees (8bit)" - Andersson187
+
+<color=#DABE41>Sonidos extra</color>
+Thirsk
+bone666138
+snv1985
+increpare's Bfxr]]></UI>
+    </Group>
+  </Set>
+</Dialogue>

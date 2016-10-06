@@ -42,6 +42,7 @@ public class KnightAI : MonoBehaviour {
     public enemy_states states = enemy_states.PATROL;
     public World world;
     public AudioClip hitSound;
+    public AudioClip toPixelSound;
     public AudioClip explosionSound;
     public GameObject item;
 
@@ -70,6 +71,9 @@ public class KnightAI : MonoBehaviour {
 	private ParticleSystem particleSystem;
 	private int tiltCounter;
 
+    public AudioClip walkingSound;
+    private AudioSource walkingSoundSource = null;
+
     void Start()
     {
         playerPos = player.GetComponent<Transform>();
@@ -81,6 +85,7 @@ public class KnightAI : MonoBehaviour {
 		spriteRenderer = transform.GetComponent<SpriteRenderer>();
 		particleSystem = transform.GetComponent<ParticleSystem>();
 		tiltCounter = 0;
+        ScoreManager.instance.EnemyAdded();
     }
 
     void OnCollisionEnter(Collision coll)
@@ -222,6 +227,13 @@ public class KnightAI : MonoBehaviour {
             animator.SetFloat("Speed", speed*speedConstant);
             animator.SetInteger("State", (int)states);
             animator.SetBool("Attack", isInAttack);
+
+            if (states != enemy_states.PATROL && walkingSoundSource != null)
+            {
+                walkingSoundSource.Stop();
+                walkingSoundSource = null;
+            }
+
             switch (states)
             {
                 case enemy_states.WAIT:
@@ -248,6 +260,19 @@ public class KnightAI : MonoBehaviour {
                     // Patrolling logic
 
                     transform.Translate(Vector3.forward * speed * world.lag);
+
+                    if(Camera.current != null)
+                    { 
+                        Vector3 positionOnScreen = Camera.current.WorldToViewportPoint(transform.position);
+
+                        if (positionOnScreen.x > 0 &&  positionOnScreen.x < 1 &&
+                            positionOnScreen.y > 0 && positionOnScreen.y < 1 &&
+                            (walkingSoundSource == null || !walkingSoundSource.isPlaying))
+                        {
+                            walkingSoundSource = SoundManager.instance.PlaySingle(walkingSound);
+                        }
+                    }
+
                     break;
 
                 // Enemy chases Glitch until reach him, reach a limit point or lose sight of Glitch
@@ -444,6 +469,7 @@ public class KnightAI : MonoBehaviour {
                 fieldOfView.enabled = false;
                 isInAttack = false;
                 InvokeRepeating("TiltModel", 0f, 0.1f);
+                ScoreManager.instance.EnemyDefeated();
             }
             else
             {
@@ -514,7 +540,7 @@ public class KnightAI : MonoBehaviour {
 		transform.rotation = new Quaternion(0f,0f,0f,0f);
 		spriteRenderer.enabled = true;
         particleSystem.Play();
-        SoundManager.instance.PlaySingle(explosionSound);
+        SoundManager.instance.PlaySingle(toPixelSound);
         
         Invoke("SpriteToDead", 1.0f);
 	}

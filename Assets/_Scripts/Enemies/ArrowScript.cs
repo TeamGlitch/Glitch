@@ -10,7 +10,7 @@ public class ArrowScript : MonoBehaviour {
     public BoxCollider arrowCollider;
 
     private float timeAlive = 3.0f;
-    private float damage = 1.0f;
+    private int damage = 1;
 
     void OnCollisionEnter(Collision coll)
     {

@@ -1,4 +1,4 @@
-﻿Shader "Hidden/Transparent"
+﻿Shader "Transparent"
 {
 	Properties
 	{

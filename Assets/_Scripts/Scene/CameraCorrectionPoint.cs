@@ -6,6 +6,8 @@ public class CameraCorrectionPoint : MonoBehaviour {
 	//How the camera is when going to the right
 	//and how the camera is when going to the left
 	public CameraBehaviour behaviour;
+    public float playerPositionX = 0.27f;
+    public MainCamera controller;
 
 	// Use this for initialization
 	void Awake () {
@@ -42,8 +44,6 @@ public class CameraCorrectionPoint : MonoBehaviour {
 	void OnTriggerEnter(Collider coll){
 		//If the player has gone trought the collider and is exiting...
 		if (coll.gameObject.CompareTag("Player")) {
-			//Get the main camera controller
-			MainCamera controller = Camera.main.GetComponent<MainCamera> ();
 
 			//Assign the current behaviour to the camera
 			controller.behaviour = behaviour;
@@ -57,6 +57,8 @@ public class CameraCorrectionPoint : MonoBehaviour {
 				controller.upRail.transform.position = upRail;
 				controller.downRail.transform.position = downRail;
 			}
+
+            controller.playerPositionX = playerPositionX;
 
 		}
 

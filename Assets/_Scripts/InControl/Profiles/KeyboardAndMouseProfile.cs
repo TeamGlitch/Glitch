@@ -47,7 +47,7 @@ namespace CustomProfileExample
 				{
 					Handle = "Hook",
 					Target = InputControlType.Action4,
-					Source = KeyCodeButton( KeyCode.LeftShift )
+					Source = KeyCodeButton( KeyCode.O )
 				},
 				new InputControlMapping
 				{
@@ -59,7 +59,7 @@ namespace CustomProfileExample
 				{
 					Handle = "LowFPS",
 					Target = InputControlType.Action2,
-					Source = KeyCodeButton( KeyCode.LeftControl )
+					Source = KeyCodeButton( KeyCode.P )
 				},
 				new InputControlMapping
 				{

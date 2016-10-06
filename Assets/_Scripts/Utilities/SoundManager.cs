@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Xml;
-using System.Globalization;
 
 public class SoundManager : MonoBehaviour
 {
@@ -13,13 +11,23 @@ public class SoundManager : MonoBehaviour
 
     private bool allowNewSounds = true;
 
+    private bool musicMuted = false;
+
+    private float fadeOutStarted = -1;
+    private float timeToFadeOut;
+    private float actualMusicVolume = 0;
+
     // Use this for initialization
     void Awake()
     {
         //Check if there is already an instance of SoundManager
         if (instance == null)
+        {
             //if not, set it to this.
             instance = this;
+            if (actualMusicVolume == 0)
+                actualMusicVolume = musicSource.volume;
+        }
         //If instance already exists:
         else if (instance != this)
         {
@@ -35,98 +43,27 @@ public class SoundManager : MonoBehaviour
 
     }
 
-    public void LoadConfiguration(){
+    void Update()
+    {
+        if (fadeOutStarted != -1)
+        {
+            float percent = (Time.time - fadeOutStarted) / timeToFadeOut;
 
-        if(!tryToLoadConfiguration()){
+            if (percent > 1f)
+            {
+                MuteMusic();
+                fadeOutStarted = -1;
+            }
+            else
+            {
+                musicSource.volume = (1 - percent) * actualMusicVolume;
+            }
 
-            //If the file doesn't exist o there is a problem, restores the default values
-            System.IO.File.WriteAllLines("config.xml", new string[] {
-            "<!--?xml version=”1.0” encoding=”UTF-8”?-->",
-            "<!--?xml version=”1.0” encoding=”UTF-8”?-->",
-            "<confg>",
-            "<music>0.5</music>",
-            "<sfx>0.5</sfx>",
-            "<pan>0</pan>",
-            "<mode>1</mode>",
-            "</confg>"
-            });
-
-            tryToLoadConfiguration();
         }
     }
 
-
-    public void SaveConfiguration(){
-
-        AudioConfiguration config = AudioSettings.GetConfiguration();
-
-        System.IO.File.WriteAllLines("config.xml", new string[] {
-            "<!--?xml version=”1.0” encoding=”UTF-8”?-->",
-            "<!--?xml version=”1.0” encoding=”UTF-8”?-->",
-            "<confg>",
-            "<music>" + musicSource.volume + "</music>",
-            "<sfx>" + efxSources[0].volume + "</sfx>",
-            "<pan>" + musicSource.panStereo + "</pan>",
-            "<mode>" + config.speakerMode + "</mode>",
-            "</confg>"
-            });
-    }
-
-    private bool tryToLoadConfiguration(){
-
-        if (!System.IO.File.Exists("config.xml"))
-            return false;
-
-        XmlDocument xmlDoc = new XmlDocument();
-        xmlDoc = new XmlDocument();
-
-        string txt = System.IO.File.ReadAllText("config.xml");
-        xmlDoc.LoadXml(txt);
-
-        XmlNode node = xmlDoc.SelectSingleNode("/confg/music");
-        if (node == null)
-            return false;
-        float value;
-        if (!float.TryParse(node.InnerText, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture.NumberFormat, out value))
-            return false;
-        if(value < 0 || value > 1)
-            return false;
-        setMusicVolume(value);
-
-        node = xmlDoc.SelectSingleNode("/confg/sfx");
-        if (node == null)
-            return false;
-        if (!float.TryParse(node.InnerText, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture.NumberFormat, out value))
-            return false;
-        if (value < 0 || value > 1)
-            return false;
-        setSoundVolume(value);
-
-        node = xmlDoc.SelectSingleNode("/confg/pan");
-        if (node == null)
-            return false;
-        if (!float.TryParse(node.InnerText, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture.NumberFormat, out value))
-            return false;
-        if (value < -1 || value > 1)
-            return false;
-        setPan(value);
-
-        node = xmlDoc.SelectSingleNode("/confg/mode");
-        if (node == null)
-            return false;
-        int valueI;
-        if (!int.TryParse(node.InnerText, out valueI))
-            return false;
-        if (valueI < 0 || valueI > 6)
-            return false;
-        setMode(valueI);
-
-        return true;
-
-    }
-
     //Used to play single sound clips.
-    public void PlaySingle(AudioClip clip)
+    public AudioSource PlaySingle(AudioClip clip)
     {
         if (allowNewSounds){
 
@@ -142,7 +79,11 @@ public class SoundManager : MonoBehaviour
             efxSources[currentAudioSource].clip = clip;
             efxSources[currentAudioSource].Play();
 
+            return efxSources[currentAudioSource];
+
         }
+
+        return null;
 
     }
 
@@ -153,7 +94,29 @@ public class SoundManager : MonoBehaviour
         else if (volume > 1)
             volume = 1;
 
-        musicSource.volume = volume;
+        actualMusicVolume = volume;
+
+        if (!musicMuted)
+            musicSource.volume = volume;
+    }
+
+
+    public void StartFadeOut(float longevity)
+    {
+        fadeOutStarted = Time.time;
+        timeToFadeOut = longevity;
+    }
+
+    public void MuteMusic()
+    {
+        musicMuted = true;
+        musicSource.volume = 0;
+    }
+
+    public void UnmuteMusic()
+    {
+        musicMuted = false;
+        musicSource.volume = actualMusicVolume;
     }
 
     public void ChangeMusicSpeed(float speed)
@@ -170,6 +133,11 @@ public class SoundManager : MonoBehaviour
 
         for (int i = 0; i < efxSources.Length; ++i)
             efxSources[i].volume = volume;
+    }
+
+    public float getSoundVolume()
+    {
+        return efxSources[0].volume;
     }
 
     public void setPan(float pan)
@@ -218,24 +186,20 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void MuteAll()
+    public void Restart()
     {
-        if (musicSource.isPlaying)
-            musicSource.Stop();
-
+        UnmuteMusic();
+        musicSource.Stop();
+        musicSource.time = 0f;
 
         for (int i = 0; i < efxSources.Length; i++)
         {
-            if (efxSources[i].isPlaying)
-            {
-                efxSources[i].Stop();
-            }
-
-
+            efxSources[i].Stop();
+            efxSources[i].time = 0f;
         }
 
     }
-
+    
     public void setAllowNewSounds(bool value){
         allowNewSounds = value;
     }

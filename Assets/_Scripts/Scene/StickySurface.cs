@@ -7,9 +7,9 @@ public class StickySurface : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other)
 	{
-		if (other.tag == "Player")
+		if (other.CompareTag("Player"))
 		{
-			other.gameObject.GetComponent<PlayerController>().getSticked(directionStick);
+			other.gameObject.GetComponent<PlayerController>().GetSticked(directionStick);
 		}
 	}
 }

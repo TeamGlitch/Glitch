@@ -7,6 +7,9 @@ using InControl;
 public class PlayerController : MonoBehaviour 
 {
     public AudioClip jumpSound;
+    public AudioClip walkSound;
+    private AudioSource walkSource = null;
+
     public GlitchOffsetCamera glitchOffsetCamera;
 
     public enum player_state
@@ -43,7 +46,9 @@ public class PlayerController : MonoBehaviour
 	private float zPosition = 0.0f;				// Position on the z axis. Unvariable
 	public float maxJumpTime = 0.25f;			// Max time a jump can be extended
     public float jumpForce = 700.0f;				// Base jump speed
+    public float stickedJumpForce = 1000.0f;         // Force in jump from sticked surface
     private float timePreparingJump = 0.0f;
+    public float maxTimeSticked = 0.5f;
 
     public float maxSpeedInAir = 20.0f;
     public float decreaseSpeedWhenIdle = 1.0f;
@@ -82,11 +87,11 @@ public class PlayerController : MonoBehaviour
     private float timeSinceChangeMoving;
     private bool moveToRight = true;
     private bool playerIsMoving = false;
+    private bool playerJumpingInSticked = false;
 
 	private bool previouslySticked = false;
 
-    [SerializeField]
-    private moving_type playerMovingType = moving_type.IDLE;
+    public moving_type playerMovingType = moving_type.IDLE;
 
 	private int layerMask = ~((1 << 1) | (1 << 2) | (1 << 4) | (1 << 5) | (1 << 8) | (1 << 9) | (1 << 10) | (1 << 11) | (1 << 13));
 
@@ -119,6 +124,7 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
 		previouslySticked = false;
+
         // State-changing calculations
         switch (state)
         {
@@ -282,14 +288,22 @@ public class PlayerController : MonoBehaviour
 
             case player_state.DEATH:
                 rigidBody.velocity = Vector3.zero;
+
+                if (walkSource != null && walkSource.isPlaying)
+                    walkSource.Stop();
+
                 break;
 
 			case player_state.STICKED:
 				previouslySticked = true;
-				if (InputManager.ActiveDevice.Action1.WasPressed) {
+                timeSinceChangeMoving += Time.deltaTime;
 
-					rigidBody.useGravity = true;
-					rigidBody.AddForce(new Vector3(0.0f, jumpForce, 0.0f));
+                if (InputManager.ActiveDevice.Action1.IsPressed && !playerJumpingInSticked) {
+
+                    playerJumpingInSticked = true;
+
+                    rigidBody.useGravity = true;
+					rigidBody.AddForce(new Vector3(0.0f, stickedJumpForce, 0.0f));
 					rigidBody.velocity = new Vector3 (4f, -directionStickObject.x * rigidBody.velocity.y, 0.0f);
 					
 					velocityWhenChangedState = -directionStickObject.x * 20f;
@@ -299,7 +313,23 @@ public class PlayerController : MonoBehaviour
 
 					state = player_state.JUMPING;
 				}
-				break;
+                else if(timeSinceChangeMoving > maxTimeSticked)
+                {
+                    rigidBody.useGravity = true;
+                    playerJumpingInSticked = false;
+
+                    velocityWhenChangedState = 0f;
+                    timeToChangeDependingVelocity = 1f;
+                    timeSinceChangeMoving = 0.0f;
+                    playerMovingType = moving_type.STOPING;
+
+                    state = player_state.JUMPING;
+                }
+                else if(playerJumpingInSticked && !InputManager.ActiveDevice.Action1.IsPressed)
+                {
+                    playerJumpingInSticked = false;
+                }
+                break;
         }
 
         //If a player-induced jump is checked but the jump key is not longer
@@ -504,17 +534,28 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        //Plays the dust particle effect
+        //Plays the dust particle effect & walking sound
         if (state == player_state.IN_GROUND && currentVelocity != 0)
         {
             if (dustParticles.isStopped)
             {
                 dustParticles.Play();
             }
+
+            if (walkSource == null || !walkSource.isPlaying){
+                walkSource = SoundManager.instance.PlaySingle(walkSound);
+            }
         }
-        else if (dustParticles.isPlaying)
+        else
         {
-            dustParticles.Stop();
+            if (dustParticles.isPlaying)
+                dustParticles.Stop();
+
+            if (walkSource != null)
+            {
+                walkSource.Stop();
+                walkSource = null;
+            }
         }
     }
 
@@ -542,11 +583,17 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
-	public void getSticked(Vector3 directionStick){
+	public void GetSticked(Vector3 directionStick){
 		state = player_state.STICKED;
-		rigidBody.useGravity = false;
+        timeSinceChangeMoving = 0.0f;
+        rigidBody.useGravity = false;
 		rigidBody.velocity = new Vector3(0, 0, 0);
-		directionStickObject = directionStick;
+        if (InputManager.ActiveDevice.Action1.IsPressed)
+            playerJumpingInSticked = true;
+        else
+            playerJumpingInSticked = false;
+
+        directionStickObject = directionStick;
 	}
 
     private bool IsGrounded()

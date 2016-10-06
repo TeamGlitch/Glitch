@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using InControl;
 
 public class BossArcherIA : MonoBehaviour
 {
@@ -48,17 +50,20 @@ public class BossArcherIA : MonoBehaviour
     }
 
     public BossStageCamera camera;
+    public CameraShake shake;
     public AudioClip hit;
     public AudioClip scream;
     public DebrisManagerGlitch glitchDebris;        // Debris in "z" of Glitch
     public float horizontalVelocity = 10.0f;
-    public Door door;
     public bool start = false;
     public float timeInPreShoot = 2.0f;
     public float timeInPostShoot = 2.0f;
+    public bool holesActives = false;
     private float timeSinceStateChanged;
     [SerializeField]
     private bool movingRight = true;
+    public GameObject glitchCollider;
+    public GameObject glitchDialogue;
 
     [SerializeField]
     private bossArcherIA bossState;
@@ -106,6 +111,7 @@ public class BossArcherIA : MonoBehaviour
     public float endZPosWhenDead = 6f - 5.06f;
     public float startXPosWhenDead;
     public float endXPosWhenDead;
+    [SerializeField]
     private bool fallingDead = false;
 
     public World world;
@@ -124,6 +130,21 @@ public class BossArcherIA : MonoBehaviour
 
     private bool canShoot = true;
     public Player playerScript;
+
+    public Transform HUDLives;
+    private Image heart1;
+    private Image heart2;
+    private Image heart3;
+    private Image heart4;
+    private Image heart5;
+
+    public Sprite heartFull;
+    public Sprite heartEmpty;
+
+    public EndBossDialoguePoint endBoss;
+
+    public delegate void BossDeadDelegate();
+    public event BossDeadDelegate BossDeadEvent;
 
     #endregion
 
@@ -160,11 +181,22 @@ public class BossArcherIA : MonoBehaviour
         playerScript.PlayerReviveEvent += GlitchRevives;
 
         upArrow.gameObject.SetActive(false);
+
+        heart1 = HUDLives.FindChild("Heart1").GetComponent<Image>();
+        heart2 = HUDLives.FindChild("Heart2").GetComponent<Image>();
+        heart3 = HUDLives.FindChild("Heart3").GetComponent<Image>();
+        heart4 = HUDLives.FindChild("Heart4").GetComponent<Image>();
+        heart5 = HUDLives.FindChild("Heart5").GetComponent<Image>();
+
+        //transform.FindChild("GlitchCollider").GetComponent<GlitchArcher>().BossGlitchedEvent += GlitchArcher;
+
+        endBoss.BossGlitchEvent += GlitchArcher;
     }
 
     // Update is called once per frame
     void Update()
     {
+
         if (slowFPSactivated && (bossState == bossArcherIA.JUMPING || bossState == bossArcherIA.FALLING_JUMP))
         {
             animator.speed = 0.5f;
@@ -453,15 +485,22 @@ public class BossArcherIA : MonoBehaviour
             --lives;
             if (lives == 0)
             {
+                heart1.sprite = heartEmpty;
                 SoundManager.instance.PlaySingle(scream);
                 animator.SetTrigger("LastHitted");
                 camera.ZoomOut();
                 glitchDebris.ArcherDead();
                 bossState = bossArcherIA.DEAD;
-                door.OpenDoor();
+                glitchDialogue.SetActive(true);
+                glitchCollider.SetActive(true);
+                shake.enabled = false;
+                if (BossDeadEvent != null)
+                    BossDeadEvent();
             }
             else if (lives == 1)
             {
+                heart2.sprite = heartEmpty;
+                holesActives = true;
                 camera.ZoomArcherIn();
                 timeInPreShoot = 0f;
                 timeInPostShoot = 0f;
@@ -470,12 +509,17 @@ public class BossArcherIA : MonoBehaviour
             }
             else if (lives == 2)
             {
+                heart3.sprite = heartEmpty;
+                holesActives = true;
                 camera.ZoomArcherIn();
                 animator.SetTrigger("Hitted");
                 bossState = bossArcherIA.HITTED;
             }
             else if (lives == 3)
             {
+                shake.enabled = true;
+                heart4.sprite = heartEmpty;
+                holesActives = true;
                 camera.ZoomArcherIn();
                 timeInPreShoot = 1f;
                 timeInPostShoot = 1f;
@@ -485,6 +529,8 @@ public class BossArcherIA : MonoBehaviour
             }
             else if (lives == 4)
             {
+                heart5.sprite = heartEmpty;
+                holesActives = true;
                 camera.ZoomArcherIn();
                 animator.SetTrigger("Hitted");
                 bossState = bossArcherIA.HITTED;
@@ -494,12 +540,14 @@ public class BossArcherIA : MonoBehaviour
 
     public void InsultingAnimationEnded()
     {
+
         if (lives == 2)
             currentSpecialSpeed = 2f;
         else if (lives == 1)
             currentSpecialSpeed = 3f;
 
         camera.ZoomArcherOut();
+        holesActives = false;
         int random;
         switch (bossPos)
         {
@@ -600,11 +648,17 @@ public class BossArcherIA : MonoBehaviour
     {
         Vector3 auxPos = transform.position + new Vector3(-2f, -2.2f, 0f);
         rigidbody.useGravity = true;
-        startXPosWhenDead = endXPosWhenDead = transform.position.x;
-        if (transform.position.x >= 16f)
-        {
-            endXPosWhenDead = startXPosWhenDead + 2f;
-        }
+
+        if (transform.position.x < -24f+9.21f)
+            endXPosWhenDead = -32f + 9.21f;
+        else if(transform.position.x < -7.5f + 9.21f)
+            endXPosWhenDead = -17f + 9.21f;
+        else if (transform.position.x < 8.5f + 9.21f)
+            endXPosWhenDead = -8f + 9.21f;
+        else
+            endXPosWhenDead = 13f + 9.21f;
+
+        startXPosWhenDead = transform.position.x;
         startZPosWhenDead = transform.position.z;
         timeFalling = 0.0f;
         transform.position = auxPos;
@@ -633,6 +687,11 @@ public class BossArcherIA : MonoBehaviour
     public void GlitchRevives()
     {
         canShoot = true;
+    }
+
+    public void GlitchArcher()
+    {
+        animator.SetTrigger("LastGlitched");
     }
 
     #endregion
@@ -912,7 +971,8 @@ public class BossArcherIA : MonoBehaviour
     {
         upArrow.gameObject.SetActive(false);
         upArrow.canMove = false;
-        bossState = bossArcherIA.POSTSHOOT;
+        if(bossState != bossArcherIA.DEAD)
+            bossState = bossArcherIA.POSTSHOOT;
         timeSinceStateChanged = 0.0f;
         animator.speed = 1f;
         int random;
@@ -971,7 +1031,7 @@ public class BossArcherIA : MonoBehaviour
                     break;
             }
         }
-        else if (lives == 1)
+        else if (lives <= 1)
         {
             random = Random.Range(1, 6);
             switch (random)

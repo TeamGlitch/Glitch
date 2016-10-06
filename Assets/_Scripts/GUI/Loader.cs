@@ -4,10 +4,12 @@ using UnityEngine.UI;
 using InControl;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using System.Xml;
 
-public class Loader : MonoBehaviour {
+public class Loader : MonoBehaviour, LanguageListener {
 
     public static Loader instance = null;       //Singleton instance
+    public TextAsset XMLAsset;
 
     private static AsyncOperation async;        //Async operation
     private static string actualScene;          //Current scene
@@ -31,11 +33,9 @@ public class Loader : MonoBehaviour {
 
     private float nextLine = 0;             //When the next line will be written
 
-    private string[] phrases = { "Loading enemies hostility", "Ensuring ragequit situations", "Rendering stereotypical hacker binary patterns",
-                               "Sharpening enemies weapons", "Coordinating AI stupidity", "Leaking memory", "Compiling innecesary break commands",
-                               "Making noise for no reason", "Retrieving nostalgia", "Making bad design decisions", "Pretending actual bugs are intended bugs",
-                               "Loading loading screens", "Initializing recursive recursive recursive functions functions functions", 
-                               "Making up false loading operations", "Looking at GitHub to see who made a code mistake"};
+    private string[] phrases = {"Phases not loaded."};
+    private string Tloading = "";
+    private string TpressAnyButton = "";
 
     void Awake()
     {
@@ -55,7 +55,14 @@ public class Loader : MonoBehaviour {
             Destroy(gameObject);
         }
 
+        Configuration.addLanguageListener(this);
+
 	}
+
+    void OnDestroy()
+    {
+        Configuration.removeLanguageListener(this);
+    }
 
     void Update(){
 
@@ -79,10 +86,14 @@ public class Loader : MonoBehaviour {
                     else if (allowLoadingToFinish) {
 
                         //If it's automatic or it isn't but the player is pressing a button
-                        if (automaticLoad || (!automaticLoad && InputManager.ActiveDevice.AnyButton.WasPressed))
+                        if (automaticLoad ||
+                            (!automaticLoad
+                            && ((InputManager.ActiveDevice.Name == "Keyboard/Mouse" && Input.anyKey) || (InputManager.ActiveDevice.Name != "Keyboard/Mouse" && InputManager.ActiveDevice.AnyButton.WasPressed))
+                            && !async.allowSceneActivation))
                         {
                             //Allow to load
                             async.allowSceneActivation = true;
+                            SoundManager.instance.Restart();
                             SoundManager.instance.setAllowNewSounds(true);
                             SoundManager.instance.PlaySingle(confirmSound);
                         }
@@ -95,18 +106,18 @@ public class Loader : MonoBehaviour {
                 {
                     //On 90%
                     loaded = true;
-                    percent.text = "Press any button to continue";
+                    percent.text = TpressAnyButton;
                 }
                 //Lower than 90%
                 else
                 {
                     int percnt = (int)((100 * async.progress) + (10 * (async.progress / 0.9f)));
-                    percent.text = "Now Loading: " + percnt + "%";
+                    percent.text = Tloading + ": " + percnt + "%";
 
-                    if (Time.time > nextLine)
+                    if (Time.unscaledTime > nextLine)
                     {
                         text.text += "\n" + phrases[Random.Range(0, phrases.Length)] + ".";
-                        nextLine = Time.time + Random.Range(0.5f, 2.0f);
+                        nextLine = Time.unscaledTime + Random.Range(0.5f, 2.0f);
                     }
                 }
 
@@ -128,7 +139,8 @@ public class Loader : MonoBehaviour {
                         {
                             //If it's automatic
                             async.allowSceneActivation = true;
-                            SoundManager.instance.MuteAll();
+                            SoundManager.instance.Restart();
+                            Time.timeScale = 1.0f;
                             loading = false;
                         }
 
@@ -147,8 +159,27 @@ public class Loader : MonoBehaviour {
 
     }
 
+    public void SetTexts()
+    {
+        XmlDocument xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(XMLAsset.text);
+
+        XmlNodeList texts = xmlDoc.SelectNodes("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/T");
+
+        phrases = new string[texts.Count];
+
+        //We add the lines to the message list 
+        for (int i = 0; i < texts.Count; i++)
+        {
+            phrases[i] = texts[i].InnerText;
+        }
+
+        Tloading = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/I[@id=\"loading\"]").InnerText;
+        TpressAnyButton = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/I[@id=\"continue\"]").InnerText;
+    }
+
     //Loads a given scene.
-    //Level = The scene we're exiting was a level
+    //Level = The scene we're GOING TO is a level
     //Use interface = If active, the loading screen will be visible.
     //Is automatic = If inactive, the player will need to push any button to continue after it has finished loading to go to the next scene.
     //Allowed = If inactive, the next scene will load but an outside allowToFinish() call will be needed to go to the next scene.
@@ -157,7 +188,10 @@ public class Loader : MonoBehaviour {
         if (!loading && actualScene != levelName){
 
             if (level)
-                lastLevel = actualScene;
+            {
+                setLastLevel(levelName);
+                ScoreManager.instance.RestartValues();
+            }
 
             sceneLoading(levelName, useInterface, isAutomatic, allowed);
         }
@@ -166,6 +200,7 @@ public class Loader : MonoBehaviour {
     public static void ReloadScene(bool useInterface = true, bool isAutomatic = false, bool allowed = true)
     {
         if (!loading){
+            ScoreManager.instance.RestartValues();
             sceneLoading(actualScene, useInterface, isAutomatic, allowed);
         }
     }
@@ -186,7 +221,7 @@ public class Loader : MonoBehaviour {
         {
             interfaceLoad = true;
             Time.timeScale = 0.0f;
-            SoundManager.instance.MuteAll();
+            SoundManager.instance.Restart();
             SoundManager.instance.setAllowNewSounds(false);
         }
         else
@@ -221,9 +256,8 @@ public class Loader : MonoBehaviour {
 
         if (interfaceLoad){
             loadingUI.SetActive(true);
-            percent.text = "Now Loading: 0%";
+            percent.text = Tloading + ": 0%";
         }
-
     }
 
     public static void allowToFinish(){
@@ -235,5 +269,12 @@ public class Loader : MonoBehaviour {
     }
     public static string getLastLevel(){
         return lastLevel;
+    }
+
+    public static void setLastLevel(string level, bool configurationSave = true)
+    {
+        lastLevel = level;
+        if(configurationSave)
+            Configuration.SaveConfiguration();
     }
 }

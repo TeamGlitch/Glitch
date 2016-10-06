@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Xml;
 
-public class OptionsMenuScript : MonoBehaviour {
+public class OptionsMenuScript : MonoBehaviour, LanguageListener {
 
     public GameObject optionsMenu;
     public Button ControlsButton;
@@ -20,6 +20,7 @@ public class OptionsMenuScript : MonoBehaviour {
     public Dropdown qualityLevel;
     public Dropdown resolutions;
     public Toggle fullscreen;
+    public Dropdown language;
 
     public GameObject audioMenu;
     public Slider musicSlider;
@@ -35,13 +36,55 @@ public class OptionsMenuScript : MonoBehaviour {
     public AudioClip selectSound;
     public AudioClip confirmSound;
 
+    public TextAsset XMLAsset;
+    public Transform menusContainer;
+
+    //Credits
+    private bool onCredits = false;
+    private float timeBegin;
+    public Text credits;
+    public RectTransform creditsT;
+
 	void Start () {
         optionsMenu.SetActive(false);
         helpMenu.SetActive(false);
         graphicsMenu.SetActive(false);
         audioMenu.SetActive(false);
         creditsMenu.SetActive(false);
+        SetTexts();
+        Configuration.addLanguageListener(this);
 	}
+
+    void Update()
+    {
+        if (onCredits)
+        {
+            float maxMov = 836.3f;
+            float maxTime = 20f;
+
+            float actualTime = Time.unscaledTime - timeBegin;
+            Vector3 position = creditsT.anchoredPosition;
+
+            if (actualTime < 4f)
+                position.y = 0;
+            else if (actualTime - 4 < maxTime)
+                position.y = ((actualTime - 4) / maxTime) * maxMov;
+            else if (actualTime - 4 > maxTime + 4)
+            {
+                position.y = 0;
+                timeBegin = Time.unscaledTime;
+            }
+            else
+                position.y = maxMov;
+
+            creditsT.anchoredPosition = position;
+        }
+    }
+
+    void OnDestroy()
+    {
+        Configuration.removeLanguageListener(this);
+    }
 
     public void Enable(){
         optionsMenu.SetActive(true);
@@ -50,6 +93,73 @@ public class OptionsMenuScript : MonoBehaviour {
 
     public void Disable(){
         optionsMenu.SetActive(false);
+    }
+
+    public void SetTexts()
+    {
+        XmlDocument xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(XMLAsset.text);
+
+        XmlNodeList texts = xmlDoc.SelectNodes("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"Options\"]/UI");
+
+        string menuName;
+        Transform menu, element;
+        Text elementText;
+        for (int i = 0; i < texts.Count; i++)
+        {
+            menuName = texts[i].Attributes["id"].Value;
+            menu = menusContainer.FindChild(menuName);
+
+            if (menu != null)
+            {
+                for (int z = 0; z < texts[i].ChildNodes.Count; z++)
+                {
+                    element = menu.FindChild(texts[i].ChildNodes[z].Attributes["id"].Value);
+                    if (element != null)
+                    {
+                        elementText = element.GetComponent<Text>();
+                        if (elementText != null)
+                        {
+                            elementText.text = texts[i].ChildNodes[z].InnerText;
+                        }
+                        else
+                        {
+                            print(texts[i].ChildNodes[z].Attributes["id"].Value + " on " + texts[i].Attributes["id"].Value + " doesn't have a Text.");
+                        }
+                    }
+                    else
+                    {
+                        print(texts[i].ChildNodes[z].Attributes["id"].Value + " not found on " + texts[i].Attributes["id"].Value + ".");
+                    }
+                } // ENDFOR
+            }
+            else
+            {
+                print("Menu " + texts[i].Attributes["id"].Value + " not found.");
+            }
+        }
+
+        credits.text = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"Credits\"]/UI[@id = \"Credits\"]").InnerText;
+
+        //Lang config
+
+        language.options.Clear();
+
+        xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(XMLAsset.text);
+
+        texts = xmlDoc.SelectNodes("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Languages/L");
+        for (int i = 0; i < texts.Count; i++)
+        {
+            Dropdown.OptionData entry = new Dropdown.OptionData();
+            entry.text = texts[i].InnerText;
+            language.options.Add(entry);
+        }
+
+        if (Configuration.getLanguage() == "Spanish") language.value = 1;
+        else language.value = 0;
+        //TODO: HERE FOR MORE LANGS
+
     }
 
     public void ReturnToOptions()
@@ -61,6 +171,7 @@ public class OptionsMenuScript : MonoBehaviour {
         graphicsMenu.SetActive(false);
         audioMenu.SetActive(false);
         creditsMenu.SetActive(false);
+        onCredits = false;
 
         ControlsButton.Select();
     }
@@ -170,6 +281,24 @@ public class OptionsMenuScript : MonoBehaviour {
         QualitySettings.SetQualityLevel(qualityLevel.value);
     }
 
+    public void ChangeLanguage()
+    {
+        string newLang;
+
+        switch (language.value)
+        {
+            case 1: newLang = "Spanish"; break;
+            default: newLang = "English"; break;
+            //TODO: HERE FOR MORE LANGS
+        }
+
+        if (newLang != Configuration.getLanguage()){
+            Configuration.setLanguage(newLang);
+            Configuration.SaveConfiguration();
+        }
+
+    }
+
     public void AudioPress()
     {
         SoundManager.instance.PlaySingle(confirmSound);
@@ -220,7 +349,7 @@ public class OptionsMenuScript : MonoBehaviour {
     }
 
     public void SaveChangesOnAudio(){
-        SoundManager.instance.SaveConfiguration();
+        Configuration.SaveConfiguration();
     }
 
     public void CreditsMenu()
@@ -228,6 +357,8 @@ public class OptionsMenuScript : MonoBehaviour {
         SoundManager.instance.PlaySingle(confirmSound);
         creditsMenu.SetActive(true);
         optionsMenu.SetActive(false);
+        onCredits = true;
+        timeBegin = Time.unscaledTime;
 
         firstCreditsButton.Select();
     }

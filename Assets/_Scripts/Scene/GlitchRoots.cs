@@ -7,6 +7,7 @@ public class GlitchRoots : MonoBehaviour {
     public AudioClip glitch;
     public GameObject rootAssociated;
     public Shader glitchShader;
+    public Material preGlitchMaterial;
     public Shader plusShader;
     public RootsManager manager;
     public GameObject debris;
@@ -14,6 +15,7 @@ public class GlitchRoots : MonoBehaviour {
 
     private Debris debrisScript;
     private Shader rootShader;
+    private Material rootInitMaterial;
     private Renderer rootRender;
     private Rigidbody rigidDebris;
 
@@ -22,7 +24,9 @@ public class GlitchRoots : MonoBehaviour {
         debrisScript = debris.GetComponent<Debris>();
         rigidDebris = debris.GetComponent<Rigidbody>();
         rootRender = rootAssociated.GetComponent<Renderer>();
+        rootInitMaterial = rootRender.material;
         rootShader = rootRender.material.shader;
+        player.PlayerDeadEvent += TurnToNormality;
     }
 
     void OnTriggerEnter(Collider coll)
@@ -37,6 +41,7 @@ public class GlitchRoots : MonoBehaviour {
     {
         if (manager.isActivable && coll.CompareTag("Player"))
         {
+            rootRender.material = preGlitchMaterial;
             player.boxUIActivated.SetActive(true);
             if (InputManager.ActiveDevice.Action4.IsPressed)
             {
@@ -55,9 +60,10 @@ public class GlitchRoots : MonoBehaviour {
 
     void OnTriggerExit(Collider coll)
     {
-        if (coll.CompareTag("Player"))
+        if (manager.isActivable && coll.CompareTag("Player"))
         {
             player.DecreaseActivableBox();
+            TurnToNormality();
         }
     }
 
@@ -76,6 +82,7 @@ public class GlitchRoots : MonoBehaviour {
 
     public void TurnToNormality()
     {
+        rootRender.material = rootInitMaterial;
         rootRender.material.shader = rootShader;
     }
 }

@@ -17,7 +17,8 @@ public class ErrorBoxScript : MonoBehaviour
 {
 
     public Player playerScript;
-    public AudioClip ErrorBoxSound;
+    public AudioClip ErrorBoxNoiseSound;
+    public AudioClip ErrorBoxActivateSound;
     public CameraGlitchedToBoxes cameraGlitchedToBoxes;
 
     private error_box_state state = error_box_state.NON_REACHED;
@@ -35,6 +36,8 @@ public class ErrorBoxScript : MonoBehaviour
     private float timeStateChange;
     private float lastFlicker = 0;
     private bool activable = false;
+
+    private AudioSource noiseSoundSource = null;
 
     void Start()
     {
@@ -55,6 +58,7 @@ public class ErrorBoxScript : MonoBehaviour
         switch (state)
         {
             case (error_box_state.NON_REACHED):
+
                 if (activable)
                 {
                     playerScript.IncreaseActivableBox();
@@ -72,6 +76,7 @@ public class ErrorBoxScript : MonoBehaviour
                     playerScript.DecreaseActivableBox();
                     cameraGlitchedToBoxes.RemoveBox(transform.position);
                     state = error_box_state.NON_REACHED;
+                    noiseSoundSource = null;
                 }
                 else if (InputManager.ActiveDevice.Action4.WasPressed)
                 {
@@ -87,8 +92,14 @@ public class ErrorBoxScript : MonoBehaviour
 
                     box.localScale = new Vector3(0f, 0f, 0f);
 
-                    SoundManager.instance.PlaySingle(ErrorBoxSound);
+                    if (noiseSoundSource != null)
+                        noiseSoundSource.Stop();
+                    SoundManager.instance.PlaySingle(ErrorBoxActivateSound);
                     state = error_box_state.GROWING;
+                }
+                else if(noiseSoundSource == null || !noiseSoundSource.isPlaying)
+                {
+                    noiseSoundSource = SoundManager.instance.PlaySingle(ErrorBoxNoiseSound);
                 }
                 break;
 
@@ -166,6 +177,7 @@ public class ErrorBoxScript : MonoBehaviour
                 if (Time.time - timeStateChange > timeCooldownBox)
                 {
                     state = error_box_state.NON_REACHED;
+                    noiseSoundSource = null;
                 }
                 break;
         }

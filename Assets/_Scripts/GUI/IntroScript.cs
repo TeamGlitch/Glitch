@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using InControl;
+using UnityEngine.UI;
+using System.Xml;
+using System.Globalization;
 
 public class IntroScript : MonoBehaviour {
     public enum introPhases
@@ -15,6 +19,15 @@ public class IntroScript : MonoBehaviour {
         INTROMOVIE,
     };
 
+    private struct subsEntry
+    {
+        public string content;
+        public float begin;
+        public float end;
+        public bool secundary;
+        public bool corrupted;
+    }
+
 	public MovieTexture movie;
     public AudioClip amigaSound;
     public Transform logoscreen;
@@ -25,18 +38,89 @@ public class IntroScript : MonoBehaviour {
     private float phaseStart = 0;
 
     private float timeToEnd;
+    private float started;
+
+    public TextAsset XMLAsset;
+    public Text Subtitles;
+    private List<subsEntry> subtitleEntries;
+    private List<subsEntry> actualSubs = new List<subsEntry>();
+    private string MainMessage = "";
+    private string SecondMessage = "";
+    private float glitchStart = 0;
+    private float glitchEnd = 0;
+
+    private char[] randomLetters = { '~', '€', '@', '¬', '#', '|', '/', '$', '·', '!', '?' };
 
 	void Start(){
 
-        SoundManager.instance.LoadConfiguration();
+        Configuration.LoadConfiguration();
 
 		GetComponent<Renderer>().material.mainTexture = movie as MovieTexture;
 
         logoMenu = logoscreen.GetChild(0).GetChild(0).GetComponent<RectTransform>();
         logoMenu.position = new Vector3(3000,0,-1);
 
+        loadSubtitles();
+        updateSubtiltes();
+
         Loader.LoadScene("menu", false, false, true, false);
 	}
+
+    private void loadSubtitles()
+    {
+        XmlDocument xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(XMLAsset.text);
+
+        XmlNode texts = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]");
+
+        subtitleEntries = new List<subsEntry>();
+        for (int i = 0; i < texts.ChildNodes.Count; i++)
+        {
+            XmlNode child = texts.ChildNodes[i];
+            subsEntry entry = new subsEntry();
+
+            entry.content = child.InnerText;
+            entry.begin = getTime(child.Attributes["begin"].Value);
+            entry.end = getTime(child.Attributes["end"].Value);
+
+            if (child.Name == "MainCorr")
+            {
+                entry.secundary = false;
+                entry.corrupted = true;
+            }
+            else if (child.Name == "Secund")
+            {
+                entry.secundary = true;
+                entry.corrupted = false;
+            }
+            else
+            {
+                entry.secundary = false;
+                entry.corrupted = false;
+            }
+
+            subtitleEntries.Add(entry);
+
+        }
+
+        subtitleEntries.Sort(delegate(subsEntry a, subsEntry b)
+        {
+            return (a.begin).CompareTo(b.begin);
+        });
+
+    }
+
+    private float getTime(string formattedTime)
+    {
+        float time = 0;
+        string rest = formattedTime;
+
+        time += float.Parse(rest.Split(':')[0], CultureInfo.InvariantCulture.NumberFormat) * 60 * 60;
+        time += float.Parse(rest.Split(':')[1], CultureInfo.InvariantCulture.NumberFormat) * 60;
+        time += float.Parse(rest.Split(':')[2], CultureInfo.InvariantCulture.NumberFormat);
+
+        return time;
+    }
 
 	// Update is called once per frame
 	void Update () {
@@ -155,12 +239,88 @@ public class IntroScript : MonoBehaviour {
                     SoundManager.instance.PlaySingle(movie.audioClip);
 
                     timeToEnd = Time.time + movie.duration;
+                    started = Time.time;
                     phase = introPhases.INTROMOVIE;
                 }
 
                 break;
 
             case introPhases.INTROMOVIE:
+
+                float passed = Time.time - started;
+
+                bool glitching = false;
+                for (int i = actualSubs.Count - 1; i >= 0; i--)
+                {
+                    if (passed >= actualSubs[i].end)
+                    {
+
+                        if (actualSubs[i].secundary)
+                            SecondMessage = "";
+                        else
+                            MainMessage = "";
+
+                        updateSubtiltes();
+                        actualSubs.RemoveAt(i);
+                    }
+                    else
+                    {
+                        if (actualSubs[i].corrupted)
+                            glitching = true;
+                    }
+                }
+
+                for (int i = 0; i < subtitleEntries.Count; i++)
+                {
+                    if (passed >= subtitleEntries[i].begin)
+                    {
+                        subsEntry entry = subtitleEntries[i];
+
+                        if (entry.secundary)
+                            SecondMessage = entry.content + "\n";
+                        else
+                            MainMessage = entry.content;
+
+                        if (!glitching && entry.corrupted)
+                        {
+                            glitchStart = Time.time + 0.2f;
+                            glitchStart = Time.time + 0.3f;
+                        }
+
+                        updateSubtiltes();
+                        actualSubs.Add(subtitleEntries[i]);
+                        subtitleEntries.RemoveAt(i);
+                        i--;
+                    }
+                    else
+                        break;
+                }
+
+                if (glitching)
+                {
+                    if (Time.time > glitchStart)
+                    {
+                        if (Time.time > glitchEnd)
+                        {
+                            glitchStart = Time.time + 0.2f + Random.Range(0, 0.1f);
+                            glitchEnd = Time.time + 0.3f + Random.Range(0, 0.1f);
+                            updateSubtiltes();
+                        }
+                        else
+                        {
+                            char[] corruption = MainMessage.ToCharArray();
+
+                            int numCorruptions = Random.Range(5, 10);
+                            for (int i = 0; i < numCorruptions; i++)
+                            {
+                                corruption[Random.Range(0, corruption.Length - 1)] = randomLetters[Random.Range(0, randomLetters.Length - 1)];
+                            }
+                            
+                            updateSubtiltes(new string(corruption));
+                        }
+                        
+                    }
+                }
 
                 if (Time.time > timeToEnd)
                 {
@@ -174,6 +334,14 @@ public class IntroScript : MonoBehaviour {
                 break;
         }
 	}
+
+    private void updateSubtiltes(string subs = "")
+    {
+        if (subs == "")
+            Subtitles.text = SecondMessage + MainMessage;
+        else
+            Subtitles.text = SecondMessage + subs;
+    }
 
     private void adjustCamera(){
         float height = Camera.current.orthographicSize * 2;

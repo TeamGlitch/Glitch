@@ -1,48 +1,100 @@
 ﻿<!--?xml version=”1.0” encoding=”UTF-8”?-->
 <!--?xml version=”1.0” encoding=”UTF-8”?-->
-<Dialogue lang="English">
-	<Scene id="0">
-		<T>[face=Glitch]Hello! You can go to the next message with [controller=A][keyboard=W].</T>
-		<T>I can also skip it automatically.[wait=1.5][skip]</T>
-		<T>[]And you can't skip this text! Go on! Try it![wait=2]&#xA;See?[wait=0.5] Told ya.</T>
-		<T>[playermove=false][noskip]You can make the player stop moving...[wait=2]</T>
-		<T>[playermove=true][noskip]...Or allow you to, so the message goes while playing.</T>
-		<T>I can talk [wait=1][speed=0]really fast [wait=1][speed=0.5]or really slow.</T>
-		<T>I can also add...[wait=2]uh...[wait=2]Oh![wait=0.5] Right![wait=0.5] Pauses!</T>
-		<T>I can also [end]end the message abruptly anytime.</T>
-		<T>[end]Or just show it all from the start.</T>
-		<T>[face=Bug]There's also a tag for changing the showing face, including pitch!</T>
-		<T>[face=Glitch]And you don't have to make any sprite references! It is automatically readed with a resource.loadAll().</T>
-		<T>[face=Bug]But don't worry! If it's called once, it is stored for fast future use, so you there's no performance drop!</T>
-		<T>[face=None]If you put "none" on the face tag, this is what happens. Ideal for narration!</T>
-		<T>[face=Glitch][bga=0.35]You can also change the background transparency!</T>
-		<T>[bga=1][align=right]You can also change...</T>
-		<T>[align=center]...the text align...</T>
-		<T>[align=left]...with tags!</T>
-		<T>So yeah, have fun.</T>
-	</Scene>
-	<Scene id="1">
-		<T>[face=None][playermove=false]Welcome to the Artichoke Kingdom!</T>
-		<T>You can move [controller=tilting the left stick][keyboard=pressing A and D].</T>
-		<T>You can also jump pressing [controller=A][keyboard=W]. The longer you press, the higher you're going to jump!</T>
-	</Scene>
-	<Scene id="2">
-		<T>[face=None][playermove=false]Press the [controller=X button][keyboard=space bar] to use your teleport.</T>
-		<T>You will teleport [controller=in the direction the left stick was pointing at when the button was pressed][keyboard=in the direction of the movement keys you were pressing when it activated].</T>
-    <T>It ignores any collisions, so you can use it to go through walls, enemies and other solid objects.</T>
-    <T>It can be used on ground and while jumping. So it's kind of a double jump!</T>
-		<T>If you want to test it, try to pick the items over this tree.</T>
-	</Scene>
-	<Scene id="3">
-		<T>[face=None][playermove=false]Do you see the exclamation over you head? And the distortion in front of you?</T>
-    <T>If there's an exclamation over you head, it means that you can bug something on the level pressing [controller=Y][keyboard=shift].</T>
-		<T>Using this power near this kind of distortions will create platforms!</T>
-	</Scene>
-	<Scene id="4">
-		<T>[face=None][playermove=false]Wait, are those traps? You may need to make time go slower to get through this.</T>
-		<T>If you press [controller=B][keyboard=CTRL] you will make the game's FPS drop, slowing it down. It should make things a little bit easier!</T>
-    <T>You can deactivate it whenever you want by pressing [controller=B][keyboard=CTRL] again.</T>
-    <T>But be careful, it doesn't last forever! Keep an eye on the bar under your lives. It indicates how much time left you have.</T>
-    <T>The bar will start filling itself once the power is deactivated, so don't worry about that.</T>
-	</Scene>
+<Dialogue >
+  <Set lang="English">
+    <StartMessage>
+      <Title><![CDATA[<color=#326400>The Forest</color>]]></Title>
+      <Subtitle>Level 1</Subtitle>
+    </StartMessage>
+	  <Scene id="0">
+		  <T>[face=Glitch]Hello! You can go to the next message with [controller=A][keyboard=W].</T>
+		  <T>I can also skip it automatically.[wait=1.5][skip]</T>
+		  <T>[]And you can't skip this text! Go on! Try it![wait=2]&#xA;See?[wait=0.5] Told ya.</T>
+		  <T>[playermove=false][noskip]You can make the player stop moving...[wait=2]</T>
+		  <T>[playermove=true][noskip]...Or allow you to, so the message goes while playing.</T>
+		  <T>I can talk [wait=1][speed=0]really fast [wait=1][speed=0.5]or really slow.</T>
+		  <T>I can also add...[wait=2]uh...[wait=2]Oh![wait=0.5] Right![wait=0.5] Pauses!</T>
+		  <T>I can also [end]end the message abruptly anytime.</T>
+		  <T>[end]Or just show it all from the start.</T>
+		  <T>[face=Bug]There's also a tag for changing the showing face, including pitch!</T>
+		  <T>[face=Glitch]And you don't have to make any sprite references! It is automatically readed with a resource.loadAll().</T>
+		  <T>[face=Bug]But don't worry! If it's called once, it is stored for fast future use, so you there's no performance drop!</T>
+		  <T>[face=None]If you put "none" on the face tag, this is what happens. Ideal for narration!</T>
+		  <T>[face=Glitch][bga=0.35]You can also change the background transparency!</T>
+		  <T>[bga=1][align=right]You can also change...</T>
+		  <T>[align=center]...the text align...</T>
+		  <T>[align=left]...with tags!</T>
+		  <T>So yeah, have fun.</T>
+	  </Scene>
+	  <Scene id="1">
+		  <T>[face=None][playermove=false]Welcome to the Artichoke Kingdom!</T>
+		  <T>You can move [controller=tilting the left stick][keyboard=pressing A and D].</T>
+		  <T>You can also jump pressing [controller=A][keyboard=W]. The longer you press, the higher you're going to jump!</T>
+	  </Scene>
+	  <Scene id="2">
+		  <T>[face=None][playermove=false]Press the [controller=X button][keyboard=space bar] to use your teleport.</T>
+		  <T>You will teleport [controller=in the direction the left stick was pointing at when the button was pressed][keyboard=in the direction of the movement keys you were pressing when it activated].</T>
+      <T>It ignores any collisions, so you can use it to go through walls, enemies and other solid objects.</T>
+      <T>It can be used on ground and while jumping. So it's kind of a double jump!</T>
+		  <T>If you want to test it, try to pick the items over this tree.</T>
+	  </Scene>
+	  <Scene id="3">
+		  <T>[face=None][playermove=false]Do you see the exclamation over you head? And the distortion in front of you?</T>
+      <T>If there's an exclamation over you head, it means that you can bug something on the level pressing [controller=Y][keyboard=shift].</T>
+		  <T>Using this power near this kind of distortions will create platforms!</T>
+	  </Scene>
+	  <Scene id="4">
+		  <T>[face=None][playermove=false]Wait, are those traps? You may need to make time go slower to get through this.</T>
+		  <T>If you press [controller=B][keyboard=CTRL] you will make the game's FPS drop, slowing it down. It should make things a little bit easier!</T>
+      <T>You can deactivate it whenever you want by pressing [controller=B][keyboard=CTRL] again.</T>
+      <T>But be careful, it doesn't last forever! Keep an eye on the bar under your lives. It indicates how much time left you have.</T>
+      <T>The bar will start filling itself once the power is deactivated, so don't worry about that.</T>
+	  </Scene>
+    <Scene id="5">
+      <T>[face=None][playermove=false]Wow, now you will have to glitch some enemies! Remember, stomp their heads to glitch them!</T>
+    </Scene>
+    <EndMessage>
+      <Title>Level 1...Complete?</Title>
+      <Subtitle>Time for a boss!</Subtitle>
+    </EndMessage>
+  </Set>
+  
+  
+  <Set lang="Spanish">
+    <StartMessage>
+      <Title><![CDATA[<color=#326400>El bosque</color>]]></Title>
+      <Subtitle>Nivel 1</Subtitle>
+    </StartMessage>
+    <Scene id="1">
+      <T>[face=None][playermove=false]¡Bienvenido al reino alcachofa!</T>
+      <T>Puedes moverte [controller=inclinando el stick izquierdo][keyboard=pulsando A y D].</T>
+      <T>También puedes saltar pulsando [controller=A][keyboard=W]. ¡Cuanto más tiempo lo mantengas pulsado, más alto llegarás!</T>
+    </Scene>
+    <Scene id="2">
+      <T>[face=None][playermove=false]Pulsa [controller=el botón X][keyboard=la barra espaciadora] para usar tu teletransporte.</T>
+      <T>Te desplazarás [controller=en la dirección a la que apuntaba el joystick izquierdo][keyboard=en la dirección de las teclas de movimiento] cuando lo activaste.</T>
+      <T>Ignora colisiones, así que puedes atravesar paredes, enemigos u otros objetos sólidos.</T>
+      <T>Puede usarse en el suelo o tras saltar...¡Así que vale como doble salto!</T>
+      <T>Si quieres probarlo, trata de hacerte con los objetos sobre este árbol.</T>
+    </Scene>
+    <Scene id="3">
+      <T>[face=None][playermove=false]¿Ves el símbolo de exclamación sobre tu cabeza? ¿Y la distorsión frente a ti?</T>
+      <T>Si hay un símbolo de exclamación sobre tu cabeza significa que puedes buggear algo del nivel pulsando [controller=Y][keyboard=shift].</T>
+      <T>Si lo usas con este tipo de distorsiones...¡Crearás plataformas!</T>
+    </Scene>
+    <Scene id="4">
+      <T>[face=None][playermove=false]¡Hey! ¿Eso de ahí son trampas? Quizá necesites ralentizar el tiempo para salirte de esta.</T>
+      <T>Si pulsas [controller=B][keyboard=CTRL] harás que los FPS del juego bajen, ralentizándolo. ¡Así estará chupado!</T>
+      <T>Puedes desactivarlo cuando quieras pulsando [controller=B][keyboard=CTRL] de nuevo.</T>
+      <T>¡Pero cuidado, que no dura para siempre! Fíjate en la barra bajo tus vidas. Te indica cuánto tiempo te queda.</T>
+      <T>No te preocupes, la barra se irá rellenando sola cuando mientras el poder esté inactivo.</T>
+    </Scene>
+    <Scene id="5">
+      <T>[face=None][playermove=false]Wow, ahora tendras que glitchear algunos enemigos! Recuerda, saltales encima para glitchearlos!</T>
+    </Scene>
+    <EndMessage>
+      <Title>Nivel 1...¿Completado?</Title>
+      <Subtitle>¡A por el jefe!</Subtitle>
+    </EndMessage>
+  </Set>
 </Dialogue>

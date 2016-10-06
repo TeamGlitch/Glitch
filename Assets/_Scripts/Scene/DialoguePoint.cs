@@ -8,7 +8,7 @@ public class DialoguePoint : MonoBehaviour
 
     public DialogueScript dialogueScript;
     public int sceneNum;
-    private bool used = false;
+    public bool used = false;
 
     void OnTriggerEnter(Collider coll)
     {

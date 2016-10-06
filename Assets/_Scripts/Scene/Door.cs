@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Door : MonoBehaviour {
 
+    public BossStageCamera camera;
     public SphereCollider sphere;
     public BoxCollider box;
     public AudioClip sound;
@@ -22,8 +23,14 @@ public class Door : MonoBehaviour {
     {
         if (coll.CompareTag("Player"))
         {
-            Loader.LoadScene("Congratulations", true, false, true, true);
+            camera.DarknessIn();
+            Invoke("Congrats", 3.0f);
         }
+    }
+
+    public void Congrats()
+    {
+        Loader.LoadScene("Congratulations", false, false, true, true);
     }
 
     public void OpenDoor()

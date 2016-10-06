@@ -1,0 +1,201 @@
+fileFormatVersion: 2
+guid: 82523bdc686aa5642a6dea4bb3664ad8
+timeCreated: 1470060654
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: joint13
+    100002: joint3
+    100004: joint4
+    100006: joint4 1
+    100008: joint5
+    100010: joint5 1
+    100012: joint6
+    100014: joint6 1
+    100016: joint7
+    100018: joint7 1
+    100020: jt_murci
+    100022: murci1
+    100024: //RootNode
+    100026: nurbsCircle1
+    100028: nurbsCircle2
+    100030: nurbsCircle3
+    100032: nurbsCircle4
+    100034: nurbsCircle5
+    100036: nurbsCircle6
+    100038: nurbsCircle7
+    100040: nurbsCircle8
+    100042: nurbsCircle9
+    100044: polySurface4
+    100046: polySurface5
+    400000: joint13
+    400002: joint3
+    400004: joint4
+    400006: joint4 1
+    400008: joint5
+    400010: joint5 1
+    400012: joint6
+    400014: joint6 1
+    400016: joint7
+    400018: joint7 1
+    400020: jt_murci
+    400022: murci1
+    400024: //RootNode
+    400026: nurbsCircle1
+    400028: nurbsCircle2
+    400030: nurbsCircle3
+    400032: nurbsCircle4
+    400034: nurbsCircle5
+    400036: nurbsCircle6
+    400038: nurbsCircle7
+    400040: nurbsCircle8
+    400042: nurbsCircle9
+    400044: polySurface4
+    400046: polySurface5
+    4300000: polySurface4
+    4300002: polySurface5
+    7400000: aletear
+    9500000: //RootNode
+    13700000: polySurface4
+    13700002: polySurface5
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: aletear
+      takeName: aletear
+      firstFrame: 0
+      lastFrame: 16
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: jt_murci
+        weight: 1
+      - path: jt_murci/joint3
+        weight: 1
+      - path: jt_murci/joint3/joint4 1
+        weight: 1
+      - path: jt_murci/joint3/joint4 1/joint5 1
+        weight: 1
+      - path: jt_murci/joint3/joint4 1/joint5 1/joint6 1
+        weight: 1
+      - path: jt_murci/joint3/joint4 1/joint5 1/joint6 1/joint7 1
+        weight: 1
+      - path: jt_murci/joint13
+        weight: 1
+      - path: jt_murci/joint13/joint4
+        weight: 1
+      - path: jt_murci/joint13/joint4/joint5
+        weight: 1
+      - path: jt_murci/joint13/joint4/joint5/joint6
+        weight: 1
+      - path: jt_murci/joint13/joint4/joint5/joint6/joint7
+        weight: 1
+      - path: murci1
+        weight: 1
+      - path: murci1/polySurface4
+        weight: 1
+      - path: murci1/polySurface5
+        weight: 1
+      - path: nurbsCircle1
+        weight: 1
+      - path: nurbsCircle1/nurbsCircle2
+        weight: 1
+      - path: nurbsCircle1/nurbsCircle2/nurbsCircle3
+        weight: 1
+      - path: nurbsCircle1/nurbsCircle2/nurbsCircle3/nurbsCircle4
+        weight: 1
+      - path: nurbsCircle1/nurbsCircle2/nurbsCircle3/nurbsCircle4/nurbsCircle5
+        weight: 1
+      - path: nurbsCircle1/nurbsCircle6
+        weight: 1
+      - path: nurbsCircle1/nurbsCircle6/nurbsCircle7
+        weight: 1
+      - path: nurbsCircle1/nurbsCircle6/nurbsCircle7/nurbsCircle8
+        weight: 1
+      - path: nurbsCircle1/nurbsCircle6/nurbsCircle7/nurbsCircle8/nurbsCircle9
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

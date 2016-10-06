@@ -2,8 +2,9 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Xml;
 
-public class AdvanceBarEnemies : MonoBehaviour {
+public class AdvanceBarEnemies : MonoBehaviour, LanguageListener {
 
     public enum endtimeState
     {
@@ -11,13 +12,14 @@ public class AdvanceBarEnemies : MonoBehaviour {
         MOVING,
         POWER_DOWNING,
         SHOWING_MESSAGE,
-        DEATH
+        DEATH,
+        LEVEL_COMPLETE
     };
 
     private endtimeState state;
     private endtimeState lastStateBeforePause = endtimeState.MOVING;
 
-    private const float maxTime = 300.0f;
+    public float maxTime = 300.0f;
     private float time = 0.0f;
     private float stateChange = 0f;
 
@@ -30,14 +32,31 @@ public class AdvanceBarEnemies : MonoBehaviour {
     public Text levelCompleteText;
 
     public AudioClip powerDownSound;
+    public TextAsset XMLAsset;
 
-
+    public EndPointScript endPoint;
 
     void Start()
     {
         slider.maxValue = maxTime;
         slider.minValue = 0.0f;
         state = endtimeState.NOT_MOVING;
+        Configuration.addLanguageListener(this);
+    }
+
+    void OnDestroy()
+    {
+        Configuration.removeLanguageListener(this);
+    }
+
+    public void SetTexts()
+    {
+        XmlDocument xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(XMLAsset.text);
+
+        XmlNode texts = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/Group[@id = \"LevelComplete\"]/UI[@id = \"LevelComplete\"]/I[@id = \"LevelCompleteText\"]");
+        levelCompleteText.text = texts.InnerText;
+
     }
 
     public void Pause (bool pause)
@@ -56,6 +75,14 @@ public class AdvanceBarEnemies : MonoBehaviour {
 
     void Update()
     {
+        if (state != endtimeState.LEVEL_COMPLETE && endPoint.enabled)
+        {
+            ScoreManager.instance.SetBasePoints(player.items);
+            ScoreManager.instance.SetTimes(maxTime, slider.value);
+            ScoreManager.instance.SetRemaniningLives(player.lives);
+            state = endtimeState.LEVEL_COMPLETE;
+        }
+
         switch(state){
 
             case endtimeState.MOVING:
@@ -66,26 +93,29 @@ public class AdvanceBarEnemies : MonoBehaviour {
                 }
                 else
                 {
-                    state = endtimeState.POWER_DOWNING;
-                    SoundManager.instance.musicSource.Pause();
-                    SoundManager.instance.PlaySingle(powerDownSound);
-                    powerDown.enabled = true;
-                    blackScreen.color = new Color(0, 0, 0, 0);
-                    levelCompleteText.enabled = false;
-                    levelCompleteText.text = "The heroes have arrived to destination!";
-                    stateChange = Time.time;
+                    if(player.lives > 0)
+                    { 
+                        state = endtimeState.POWER_DOWNING;
+                        SoundManager.instance.musicSource.Pause();
+                        SoundManager.instance.PlaySingle(powerDownSound);
+                        powerDown.enabled = true;
+                        blackScreen.color = new Color(0, 0, 0, 0);
+                        levelCompleteText.enabled = false;
+                        stateChange = Time.time;
+                        playerController.allowMovement = false;
+                    }
                 }
                 break;
 
             case endtimeState.POWER_DOWNING:
 
                 float percent = (Time.time - stateChange) / 2.5f;
-                playerController.allowMovement = false;
 
                 if (percent > 1) { 
                     percent = 1;
                     state = endtimeState.SHOWING_MESSAGE;
                     levelCompleteText.enabled = true;
+                    SetTexts();
                     stateChange = Time.time;
                 }
 

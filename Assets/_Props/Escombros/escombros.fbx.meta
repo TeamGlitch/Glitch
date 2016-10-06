@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: 684ee8de700cf3f40859d288f9dfc88e
-timeCreated: 1469487945
+guid: ffaf5843316c5994c8f65a68e5908bdf
+timeCreated: 1470264194
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: //RootNode
-    100002: escombros
-    100004: escombros_rotos
+    100000: escombros
+    100002: escombros_rotos
+    100004: //RootNode
     100006: pCube1
     100008: pCube2
     100010: pCube3
@@ -32,9 +32,9 @@ ModelImporter:
     100048: polySurface7
     100050: polySurface8
     100052: polySurface9
-    400000: //RootNode
-    400002: escombros
-    400004: escombros_rotos
+    400000: escombros
+    400002: escombros_rotos
+    400004: //RootNode
     400006: pCube1
     400008: pCube2
     400010: pCube3
@@ -145,9 +145,9 @@ ModelImporter:
     clipAnimations:
     - serializedVersion: 16
       name: romperycaer
-      takeName: romperycaer
-      firstFrame: 1
-      lastFrame: 121
+      takeName: romper
+      firstFrame: 2
+      lastFrame: 60
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -224,12 +224,12 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 1
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: wait
-      takeName: romperycaer
-      firstFrame: 1
-      lastFrame: 1
+      takeName: romper
+      firstFrame: 2
+      lastFrame: 2
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -306,7 +306,7 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 1
+      additiveReferencePoseFrame: 2
     isReadable: 1
   meshes:
     lODScreenPercentages: []

@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using InControl;
+using UnityEngine.UI;
+using System.Xml;
 
 public class DynamicCamera : MonoBehaviour {
 
@@ -47,8 +49,26 @@ public class DynamicCamera : MonoBehaviour {
 			case dynamic_camera_state.PANNING:
 
 				if (transform.position.x <= (player.position.x + offsetX)) {
-					state = dynamic_camera_state.WAITING;
+
+                    state = dynamic_camera_state.WAITING;
+
+                    //TODO: Change to getchild and have a own textasset
+                    Text title = advanceBarEnemies.endPoint.title;
+                    Text subtitle = advanceBarEnemies.endPoint.subtitle;
+                    TextAsset XMLAsset = advanceBarEnemies.endPoint.XMLAsset;
+
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(XMLAsset.text);
+
+                    XmlNode texts = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/StartMessage/Title");
+                    title.text = texts.InnerText;
+                    title.color = Color.red;
+
+                    texts = xmlDoc.SelectSingleNode("/Dialogue/Set[@lang = \"" + Configuration.getLanguage() + "\"]/StartMessage/Subtitle");
+                    subtitle.text = texts.InnerText;
+
 					titles.SetActive(true);
+
 				} else {
 					// Camera moves to left until reach player
 					transform.Translate((Time.deltaTime) * -speed, 0.0f, 0.0f);

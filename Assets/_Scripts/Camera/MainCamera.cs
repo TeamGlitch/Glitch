@@ -16,11 +16,13 @@ public class MainCamera : MonoBehaviour {
 	//Following mode
 	public float maxUp = 0.5f;
 	public float maxDown = 0.33f;
-	private float playerPositionX = 0.27f; //In percent
+	public float playerPositionX = 0.27f; //In percent
 
 	//On_rails mode
 	public Transform upRail;
 	public Transform downRail;
+
+    public bool move = true;
 
 	void OnEnable() {
 		CameraZones.SetActive(true);
@@ -29,7 +31,7 @@ public class MainCamera : MonoBehaviour {
 	void Update()
 	{
 
-        if ((Camera.current == Camera.main) && (playerPosition.position.x <= maxCamera.position.x) && (playerPosition.position.x >= minCamera.position.x)) 
+        if (move && (Camera.current == Camera.main) && (playerPosition.position.x <= maxCamera.position.x) && (playerPosition.position.x >= minCamera.position.x)) 
 		{
 
 			//Calculates the smooth depending on the ratio and the zoom

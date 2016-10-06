@@ -3,54 +3,51 @@ using System.Collections;
 
 public class RootScript : MonoBehaviour {
 
-    public World world;
-    public bool down = true;
+    public GameObject root;
+    public float waitUntilExtend;
+    public float waitUntilShrink;
+    public bool continousMoving;
 
-    private bool top;
+    private Animator anim;
+    private bool stop = false;
 
     void Start()
     {
-        if (down)
-        {
-            top = true;
-        }
-        else
-        {
-            top = false;
-        }
+        anim = root.GetComponent<Animator>();
     }
 
-    void OnCollisionEnter(Collision coll)
+    void Update()
     {
-        if (!coll.collider.CompareTag("Player"))
+        if (continousMoving && !stop)
         {
-            if (!down)
-            {
-                down = true;
-                if (top)
-                {
-                    enabled = false;
-                }
-            }
-            else
-            {
-                down = false;
-                if (!top)
-                {
-                    enabled = false;
-                }
-            }
+            Invoke("Extend", waitUntilExtend);
+            stop = true;
         }
     }
 
-	void Update () {
-        if (down)
+    void OnTriggerEnter(Collider coll)
+    {
+        if (!continousMoving && !stop && coll.CompareTag("Player"))
         {
-            transform.Translate(0.0f, -world.lag * 20, 0.0f);
+            Invoke("Extend", waitUntilExtend);
+            stop = true;
         }
-        else
-        {
-            transform.Translate(0.0f, world.lag * 10, 0.0f);
-        }
-	}
+    }
+
+    public void Extend()
+    {
+        anim.SetBool("Extend", true);
+        Invoke("Shrink", waitUntilShrink);
+    }
+
+    public void Shrink()
+    {
+        anim.SetBool("Extend", false);
+        Invoke("Reactivate", 1.0f);
+    }
+
+    public void Reactivate()
+    {
+        stop = false;
+    }
 }

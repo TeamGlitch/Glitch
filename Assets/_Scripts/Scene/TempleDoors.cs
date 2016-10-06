@@ -13,6 +13,8 @@ public class TempleDoors : MonoBehaviour {
 
     public World world;
 
+    public Player player;
+
     private BoxCollider boxCollider;
 
     private enum door_state
@@ -93,5 +95,10 @@ public class TempleDoors : MonoBehaviour {
                     break;
             }
         }
+    }
+
+    void OnTriggerEnter(Collider coll)
+    {
+        player.Death();
     }
 }

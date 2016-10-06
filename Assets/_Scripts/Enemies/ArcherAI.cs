@@ -41,7 +41,9 @@ public class ArcherAI : MonoBehaviour {
     public BoxCollider headCollider;
 	public AudioClip hitSound;
     public AudioClip bowSound;
+    public AudioClip toPixelSound;
     public AudioClip explosionSound;
+    public Renderer render;                // To know if is visible
 
     private static GameObject item1;
     private static GameObject item2;
@@ -55,7 +57,7 @@ public class ArcherAI : MonoBehaviour {
     private float rotationTime = 0.0f;
     private float searchRotationTime = 1.0f;
     private bool returning = false;
-    private float meleeDamage = 1.0f;
+    private int meleeDamage = 1;
     private Vector3 origin;
     private Animator animator;
     private float timePerKick = 0.0f;
@@ -143,6 +145,9 @@ public class ArcherAI : MonoBehaviour {
         spriteRenderer = transform.GetComponent<SpriteRenderer>();
         archerModel = transform.FindChild("arquera_animclip");
         particleSystem = transform.GetComponent<ParticleSystem>();
+        ScoreManager.instance.EnemyAdded();
+
+        player.PlayerReviveEvent += TurnTrigger;
     }
 
     void Update()
@@ -162,7 +167,7 @@ public class ArcherAI : MonoBehaviour {
                     // Shooting logic
 
                     // If player deaths archer waits, else if is possible shoots
-                    if (player.playerController.state == PlayerController.player_state.DEATH)
+                    if ((player.playerController.state == PlayerController.player_state.DEATH) || (!render.isVisible))
                     {
                         animator.SetBool("Shoot", false);
                         states = enemy_states.WAIT;
@@ -438,6 +443,7 @@ public class ArcherAI : MonoBehaviour {
         InvokeRepeating("TiltModel", 0f, 0.1f);
         // To impulse player from enemy
         player.ReactToAttack(transform.position.x);
+        ScoreManager.instance.EnemyDefeated();
     }
 
     public void TiltModel()
@@ -469,7 +475,7 @@ public class ArcherAI : MonoBehaviour {
         transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
         spriteRenderer.enabled = true;
         particleSystem.Play();
-        SoundManager.instance.PlaySingle(explosionSound);
+        SoundManager.instance.PlaySingle(toPixelSound);
         Invoke("SpriteToDead", 1.0f);
     }
 

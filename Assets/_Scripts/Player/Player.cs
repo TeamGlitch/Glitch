@@ -17,6 +17,8 @@ public class Player : MonoBehaviour
     //Internal references
     private BoxCollider trigger;
 
+    public bool godmode = false;
+
     // Player element
     public PlayerController playerController;	//Reference to the player controller
     private SpriteRenderer sprite;
@@ -28,10 +30,11 @@ public class Player : MonoBehaviour
     private ObjectPool glitchPartPool;          //Fragments pool
 
     // Properties
-    public float lives;                         // Actual lives
+    public int lives;                           // Actual lives
     public int items = 0;                       // Items collected
 
     // State
+    public bool isInZoom = false;                                   // Variable from bossStage, if stage is in zoom he can't die
     private bool moveToCheckpoint = false;                          // If it's moving to the last checkpoint
     private Vector3 speedToCheckpoint = new Vector3(0, 0, 0);       // Speed vector to the checkpoint
     private float stopMoving;                                       // When to stop moving
@@ -87,7 +90,10 @@ public class Player : MonoBehaviour
         //If there's a collision with some lethal thing in scene
         if (coll.gameObject.CompareTag("Death"))
         {
-            DecrementLives(1);
+            if (!isInZoom && !moveToCheckpoint)
+            {
+                DecrementLives(1);
+            }
         }
     }
 
@@ -96,7 +102,10 @@ public class Player : MonoBehaviour
         //If there's a collision with some lethal thing in scene
         if (coll.gameObject.CompareTag("Death"))
         {
-            DecrementLives(1);
+            if (!isInZoom && !moveToCheckpoint)
+            {
+                DecrementLives(1);
+            }
         }
     }
 
@@ -186,6 +195,7 @@ public class Player : MonoBehaviour
         {
             bigCollUI.gameObject.SetActive(true);
             bigCollUI.AddItem(collect.orderNum);
+            ScoreManager.instance.AddCollectionable();
         }
     }
 
@@ -196,26 +206,33 @@ public class Player : MonoBehaviour
     }
 
     //Decrement lives and update the GUI
-    public void DecrementLives(float damage)
+    public void DecrementLives(int damage)
     {
         if (PlayerDeadEvent != null)
         {
             PlayerDeadEvent();
         }
 
-        if ((lives % 1 == 0) || ((lives - damage) > Mathf.FloorToInt(lives)))
-        {
-            lives -= damage;
-        }
-        else
-        {
-            lives = Mathf.FloorToInt(lives);
-        }
+        ScoreManager.instance.PlayerKilled(transform.position);
 
-        if (lives <= 0)
-        {
-            lives = 0;
-            lastLife = true;
+        if (!godmode)
+        { 
+
+            if ((lives % 1 == 0) || ((lives - damage) > Mathf.FloorToInt(lives)))
+            {
+                lives -= damage;
+            }
+            else
+            {
+                lives = Mathf.FloorToInt(lives);
+            }
+
+            if (lives <= 0)
+            {
+                lives = 0;
+                lastLife = true;
+            }
+
         }
 
         //If it is the last life, activate the dead menu
@@ -293,5 +310,7 @@ public class Player : MonoBehaviour
         lastLife = false;
 
         deadMenuScript.gameObject.SetActive(false);
+
+        ScoreManager.instance.RetryDone();
     }
 }
