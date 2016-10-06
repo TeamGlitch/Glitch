@@ -17,6 +17,8 @@ public class BatMovement : MonoBehaviour {
     public float timeToGoUp = 3f;
     private float initPosY;
 
+    public World world;
+
 
     // Use this for initialization
     void Start () {
@@ -31,59 +33,63 @@ public class BatMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if(goingRight)
+        if (world.doUpdate)
         {
-            currentRotation += Time.deltaTime * 100;
-            rotation.eulerAngles = new Vector3(0, currentRotation, 0);
-            transform.position = rotation * radius + initPos + radius;
-            transform.rotation = rotation;
-            if (currentRotation >= 360f + 180f)
+
+            if (goingRight)
             {
-                currentRotation = 0f;
-                goingRight = false;
+                currentRotation += world.lag * 100;
+                rotation.eulerAngles = new Vector3(0, currentRotation, 0);
+                transform.position = rotation * radius + initPos + radius;
+                transform.rotation = rotation;
+                if (currentRotation >= 360f + 180f)
+                {
+                    currentRotation = 0f;
+                    goingRight = false;
+                }
             }
-        }
-        else
-        {
-            currentRotation -= Time.deltaTime * speed;
-            rotation.eulerAngles = new Vector3(0, currentRotation, 0);
-            transform.position = rotation * radius + initPos - radius;
-            rotation.eulerAngles = new Vector3(0, currentRotation - 180f, 0);
-            transform.rotation = rotation;
-            if (currentRotation <= -360f)
+            else
             {
-                currentRotation = 180f;
-                goingRight = true;
+                currentRotation -= world.lag * speed;
+                rotation.eulerAngles = new Vector3(0, currentRotation, 0);
+                transform.position = rotation * radius + initPos - radius;
+                rotation.eulerAngles = new Vector3(0, currentRotation - 180f, 0);
+                transform.rotation = rotation;
+                if (currentRotation <= -360f)
+                {
+                    currentRotation = 180f;
+                    goingRight = true;
+                }
             }
-        }
-        if(goingUp)
-        {
-            timeGoingUp += Time.deltaTime;
-            if(timeGoingUp >= timeToGoUp)
-                timeGoingUp = timeToGoUp;
-            Vector3 pos = transform.position;
-            pos.y = Mathf.Lerp(initPosY, initPosY + upDistance, timeGoingUp / timeToGoUp);
-            transform.position = pos;
-            if(timeGoingUp == timeToGoUp)
+            if (goingUp)
             {
-                timeGoingUp = 0f;
-                goingUp = false;
-                initPosY = transform.position.y;
+                timeGoingUp += world.lag;
+                if (timeGoingUp >= timeToGoUp)
+                    timeGoingUp = timeToGoUp;
+                Vector3 pos = transform.position;
+                pos.y = Mathf.Lerp(initPosY, initPosY + upDistance, timeGoingUp / timeToGoUp);
+                transform.position = pos;
+                if (timeGoingUp == timeToGoUp)
+                {
+                    timeGoingUp = 0f;
+                    goingUp = false;
+                    initPosY = transform.position.y;
+                }
             }
-        }
-        else
-        {
-            timeGoingUp += Time.deltaTime;
-            if (timeGoingUp >= timeToGoUp)
-                timeGoingUp = timeToGoUp;
-            Vector3 pos = transform.position;
-            pos.y = Mathf.Lerp(initPosY, initPosY - upDistance, timeGoingUp / timeToGoUp);
-            transform.position = pos;
-            if (timeGoingUp == timeToGoUp)
+            else
             {
-                timeGoingUp = 0f;
-                goingUp = true;
-                initPosY = transform.position.y;
+                timeGoingUp += world.lag;
+                if (timeGoingUp >= timeToGoUp)
+                    timeGoingUp = timeToGoUp;
+                Vector3 pos = transform.position;
+                pos.y = Mathf.Lerp(initPosY, initPosY - upDistance, timeGoingUp / timeToGoUp);
+                transform.position = pos;
+                if (timeGoingUp == timeToGoUp)
+                {
+                    timeGoingUp = 0f;
+                    goingUp = true;
+                    initPosY = transform.position.y;
+                }
             }
         }
     }
