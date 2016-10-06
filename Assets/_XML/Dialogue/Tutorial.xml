@@ -178,6 +178,7 @@
 	  </Scene>
     <Scene id="8">
 		  <T>[face=Bug][playermove=false]¿Ves la exclamación sobre tu cabeza?[wait=0.2] ¿Y la distorsión frente a ti?</T>
+      <T>Si hay una exclamación sobre tu cabeza significa que puedes bugear algo en el nivel pulsando [controller=Y][keyboard=O].</T>
 		  <T>Si usas este poder en este tipo de distorsiones...[wait=0.2]¡Crearás plataformas!</T>
 	  </Scene>
     <Scene id="9">
